@@ -1,0 +1,11 @@
+.don-spon-title{
+    background-color: #a98de3;
+    border-radius:10px;
+    text-align: left;
+    justify-content: center;
+    color: black;
+    gap: 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    /* font-size: 2.5rem; */
+}

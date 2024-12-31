@@ -1,0 +1,137 @@
+.job-pozt{
+    margin-top: 250px;
+    display: flex;
+    /* margin-left: 20px;
+    margin-right: 20px; */
+    position: relative;
+    margin-bottom: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 5vw;
+    z-index: 1;
+    /* border: 1px solid #ccc; */
+    /* padding: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; */
+}
+
+.job-post-delete{
+    margin-top: 10px;
+}
+
+.job-post-delete button{
+    width: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    color: white;
+    background-color: #5f92e3;
+    justify-content: center;
+    padding: 5px;
+    border: solid;
+}
+
+/* .donation-card{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    background-color: #fff;
+    width: 34vw;
+    height: 60vh;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu{
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+} */
+ /* Updated styles for the job post card */
+.donation-card {
+    display: flex;
+    /* align-items: center; */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    min-height: 290px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+}
+
+.donation-card-image1 {
+    width: 200px !important;
+    height: 200px !important;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.donation-card-title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5;
+    
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #555;
+}
+
+.user-details p {
+    margin: 0;
+    margin-left: 8px;
+}
+
+.job-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.job-badges .badge {
+    background-color: #301c5B;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.menu {
+    position: absolute;
+    top: 10;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.menu:hover {
+    background-color: #ebeff5;
+    color: black;
+    
+  }
+
+  .menu li {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  
