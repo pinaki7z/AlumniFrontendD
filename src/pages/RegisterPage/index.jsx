@@ -76,12 +76,10 @@ const RegisterPage = () => {
         <div className="rectangle-group">
           <div className="frame-item" />
           <div className="bhu-alumni-association-container1">
-            <b>
-              <span>BHU</span>
-            </b>
+              <span>Welcome to</span>
             <span className="alumni-association">
               <b>{` `}</b>
-              <span className="alumni-association1">Alumni Association</span>
+              <span className="alumni-association1" style={{fontSize: '65px'}}>Alumnify</span>
             </span>
           </div>
         </div>
