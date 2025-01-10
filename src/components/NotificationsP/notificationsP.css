@@ -70,7 +70,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #eee8fa; /* Light purple color */
+    background-color: #efeff0; /* Light purple color */
     color: #333;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .accept-button:hover {
-    background-color: #a98de3; /* Darker shade of light purple */
+    background-color: #71be95; /* Darker shade of light purple */
 }
 
 .decline-button:hover {

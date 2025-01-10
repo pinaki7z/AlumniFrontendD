@@ -29,7 +29,7 @@
     color: #F8F8FF;
 }
 .sideBar li:hover {
-    background-color: #a98de3; 
+    background-color: #71be95; 
     color: #F8F8FF;
   }
   
@@ -38,7 +38,7 @@
   }
 
   .dashboard-icon {
-    color: #a98de3;
+    color: #71be95;
   }
 
   .sideBar li:hover .dashboard-icon {
@@ -47,7 +47,7 @@
 
   .side-bar-resp{
     width: 20%;
-    background-color: #301C58;
+    background-color: #0a3a4c;
     height: 100vh;
     position: fixed;
   }
@@ -55,7 +55,7 @@
   @media (max-width: 480px) {
     .side-bar-resp{
       width: 80%;
-      background-color: #301C58;
+      background-color: #0a3a4c;
       height: 100vh;
       position: fixed;
     }

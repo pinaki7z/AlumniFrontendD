@@ -1,7 +1,7 @@
 import "./loginPage.css";
 import "../../components/FrameComponent/FrameComponent.css";
-import io from "../../images/io.png";
-import bhu from "../../images/bhu.png";
+// import io from "../../images/io.png";
+import io from "../../images/logo-io.png";
 import { useState } from 'react';
 import './loginPage.css';
 import { useCookies } from "react-cookie";
@@ -97,7 +97,7 @@ const LoginPage = ({ handleLogin }) => {
     <div className="landing-page-1">
       <div className="main-container">
         <div className="content-area">
-          <img src={bhu} alt="" srcset="" width='300px' height='100px' />
+          <img src={io} alt="" srcset="" width='250px' height='100px' />
         </div>
       </div>
       <main className="login-panel">
@@ -113,16 +113,16 @@ const LoginPage = ({ handleLogin }) => {
         </div>
         <div className="login-fields">
           <form className="credentials-input" onSubmit={handleSubmit}>
-            <h1 className="welcome-back" style={{ color: '#301c58' }}>Welcome Back!</h1>
+            <h1 className="welcome-back" style={{ color: '#0a3a4c' }}>Welcome To</h1>
             <div className="university-affiliation">
               <div className="bhu-alumni-association-container">
                 <b className="bhu">
-                  <span className="bhu1" style={{ color: '#301c58' }}>BHU</span>
+                  <span className="bhu1" style={{ color: '#0a3a4c' }}>ALUMNIFY</span>
                 </b>
-                <span className="alumni-association">
+                {/* <span className="alumni-association">
                   <b className="b">{` `}</b>
-                  <span className="alumni-association1" style={{ color: '#301c58' }}>Alumni Association</span>
-                </span>
+                  <span className="alumni-association1" style={{ color: '#0a3a4c' }}>Alumni Association</span>
+                </span> */}
               </div>
             </div>
             <div className="account-details-parent">
@@ -185,7 +185,7 @@ const LoginPage = ({ handleLogin }) => {
             <div className="action-buttons">
               <button className="button" type='submit' style={{
                 color: '#F8F8FF',
-                background: '#a98de3'
+                background: '#71be95'
               }}>
                 <div className="button1" style={{ color: '#F8F8FF' }}>{loading ? 'Logging in...' : 'Login'}</div>
               </button>

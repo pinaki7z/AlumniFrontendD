@@ -556,7 +556,7 @@ const DonSponRequest = ({ name, edit }) => {
         extraFields = (
             <>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                    <Button variant="primary" onClick={() => setModalShow(true)} style={{ width: '15%',background: '#301C58' }}>
+                    <Button variant="primary" onClick={() => setModalShow(true)} style={{ width: '15%',background: '#0a3a4c' }}>
                         Bulk Upload
                     </Button>
                 </div>
@@ -566,27 +566,27 @@ const DonSponRequest = ({ name, edit }) => {
                 />
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>First Name*</label><br />
-                    <input type='text' name='firstName' id='firstName' placeholder='Enter First Name' className='custom-placeholder' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '10px'}}/>
+                    <input type='text' name='firstName' id='firstName' placeholder='Enter First Name' className='custom-placeholder' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '10px'}}/>
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Last Name*</label><br />
-                    <input type='text' name='lastName' id='lastName' placeholder='Enter Last Name' className='custom-placeholder' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '10px'}}/>
+                    <input type='text' name='lastName' id='lastName' placeholder='Enter Last Name' className='custom-placeholder' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '10px'}}/>
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>E-mail address*</label><br />
-                    <input type='text' name='email' id='email' className='custom-placeholder' placeholder='Enter email' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '10px'}}/>
+                    <input type='text' name='email' id='email' className='custom-placeholder' placeholder='Enter email' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '10px'}}/>
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Password*</label><br />
-                    <input type='password' name='password' id='password' className='custom-placeholder' placeholder='Enter Password' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '10px'}}/>
+                    <input type='password' name='password' id='password' className='custom-placeholder' placeholder='Enter Password' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '10px'}}/>
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Confirm Password*</label><br />
-                    <input type='password' name='confirmPassword' id='confirmPassword' className='custom-placeholder' placeholder='Confirm Password' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '10px'}}/>
+                    <input type='password' name='confirmPassword' id='confirmPassword' className='custom-placeholder' placeholder='Confirm Password' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '10px'}}/>
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Gender*</label><br />
-                    <select name='gender' id='gender' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #301C58', padding: '9px',color: '#a98de3'}}>
+                    <select name='gender' id='gender' onChange={handleChange} required style={{width: '65%', height: '48px',borderRadius: '6px', border: '2px solid #0a3a4c', padding: '9px',color: '#71be95'}}>
                         <option value='0'>Gender</option>
                         <option value='Male'>Male</option>
                         <option value='Female'>Female</option>
@@ -615,7 +615,7 @@ const DonSponRequest = ({ name, edit }) => {
 
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Department*</label><br />
-                    <select name='department' id='department' title='Department' onChange={handleChange} disabled={isSpecialRole} required  style={{ backgroundColor: isSpecialRole ? '#f2f2f2' : 'white',width: '65%', height: '48px' , border: '2px solid #301C58',borderRadius: '6px', padding: '9px',color: '#a98de3'}}>
+                    <select name='department' id='department' title='Department' onChange={handleChange} disabled={isSpecialRole} required  style={{ backgroundColor: isSpecialRole ? '#f2f2f2' : 'white',width: '65%', height: '48px' , border: '2px solid #0a3a4c',borderRadius: '6px', padding: '9px',color: '#71be95'}}>
                         <option value='' disabled selected>Select Department</option>
                         <option value='Agricultural Engineering'>Agricultural Engineering</option>
                         <option value='Gastroenterology'>Gastroenterology</option>
@@ -626,7 +626,7 @@ const DonSponRequest = ({ name, edit }) => {
                 </div>
                 <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label style={{fontFamily: 'Inter', fontWeight: '500',fontSize: '18px'}}>Batch*</label><br />
-                    <select name='batch' id='batch' onChange={handleChange} disabled={isAdmin || isSpecialRole} style={{ backgroundColor: (isAdmin || isSpecialRole) ? '#f2f2f2' : 'white',width: '65%', height: '48px' , border: '2px solid #301C58',borderRadius: '6px', padding: '9px',color: '#a98de3'}} required>
+                    <select name='batch' id='batch' onChange={handleChange} disabled={isAdmin || isSpecialRole} style={{ backgroundColor: (isAdmin || isSpecialRole) ? '#f2f2f2' : 'white',width: '65%', height: '48px' , border: '2px solid #0a3a4c',borderRadius: '6px', padding: '9px',color: '#71be95'}} required>
                         <option value='' disabled selected>Select Batch</option>
                         {generateYears().map((year) => (
                             <option key={year} value={year}>

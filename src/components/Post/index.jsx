@@ -18,6 +18,7 @@ import liked from "../../images/liked.svg";
 import unliked from "../../images/unliked.svg";
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
+import profilePic from "../../images/profilepic.jpg";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
   console.log('video pathh',video)
@@ -155,11 +156,10 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     <div className={`post ${className}`}>
       {loading ? (<div> Loading...</div>) : (<>
         <div className='top'>
-          {profilePicture ? (<img src={profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />) :
-            (<Avatar src={comment} style={{ width: '50px', height: '50px' }} />)}
+          <img src={profilePic} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
           <div className='info'>
             <h4>{username}</h4>
-            <span style={{ fontSize: '14px', fontWeight: '500', color: '#301C58' }}>{formatCreatedAt(timestamp)}</span>
+            <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(timestamp)}</span>
           </div>
           {(admin || userId === profile._id) && (
             <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>

@@ -1313,11 +1313,11 @@ export default function LandingPage(handleLogin) {
                 return (
                     <section id="hero" className="text-center py-5 content-overlay">
                         <img src={bhu} alt="" width="300px" height="100px" />
-                        <h1 className="display-4 fw-bold mb-3">Welcome to BHU Community</h1>
+                        <h1 className="display-4 fw-bold mb-3">Welcome to InsideOut Community</h1>
                         <p className="lead mb-4" style={{ fontWeight: '500' }}>
                             Connect, engage, and stay updated with your alma mater.
                         </p>
-                        <Button size="lg" style={{ backgroundColor: '#301C58', color: 'white' }}>
+                        <Button size="lg" style={{ backgroundColor: '#0a3a4c', color: 'white' }}>
                             Join Our Community
                         </Button>
                     </section>
@@ -1328,10 +1328,10 @@ export default function LandingPage(handleLogin) {
     return (
         <div className="d-flex flex-column min-vh-100 container-div-bg">
             {/* Navbar */}
-            <Navbar expand="lg" className="py-3" style={{ backgroundColor: '#301C58', color: 'white' }}>
+            <Navbar expand="lg" className="py-3" style={{ backgroundColor: '#0a3a4c', color: 'white' }}>
                 <Container style={{ paddingTop: '30px' }}>
                     <Navbar.Brand href="#" style={{ color: 'white' }}>
-                        BHU Alumni Portal
+                        InsideOut Alumni Portal
                     </Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link
@@ -1394,7 +1394,7 @@ export default function LandingPage(handleLogin) {
             {/* Footer */}
             <footer className="bg-light py-4 mt-auto">
                 <Container className="text-center">
-                    <p className="mb-0">&copy; {new Date().getFullYear()} BHU Alumni Portal. All rights reserved.</p>
+                    <p className="mb-0">&copy; {new Date().getFullYear()} InsideOut Alumni Portal. All rights reserved.</p>
                 </Container>
             </footer>
         </div>

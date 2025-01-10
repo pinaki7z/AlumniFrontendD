@@ -637,7 +637,7 @@ const IntJobs = (props) => {
         <>
 
             <div style={{ width: '100%' }}>
-                <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#a98de3' }}>
+                <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
                     <h2 style={{ margin: '0', color: 'white' }}>{title}</h2>
                     <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
                         Discover, explore, and submit applications for job openings on the Alumni Portal.
@@ -710,7 +710,7 @@ const IntJobs = (props) => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                     {/* <button
                         style={{
-                            backgroundColor: '#eee8fa',
+                            backgroundColor: '#efeff0',
                             border: '1px solid #ced4da',
                             padding: '5px 10px',
                             cursor: 'pointer',
@@ -732,7 +732,7 @@ const IntJobs = (props) => {
                     {/* {profile.profileLevel === 2 && (
                         <button
                             style={{
-                                backgroundColor: '#eee8fa',
+                                backgroundColor: '#efeff0',
                                 color: 'black',
                                 border: 'none',
                                 padding: '10px 20px',
@@ -751,7 +751,7 @@ const IntJobs = (props) => {
                             >
                                 <button
                                     style={{
-                                        backgroundColor: '#eee8fa',
+                                        backgroundColor: '#efeff0',
                                         color: 'black',
                                         border: 'none',
                                         padding: '10px 20px',

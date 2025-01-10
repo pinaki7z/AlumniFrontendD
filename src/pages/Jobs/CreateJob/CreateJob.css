@@ -16,14 +16,14 @@
 }
 
 .custom-dropdown1 .dropdown-toggle {
-    background-color: #a98de3 !important;
-    border-color: #a98de3 !important;
+    background-color: #71be95 !important;
+    border-color: #71be95 !important;
     color: white !important; /* Ensures text is visible */
     width: 100px;
 }
 
 .custom-dropdown1 .dropdown-menu {
-    background-color: #a98de3 !important;
+    background-color: #71be95 !important;
     color: white !important; /* Ensures text is visible */
 }
 
@@ -32,7 +32,7 @@ input[type="file"] {
 }
 
 input[type="file"]::file-selector-button {
-    background-color: #a98de3; /* Light purple color */
+    background-color: #71be95; /* Light purple color */
     color: white;
     border: none;
     padding: 8px 12px;
@@ -46,7 +46,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 .button-group Button{
-    background-color: #a98de3; 
+    background-color: #71be95; 
     border-color: #8f73b7;
     width: 100px;
 }

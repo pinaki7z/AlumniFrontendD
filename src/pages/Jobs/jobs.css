@@ -54,7 +54,7 @@
 }
 
 .custom-dropdown .dropdown-toggle {
-    background-color: #eee8fa !important; /* Ensure the background color remains the same */
+    background-color: #efeff0 !important; /* Ensure the background color remains the same */
     color: black !important; /* Ensure the text color is black */
     border-color: #ced4da !important; /* Optional: consistent border color */
     width:100%;
@@ -62,7 +62,7 @@
 
 /* Styles for the dropdown menu items */
 .custom-dropdown .dropdown-menu {
-    background-color: #eee8fa !important; /* Set the background color for the opened dropdown */
+    background-color: #efeff0 !important; /* Set the background color for the opened dropdown */
     color: black !important; /* Set the text color for dropdown items */
     width:100% !important;
 }

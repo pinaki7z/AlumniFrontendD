@@ -37,7 +37,7 @@ const Groups = () => {
 
   return (
     <div style={{ width: '100%', padding: '2% 5%' }}>
-      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#a98de3' }}>
+      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
           <h2 style={{ margin: '0', color: 'white' }}>Groups</h2>
           <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
           Connect with like-minded individuals in focused community groups.
@@ -58,7 +58,7 @@ const Groups = () => {
                       placeholder="Search for groups"
                       //value={searchQuery}
                       //onChange={(e) => setSearchQuery(e.target.value)}
-                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #301C58', backgroundColor: 'white' }}
+                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #0a3a4c', backgroundColor: 'white' }}
                     />
                     <button
                       type="submit"
@@ -75,7 +75,7 @@ const Groups = () => {
                       }}
                     >
 
-                      <IoSearchSharp style={{ color: '#301C58', width: '25px', height: '25px' }} />
+                      <IoSearchSharp style={{ color: '#0a3a4c', width: '25px', height: '25px' }} />
                     </button>
                   </div>
 
@@ -103,7 +103,7 @@ const Groups = () => {
                       placeholder="Search for groups"
                       //value={searchQuery}
                       //onChange={(e) => setSearchQuery(e.target.value)}
-                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #301C58', backgroundColor: 'white' }}
+                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #0a3a4c', backgroundColor: 'white' }}
                     />
                     <button
                       type="submit"
@@ -120,7 +120,7 @@ const Groups = () => {
                       }}
                     >
 
-                      <IoSearchSharp style={{ color: '#301C58', width: '25px', height: '25px' }} />
+                      <IoSearchSharp style={{ color: '#0a3a4c', width: '25px', height: '25px' }} />
                     </button>
                   </div>
 
@@ -149,7 +149,7 @@ const Groups = () => {
                       placeholder="Search for groups"
                       //value={searchQuery}
                       //onChange={(e) => setSearchQuery(e.target.value)}
-                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #301C58', backgroundColor: 'white' }}
+                      style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #0a3a4c', backgroundColor: 'white' }}
                     />
                     <button
                       type="submit"
@@ -166,7 +166,7 @@ const Groups = () => {
                       }}
                     >
 
-                      <IoSearchSharp style={{ color: '#301C58', width: '25px', height: '25px' }} />
+                      <IoSearchSharp style={{ color: '#0a3a4c', width: '25px', height: '25px' }} />
                     </button>
                   </div>
 
@@ -196,7 +196,7 @@ const Groups = () => {
         {admin ? (
           <Route path="/" element={<div style={{ marginTop: '25px' }}>
             <Link to={`/groups/create`} style={{ textDecoration: 'none', color: 'black' }}>
-              <button style={{ padding: '8px 32px', borderRadius: '8px', border: 'none',background: '#301C58',color: '#ffffff'
+              <button style={{ padding: '8px 32px', borderRadius: '8px', border: 'none',background: '#0a3a4c',color: '#ffffff'
  }}>
                 Create
               </button>

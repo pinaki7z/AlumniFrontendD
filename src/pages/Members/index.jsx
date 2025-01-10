@@ -202,7 +202,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
           paddingTop: '25px'
         }}
       >
-        <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#a98de3' }}>
+        <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
           <h2 style={{ margin: '0', color: 'white' }}>Members</h2>
           <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
             Explore profiles and expand your network with fellow members.
@@ -219,7 +219,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                   placeholder="Search for members"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #301C58', backgroundColor: 'white' }}
+                  style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #0a3a4c', backgroundColor: 'white' }}
                 />
                 <button
                   type="submit"
@@ -235,7 +235,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                     cursor: 'pointer'
                   }}
                 >
-                  <IoSearchSharp style={{ color: '#301C58', width: '25px', height: '25px' }} />
+                  <IoSearchSharp style={{ color: '#0a3a4c', width: '25px', height: '25px' }} />
                 </button>
               </div>
             </form>
@@ -293,7 +293,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                   <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
                     <div
                       style={{
-                        border: '2px dotted #a98de3',
+                        border: '2px dotted #71be95',
                         borderRadius: '8px',
                         width: '17vw',
                         height: '100%',

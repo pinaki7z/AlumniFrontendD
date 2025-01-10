@@ -99,7 +99,7 @@ const PollDisplay = ({ poll }) => {
                 )}
                 <div className='info'>
                     <h4>{poll.userName}</h4>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#301C58' }}>{formatCreatedAt(poll.createdAt)}</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(poll.createdAt)}</span>
                 </div>
                 {profile._id === poll.userId && (
                     <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>

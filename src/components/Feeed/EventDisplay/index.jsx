@@ -177,7 +177,7 @@ const EventDisplay = ({ event }) => {
                 )}
                 <div className='info'>
                     <h4>{event.userName ? event.userName : null}</h4>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#301C58' }}>{formatCreatedAt(event.createdAt)}</span>
+                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(event.createdAt)}</span>
                 </div>
                 {event.userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
                     <img src={postDelete} onClick={handleDeleteEvent} />
@@ -355,7 +355,7 @@ const EventDisplay = ({ event }) => {
             >
                 <Box className='poll-modal-box'>
                     <h2 id="modal-title">Event Attendees</h2>
-                    <button className='excel-export-button' onClick={exportAttendeesToExcel} style={{ backgroundColor: '#a98de3', padding: '10px', borderRadius: '6px', border: 'none', color: 'white' }}>
+                    <button className='excel-export-button' onClick={exportAttendeesToExcel} style={{ backgroundColor: '#71be95', padding: '10px', borderRadius: '6px', border: 'none', color: 'white' }}>
                         Export as an Excel Sheet
                     </button>
                     <div className='voters-container'>

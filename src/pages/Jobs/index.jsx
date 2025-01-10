@@ -175,7 +175,7 @@ const Jobs = () => {
 
                 <div style={{ margin: '20px 0', zIndex: '1', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <label>Filter by Verification: </label>
-                    <select value={verifiedFilter} onChange={handleVerifiedFilterChange} style={{ backgroundColor: '#eee8fa', marginLeft: '10px', color: 'black', borderColor: '#ced4da', padding: '5px 10px', borderRadius: 5 }}>
+                    <select value={verifiedFilter} onChange={handleVerifiedFilterChange} style={{ backgroundColor: '#efeff0', marginLeft: '10px', color: 'black', borderColor: '#ced4da', padding: '5px 10px', borderRadius: 5 }}>
                         <option value="all">All Jobs</option>
                         <option value="verified">Verified Jobs</option>
                         <option value="unverified">Unverified Jobs</option>

@@ -126,12 +126,12 @@
 .poll-percentage {
   margin-left: 10px;
   font-weight: 600;
-  color: #301C58;
+  color: #0a3a4c;
 }
 
 .submit-vote-button {
   padding: 10px 20px;
-  background-color: #301C58;
+  background-color: #0a3a4c;
   color: white;
   border: none;
   cursor: pointer;

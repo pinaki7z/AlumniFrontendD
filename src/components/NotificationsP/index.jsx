@@ -245,7 +245,7 @@ export const NotificationsP = () => {
         <div style={{ paddingTop: '20px' }}>
             <form onSubmit={handleAlumniSearch} style={{ display: 'flex', gap: '15px', }}>
                 <input type="text" placeholder='Search for name' name='user' value={user} onChange={(e) => setUser(e.target.value)} style={{ width: '40%', borderRadius: '5px' }} />
-                <button type="submit" style={{ borderRadius: '5px', backgroundColor: "#eee8fa" }}>Search</button>
+                <button type="submit" style={{ borderRadius: '5px', backgroundColor: "#efeff0" }}>Search</button>
             </form>
             <div style={{ padding: '2% 5%' }}>
                 {loading ? (

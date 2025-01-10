@@ -335,10 +335,10 @@ const IndividualGroup = () => {
                                                             <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.userName}</p>
                                                             <button
                                                                 style={{
-                                                                    backgroundColor: isFollowing(member.userId) ? '#a98de3' : '#FFFFFF',
-                                                                    color: isFollowing(member.userId) ? '#FFFFFF' : '#a98de3',
+                                                                    backgroundColor: isFollowing(member.userId) ? '#71be95' : '#FFFFFF',
+                                                                    color: isFollowing(member.userId) ? '#FFFFFF' : '#71be95',
                                                                     borderRadius: '32px',
-                                                                    border: isFollowing(member.userId) ? 'none' : '2px solid #a98de3',
+                                                                    border: isFollowing(member.userId) ? 'none' : '2px solid #71be95',
                                                                     marginLeft: 'auto',
                                                                     padding: '8px 32px',
                                                                     cursor: 'pointer'
@@ -372,7 +372,7 @@ const IndividualGroup = () => {
                                                     <p>Add/Remove Members</p>
                                                 </div>
                                                 <button className="close-button"
-                                                    style={{ fontSize: 'larger', fontFamily: 'Inter', color: '#301C58' }}
+                                                    style={{ fontSize: 'larger', fontFamily: 'Inter', color: '#0a3a4c' }}
                                                     onClick={() => {
                                                         setShowModal(false);
                                                     }

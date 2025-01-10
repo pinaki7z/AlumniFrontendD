@@ -111,7 +111,7 @@ const PhotoGallery = () => {
           padding: "20px",
           borderRadius: "10px",
           marginBottom: "10px",
-          backgroundColor: "#a98de3",
+          backgroundColor: "#71be95",
         }}
       >
         <h2 style={{ margin: "0", color: "white" }}>Photo Gallery</h2>

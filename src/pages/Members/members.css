@@ -34,7 +34,7 @@
 }
 .select-dropdown {
     background-color: 
-    #eee8fa; 
+    #efeff0; 
     padding: 8px;
     border-radius: 4px;
     border: 1px solid #00796b; 
@@ -86,7 +86,7 @@
   
   /* Toggle button styling */
   .toggle-button {
-    background-color: #301C58;
+    background-color: #0a3a4c;
     color: white;
     border: none;
     padding: 10px 20px;

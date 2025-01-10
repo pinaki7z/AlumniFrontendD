@@ -148,7 +148,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
         style={{
           width: "17vw",
           backgroundPosition: "center",
-          backgroundColor:"#eee8fa",
+          backgroundColor:"#efeff0",
           WebkitBackgroundSize: "cover",
           position: 'relative',
           height: '45vh',
@@ -221,7 +221,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
                 fontSize: '20px',
                 fontWeight: '500',
                 fontFamily: 'Inter',
-                backgroundColor: '#301C58',
+                backgroundColor: '#0a3a4c',
               }}
             >
               {isFollowing ? "Following" : <><BiUserPlus style={{ fontSize: "17px" }} /> Follow</>}

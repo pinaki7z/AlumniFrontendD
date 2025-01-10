@@ -139,7 +139,7 @@ const IndividualDonSpon = () => {
                                  {donation.sponsorshipBenefits && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Sponsorship Benefits:- {donation.sponsorshipBenefits}</p>}
                                  {profile._id !== donation.userId && (
                                     <button
-                                        style={{ width: '30%', padding: '10px', marginTop: '10px', backgroundColor:"#eee8fa" }}
+                                        style={{ width: '30%', padding: '10px', marginTop: '10px', backgroundColor:"#efeff0" }}
                                         onClick={() => window.open('https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt', '_blank')}
                                     >
                                        Donate
