@@ -1,9 +1,9 @@
-// import Image from 'next/image'
+
 import contact from "../../images/contact-us-customer-support-hotline-people-connect-email-address-live-chat-telephone-customer-service-contact-customer-phone-support-online.jpg";
 
 export default function Contact() {
   return (
-    <section className="py-5 bg-light">
+    <section className="bg-light" id="contactUs" style={{marginBottom: '3rem'}}>
       <div className="container">
         <div className="row g-4 align-items-center">
           <div className="col-md-6">
@@ -29,9 +29,13 @@ export default function Contact() {
             <p className="text-muted mt-3">
               You may also Email us to schedule the demo
             </p>
-            <button className="btn text-success" style={{ backgroundColor: 'transparent' }}>
-              Send Us
-            </button>
+            <a
+              href="mail@insideoutconsult.com"
+              className="btn"
+              style={{ backgroundColor: "#4CAF50", color: "white", textDecoration: "none" }}
+            >
+              Mail Us
+            </a>
           </div>
         </div>
       </div>

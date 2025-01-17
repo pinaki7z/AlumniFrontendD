@@ -15,7 +15,6 @@ import ReCAPTCHA from "react-google-recaptcha";
 const RegisterPage = () => {
   const navigateTo = useNavigate();
   const [loading, setLoading] = useState(false);
-  //const [captchaToken, setCaptchaToken] = useState(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,7 +22,7 @@ const RegisterPage = () => {
     password: '',
     confirmPassword: '',
     gender: '',
-    accept: false, 
+    accept: false,
     captchaToken: null
   });
 
@@ -40,11 +39,20 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log('handling reg submission')
     if (!formData.captchaToken) {
       toast.error("Please complete the CAPTCHA.");
       setLoading(false);
       return;
     }
+
+    if (!formData.accept) {
+      toast.error("You must accept the terms and conditions to register.");
+      setLoading(false);
+      return;
+    }
+
+    console.log('handling reg submission 2')
     try {
       console.log('formData', formData);
       const response = await axios.post(`${baseUrl}/alumni/register`, formData);
@@ -76,17 +84,17 @@ const RegisterPage = () => {
         <div className="rectangle-group">
           <div className="frame-item" />
           <div className="bhu-alumni-association-container1">
-              <span>Welcome to</span>
+            <span>Welcome to</span>
             <span className="alumni-association">
               <b>{` `}</b>
-              <span className="alumni-association1" style={{fontSize: '65px'}}>Alumnify</span>
+              <span className="alumni-association1" style={{ fontSize: '65px' }}>Alumnify</span>
             </span>
           </div>
         </div>
         <div className="first-name-field-wrapper">
           <form className="first-name-field" onSubmit={handleSubmit} >
             <h1 className="create-an-account">Create an account</h1>
-            <span style={{fontSize:"15px"}}>(All fields are mandatory)</span>
+            <span style={{ fontSize: "15px" }}>(All fields are mandatory)</span>
             <div className="last-name-field-parent">
               <div className="last-name-field">First Name</div>
               <div className="input">
@@ -125,7 +133,7 @@ const RegisterPage = () => {
                       placeholder="Enter Email Address"
                       type="text"
                       style={{ width: '100%' }}
-                      name='email' id='email' onChange={handleChange} required 
+                      name='email' id='email' onChange={handleChange} required
                     />
                   </div>
                 </div>
@@ -141,7 +149,7 @@ const RegisterPage = () => {
                         placeholder="Enter Password"
                         type="password"
                         style={{ width: '100%' }}
-                        name='password' id='password' onChange={handleChange} required 
+                        name='password' id='password' onChange={handleChange} required
                       />
                     </div>
                   </div>
@@ -158,7 +166,7 @@ const RegisterPage = () => {
                         placeholder="Confirm Password"
                         type="password"
                         style={{ width: '100%' }}
-                        name='confirmPassword' id='confirmPassword' onChange={handleChange} required 
+                        name='confirmPassword' id='confirmPassword' onChange={handleChange} required
                       />
                     </div>
                   </div>
@@ -203,30 +211,32 @@ const RegisterPage = () => {
                 </div>
               </div>
               <div>
-              <ReCAPTCHA
-                sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM"
-                onChange={handleReCaptcha}
-              />
-            </div>
+                <ReCAPTCHA
+                  sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM"
+                  onChange={handleReCaptcha}
+                />
+              </div>
               <div className="privacy-policy-link">
                 <div className="controls">
                   <div className="union-wrapper">
-                    <img
-                      className="union-icon"
-                      loading="lazy"
-                      alt=""
-                      src="/union.svg"
+                    <input
+                      type="checkbox"
+                      name="accept"
+                      id="accept"
+                      checked={formData.accept}
+                      onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
-                <div className="by-creating-your">
+                <div className="by-creating-your" htmlFor="accept">
                   By creating your account, you agree to our
                 </div>
                 <div className="privacy-policy">Privacy Policy</div>
               </div>
             </div>
             <button className="register-button" type='submit' id='btn' name='btn'>
-              <div className="register-button1">{loading? 'Registering...' : "Register"}</div>
+              <div className="register-button1">{loading ? 'Registering...' : "Register"}</div>
             </button>
           </form>
         </div>

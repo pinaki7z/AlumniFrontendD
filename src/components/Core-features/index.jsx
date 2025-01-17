@@ -66,7 +66,7 @@ export default function CoreFeatures() {
   ];
 
   return (
-    <section className="py-5 bg-white">
+    <section className="bg-white" id="coreFeatures" style={{paddingTop: '90px',paddingBottom: '3rem'}}>
       <div className="container">
         <h2 className="display-4 text-center mb-4">
           Core Features That Set Alumnify Apart

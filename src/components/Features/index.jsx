@@ -22,7 +22,7 @@ export default function Features() {
   ];
 
   return (
-    <section className="py-5 bg-light">
+    <section className="bg-light" id="whatMakes" style={{paddingTop: '90px',paddingBottom: '3rem'}}>
       <div className="container">
         <h2 className="display-4 text-center mb-4">
           What Makes Alumnify The Ideal Choice For Your Institution?

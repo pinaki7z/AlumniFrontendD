@@ -1,0 +1,26 @@
+.text-gray-800 {
+    color: #4a4a4a; /* Adjust the color as needed */
+  }
+  
+  .hover\:text-green-500:hover {
+    color: #28a745; /* Adjust the hover color as needed */
+  }
+
+  .custom-collapse {
+    display: none;
+  }
+  
+  /* Expanded styles for the navbar collapse */
+  .custom-collapse.expanded {
+    display: flex !important;
+    flex-direction: column;
+  
+  }
+  
+  @media (min-width: 992px) {
+    /* Reset the styles for larger screens */
+    .custom-collapse {
+      display: flex !important;
+      flex-direction: row;
+    }
+  }
