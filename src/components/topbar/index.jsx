@@ -252,11 +252,11 @@ const TopBar = ({ handleLogout }) => {
                         {showProfileOptions && (
                             <ul className="profile-options" >
                                 <a href="/profile" style={{ textDecoration: 'none', color: 'black' }}><li>Profile</li></a>
-                                {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+                                {/* {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                     <a href="/settings" style={{ textDecoration: 'none', color: 'black' }}>
                                         <li>Settings</li>
                                     </a>
-                                )}
+                                )} */}
                                 <li onClick={logout} style={{ cursor: 'pointer' }}><p>Log out</p></li>
                             </ul>
                         )}

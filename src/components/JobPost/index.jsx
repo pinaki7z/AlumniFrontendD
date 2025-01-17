@@ -182,7 +182,7 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
                 </div>
                 <div className="job-badges">
                     <span className="badge">{employmentType}</span>
-                    <span className="badge">Urgent</span>
+                    {/* <span className="badge">Urgent</span> */}
                 </div>
             </div>
             {appliedCandidates && appliedCandidates.map(candidate => {

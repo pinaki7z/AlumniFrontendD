@@ -2,7 +2,7 @@ import "./loginPage.css";
 import "../../components/FrameComponent/FrameComponent.css";
 // import io from "../../images/io.png";
 import io from "../../images/logo-io.png";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './loginPage.css';
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ import { login } from '../../store/userSlice';
 import { updateProfile, setAdmin } from "../../store/profileSlice";
 import baseUrl from "../../config";
 import ReCAPTCHA from "react-google-recaptcha";
+import CryptoJS from "crypto-js";
 const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,6 +24,28 @@ const LoginPage = ({ handleLogin }) => {
   const profile = useSelector((state) => state.profile);
   const backgroundImageUrl = `${process.env.REACT_APP_URL}/images/background.jpg`;
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [rememberDevice, setRememberDevice] = useState(false);
+
+  const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
+
+  const encrypt = (text) => {
+    return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+  };
+
+  const decrypt = (cipherText) => {
+    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  };
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("savedEmail");
+    const savedPassword = localStorage.getItem("savedPassword");
+    if (savedEmail && savedPassword) {
+      setEmail(savedEmail);
+      setPassword(decrypt(savedPassword));
+      setRememberDevice(true);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +57,15 @@ const LoginPage = ({ handleLogin }) => {
     }
 
     try {
+      if (rememberDevice) {
+        localStorage.setItem("savedEmail", email);
+        localStorage.setItem("savedPassword", encrypt(password));
+      } else {
+        localStorage.removeItem("savedEmail");
+        localStorage.removeItem("savedPassword");
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const currentDate = new Date();
       const response = await fetch(`${baseUrl}/alumni/login`, {
         method: 'POST',
@@ -165,9 +197,13 @@ const LoginPage = ({ handleLogin }) => {
                 <div className="remember-this-device-forgot">
                   <div className="remember-this-device">
                     <div className="controls">
-                      <div className="checkmark">
-                        <img className="union-icon" loading="lazy" alt="" />
-                      </div>
+                    <div className="checkmark">
+                          <input
+                            type="checkbox"
+                            checked={rememberDevice}
+                            onChange={() => setRememberDevice(!rememberDevice)}
+                          />
+                        </div>
                     </div>
                     <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
                   </div>

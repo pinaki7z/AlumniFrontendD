@@ -176,6 +176,32 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
       }
     };
 
+    function formatDate(isoDate) {
+      const date = new Date(isoDate);
+    
+      // Extract day, month, and year
+      const day = date.getDate();
+      const month = date.toLocaleString('default', { month: 'long' }); // Full month name
+      const year = date.getFullYear();
+    
+      // Determine the day suffix
+      const suffix = (d) => {
+        if (d > 3 && d < 21) return "th"; // Special case for 11th to 19th
+        switch (d % 10) {
+          case 1:
+            return "st";
+          case 2:
+            return "nd";
+          case 3:
+            return "rd";
+          default:
+            return "th";
+        }
+      };
+    
+      return `${day}${suffix(day)} ${month} ${year}`;
+    }
+
     return (
       <div key={group._id} className='display-post-card'>
         {console.log('group individual post', group)}
@@ -205,7 +231,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                 </div>
               </div>
               <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-                22nd April 2024
+              {formatDate(group.createdAt)}
               </div>
             </Link>
           </div>
@@ -229,7 +255,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
               </div>
             </div>
             <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-              22nd April 2024
+            {formatDate(group.createdAt)}
             </div>
           </div>
         )}

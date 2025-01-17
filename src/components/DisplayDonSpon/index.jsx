@@ -84,7 +84,8 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
 
                                     <button style={{ border: '1px', padding: '5px', backgroundColor: "white" }}>
                                         <div className="donation-card-title">
-                                            <h2>{donation.name ? donation.name : donation.nameOfOrganiser}</h2>
+                                            <h2>{donation.nameOfEvent ? donation.nameOfEvent : null}</h2>
+                                            <h3>{donation.name ? donation.name : donation.nameOfOrganiser}</h3>
                                         </div>
                                     </button>
 

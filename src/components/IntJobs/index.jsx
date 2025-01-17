@@ -547,7 +547,7 @@ const IntJobs = (props) => {
                                     <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
                                     <Dropdown.Item eventKey="Admin & Office" >Admin & Office</Dropdown.Item>
                                     <Dropdown.Item eventKey="Art & Design" >Art & Design</Dropdown.Item>
-                                    {/* Other category items */}
+                                    
                                 </div>
                             </DropdownButton>
                         </Form.Group>
@@ -697,6 +697,7 @@ const IntJobs = (props) => {
                         style={{ color: 'black', borderRadius: 5, width: '500px' }}
                         variant="light"
                     >
+                        <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
                         <Dropdown.Item eventKey="Admin & Office">Admin & Office</Dropdown.Item>
                         <Dropdown.Item eventKey="Art & Design">Art & Design</Dropdown.Item>
                         <Dropdown.Item eventKey="Business Operations">Business Operations</Dropdown.Item>

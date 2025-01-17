@@ -233,7 +233,7 @@ export const CreateJob = () => {
 
     return (
         <div className="create-job-container">
-            <h2 style={{marginBottom:'30px'}}>Create A Job</h2>
+            <h2 style={{ marginBottom: '30px' }}>Create A Job</h2>
             <Form encType="multipart/form-data">
                 <Row>
                     <Col>
@@ -456,7 +456,10 @@ export const CreateJob = () => {
                             <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
                             <Dropdown.Item eventKey="Admin & Office" >Admin & Office</Dropdown.Item>
                             <Dropdown.Item eventKey="Art & Design" >Art & Design</Dropdown.Item>
-                            {/* Other category items */}
+                            <Dropdown.Item eventKey="Business Operations">Business Operations</Dropdown.Item>
+                            <Dropdown.Item eventKey="Healthcare">Healthcare</Dropdown.Item>
+                            <Dropdown.Item eventKey="Management">Management</Dropdown.Item>
+                            <Dropdown.Item eventKey="Retail & Sales">Retail & Sales</Dropdown.Item>
                         </div>
                     </DropdownButton>
                 </Form.Group>
