@@ -101,8 +101,8 @@ export default function Navbarr() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav"  onClick={() => setExpanded((prev) => !prev)} />
         <Navbar.Collapse id="responsive-navbar-nav" className={expanded ? "custom-collapse expanded" : "custom-collapse"}>
           <Nav className="me-auto" style={{ marginLeft: 'auto' }}>
-            <Nav.Link href="#whyChoose">Why Choose</Nav.Link>
-            <Nav.Link href="#whatMakes">What Makes</Nav.Link>
+            <Nav.Link href="#whyChoose" style={{fontWeight: '500'}}>Why Choose</Nav.Link>
+            <Nav.Link href="#whatMakes" style={{fontWeight: '500'}}>What Makes</Nav.Link>
             {/* <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -114,8 +114,8 @@ export default function Navbarr() {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown> */}
-            <Nav.Link href="#coreFeatures">Core Features</Nav.Link>
-            <Nav.Link href="#contactUs">Contact Us</Nav.Link>
+            <Nav.Link href="#coreFeatures" style={{fontWeight: '500'}}>Core Features</Nav.Link>
+            <Nav.Link href="#contactUs" style={{fontWeight: '500'}}>Contact Us</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link href="https://www.facebook.com/insideoutconsult/"><div className="w-6 h-6 bg-green-500" >

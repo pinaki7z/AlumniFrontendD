@@ -30,7 +30,7 @@ export default function Contact() {
               You may also Email us to schedule the demo
             </p>
             <a
-              href="mail@insideoutconsult.com"
+              href="mailto:mail@insideoutconsult.com"
               className="btn"
               style={{ backgroundColor: "#4CAF50", color: "white", textDecoration: "none" }}
             >
