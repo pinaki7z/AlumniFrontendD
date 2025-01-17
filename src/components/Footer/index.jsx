@@ -1,37 +1,46 @@
 // import Image from 'next/image'
 import { Link } from "react-router-dom";
+import { FaLinkedin } from "react-icons/fa6";
+import { FiInstagram } from "react-icons/fi";
+import { IoLogoFacebook } from "react-icons/io5";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 py-6">
-      <div className="container mx-auto px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="text-gray-400 text-sm mb-4 md:mb-0">
-            © 2023 InsideOut. All rights reserved
+    <footer className="bg-dark text-light py-4">
+      <div className="container">
+        <div className="d-flex flex-column flex-md-row align-items-center justify-content-between">
+          <div className="mb-3 mb-md-0">
+            © 2025 InsideOut. All rights reserved
           </div>
-          <div className="flex items-center gap-4">
-            <Link to="#" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800">
-              <div className="w-4 h-4 bg-green-500" />
+          <div className="d-flex align-items-center gap-3">
+            <Link to="https://www.facebook.com/insideoutconsult/" className="d-flex align-items-center justify-content-center rounded-circle " style={{ width: '32px', height: '32px' }}>
+              <div>
+              <IoLogoFacebook color="#38A750" style={{ width: "30px", height: "30px" }}/>
+              </div>
             </Link>
-            <Link to="#" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800">
-              <div className="w-4 h-4 bg-green-500" />
+            <Link to="https://www.instagram.com/insideoutconsultants/" className="d-flex align-items-center justify-content-center rounded-circle " style={{ width: '32px', height: '32px' }}>
+              <div >
+              <FiInstagram color="#38A750" style={{ width: "30px", height: "30px" }}/>
+              </div>
             </Link>
-            <Link to="#" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800">
-              <div className="w-4 h-4 bg-green-500" />
+            <Link to="https://www.linkedin.com/company/inside-out-value-consultancy/" className="d-flex align-items-center justify-content-center rounded-circle" style={{ width: '32px', height: '32px' }}>
+              <div >
+              <FaLinkedin color="#38A750" style={{ width: "30px", height: "30px" }}/>
+              </div>
             </Link>
           </div>
-          <div className="flex items-center gap-2 mt-4 md:mt-0">
-            <span className="text-gray-400 text-sm">Powered by</span>
-            <img
+          <div className="d-flex align-items-center gap-1 mt-3 mt-md-0">
+            <span>Powered by</span>
+            {/* <img
               src="/placeholder.svg?height=24&width=80"
               alt="InsideOut"
               width={80}
               height={24}
-            />
+            /> */}
+            <span style={{color: '#54cd52'}}>InsideOut</span>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
-

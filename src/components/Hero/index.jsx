@@ -1,39 +1,38 @@
 // import Image from 'next/image'
+import ss from "../../images/screenshots.png"
 
 export default function Hero() {
   return (
-    <section className="pt-20 pb-16 bg-gradient-to-br from-[#4CAF50] to-[#1B5E20]">
-      <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="text-center md:text-left text-white max-w-xl mx-auto md:mx-0">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-8 leading-tight">
+    <section className="pb-4" style={{ background: 'linear-gradient(to bottom right, #4CAF50, #1B5E20)', marginTop: '100px' }}>
+      <div className="container">
+        <div className="row align-items-center g-4">
+          <div className="col-md-6 text-center text-md-start text-white">
+            <h1 className="display-4 fw-bold mb-4">
               Revolutionizing Alumni Engagement For Institutions
             </h1>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-8 inline-block">
-              <p className="text-lg font-medium">
+            <div className="bg-white bg-opacity-10 rounded-lg p-3 mb-4">
+              <p className="h5 mb-0">
                 Alumnify - Connect. Engage. Empower
               </p>
             </div>
-            <p className="text-white/80 mb-8 text-sm md:text-base">
+            <p className="text-white opacity-80 mb-4">
               Unite your alumni under one powerful platform. Alumnify helps institutions foster lifelong connections, promote collaboration, and build a strong alumni network.
             </p>
-            <button className="bg-[#4CAF50] hover:bg-[#45a049] text-white px-8 py-3 rounded-md text-sm font-medium transition-colors">
+            <button className="btn" style={{ backgroundColor: '#4CAF50', color: 'white' }}>
               Schedule Your Free Demo Now
             </button>
           </div>
-          <div className="relative h-[400px] md:h-[600px] flex justify-center items-center">
+          <div className="col-md-6 d-flex justify-content-center align-items-center">
             <img
-              src={`${process.env.NEXT_PUBLIC_ASSETS_URL}/yX0UY.png`}
+              src={ss}
               alt="Alumnify Mobile App"
-              //width={400}
-              //height={600}
-              className="object-contain"
-              priority
+              className="img-fluid"
+              style={{ maxHeight: '600px', objectFit: 'contain' }}
             />
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 

@@ -1,4 +1,5 @@
 // import Image from 'next/image'
+import education from "../../images/city-committed-education-collage-concept.jpg"
 
 export default function Features() {
   const features = [
@@ -18,41 +19,45 @@ export default function Features() {
       title: "Secure and Reliable",
       description: "Protect sensitive data with robust security measures and privacy controls"
     }
-  ]
+  ];
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
+    <section className="py-5 bg-light">
+      <div className="container">
+        <h2 className="display-4 text-center mb-4">
           What Makes Alumnify The Ideal Choice For Your Institution?
         </h2>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="relative h-[300px] md:h-[400px]">
-            <img
-              src="/placeholder.svg?height=400&width=600"
-              alt="Education Technology"
-              fill
-              className="rounded-lg object-cover"
-            />
+        <div className="row g-4 align-items-center">
+          <div className="col-md-6">
+            <div className="position-relative" style={{ height: '400px' }}>
+              <img
+                src={education}
+                alt="Education Technology"
+                className="img-fluid rounded"
+                style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+              />
+            </div>
           </div>
-          <div className="space-y-6">
-            {features.map((feature, index) => (
-              <div key={index} className="flex gap-4">
-                <div className="flex-shrink-0 w-6 h-6 mt-1">
-                  <svg className="w-6 h-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
+          <div className="col-md-6">
+            <div className="mb-4">
+              {features.map((feature, index) => (
+                <div key={index} className="d-flex mb-3">
+                  <div className="flex-shrink-0 me-3" style={{ width: '24px', height: '24px' }}>
+                    <svg className="w-100 h-100 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="fw-medium mb-1">{feature.title}</h3>
+                    <p className="text-muted mb-0">{feature.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-medium mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm">{feature.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 

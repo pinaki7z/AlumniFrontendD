@@ -1,0 +1,7 @@
+.text-gray-800 {
+    color: #4a4a4a; /* Adjust the color as needed */
+  }
+  
+  .hover\:text-green-500:hover {
+    color: #28a745; /* Adjust the hover color as needed */
+  }
