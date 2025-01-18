@@ -235,7 +235,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
               </div>
             );
           }
-          else if (entityType === 'news') {
+          else if (post.type === 'news') {
+            console.log('newssssss')
             return (
               <div key={post._id} style={{ width: '100%' }}>
                 <DisplayNews

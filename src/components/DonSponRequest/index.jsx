@@ -17,7 +17,10 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import React from 'react';
 import baseUrl from "../../config";
-import upload from "../../images/upload.svg"
+import upload from "../../images/upload.svg";
+import ReCAPTCHA from "react-google-recaptcha";
+
+
 const DonSponRequest = ({ name, edit }) => {
     console.log("DON SPON");
     console.log('name', name, edit)
@@ -136,6 +139,8 @@ const DonSponRequest = ({ name, edit }) => {
         alumni: false,
         student: false,
         specialRole: false,
+        captchaToken: null
+
     });
 
     const [sponsorshipFormData, setSponsorshipFormData] = useState({
@@ -154,6 +159,10 @@ const DonSponRequest = ({ name, edit }) => {
         sponsorshipBenefits: '',
         additionalInfo: ''
     });
+
+    const handleReCaptcha = (token) => {
+        setFormData({ ...formData, captchaToken: token });
+      };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -249,6 +258,12 @@ const DonSponRequest = ({ name, edit }) => {
         console.log("handling submit");
         console.log('body', body)
         if (name === 'member') {
+            if (!formData.captchaToken) {
+                  toast.error("Please complete the CAPTCHA.");
+                  setLoading(false);
+                  return;
+                }
+
             if (formData.admin === false && formData.batch === null && formData.specialRole === false) {
                 console.log('formData member1', formData)
                 toast.error('Please select batch again');
@@ -634,6 +649,12 @@ const DonSponRequest = ({ name, edit }) => {
                             </option>
                         ))}
                     </select>
+                </div>
+                <div style={{width: '100%'}}>
+                <ReCAPTCHA
+                  sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM"
+                  onChange={handleReCaptcha}
+                />
                 </div>
 
             </>

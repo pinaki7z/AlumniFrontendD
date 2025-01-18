@@ -27,12 +27,12 @@
     color: white !important; /* Ensures text is visible */
 }
 
-input[type="file"] {
-    color: transparent; /* Hides default text */
-}
+/* input[type="file"] {
+    color: transparent; 
+} */
 
 input[type="file"]::file-selector-button {
-    background-color: #71be95; /* Light purple color */
+    background-color: #71be95; 
     color: white;
     border: none;
     padding: 8px 12px;
@@ -42,8 +42,12 @@ input[type="file"]::file-selector-button {
 }
 
 input[type="file"]::file-selector-button:hover {
-    background-color: #8f73b7; /* Slightly darker shade for hover effect */
+    background-color: #8f73b7; 
 }
+
+
+
+
 
 .button-group Button{
     background-color: #71be95; 

@@ -72,7 +72,7 @@ export const DisplayNews = ({ userId, postId, title,description, createdAt, pict
     };
 
     const handleReadMore = () => {
-        navigate(`/news/${postId}`, {
+        navigate(`/news/news/${postId}`, {
             state: {
                 userId,
                 postId,
@@ -96,7 +96,7 @@ export const DisplayNews = ({ userId, postId, title,description, createdAt, pict
                     </div>
                     <div className="news-card-content">
                         <div className="news-card-header">
-                            <h3 className="news-title">{title? title : 'News Headline'}</h3>
+                            {/* <h3 className="news-title">{title? title : 'News Headline'}</h3> */}
                             <span style={{ color: 'gray', fontSize: '14px', fontWeight:'600' }}>
                                 Posted on {formatDate(createdAt)}
                             </span>

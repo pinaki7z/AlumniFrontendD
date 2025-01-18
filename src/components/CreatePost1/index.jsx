@@ -351,7 +351,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [picturePath, setPicturePath] = useState([]);
-  const [selectedFile, setSelectedFile] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [posts, setPosts] = useState([]);
   const [imgUrl, setImgUrl] = useState('');
@@ -494,12 +494,16 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       for (let pair of formData.entries()) {
         const key = pair[0];
         const value = pair[1];
-
-
-        formDataObject[key] = value;
-        console.log("FORMDATAOBJECT:", formDataObject)
+      
+        // Check if the key is 'picturePath' and if the value is an array
+        if (key === "picturePath" && Array.isArray(value)) {
+          formDataObject[key] = value.join(","); // Convert array to a comma-separated string
+        } else {
+          formDataObject[key] = value; // Assign the value as it is for other keys
+        }
+      
+        console.log("FORMDATAOBJECT:", formDataObject);
       }
-
 
       try {
         const response = await axios.post(

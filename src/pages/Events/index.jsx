@@ -392,7 +392,7 @@ function MyVerticallyCenteredModal(props) {
           <div className="mb-3">
             <input
               type="file"
-              className="form-control"
+              //className="form-control"
               onChange={handleImageChange}
               style={{ borderColor: "black" }} // Adding black border
             />
@@ -795,7 +795,7 @@ function Events() {
 
   return (
     <div className="Events mx-auto px-4 py-8">
-      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
+      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#a98de3' }}>
         <h2 style={{ margin: '0', color: 'white' }}>Event Calendar</h2>
         <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
           Stay updated on upcoming events and opportunities to connect.
@@ -845,7 +845,7 @@ function Events() {
             onHide={() => setSelectedEventDetails(null)}
             size="lg"
           >
-            <Modal.Header style={{ backgroundColor: '#71be95' }} closeButton>
+            <Modal.Header style={{ backgroundColor: '#a98de3' }} closeButton>
               <Modal.Title>Event Details</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{ backgroundColor: '#eaf6ff' }}>

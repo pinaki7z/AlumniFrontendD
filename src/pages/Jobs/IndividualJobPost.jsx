@@ -92,11 +92,11 @@ const IndividualJobPost = () => {
 
         useEffect(() => {
             if (jobs.questions && Array.isArray(jobs.questions)) {
-              setQuestions(jobs.questions);
-              setAnswers(jobs.questions.map(question => ({ question: question, answer: '' })));
+                setQuestions(jobs.questions);
+                setAnswers(jobs.questions.map(question => ({ question: question, answer: '' })));
             }
-          }, [props.jobs]);
-          
+        }, [props.jobs]);
+
 
         const handleNameChange = (e) => {
             setName(e.target.value);
@@ -168,14 +168,19 @@ const IndividualJobPost = () => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                             <Form.Label>Upload Resume</Form.Label>
-                            <Form.Control type="file" accept=".pdf" onChange={handleResumeChange} />
+                            <input
+                                type="file"
+                                //className="form-control"
+                                accept=".pdf" onChange={handleResumeChange}  // Adding black border
+                            />
                         </Form.Group>
-                        {questions.map((question, index) => (
+                        {questions && questions.length > 0 && questions[0] !== "" && questions.map((question, index) => (
                             <Form.Group key={index} className="mb-3" controlId={`question-${index}`}>
                                 <Form.Label>{question}</Form.Label>
                                 <Form.Control type="text" value={answers[index].answer} onChange={(e) => handleAnswerChange(index, e)} />
                             </Form.Group>
                         ))}
+
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -472,95 +477,97 @@ const IndividualJobPost = () => {
 
     return (
         <div className="job-post-container">
-      <div className="job-post-header">
-        <img
-          src={jobs.coverImage || coverImage}
-          alt="Job Cover"
-          className="job-post-cover"
-        />
-      </div>
-      <div className="job-post-content">
-        <div className="job-post-details">
-          <h1 className="job-title">{jobs.title || "Job Title"}</h1>
-          <p className="company-name">{jobs.company || "Company Name"}</p>
-          <div className="job-description">
-            <h2>Job Description</h2>
-            <p>{jobs.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
-          </div>
-          <div className="job-responsibilities">
-            <h2>Responsibilities</h2>
-            <p>
-              {jobs.responsibilities || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-            </p>
-          </div>
-          <div className="job-qualifications">
-            <h2>Qualifications</h2>
-            <p>{jobs.qualifications || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
-          </div>
-        </div>
-        <div className="job-overview">
-            <div style={{backgroundColor: "#f4f4f4", borderRadius: "10px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",  }}> 
+            <div className="job-post-header">
+                <img
+                    src={jobs.coverImage || coverImage}
+                    alt="Job Cover"
+                    className="job-post-cover"
+                />
+            </div>
+            <div className="job-post-content">
+                <div className="job-post-details">
+                    <h1 className="job-title">{jobs.title || "Job Title"}</h1>
+                    <p className="company-name">{jobs.company || "Company Name"}</p>
+                    <div className="job-description">
+                        <h2>Job Description</h2>
+                        <p>{jobs.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
+                    </div>
+                    <div className="job-responsibilities">
+                        <h2>Responsibilities</h2>
+                        <p>
+                            {jobs.responsibilities || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+                        </p>
+                    </div>
+                    <div className="job-qualifications">
+                        <h2>Qualifications</h2>
+                        <p>{jobs.qualifications || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
+                    </div>
+                </div>
+                <div className="job-overview">
+                    <div style={{
+                        backgroundColor: "#f4f4f4", borderRadius: "10px",
+                        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    }}>
 
-            
-            <h2>Job Overview</h2>
-            <div style={{padding:'15px'}}>
-            <ul>
-                <li>
-                    <div>
-                    <FaCalendarAlt />
-                    </div>               
-                    <div>
-                    <span className="key">Date Posted</span>
-                    <span className="value">{jobs.datePosted || "N/A"}</span>
-                    </div>
-                    
-                </li>
-                <li>
-                    <div>
-                    <FaCalendarAlt />
-                    </div>
-                    
-                    <div>
-                    <span className="key">Apply By</span>
-                    <span className="value">{jobs.applyBy || "N/A"}</span>
-                    </div>
-            
-                </li>
-                <li>
-                    <div>
-                    <FaMapMarkerAlt />
-                    </div>
-                    
-                    <div>
-                    <span className="key">Location</span>
-                    <span className="value">{jobs.location || "N/A"}</span>
-                    </div>
-                
-                </li>
-                <li>
-                    <div>
-                    <FcBriefcase />
-                    </div>
-                    
-                    <div>
-                    <span className="key">Category</span>
-                    <span className="value">{jobs.category || "N/A"}</span>
-                    </div>
-                
-                </li>
-                <li>
-                    <div>
-                    <GiMoneyStack />
-                    </div>
-                    <div>
-                    <span className="key">Salary</span>
-                    <span className="value">{jobs.salary || "N/A"}</span>
-                    </div>
-                
-                </li>
-            </ul>
-            <div className="ijp-candidates-button">
+
+                        <h2>Job Overview</h2>
+                        <div style={{ padding: '15px' }}>
+                            <ul>
+                                <li>
+                                    <div>
+                                        <FaCalendarAlt />
+                                    </div>
+                                    <div>
+                                        <span className="key">Date Posted</span>
+                                        <span className="value">{jobs.datePosted || "N/A"}</span>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div>
+                                        <FaCalendarAlt />
+                                    </div>
+
+                                    <div>
+                                        <span className="key">Apply By</span>
+                                        <span className="value">{jobs.applyBy || "N/A"}</span>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div>
+                                        <FaMapMarkerAlt />
+                                    </div>
+
+                                    <div>
+                                        <span className="key">Location</span>
+                                        <span className="value">{jobs.location || "N/A"}</span>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div>
+                                        <FcBriefcase />
+                                    </div>
+
+                                    <div>
+                                        <span className="key">Category</span>
+                                        <span className="value">{jobs.category || "N/A"}</span>
+                                    </div>
+
+                                </li>
+                                <li>
+                                    <div>
+                                        <GiMoneyStack />
+                                    </div>
+                                    <div>
+                                        <span className="key">Salary</span>
+                                        <span className="value">{jobs.salary || "N/A"}</span>
+                                    </div>
+
+                                </li>
+                            </ul>
+                            <div className="ijp-candidates-button">
                                 {jobs.userId === profile._id ? (
                                     <>
                                         {viewCandidatesButton}
@@ -588,12 +595,12 @@ const IndividualJobPost = () => {
                                 )}
                             </div>
                             <CandidatesModal />
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div>
+            {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */}
         </div>
-      </div>
-      {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */}
-    </div>
     )
 
 

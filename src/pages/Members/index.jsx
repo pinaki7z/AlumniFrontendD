@@ -45,15 +45,15 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     }
     return years;
   };
-
   const generateBatches = () => {
     const currentYear = new Date().getFullYear();
     const batches = [];
-    for (let i = currentYear; i >= currentYear - 100; i -= 3) {
-      batches.push(`${i - 2}-${i}`);
+    for (let i = currentYear; i >= currentYear - 100; i--) {
+      batches.push(`${i - 1}-${i}`); // Using template literals ensures batches are strings
     }
     return batches;
   };
+
 
   const ListViewItem = ({ member }) => {
     return (
@@ -142,13 +142,22 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     }
 
     // Apply batch filter
+    // if (batch) {
+    //   const [startYear, endYear] = batch.split('-').map(Number);
+    //   filteredMembers = filteredMembers.filter(
+    //     (member) =>
+    //       member.graduatingYear >= startYear && member.graduatingYear <= endYear
+    //   );
+    // }
+
     if (batch) {
       const [startYear, endYear] = batch.split('-').map(Number);
       filteredMembers = filteredMembers.filter(
         (member) =>
-          member.graduatingYear >= startYear && member.graduatingYear <= endYear
+          member.batch === batch
       );
     }
+
 
     // Update no users found state
     setNoUsersFound(filteredMembers.length === 0);
@@ -259,15 +268,17 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
             <select className='select-dropdown' style={{ marginLeft: '10px' }} value={department} onChange={handleDepartmentChange}>
               <option value="">All Departments</option>
-              <option value="Agricultural">Agricultural</option>
+              <option value="Agricultural Engineering">Agricultural</option>
               <option value="Gastroenterology">Gastroenterology</option>
               <option value="Neurosurgery">Neurosurgery</option>
               <option value="Human Languages">Human Languages</option>
+              <option value="Vocal Music">Vocal Music</option>
             </select>
 
             <select className='select-dropdown' style={{ marginLeft: '10px' }} value={batch} onChange={handleBatchChange}>
               <option value="">All Batches</option>
               {generateBatches().map(batch => (
+              
                 <option key={batch} value={batch}>{batch}</option>
               ))}
             </select>

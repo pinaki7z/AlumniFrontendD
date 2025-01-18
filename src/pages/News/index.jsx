@@ -22,7 +22,7 @@ const News = () => {
         </p>
       </div>
       {admin ?
-        <Feed showCreatePost={false} showCreateButton={true} entityType="news" entityId="id" showDeleteButton={true} />
+        <Feed showCreatePost={true} showCreateButton={false} entityType="news" entityId="id" showDeleteButton={true} />
         :
         <Feed showCreatePost={false} entityType="news" entityId="id" showDeleteButton={true} />
       }

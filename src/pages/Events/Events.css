@@ -87,4 +87,8 @@
   white-space: nowrap;
   background-color: #301c5B;
 }
+
+.hoverColorChange:hover {
+  background-color: #8f73b7; /* Slightly darker shade for hover effect */
+}
   
