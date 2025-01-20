@@ -56,7 +56,8 @@ export const CreateJob = () => {
         type: 'Internship',
         description: '',
         attachments: [],
-        locationType: 'onSite'
+        locationType: 'onSite',
+        applyBy: ''
     });
     const [paidStatus, setPaidStatus] = useState('');
 
@@ -92,6 +93,11 @@ export const CreateJob = () => {
 
     const handleLocationTypeChange = (type) => {
         setInternshipFormData(prev => ({ ...prev, locationType: type }));
+    };
+
+    const handleApplyByChange = (e) => {
+        const { value } = e.target;
+        setInternshipFormData((prev) => ({ ...prev, applyBy: value }));
     };
 
     const handleFileUpload = (file, endpoint, callback) => {
@@ -156,6 +162,7 @@ export const CreateJob = () => {
             "locationType[remote]": internshipFormData.locationType === 'remote',
             "locationType[hybrid]": internshipFormData.locationType === 'hybrid'
         };
+        console.log('job ', typeof formData.applyBy);
 
         try {
             const response = await fetch(`${baseUrl}/jobs/create`, {
@@ -419,6 +426,18 @@ export const CreateJob = () => {
                         </div>
                     </DropdownButton>
                 </Form.Group>
+                <Col>
+                        <Form.Group as={Col} controlId="applyBy" className="form-group-custom">
+                            <Form.Label>Apply By*</Form.Label>
+                            <Form.Control
+                                type="date"
+                                name="applyBy"
+                                value={internshipFormData.applyBy}
+                                onChange={handleApplyByChange}
+                                required
+                            />
+                        </Form.Group>
+                    </Col>
                 {(internshipFormData.type === 'Internship' || internshipFormData.employmentType === 'Volunteer') && (
                     <Form.Group controlId="internship-type" className="form-group-custom">
                         <Form.Check

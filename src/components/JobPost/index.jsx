@@ -9,6 +9,7 @@ import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify';
 import { BiSolidArchiveIn } from "react-icons/bi";
 import { useState } from 'react';
+import dummy from "../../images/d-group.jpg"
 import { FaBriefcase } from "react-icons/fa";
 import { IoIosInformationCircle } from "react-icons/io";
 import { CiLocationArrow1 } from "react-icons/ci";
@@ -134,23 +135,29 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
     return (
         <div className="donation-card" onClick={handleClick} style={{ cursor: "pointer" }}>
             <div className="donation-card-image1">
-                {/* Placeholder for the image */}
-                {console.log('attachments', attachments, jobTitle)}
-                {attachments && attachments.map((attachment, index) => {
-                    if (!attachment.endsWith('.pdf')) {
-                        return (
-                            <img
-                                key={index}
-                                src={`${baseUrl}/uploads/${attachment}`}
-                                alt=""
-                                className="src"
-                                style={{width: '100%', height: '100%'}}
-                            />
-
-                        );
-                    }
-                    return null;
-                })}
+                {/* {attachments && attachments.length > 0 ? (
+                    attachments.map((attachment, index) => {
+                        if (!attachment.endsWith('.pdf')) {
+                            return (
+                                <img
+                                    key={index}
+                                    src={`${baseUrl}/uploads/${attachment}`}
+                                    alt=""
+                                    className="src"
+                                    style={{ width: '100%', height: '100%' }}
+                                />
+                            );
+                        }
+                        return null;
+                    })
+                ) : ( */}
+                    <img
+                        src={dummy}
+                        alt="Default"
+                        className="src"
+                        style={{ width: '100%', height: '100%' }}
+                    />
+               {/* )} */}
             </div>
             <div className="donation-card-title">
                 <h2>
