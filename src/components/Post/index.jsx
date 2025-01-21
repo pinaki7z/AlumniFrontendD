@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded } from '@mui/icons-material';
 import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import { Avatar, TextField, IconButton, Typography } from '@mui/material';
+import { Avatar, TextField, IconButton, Typography, Menu, MenuItem } from '@mui/material';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -48,7 +48,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
-
+  const [anchorEl, setAnchorEl] = useState(null);
 
 
   const [loading, setLoading] = useState(false)
@@ -152,6 +152,29 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   //   return null; 
   // }
 
+  const handleShareClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleShareClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleShare = (platform) => {
+    const postUrl = `${window.location.href}/posts/${postId}`;
+    const shareUrls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`,
+      instagram: `https://www.instagram.com/`, // Instagram does not allow direct sharing via URL
+      linkedin: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(postUrl)}&title=${encodeURIComponent(username)}&summary=${encodeURIComponent(text)}`,
+    };
+
+    const url = shareUrls[platform];
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+    handleShareClose();
+  };
+
   return (
     <div className={`post ${className}`}>
       {loading ? (<div> Loading...</div>) : (<>
@@ -220,13 +243,18 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             } <h4>{isliked ? 'Liked' : 'Like'}</h4>
             </div>
 
-            <div className='action'>
+            <div className='action' onClick={handleShareClick}>
               <img src={share} alt='share-icon' className={`postAction grey`} />
               <h4>Share</h4>
             </div>
           </div>
         )}
       </>)}
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleShareClose}>
+        <MenuItem onClick={() => handleShare('facebook')}>Share to Facebook</MenuItem>
+        <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem>
+        <MenuItem onClick={() => handleShare('linkedin')}>Share to LinkedIn</MenuItem>
+      </Menu>
     </div>
   );
 }
