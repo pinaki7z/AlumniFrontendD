@@ -43,7 +43,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(`${baseUrl}/${entityType}/${entityId}/comments/${commentId}`);
-      onDeleteComment(commentId);
+      onDeleteComment(entityId);
     } catch (error) {
       console.error('Error deleting comment:', error);
     }
@@ -63,7 +63,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
         userId: userId,
       });
       toast.success('reported');
-      onCommentSubmit();
+      onCommentSubmit(postId);
     } catch (error) {
       console.error('Error adding reply:', error);
     }

@@ -771,7 +771,7 @@ const ProfilePage = () => {
               <div style={{ width: '40%', paddingTop: '100px' }}>
                 <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName} {profile.validated === true ? <HiMiniCheckBadge style={{ color: '#51a8f5' }} /> : null}</p>
                 <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPERADMIN'}</p>
-                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully.</p>
+                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>{member.aboutMe}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                   <div style={{ cursor: 'pointer' }}>
                     <Link to={`/groups/${profile._id}/joined-groups`} style={{ textDecoration: 'none', color: 'black' }}>
