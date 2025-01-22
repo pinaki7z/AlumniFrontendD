@@ -105,7 +105,7 @@ const LoginPage = ({ handleLogin }) => {
           : currentUrl;
 
         if (currentUrl.endsWith(loginPath)) {
-          window.location.href = baseUrl;
+          window.location.href = baseUrl + "/home";
         } else {
           window.location.href = window.location.href;
         }

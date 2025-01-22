@@ -13,7 +13,8 @@ import Button from 'react-bootstrap/Button';
 import React from 'react';
 import baseUrl from '../../config';
 import groupMembers from "../../images/Groups-c.svg";
-import groupPic from "../../images/d-group.jpg"
+import groupPic from "../../images/d-group.jpg";
+
 
 
 lineSpinner.register();

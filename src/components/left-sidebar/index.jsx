@@ -45,13 +45,13 @@ const LeftSidebar = () => {
     return (
         <div className='side-bar-resp'>
             <div style={{ textAlign: 'center', marginTop: '3em' }}>
-                <a href="/" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+                <a href="/home" style={{ textDecoration: 'none', cursor: 'pointer' }}>
                     <img src={io} alt="" width="230px" height="110px" style={{ borderRadius: '8px' }} />
                 </a>
             </div>
             <div className='sideBar'>
                 <ul style={{ paddingLeft: '0px', width: '100%' }}>
-                    <li><a href="/" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></a></li>
+                    <li><Link to="/home" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></Link></li>
                     {/* <li><Link to="/socialWall" style={{ textDecoration: 'none' }}><FaHeart style={{ color: '#fd546b' }} /><p>Social Wall</p></Link></li> */}
                     <li><Link to="/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>
                     <li><Link to="/groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link></li>

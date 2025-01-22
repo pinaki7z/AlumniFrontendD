@@ -19,6 +19,15 @@ import unliked from "../../images/unliked.svg";
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import profilePic from "../../images/profilepic.jpg";
+import {
+  FacebookShareButton,
+  LinkedinShareButton,
+} from "react-share";
+
+import {
+  FacebookIcon,
+  LinkedinIcon,
+} from "react-share";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
   console.log('video pathh',video)
@@ -60,6 +69,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   if (profile.profileLevel === 0) {
     admin = true;
   }
+  const shareUrl = window.location.href;
 
   console.log('groupIds in feed', _id, groupID)
 
@@ -251,9 +261,13 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         )}
       </>)}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleShareClose}>
-        <MenuItem onClick={() => handleShare('facebook')}>Share to Facebook</MenuItem>
-        <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem>
-        <MenuItem onClick={() => handleShare('linkedin')}>Share to LinkedIn</MenuItem>
+        <MenuItem>
+        <FacebookShareButton url={shareUrl}><FacebookIcon/></FacebookShareButton>
+        </MenuItem>
+        {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
+        <MenuItem >
+        <LinkedinShareButton url={shareUrl}><LinkedinIcon/></LinkedinShareButton>
+        </MenuItem>
       </Menu>
     </div>
   );

@@ -63,7 +63,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
         userId: userId,
       });
       toast.success('reported');
-      onCommentSubmit(postId);
+      onCommentSubmit(entityId);
     } catch (error) {
       console.error('Error adding reply:', error);
     }

@@ -30,10 +30,13 @@ import { GiConsoleController } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import Events from "./pages/Events";
 
+
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState(true);
   const profile = useSelector((state) => state.profile);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
   useEffect(() => {
     const token = cookies.token;
     if (token && token !== undefined) {
@@ -44,93 +47,89 @@ function App() {
     setLoading(false);
   }, [cookies.token]);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
   const handleLogin = () => {
     setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    if (cookies.token) {
+      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    }
+    setIsLoggedIn(false);
   };
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  const handleLogout = () => {
-    if (cookies.token) {
-      console.log("Cookie exists, removing...");
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-      console.log("Cookie removed");
-    }
-    setIsLoggedIn(false);
-    console.log("handle logout");
-  };
-
   return (
     <div className="App">
       <ToastContainer />
-      <div>
-        <Router>
-          <Routes>
-            <Route
-              path="/login"
-              element={<LoginPage handleLogin={handleLogin} />}
-            />
-            <Route
-              path="/register"
-              element={<RegisterPage handleLogin={handleLogin} />}
-            />
-            {console.log("logged in", isLoggedIn)}
-            {!isLoggedIn ? (
+      <Router>
+        <Routes>
+          {/* Route for the base URL */}
+          <Route path="/" element={<LandingPage handleLogin={handleLogin} />} />
+          
+          {/* Login and Register Routes */}
+          <Route
+            path="/login"
+            element={<LoginPage handleLogin={handleLogin} />}
+          />
+          <Route
+            path="/register"
+            element={<RegisterPage handleLogin={handleLogin} />}
+          />
+
+          {isLoggedIn && (
+            <>
+              {/* Home route for logged-in users */}
               <Route
-                path="*"
-                element={<LandingPage handleLogin={handleLogin} />}
+                path="/home/*"
+                element={<Dashboard handleLogout={handleLogout} />}
               />
-            ) : (
-              <>
-                <Route
-                  path="/*"
-                  element={<Dashboard handleLogout={handleLogout} />}
-                />
-                <Route
-                  path="/groups/:_id/invite/*"
-                  element={
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <LeftSidebar />
-                      <div style={{ marginLeft: "20%", width: "80%" }}>
-                        <TopBar handleLogout={handleLogout} />
-                        <JoinGroup />
-                      </div>
+              <Route
+                path="/groups/:_id/invite/*"
+                element={
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <LeftSidebar />
+                    <div style={{ marginLeft: "20%", width: "80%" }}>
+                      <TopBar handleLogout={handleLogout} />
+                      <JoinGroup />
                     </div>
-                  }
-                />
-                <Route
-                  path="/events/:_id/*"
-                  element={
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <LeftSidebar />
-                      <div style={{ marginLeft: "20%", width: "80%" }}>
-                        <TopBar handleLogout={handleLogout} />
-                        <Events />
-                      </div>
+                  </div>
+                }
+              />
+              <Route
+                path="/events/:_id/*"
+                element={
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <LeftSidebar />
+                    <div style={{ marginLeft: "20%", width: "80%" }}>
+                      <TopBar handleLogout={handleLogout} />
+                      <Events />
                     </div>
-                  }
-                />
-              </>
-            )}
-          </Routes>
-        </Router>
-      </div>
+                  </div>
+                }
+              />
+            </>
+          )}
+
+          {/* Catch-all route to redirect to LandingPage */}
+          <Route path="*" element={<LandingPage handleLogin={handleLogin} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }

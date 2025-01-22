@@ -86,7 +86,7 @@ export default function Navbarr() {
 
   const [expanded, setExpanded] = useState(false);
   return (
-    <Navbar collapseOnSelect expand="lg" className="navbar-light bg-white fixed-top "  expanded={expanded}>
+    <Navbar collapseOnSelect expand="lg" className="navbar-light bg-white fixed-top " expanded={expanded}>
       <Container>
         {/* <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand> */}
         <Link to="#home" className="navbar-brand">
@@ -98,11 +98,11 @@ export default function Navbarr() {
             priority
           />
         </Link>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav"  onClick={() => setExpanded((prev) => !prev)} />
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={() => setExpanded((prev) => !prev)} />
         <Navbar.Collapse id="responsive-navbar-nav" className={expanded ? "custom-collapse expanded" : "custom-collapse"}>
           <Nav className="me-auto" style={{ marginLeft: 'auto' }}>
-            <Nav.Link href="#whyChoose" style={{fontWeight: '500'}}>Why Choose</Nav.Link>
-            <Nav.Link href="#whatMakes" style={{fontWeight: '500'}}>What Makes</Nav.Link>
+            <Nav.Link href="#whyChoose" style={{ fontWeight: '500' }}>Why Choose</Nav.Link>
+            <Nav.Link href="#whatMakes" style={{ fontWeight: '500' }}>What Makes</Nav.Link>
             {/* <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -114,10 +114,10 @@ export default function Navbarr() {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown> */}
-            <Nav.Link href="#coreFeatures" style={{fontWeight: '500'}}>Core Features</Nav.Link>
-            <Nav.Link href="#contactUs" style={{fontWeight: '500'}}>Contact Us</Nav.Link>
+            <Nav.Link href="#coreFeatures" style={{ fontWeight: '500' }}>Core Features</Nav.Link>
+            <Nav.Link href="#contactUs" style={{ fontWeight: '500' }}>Contact Us</Nav.Link>
           </Nav>
-          <Nav>
+          {/* <Nav>
             <Nav.Link href="https://www.facebook.com/insideoutconsult/"><div className="w-6 h-6 bg-green-500" >
               <IoLogoFacebook color="#38A750" style={{ width: "30px", height: "30px" }} />
             </div></Nav.Link>
@@ -127,7 +127,12 @@ export default function Navbarr() {
             <Nav.Link href="https://www.linkedin.com/company/inside-out-value-consultancy/"><div className="w-6 h-6 bg-green-500">
               <FaLinkedin color="#38A750" style={{ width: "30px", height: "30px" }} />
             </div></Nav.Link>
-          </Nav>
+          </Nav> */}
+          <Link to="/login" style={{ textDecoration: 'none' }}>
+            <button className="btn" style={{ backgroundColor: '#4CAF50', color: 'white' }}>
+              Login to Alumnify
+            </button>
+          </Link>
         </Navbar.Collapse>
       </Container>
     </Navbar>
