@@ -69,9 +69,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   if (profile.profileLevel === 0) {
     admin = true;
   }
-  const shareUrl = window.location.href;
+  const shareUrl = "https://www.alumnify.in/home/groups";
 
-  console.log('groupIds in feed', _id, groupID)
 
   const handlePlay = async () => {
     if (videoRef.current) {

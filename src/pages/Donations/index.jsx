@@ -21,9 +21,9 @@ const Donations = () => {
   const buttontext1 = 'Browse Businesses';
   const buttontext2 = 'My Business Requests';
   const buttontext3 = 'Business Connect';
-  const buttontext1Link = "/donations";
-  const buttontext2Link = "/donations/my-donation-requests";
-  const buttontext3Link = "/donations/businessConnect";
+  const buttontext1Link = "/home/donations";
+  const buttontext2Link = "/home/donations/my-donation-requests";
+  const buttontext3Link = "/home/donations/businessConnect";
   const [donations, setDonations] = useState([]);
   const [userDonations, setUserDonations] = useState([]);
   const [totalDonations, setTotalDonations] = useState(0);
@@ -88,7 +88,7 @@ const Donations = () => {
       {admin && (
         <div style={{ margin: '1rem 0', textAlign: 'right' }}>
           <button
-            onClick={() => navigate('/donations/create')}
+            onClick={() => navigate('/home/donations/create')}
             style={{
               padding: '10px 20px',
               backgroundColor: '#6c63ff',

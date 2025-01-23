@@ -28,11 +28,11 @@ const JobPost = ({ userId, id, jobTitle, title, titleS, description, salaryMin, 
     const handleClick = () => {
         console.log('titee', title)
         if (type === 'Job') {
-            navigateTo(`/jobs/${id}/Jobs`);
+            navigateTo(`/home/jobs/${id}/Jobs`);
         }
 
         if (type === 'Internship') {
-            navigateTo(`/internships/${id}/Internships`);
+            navigateTo(`/home/internships/${id}/Internships`);
         }
     }
     const [modalShow, setModalShow] = React.useState(false);

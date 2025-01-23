@@ -207,7 +207,7 @@ const LoginPage = ({ handleLogin }) => {
                     </div>
                     <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
                   </div>
-                  <div className="forgot-password">Forgot Password?</div>
+                  <div className="forgot-password" onClick={() => navigateTo('/forgot-password')} style={{cursor: 'pointer'}}>Forgot Password?</div>
                 </div>
               </div>
             </div>

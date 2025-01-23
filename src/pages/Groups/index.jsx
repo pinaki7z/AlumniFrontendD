@@ -23,8 +23,8 @@ const Groups = () => {
   const buttontext1 = 'Suggested Groups';
   const buttontext2 = 'Joined Groups';
   const buttontext3 = '';
-  const buttontext1Link = "/groups/suggested-groups";
-  const buttontext2Link = `/groups/${profile._id}/joined-groups`;
+  const buttontext1Link = "/home/groups/suggested-groups";
+  const buttontext2Link = `/home/groups/${profile._id}/joined-groups`;
   const buttontext3Link = ``;
   const [groupType, setGroupType] = useState(""); 
   const [searchQuery, setSearchQuery] = useState("");

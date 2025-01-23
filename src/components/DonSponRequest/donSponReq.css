@@ -4,7 +4,7 @@
 }
 
 .custom-placeholder::placeholder {
-  color: #71be95;
+  color: #a98de3;
   ;
 }
 
@@ -40,6 +40,16 @@
   font-weight: bold;
   text-align: center;
   transition: color .2s ease-in-out;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 input[type=file] {

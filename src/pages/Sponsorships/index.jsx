@@ -20,8 +20,8 @@ const Sponsorships = () => {
   const icon = <GoSponsorTiers />;
   const buttontext1 = 'Browse Sponsorships';
   let buttontext2 = '';
-  const buttontext1Link = "/sponsorships";
-  const buttontext2Link = "/sponsorships/my-sponsorship-requests";
+  const buttontext1Link = "/home/sponsorships";
+  const buttontext2Link = "/home/sponsorships/my-sponsorship-requests";
   const [donations, setDonations] = useState([]);
   const [userDonations, setUserDonations] = useState([]);
   const [totalDonations, setTotalDonations] = useState(0);
@@ -93,7 +93,7 @@ const Sponsorships = () => {
       {admin && (
         <div style={{ margin: '1rem 0', textAlign: 'right' }}>
           <button
-            onClick={() => navigate('/sponsorships/create')}
+            onClick={() => navigate('/home/sponsorships/create')}
             style={{
               padding: '10px 20px',
               backgroundColor: '#6c63ff',

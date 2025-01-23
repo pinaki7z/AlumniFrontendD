@@ -562,45 +562,45 @@ const IndividualJobPost = () => {
                                     </div>
                                     <div>
                                         <span className="key">Salary</span>
-                                        <span className="value">{jobs.salary || "N/A"}</span>
-                                    </div>
+                                        <span className="value">{jobs.salaryMin} - {jobs.salaryMax}</span>
+                                </div>
 
-                                </li>
-                            </ul>
-                            <div className="ijp-candidates-button">
-                                {jobs.userId === profile._id ? (
+                            </li>
+                        </ul>
+                        <div className="ijp-candidates-button">
+                            {jobs.userId === profile._id ? (
+                                <>
+                                    {viewCandidatesButton}
+
+                                </>
+                            ) : (
+                                isApplied ? (
                                     <>
-                                        {viewCandidatesButton}
-
+                                        <button style={{ backgroundColor: '#a3e3ff' }}>Applied</button>
+                                        {/* <span style={{fontSize: '15px', color: 'blueviolet', cursor: 'default'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{profile.appliedJobs[0].status? profile.appliedJobs[0].status: null}</span> */}
+                                    </>
+                                ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
+                                    <>
                                     </>
                                 ) : (
-                                    isApplied ? (
-                                        <>
-                                            <button style={{ backgroundColor: '#a3e3ff' }}>Applied</button>
-                                            {/* <span style={{fontSize: '15px', color: 'blueviolet', cursor: 'default'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{profile.appliedJobs[0].status? profile.appliedJobs[0].status: null}</span> */}
-                                        </>
-                                    ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
-                                        <>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
-                                            <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
-                                            <MyVerticallyCenteredModal
-                                                show={modalShow}
-                                                onHide={() => setModalShow(false)}
-                                            />
-                                        </>
-                                    )
-                                )}
-                            </div>
-                            <CandidatesModal />
+                                    <>
+                                        <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
+                                        <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
+                                        <MyVerticallyCenteredModal
+                                            show={modalShow}
+                                            onHide={() => setModalShow(false)}
+                                        />
+                                    </>
+                                )
+                            )}
                         </div>
+                        <CandidatesModal />
                     </div>
                 </div>
             </div>
-            {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */}
         </div>
+            {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */ }
+        </div >
     )
 
 

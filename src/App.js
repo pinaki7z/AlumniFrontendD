@@ -29,7 +29,8 @@ import IndividualGroup from "./components/Groups/IndividualGroup";
 import { GiConsoleController } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import Events from "./pages/Events";
-
+import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
+import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
@@ -68,8 +69,11 @@ function App() {
       <Router>
         <Routes>
           {/* Route for the base URL */}
-          <Route path="/*" element={<LandingPage handleLogin={handleLogin} />} />
-          
+          <Route
+            path="/*"
+            element={<LandingPage handleLogin={handleLogin} />}
+          />
+
           {/* Login and Register Routes */}
           <Route
             path="/login"
@@ -78,6 +82,12 @@ function App() {
           <Route
             path="/register"
             element={<RegisterPage handleLogin={handleLogin} />}
+          />
+
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/reset-password/:userId/:token"
+            element={<PasswordReset />}
           />
 
           {isLoggedIn && (
