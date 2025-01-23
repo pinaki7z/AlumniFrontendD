@@ -53,19 +53,19 @@ const LeftSidebar = () => {
                 <ul style={{ paddingLeft: '0px', width: '100%' }}>
                     <li><Link to="/home" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></Link></li>
                     {/* <li><Link to="/socialWall" style={{ textDecoration: 'none' }}><FaHeart style={{ color: '#fd546b' }} /><p>Social Wall</p></Link></li> */}
-                    <li><Link to="/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>
-                    <li><Link to="/groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link></li>
+                    <li><Link to="/home/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>
+                    <li><Link to="/home/groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link></li>
                     {/* <li><Link to="/chat" style={{ textDecoration: 'none' }}><MdSettings style={{ color: '#b744b7' }} /><p>Chat</p></Link></li> */}
-                    <li><Link to="/forums" style={{ textDecoration: 'none' }}><MdForum className="dashboard-icon" /><p>Forums</p></Link></li>
-                    <li><Link to="/news" style={{ textDecoration: 'none' }}><BiNews className="dashboard-icon" /><p>News</p></Link></li>
-                    <li><Link to="/donations" style={{ textDecoration: 'none' }}><LuHeartHandshake className="dashboard-icon" /><p>Business Connect</p></Link></li>
-                    <li><Link to="/sponsorships" style={{ textDecoration: 'none' }}><GoSponsorTiers className="dashboard-icon" /><p>Sponsorships</p></Link></li>
-                    <li><Link to="/events" style={{ textDecoration: 'none' }}><MdOutlineEvent className="dashboard-icon" /><p>Events</p></Link></li>
-                    <li><Link to="/jobs" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Jobs/Internships</p></Link></li>
-                    <li><Link to="/photo-gallery" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Photo Gallery</p></Link></li>
-                    <li><Link to="/guidance" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Guidance</p></Link></li>
+                    <li><Link to="/home/forums" style={{ textDecoration: 'none' }}><MdForum className="dashboard-icon" /><p>Forums</p></Link></li>
+                    <li><Link to="/home/news" style={{ textDecoration: 'none' }}><BiNews className="dashboard-icon" /><p>News</p></Link></li>
+                    <li><Link to="/home/donations" style={{ textDecoration: 'none' }}><LuHeartHandshake className="dashboard-icon" /><p>Business Connect</p></Link></li>
+                    <li><Link to="/home/sponsorships" style={{ textDecoration: 'none' }}><GoSponsorTiers className="dashboard-icon" /><p>Sponsorships</p></Link></li>
+                    <li><Link to="/home/events" style={{ textDecoration: 'none' }}><MdOutlineEvent className="dashboard-icon" /><p>Events</p></Link></li>
+                    <li><Link to="/home/jobs" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Jobs/Internships</p></Link></li>
+                    <li><Link to="/home/photo-gallery" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Photo Gallery</p></Link></li>
+                    <li><Link to="/home/guidance" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Guidance</p></Link></li>
                     {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}
-                    <li><Link to="/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>
+                    <li><Link to="/home/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>
                     {/* <li><Link to="/settings" style={{ textDecoration: 'none' }}><MdSettings className="dashboard-icon" /><p>Settings</p></Link></li> */}
                 </ul>
             </div>

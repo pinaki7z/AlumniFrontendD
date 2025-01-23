@@ -68,7 +68,7 @@ function App() {
       <Router>
         <Routes>
           {/* Route for the base URL */}
-          <Route path="/" element={<LandingPage handleLogin={handleLogin} />} />
+          <Route path="/*" element={<LandingPage handleLogin={handleLogin} />} />
           
           {/* Login and Register Routes */}
           <Route
