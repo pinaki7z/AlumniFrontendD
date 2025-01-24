@@ -373,15 +373,17 @@ export const NotificationsP = () => {
     groupId,
     memberId,
     type,
-    toDelete
+    toDelete,
+    requestedUserName
   ) => {
     console.log(
-      "notificationId, groupId, memberId, type, toDelete",
+      "notificationId, groupId, memberId, type, toDelete,requested username",
       notificationId,
       groupId,
       memberId,
       type,
-      toDelete
+      toDelete,
+      requestedUserName
     );
     setLoading(true);
     console.log("type", type);
@@ -418,10 +420,10 @@ export const NotificationsP = () => {
         console.log("group");
         const response = await axios.put(url, {
           members: {
-            userId: profile._id,
+            userId: memberId,
             profilePicture: profile.profilePicture,
-            userName: `${profile.firstName} ${profile.lastName}`,
-            profileLevel: profile.profileLevel,
+            userName: requestedUserName,
+            //profileLevel: profile.profileLevel,
           },
           notificationId: notificationId,
           toDelete,
@@ -770,7 +772,8 @@ export const NotificationsP = () => {
                                 : notification.forumId
                                 ? "forum"
                                 : "group",
-                              false
+                              false,
+                              notification.requestedUserName
                             )
                           }
                           className="border px-3 w-20 p-1 rounded hover:bg-gray-400 font-semibold  cursor-pointer  text-center bg-gray-300 "

@@ -113,6 +113,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           };
           const response = await axios.post(`${baseUrl}/groups/createRequest`, formData, config);
           setModalShow(false);
+          getRequest();
           toast.success('requested');
           if (response.data.requested === true) {
 
@@ -212,7 +213,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           group.businessConnect === true ? (
           <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#efeff0'
           }}>
-            <Link to={`/groups/${group._id}`} style={{ textDecoration: 'none', color: 'black' }}>
+            <Link to={`/home/groups/${group._id}`} style={{ textDecoration: 'none', color: 'black' }}>
               <div className='display-post-image' style={{ position: 'relative' }}>
                 {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
                 <div style={{

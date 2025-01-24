@@ -350,7 +350,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const { _id } = useParams();
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
-  const [picturePath, setPicturePath] = useState([]);
+  const [picturePath, setPicturePath] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [posts, setPosts] = useState([]);
