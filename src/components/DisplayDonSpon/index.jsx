@@ -20,14 +20,19 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
     const navigateTo = useNavigate();
     const [displayCount, setDisplayCount] = useState(2);
     console.log('sponsorships', donations)
+   
 
     useEffect(() => {
-        if (location.pathname === '/donations/my-donation-requests' || location.pathname === '/sponsorships/my-sponsorship-requests') {
+        console.log('checking for editing')
+        if (location.pathname === '/home/donations/my-donation-requests' || location.pathname === '/home/sponsorships/my-sponsorship-requests') {
+            console.log('checking for edit')
             setEdit(true);
         } else {
             setEdit(false)
         }
     }, [location.pathname]);
+
+    console.log('EDIT', edit)
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -99,7 +104,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
                                 </div>
                                 {edit ? (
                                     <div className="edit-delete-buttons">
-                                        <Link to={`/${name}/edit/${donation._id}`} style={{ width: 'calc(50% - 18px)' }}>
+                                        <Link to={`/home/${name}/edit/${donation._id}`} style={{ width: 'calc(50% - 18px)' }}>
                                             <button style={{ width: '100%' }}>Edit</button>
                                         </Link>
                                         <button onClick={() => handleDelete(donation._id)} style={{ backgroundColor: 'rgb(244 67 54 / 20%)', color: '#f44336' }}>Delete</button>
