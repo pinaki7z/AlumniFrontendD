@@ -356,8 +356,9 @@ import "./notificationsP.css";
 import { Link } from "react-router-dom";
 import baseUrl from "../../config";
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
 
-export const NotificationsP = () => {
+export const NotificationsP = ({ sendNotificationCount }) => {
   const [notificationList, setNotificationList] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
@@ -367,6 +368,31 @@ export const NotificationsP = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [user, setUser] = useState("");
   let deleteComment;
+
+
+  const handleAddLink = async (notificationId, link,department) => {
+         console.log('Notification Link:', link);
+         setLoading(true);
+         try {
+             const response = await axios.post(`${baseUrl}/images/addLink`, {
+                 notificationId,
+                 link,
+                 userId: profile._id,
+                 department
+             });
+             if (response.status === 200) {
+                 console.log('Link added successfully');
+                 toast.success('Added to Photo Gallery')
+                 setIsAdded(true);
+             } else {
+                 console.error('Failed to add the link');
+             }
+             setLoading(false);
+         } catch (error) {
+             console.error('Error adding link:', error);
+             setLoading(false);
+         }
+     };
 
   const handleAddMember = async (
     notificationId,
@@ -486,6 +512,7 @@ export const NotificationsP = () => {
         (notification) => notification.status === false
       );
       setNotificationList(filteredData);
+      sendNotificationCount(filteredData.length);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching request:", error);
@@ -626,7 +653,14 @@ export const NotificationsP = () => {
               {filteredNotifications.map((notification) => (
                 <div key={notification._id}>
                   <div className="text-lg py-4 font-semibold">
-                    {notification.ID ? (
+                    {notification.link ? (
+                                         <span>
+                                            <Link to={`/members/${notification.userId}`} className="notification-link">
+                                                 {notification.requestedUserName}
+                                             </Link>{" "}
+                                             has requested to add <a href={notification.link} target="_blank" rel="noopener noreferrer">{notification.link}</a> to the photo gallery.
+                                         </span>
+                                     ) :notification.ID ? (
                       <div>
                         <Link
                           to={`/members/${notification.userId}`}
@@ -740,7 +774,11 @@ export const NotificationsP = () => {
                   </div>
                   <div className="flex gap-4 mb-3 items-center justify-start ">
                     <div className="">
-                      {notification.commentId ? (
+                      {notification.link ? (
+                                         <button className="accept-button" onClick={() => handleAddLink(notification._id, notification.link,notification.department)}>
+                                             Accept Link
+                                         </button>
+                                     ) : notification.commentId ? (
                         <div
                           onClick={() =>
                             handleComment(
