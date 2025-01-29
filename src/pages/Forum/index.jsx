@@ -123,7 +123,7 @@ const Forum = () => {
             </div>
           </div>
           <div style={{ textAlign: 'right', paddingTop: '20px', paddingBottom: '20px' }}>
-            <Link to="/forums/create">
+            <Link to="/home/forums/create">
               <button style={{ width: '126px' }}>Create</button>
             </Link>
           </div>

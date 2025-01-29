@@ -172,7 +172,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           )}
         </div>
         <Link
-          to={isFollowPresent ? `/members/${member.userId}` : `/members/${member._id}`}
+          to={isFollowPresent ? `/home/members/${member.userId}` : `/home/members/${member._id}`}
           style={{ textDecoration: "none", color: "black" }}
         >
           <div style={{ textAlign: 'center' }}>

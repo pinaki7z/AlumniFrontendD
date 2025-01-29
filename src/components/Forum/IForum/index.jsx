@@ -205,9 +205,10 @@ const IForum = () => {
       <div className="forum-post-container">
         {forum && (
           <>
-            {(forum.userId === profile._id || admin) && forum.type === 'Private' && (
+            {(forum.userId === profile._id || profile.profileLevel === 0) && (
               <div className='manage-members'>
                 <p className='manage-members-btn' onClick={() => setShowModal(true)}>Manage forum members</p>
+                <Link to={`/home/forums/edit/${forum._id}`}><p className='manage-members-btn' >Edit</p></Link>
               </div>
             )}
             <div className="forum-post">

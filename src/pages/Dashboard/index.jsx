@@ -137,6 +137,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
             <Route path="/forums/*" element={<Forum />} />
             <Route path="/forums/create" element={<CreateForum />} />
+            <Route path="/forums/edit/:id" element={<CreateForum />} />
             <Route path="/forums/:id/*" element={<IForum />} />
             <Route path="/profile/:id/following" element={<Following />} />
             <Route path="/profile/:id/followers" element={<Followers />} />

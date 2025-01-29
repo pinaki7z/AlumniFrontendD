@@ -25,7 +25,7 @@ const DisplayForum = ({ forumData, loading, admin }) => {
               <tr key={forum.id}>
                 <td>
                   <div>
-                    <Link to={`/forums/${forum._id}`} style={{ textDecoration: 'none' }}>
+                    <Link to={`/home/forums/${forum._id}`} style={{ textDecoration: 'none' }}>
                       <h4 style={{ color: '#3A3A3A', fontSize: '18px',fontWeight: '600', fontFamily: 'Inter' }}>{forum.title}</h4>
                     </Link>
                   </div>

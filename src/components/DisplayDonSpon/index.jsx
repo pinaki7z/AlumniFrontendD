@@ -80,7 +80,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
             <div className="donSpon-container">
                 {donations !== undefined && donations.length > 0 ? (
                     donations.map((donation) => (
-                        <Link to={`/${name}/${donation._id}`} style={{ textDecoration: 'none', color: 'black',width: '48%' }}>
+                        <Link to={`/home/${name}/${donation._id}`} style={{ textDecoration: 'none', color: 'black',width: '48%' }}>
                             <div key={donation._id} className='donSpon-card'>
                                 <div className="donation-card-image">
                                     <img src={donation.picturePath ? donation.picturePath : picture} alt="" className="src" />

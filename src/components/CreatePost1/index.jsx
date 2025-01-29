@@ -78,8 +78,8 @@ function MyVerticallyCenteredModal(props) {
       location,
       department: profile.department,
       createGroup,
-      groupEvent : _id ? true : false,
-      groupId : _id ? _id : null,
+      groupEvent: _id ? true : false,
+      groupId: _id ? _id : null,
       // Include price type and amount based on selection
       priceType,
       amount: priceType === "paid" ? amount : null, // Only include amount if it's paid
@@ -358,7 +358,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const [showModal, setShowModal] = useState(false);
   const [cookie, setCookie] = useCookies(["access_token"]);
   const profile = useSelector((state) => state.profile);
-  const [showPollModal, setShowPollModal] = useState(false); 
+  const [showPollModal, setShowPollModal] = useState(false);
   const [modalShow, setModalShow] = React.useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -494,14 +494,14 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       for (let pair of formData.entries()) {
         const key = pair[0];
         const value = pair[1];
-      
+
         // Check if the key is 'picturePath' and if the value is an array
         if (key === "picturePath" && Array.isArray(value)) {
           formDataObject[key] = value.join(","); // Convert array to a comma-separated string
         } else {
           formDataObject[key] = value; // Assign the value as it is for other keys
         }
-      
+
         console.log("FORMDATAOBJECT:", formDataObject);
       }
 
@@ -566,7 +566,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   };
 
   const handleCreatePoll = async (question, options) => {
-    console.log('question1',question, options);
+    console.log('question1', question, options);
     const pollData = {
       userId: profile._id,
       userName: `${profile.firstName} ${profile.lastName}`,
@@ -596,24 +596,44 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   return (
     <div className={`social-media-post ${isExpanded ? 'expanded' : ''}`}>
       <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
-      <div className={`card ${isExpanded ? 'expanded' : ''}`} style={{ border: 'none',paddingTop: '50px' }}>
-        <div className="card-header" style={{ backgroundColor: 'white',borderBottom: 'none',padding: '0px' }}>
+      <div className={`card ${isExpanded ? 'expanded' : ''}`} style={{ border: 'none', paddingTop: '50px' }}>
+        <div className="card-header" style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src={profile.profilePicture || picture} alt='Profile' width='75px' height='75px' style={{ borderRadius: '50%' }} />
-            <div style={{borderBottom: '1px solid #ccc', width: '93%'}}>
-              <input
-                type="text"
+            <img
+              src={profile.profilePicture || picture}
+              alt='Profile'
+              width='75px'
+              height='75px'
+              style={{ borderRadius: '50%' }}
+            />
+            <div style={{ borderBottom: '1px solid #ccc', width: '93%' }}>
+              <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Whats Going on??"
-                
+                placeholder="What's going on??"
+                rows={1} // Set the default number of rows
+                style={{
+                  width: '100%',
+                  border: 'none',
+                  outline: 'none',
+                  resize: 'none',
+                  padding: '8px',
+                  fontSize: '16px',
+                  fontFamily: 'inherit'
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault(); // Prevents new line
+                    handleSubmit(); // Call the submit function
+                  }
+                }}
               />
             </div>
           </div>
         </div>
         <div className={`img-job-vide ${isExpanded ? 'expanded' : ''}`}>
-          <label style={{ border: '1px solid #71be95' ,color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', display: 'flex', alignItems: 'center', justifyContent: 'center',fontSize: '15px', gap: '5px',width: '18%' }}>
-          <img src={gallery} alt="" srcset=""/><p className="d-none d-lg-block" style={{marginBottom: '0px'}}>Image</p>
+          <label style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', gap: '5px', width: '18%' }}>
+            <img src={gallery} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Image</p>
             <input
               type='file'
               accept='image/*'
@@ -622,11 +642,11 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
               multiple
             />
           </label>
-          <button style={{ backgroundColor: 'white', color: 'black', padding: '5px 10px', marginLeft: '0px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '15px', width: '18%', borderRadius: '3em',border: '1px solid #71be95'  }} onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="d-none d-lg-block" style={{marginBottom: '0px'}}>Poll</p></button>
-  
+          <button style={{ backgroundColor: 'white', color: 'black', padding: '5px 10px', marginLeft: '0px', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '15px', width: '18%', borderRadius: '3em', border: '1px solid #71be95' }} onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Poll</p></button>
 
-          <label style={{ border: '1px solid #71be95' , color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px',display: 'flex', alignItems: 'center', justifyContent: 'center',width: '18%', gap: '5px' }}>
-          <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{marginBottom: '0px'}}>Video</p>
+
+          <label style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
+            <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Video</p>
             <input
               type='file'
               accept='video/*'
@@ -634,17 +654,17 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
               onChange={handleFileInputChange}
             />
           </label>
-          {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95' , color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px',display: 'flex', alignItems: 'center', justifyContent: 'center',width: '18%', gap: '5px' }}>
-          <img src={video} alt="" srcset="" />Event
+          {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
+            <img src={video} alt="" srcset="" />Event
           </label>}
-          <div style={{ marginTop: '4px',marginLeft: 'auto' }}>
-              <button onClick={handleSubmit} style={{
-                float: 'right', color: '#ffffff',
-                backgroundColor: '#71be95',
-                borderColor: '#174873',
-                fontSize: '16px'
-              }}>Post</button>
-            </div>
+          <div style={{ marginTop: '4px', marginLeft: 'auto' }}>
+            <button onClick={handleSubmit} style={{
+              float: 'right', color: '#ffffff',
+              backgroundColor: '#71be95',
+              borderColor: '#174873',
+              fontSize: '16px'
+            }}>Post</button>
+          </div>
         </div>
       </div>
       <PollModal
@@ -653,14 +673,14 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
         onCreatePoll={handleCreatePoll}
       />
       <MyVerticallyCenteredModal
-          show={modalShow}
-          isEditing={isEditing}
-          selectedEvent={selectedEvent}
-          onHide={() => {
-            setModalShow(false);
-            setSelectedEventDetails(null);
-          }}
-        />
+        show={modalShow}
+        isEditing={isEditing}
+        selectedEvent={selectedEvent}
+        onHide={() => {
+          setModalShow(false);
+          setSelectedEventDetails(null);
+        }}
+      />
     </div>
 
   );

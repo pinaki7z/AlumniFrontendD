@@ -58,7 +58,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const ListViewItem = ({ member }) => {
     return (
       <Link
-        to={`/members/${member._id}`}
+        to={`/home/members/${member._id}`}
         style={{ textDecoration: "none", color: "black" }}
       >
         <div className="list-view-item">
@@ -301,7 +301,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
             {viewMode === 'grid' ? (
               <div className="pro grid-view">
                 {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-                  <Link to={`/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
+                  <Link to={`/home/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
                     <div
                       style={{
                         border: '2px dotted #71be95',
