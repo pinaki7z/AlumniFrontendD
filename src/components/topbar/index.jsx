@@ -20,7 +20,8 @@ import { IoSearchSharp } from "react-icons/io5";
 import { SearchedResults } from '../SearchedResults';
 import { lineSpinner } from 'ldrs';
 import baseUrl from '../../config';
-import profilePic from "../../images/profilepic.jpg"
+import profilePic from "../../images/profilepic.jpg";
+import { NotificationsP } from '../NotificationsP';
 
 lineSpinner.register()
 
@@ -63,7 +64,7 @@ const TopBar = ({ handleLogout }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
-                //!notificationsOptionsRef.current.contains(event.target) &&
+                !notificationsOptionsRef.current.contains(event.target) &&
                 !profileOptionsRef.current.contains(event.target) &&
                 !(event.target.closest('.notifications-card'))
             ) {
@@ -114,7 +115,7 @@ const TopBar = ({ handleLogout }) => {
             //     throw new Error('Network response was not ok');
             // }
             // const data = await response.json();
-            navigateTo(`/?search=${encodeURIComponent(searchText)}`);
+            navigateTo(`/home/?search=${encodeURIComponent(searchText)}`);
             //setSearchResults(data);
             setSearchLoading(false);
         } catch (error) {
@@ -226,7 +227,7 @@ const TopBar = ({ handleLogout }) => {
                                 No New Messages
                             </div>
                         )}
-                        {/* <div ref={notificationsOptionsRef}>
+                        <div ref={notificationsOptionsRef}>
                             <FaBell style={{ cursor: 'pointer', color: '#0a3a4c' }} onClick={() => {
                                 setShowProfileOptions(false);
                                 setShowMessages(false);
@@ -236,9 +237,9 @@ const TopBar = ({ handleLogout }) => {
                         {showNotifications && (
                             <div className="notifications-card">
 
-                                <Notifications />
+                                <NotificationsP />
                             </div>
-                        )} */}
+                        )}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1vw', cursor: 'pointer' }} ref={profileOptionsRef}
                             onClick={() => {
                                 console.log('clicked image')
@@ -251,7 +252,7 @@ const TopBar = ({ handleLogout }) => {
                         </div>
                         {showProfileOptions && (
                             <ul className="profile-options" >
-                                <a href="/profile" style={{ textDecoration: 'none', color: 'black' }}><li>Profile</li></a>
+                                <a href="/home/profile" style={{ textDecoration: 'none', color: 'black' }}><li>Profile</li></a>
                                 {/* {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                     <a href="/settings" style={{ textDecoration: 'none', color: 'black' }}>
                                         <li>Settings</li>

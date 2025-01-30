@@ -69,7 +69,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   if (profile.profileLevel === 0) {
     admin = true;
   }
-  const shareUrl = "https://www.alumnify.in/home/groups";
+  const shareUrl = "https://alumnify.in/home";
+
 
 
   const handlePlay = async () => {

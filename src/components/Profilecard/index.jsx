@@ -188,11 +188,11 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
             <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
               <div>
                 <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Followers</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>0</p>
+                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member.followers.length}</p>
               </div>
               <div>
                 <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Following</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>0</p>
+                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member.following.length}</p>
               </div>
             </div>
           </div>

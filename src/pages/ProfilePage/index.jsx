@@ -774,19 +774,19 @@ const ProfilePage = () => {
                 <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>{member.aboutMe}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                   <div style={{ cursor: 'pointer' }}>
-                    <Link to={`/groups/${profile._id}/joined-groups`} style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link to={`/home/groups/${profile._id}/joined-groups`} style={{ textDecoration: 'none', color: 'black' }}>
                       <p>Groups</p>
                       <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>{profile.groupNames.length}</p>
                     </Link>
                   </div>
                   <div style={{ cursor: 'pointer' }}>
-                    <Link to={`/profile/${profile._id}/followers`} style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link to={`/home/profile/${profile._id}/followers`} style={{ textDecoration: 'none', color: 'black' }}>
                       <p>Followers</p>
                       <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>{profile.followers.length}</p>
                     </Link>
                   </div>
                   <div style={{ cursor: 'pointer' }}>
-                    <Link to={`/profile/${profile._id}/following`} style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link to={`/home/profile/${profile._id}/following`} style={{ textDecoration: 'none', color: 'black' }}>
                       <p>Following</p>
                       <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>{profile.following.length}</p>
                     </Link>
@@ -826,7 +826,7 @@ const ProfilePage = () => {
                     {profile && profile.profilePicture ? (
                       <p><img src={check} alt="" srcset="" /> Profile Picture Added</p>
                     ) : (
-                      <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+                      <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                         <li><HiMiniPlusCircle style={{ width: '19px', height: '19px' }} /> Add your profile picture</li>
                       </Link>
                     )}
@@ -835,7 +835,7 @@ const ProfilePage = () => {
                     {profile && profile.firstName ? (
                       <p><img src={check} alt="" srcset="" />  Name: {profile.firstName}</p>
                     ) : (
-                      <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+                      <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                         <li><HiMiniPlusCircle style={{ width: '19px', height: '19px' }} /> Add your name</li>
                       </Link>
                     )}
@@ -844,7 +844,7 @@ const ProfilePage = () => {
                     {profile && profile.workExperience && profile.workExperience.length > 0 ? (
                       <p><img src={check} alt="" srcset="" />  Workplace: {findCurrentWorkingAt()}</p>
                     ) : (
-                      <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+                      <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                         <li><HiMiniPlusCircle style={{ width: '19px', height: '19px' }} /> Add your workplace</li>
                       </Link>
                     )}
@@ -853,7 +853,7 @@ const ProfilePage = () => {
                     {profile && profile.country ? (
                       <p><img src={check} alt="" srcset="" /> Country: {profile.country}</p>
                     ) : (
-                      <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+                      <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                         <li><HiMiniPlusCircle style={{ width: '19px', height: '19px' }} /> Add your country</li>
                       </Link>
                     )}
@@ -862,7 +862,7 @@ const ProfilePage = () => {
                     {profile && profile.city ? (
                       <p><img src={check} alt="" srcset="" />  Address: {profile.city}</p>
                     ) : (
-                      <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+                      <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                         <li><HiMiniPlusCircle style={{ width: '19px', height: '19px' }} />  Add your address</li>
                       </Link>
                     )}
@@ -917,7 +917,7 @@ const ProfilePage = () => {
               </div>
 
             </div> */}
-            <Link to='/profile/workExperience' style={{ textDecoration: 'none', color: 'black' }}>
+            <Link to='/home/profile/workExperience' style={{ textDecoration: 'none', color: 'black' }}>
               <div style={{ backgroundColor: '#0a3a4c', color: '#F8F8FF', borderRadius: '12px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
                 <img src={workExperience} alt="" />
                 <p style={{ marginBottom: '0px' }}>Work Experience </p>
