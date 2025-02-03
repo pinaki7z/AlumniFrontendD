@@ -16,17 +16,20 @@ import commentIcon from "../../images/comment.svg";
 import share from "../../images/share.svg";
 import liked from "../../images/liked.svg";
 import unliked from "../../images/unliked.svg";
+import { Link } from 'react-router-dom';
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import profilePic from "../../images/profilepic.jpg";
 import {
   FacebookShareButton,
   LinkedinShareButton,
+  TwitterShareButton
 } from "react-share";
 
 import {
   FacebookIcon,
   LinkedinIcon,
+  TwitterIcon
 } from "react-share";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
@@ -200,6 +203,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             </IconButton>
           )}
         </div>
+        <div>
+        <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }}>
         {text && (
           <div className='texxt'>
             <p>{text}</p>
@@ -237,6 +242,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             </div>
           </div>
         )}
+        </Link>
+        </div>
         {console.log('entity type1', entityType)}
         {entityType === 'posts' && (
           <div className='bottomAction'>
@@ -267,6 +274,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
         <MenuItem >
         <LinkedinShareButton url={shareUrl}><LinkedinIcon/></LinkedinShareButton>
+        </MenuItem>
+        <MenuItem >
+        <TwitterShareButton url={shareUrl}><TwitterIcon/></TwitterShareButton>
         </MenuItem>
       </Menu>
     </div>

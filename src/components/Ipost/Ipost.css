@@ -1,0 +1,102 @@
+/* Ipost.scss */
+
+.ipost {
+    width: 50%;
+    margin: 30px auto;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+  }
+  
+  .top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .timestamp {
+    font-size: 12px;
+    color: #777;
+  }
+  
+  .post-content {
+    margin-top: 15px;
+  }
+  
+  .post-text {
+    font-size: 16px;
+    color: #222;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  
+  .image,
+  .single-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .slick-slider {
+    width: 100%;
+  }
+  
+  .video {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-top: 10px;
+  }
+  
+  .video video {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .play-button:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .ipost {
+      width: 90%;
+    }
+  }
+  

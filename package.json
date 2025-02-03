@@ -2,7 +2,7 @@
   "name": "alumniui",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://alumni-backend-chi.vercel.app/",
+  "proxy": "https://api.alumnify.in",
   "homepage": ".",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^40.1.0",
@@ -37,6 +37,7 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^3.1.0",
     "react-google-recaptcha-v3": "^1.10.1",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.51.2",
     "react-icons": "^4.11.0",
     "react-modal": "^3.16.1",

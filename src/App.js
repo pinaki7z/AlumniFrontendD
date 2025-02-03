@@ -140,7 +140,24 @@ function App() {
           <Route path="*" element={<LandingPage handleLogin={handleLogin} />} />
         </Routes>
       </Router>
+      <Helmet>
+        <title>My React App</title>
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content="My React App" />
+        <meta property="og:description" content="This is an awesome web app!" />
+        <meta property="og:image" content="https://alumnify.in/image.jpg" />
+        <meta property="og:url" content="https://alumnify.in" />
+        <meta property="og:type" content="website" />
+
+        {/* Twitter Card for better social sharing */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="My React App" />
+        <meta name="twitter:description" content="This is an awesome web app!" />
+        <meta name="twitter:image" content="https://alumnify.in/image.jpg" />
+      </Helmet>
     </div>
+    
   );
 }
 

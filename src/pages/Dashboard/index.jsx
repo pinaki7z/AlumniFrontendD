@@ -24,6 +24,7 @@ import Chatbox from "../../components/Chatbox"
 import { ProfileSettings } from "../ProfilePage/ProfileSettings/index.jsx";
 import { Following } from "../../components/Following/index.jsx";
 import { Followers } from "../../components/Followers/index.jsx";
+import { Ipost } from "../../components/Ipost"
 import IndividualGroup from "../../components/Groups/IndividualGroup/index.jsx";
 import Chat from "../../pages/Chat";
 import { WorkExperience } from "../../components/WorkExperience/index.jsx";
@@ -134,6 +135,7 @@ const Dashboard = ({ handleLogout }) => {
             {/* <Route path="/internships/*" element={<Internships />} /> */}
             <Route path="/settings/*" element={<Settings />} />
             <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
+            <Route path="/posts/:_id/" element={<Ipost />} />
             <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
             <Route path="/forums/*" element={<Forum />} />
             <Route path="/forums/create" element={<CreateForum />} />
