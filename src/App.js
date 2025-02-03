@@ -31,6 +31,7 @@ import { useSelector } from "react-redux";
 import Events from "./pages/Events";
 import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 import PasswordReset from "./pages/ForgetPassword/PasswordReset";
+import { Helmet } from "react-helmet";
 
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
