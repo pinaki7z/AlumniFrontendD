@@ -14,6 +14,7 @@ import unliked from '../../images/unliked.svg';
 import commentIcon from '../../images/comment.svg';
 import share from '../../images/share.svg';
 import { useParams } from "react-router-dom";
+import { IoLogoLinkedin } from "react-icons/io5";
 
 import './Ipost.css';
 
@@ -39,6 +40,11 @@ export const Ipost = () => {
   const handleShareClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLinkedInShare = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
 
   return (
     <div className="ipost">
@@ -93,17 +99,14 @@ export const Ipost = () => {
         </div>
       </div>
 
-      {/* Share Menu */}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleShareClose}>
         <MenuItem>
           <FacebookShareButton url={shareUrl}>
             <FacebookIcon size={32} round />
           </FacebookShareButton>
         </MenuItem>
-        <MenuItem>
-          <LinkedinShareButton url={shareUrl}>
-            <LinkedinIcon size={32} round />
-          </LinkedinShareButton>
+        <MenuItem onClick={handleLinkedInShare}>
+        <IoLogoLinkedin />
         </MenuItem>
         <MenuItem>
           <TwitterShareButton url={shareUrl}>
