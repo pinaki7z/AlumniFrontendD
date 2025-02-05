@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom';
 import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import profilePic from "../../images/profilepic.jpg";
+import { IoLogoLinkedin } from "react-icons/io5";
 import {
   FacebookShareButton,
   LinkedinShareButton,
@@ -72,10 +73,11 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   if (profile.profileLevel === 0) {
     admin = true;
   }
-  const shareUrl = "https://alumnify.in/home";
+  const shareUrl = `https://alumnify.in/home/posts/${postId}`;
 
-
-
+  const handleLinkedInShare = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
   const handlePlay = async () => {
     if (videoRef.current) {
       if (isPlaying) {
@@ -272,9 +274,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         <FacebookShareButton url={shareUrl}><FacebookIcon/></FacebookShareButton>
         </MenuItem>
         {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
-        <MenuItem >
-        <LinkedinShareButton url={shareUrl}><LinkedinIcon/></LinkedinShareButton>
-        </MenuItem>
+        <MenuItem onClick={handleLinkedInShare}>
+                <IoLogoLinkedin />
+                </MenuItem>
         <MenuItem >
         <TwitterShareButton url={shareUrl}><TwitterIcon/></TwitterShareButton>
         </MenuItem>
