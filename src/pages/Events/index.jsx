@@ -70,7 +70,7 @@ function MyVerticallyCenteredModal(props) {
     setNewEvent({ ...newEvent, [field]: date });
   };
 
-  const handleAddEvent = () => {
+  const handleAddEvent = async () => {
     const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
 
     if (!title || !start || !end || !picture) {
@@ -104,40 +104,50 @@ function MyVerticallyCenteredModal(props) {
       currency: priceType === "paid" ? currency : ""
     };
     console.log('eventData', eventData);
+    try {
+      const response = await axios.post(`${baseUrl}/events/createEvent`, eventData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      setAllEvents([...allEvents, response.data]);
+      setLoading(false);
+      window.location.reload();
+  
+      setNewEvent({
+        title: "",
+        start: "",
+        end: "",
+        startTime: "",
+        endTime: "",
+        picture: null,
+        cEmail: "",
+        cName: "",
+        cNumber: "",
+        location: "",
+      });
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+  }
 
-    fetch(`${baseUrl}/events/createEvent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    })
-      .then((response) => response.json())
-      .then((createdEvent) => {
-        setAllEvents([...allEvents, createdEvent]);
-        setLoading(false);
-        window.location.reload();
 
-        setNewEvent({ title: "", start: "", end: "", startTime: "", endTime: "", picture: null, cEmail: "", cName: "", cNumber: "", location: "" });
-      })
-      .catch((error) => console.error("Error creating event:", error));
-  };
-
-  const handleEditEvent = () => {
+  const handleEditEvent = async () => {
     const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
     const eventId = props.selectedEvent._id;
-
+  
     if (!title || !start || !end) {
       alert("Please provide title, start date, and end date.");
       return;
     }
-
+  
     try {
       const formattedStart = format(new Date(start), "yyyy-MM-dd");
       const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-
+  
       const updatedEvent = {
-        title: title,
+        title,
         start: formattedStart,
         end: formattedEnd,
         startTime,
@@ -148,34 +158,28 @@ function MyVerticallyCenteredModal(props) {
         cEmail,
         location,
         priceType,
-        amount: priceType === "paid" ? amount : "0", // Only include amount if it's paid
-        currency: priceType === "paid" ? currency : ""
+        amount: priceType === "paid" ? amount : "0",
+        currency: priceType === "paid" ? currency : "",
       };
-
-      const jsonEventData = JSON.stringify(updatedEvent);
-
-      fetch(`${baseUrl}/events/${eventId}`, {
-        method: "PUT",
+  
+      await axios.put(`${baseUrl}/events/${eventId}`, updatedEvent, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: jsonEventData,
-      })
-        .then(() => {
-          const updatedEvents = allEvents.map((event) =>
-            event._id === eventId ? updatedEvent : event
-          );
-
-          setAllEvents(updatedEvents);
-          setSelectedEvent(null);
-          props.onHide();
-          toast.success("Event updated successfully.");
-          window.location.reload();
-        })
-        .catch((error) => console.error("Error updating event:", error));
-    } catch (jsonError) {
-      console.error("JSON serialization error:", jsonError);
-      alert("Error updating event: JSON serialization error");
+      });
+  
+      const updatedEvents = allEvents.map((event) =>
+        event._id === eventId ? updatedEvent : event
+      );
+  
+      setAllEvents(updatedEvents);
+      setSelectedEvent(null);
+      props.onHide();
+      toast.success("Event updated successfully.");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error updating event:", error);
+      alert("Error updating event. Please try again.");
     }
   };
 
@@ -402,7 +406,7 @@ function MyVerticallyCenteredModal(props) {
         </form>
       </Modal.Body>
       <Modal.Footer className="border-0">
-        <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
+        {props.isEditing ? null : <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
           <input
             type="checkbox"
             id="create-group"
@@ -410,7 +414,7 @@ function MyVerticallyCenteredModal(props) {
             onChange={(e) => setCreateGroup(e.target.checked)}
           />
           <label htmlFor="create-group" style={{ marginLeft: '0.5em' }}>Create a group with the same event title name</label>
-        </div>
+        </div>}
         <Button
           variant="light"
           onClick={props.onHide}
@@ -538,7 +542,8 @@ function Events() {
       !calendarRef.current.contains(event.target) &&
       !event.target.closest(".modal-open")
     ) {
-      setIsEditing(false);
+      return;
+      //setIsEditing(false);
     }
   };
 

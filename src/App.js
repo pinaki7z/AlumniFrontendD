@@ -73,7 +73,7 @@ function App() {
           <meta name="description" content="This is an awesome web app!" />
 
           {/* Open Graph Meta Tags */}
-          <meta property="og:title" content="My React App" />
+          <meta property="og:title" content="Alumnify by InsideOut" />
           <meta
             property="og:description"
             content="This is an awesome web app!"
