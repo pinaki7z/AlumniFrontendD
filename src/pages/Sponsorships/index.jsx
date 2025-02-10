@@ -2,7 +2,7 @@ import './sponsorships.css'
 import '../../components/DonSpon'
 import DonSpon from '../../components/DonSpon';
 import PageSubTitle from '../../components/PageSubTitle';
-import { Route, Routes,useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 // import MySponsorshipRequests from '../../components/Sponsorships/MySponsorshipRequests';
 import BrowseDonations from '../../components/BrowseDonations';
 import { GoSponsorTiers } from 'react-icons/go';
@@ -84,11 +84,11 @@ const Sponsorships = () => {
   useEffect(() => {
     getUserSponsorships();
   }, []);
-  console.log('admin',admin)
+  console.log('admin', admin)
 
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '2% 5% '  }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '2% 5% ' }}>
       <DonSpon title={title} icon={icon} />
       {admin && (
         <div style={{ margin: '1rem 0', textAlign: 'right' }}>
@@ -109,18 +109,19 @@ const Sponsorships = () => {
         </div>
       )}
       <Routes>
-        <Route path="/" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin}/>} />
-        <Route path="/my-sponsorship-requests" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin}/>} />
+        <Route path="/" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin} />} />
+        <Route path="/my-sponsorship-requests" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin} />} />
         <Route path="/:_id" element={<IndividualDonSpon />} />
         <Route path="/create" element={<DonSponRequest name='sponsorship' />} />
         <Route path="/edit/:_id" element={<DonSponRequest name='sponsorship' edit={true} />} />
       </Routes>
       <Routes>
-        {admin ? (
+        {profile.profileLevel === 0 ? (
           <Route path="/my-sponsorship-requests" element={<BrowseDonations donSpon={donations} name='sponsorships' />} />
-        ) : (
+        ) : profile.profileLevel === 1 || profile.profileLevel === 3 ? (
           <Route path="/my-sponsorship-requests" element={<BrowseDonations donSpon={userDonations} name='sponsorships' />} />
-        )}
+        ) : null}
+
         <Route path="/" element={<BrowseDonations donSpon={donations} name='sponsorships' updateDonations={updateDonations} totalDonations={totalDonations} limit={LIMIT} page={page} loading={loading} />} />
       </Routes>
     </div>

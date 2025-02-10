@@ -6,7 +6,7 @@ import { FiSend } from 'react-icons/fi';
 import Picker from 'emoji-picker-react';
 import { MdOutlineOpenInNew } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
-import { IoIosContract  } from "react-icons/io";
+import { IoIosContract } from "react-icons/io";
 import { Link } from 'react-router-dom';
 import Contact from '../../pages/Chat/Contact';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import { AiOutlinePaperClip } from "react-icons/ai";
 import { uniqBy } from "lodash";
 import { MdBlock } from "react-icons/md";
 import { toast } from "react-toastify";
-import { IoIosExpand  } from "react-icons/io";
+import { IoIosExpand } from "react-icons/io";
 import ChatM from "../../../src/pages/Chat";
 import baseUrl from '../../config';
 const Chat = () => {
@@ -109,7 +109,7 @@ const Chat = () => {
     console.log("Connecting to WS")
     if (ws === null || !ws || ws) {
       console.log("Connecting..")
-      const ws = new WebSocket('wss://alumni-backend-chi.vercel.app/');
+      const ws = new WebSocket('wss://api.alumnify.in/');
       ws.addEventListener('message', handleMessage);
       setWs(ws);
 
@@ -152,7 +152,7 @@ const Chat = () => {
 
       if (selectedUserId === null) {
         console.log('messageData', messageData)
-        setSelectedUserId(messageData.sender); 
+        setSelectedUserId(messageData.sender);
       }
       console.log('selecteduserId,messageData sender', selectedUserId, messageData.sender)
       if (messageData.sender === selectedUserId) {
@@ -227,29 +227,29 @@ const Chat = () => {
 
 
   const sendFile = (ev) => {
-    if(ev.target.files){
-    const file = ev.target.files[0];
-    const fileSizeMB = file.size / (1024 * 1024); 
-    if (fileSizeMB > 50) {
-      
-      console.log('File size exceeds 50MB. Please select a smaller file.');
-      alert("File size exceeds 50MB. Please select a smaller file.")
-      return;
+    if (ev.target.files) {
+      const file = ev.target.files[0];
+      const fileSizeMB = file.size / (1024 * 1024);
+      if (fileSizeMB > 50) {
+
+        console.log('File size exceeds 50MB. Please select a smaller file.');
+        alert("File size exceeds 50MB. Please select a smaller file.")
+        return;
+      }
+
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64Data = reader.result.split(',')[1];
+        sendMessage(null, {
+          name: file.name,
+          data: base64Data,
+        });
+      };
     }
-  
-  
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64Data = reader.result.split(',')[1];
-      sendMessage(null, {
-        name: file.name,
-        data: base64Data,
-      });
-    };
-  }
   };
-  
+
 
 
 
@@ -343,56 +343,56 @@ const Chat = () => {
   };
   console.log('show block modal', showBlockModal)
 
-//   const [isFullscreen, setIsFullscreen] = useState(false);
-//   const toggleFullscreen = () => {
-//     setIsFullscreen(!isFullscreen);
-// };
-// const chatStyle = isFullscreen ? {
-//   position: 'fixed',
-//   top: 0,
-//   left: 0,
-//   width: '100%',
-//   height: '100%',
-//   zIndex: 1000,
-//   backgroundColor: '#174873',
-//   display: 'flex',
-//   flexDirection: 'row', // Assuming you want a column layout when fullscreen
-// } : {
-//   width: '100%', // '100%' should be in quotes
-//   display: 'flex',
-//   justifyContent: 'space-between',
-//   padding: '10px',
-//   backgroundColor: 'black',
-//   borderRadius: '10px 10px 0 0', // Correct syntax for border-radius
-//   height: '20%',
-// };
-// const [isFullscreen, setIsFullscreen] = useState(false);
+  //   const [isFullscreen, setIsFullscreen] = useState(false);
+  //   const toggleFullscreen = () => {
+  //     setIsFullscreen(!isFullscreen);
+  // };
+  // const chatStyle = isFullscreen ? {
+  //   position: 'fixed',
+  //   top: 0,
+  //   left: 0,
+  //   width: '100%',
+  //   height: '100%',
+  //   zIndex: 1000,
+  //   backgroundColor: '#174873',
+  //   display: 'flex',
+  //   flexDirection: 'row', // Assuming you want a column layout when fullscreen
+  // } : {
+  //   width: '100%', // '100%' should be in quotes
+  //   display: 'flex',
+  //   justifyContent: 'space-between',
+  //   padding: '10px',
+  //   backgroundColor: 'black',
+  //   borderRadius: '10px 10px 0 0', // Correct syntax for border-radius
+  //   height: '20%',
+  // };
+  // const [isFullscreen, setIsFullscreen] = useState(false);
 
-// const toggleFullscreen = () => {
-//   const elem = document.querySelector('.profile-chat'); // adjust this selector to target the specific element you want fullscreen
-//   if (!document.fullscreenElement) {
-//     elem.requestFullscreen().catch(err => {
-//       alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-//     });
-//     setIsFullscreen(true);
-//   } else {
-//     document.exitFullscreen();
-//     setIsFullscreen(false);
-//   }
-// };
+  // const toggleFullscreen = () => {
+  //   const elem = document.querySelector('.profile-chat'); // adjust this selector to target the specific element you want fullscreen
+  //   if (!document.fullscreenElement) {
+  //     elem.requestFullscreen().catch(err => {
+  //       alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+  //     });
+  //     setIsFullscreen(true);
+  //   } else {
+  //     document.exitFullscreen();
+  //     setIsFullscreen(false);
+  //   }
+  // };
 
-// useEffect(() => {
-//   const handleFullscreenChange = () => {
-//     setIsFullscreen(!!document.fullscreenElement);
-//   };
+  // useEffect(() => {
+  //   const handleFullscreenChange = () => {
+  //     setIsFullscreen(!!document.fullscreenElement);
+  //   };
 
-//   document.addEventListener("fullscreenchange", handleFullscreenChange);
+  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
 
-//   return () => {
-//     document.removeEventListener("fullscreenchange", handleFullscreenChange);
-//   };
-// }, []);
-const [showPopup, setShowPopup] = useState(false);
+  //   return () => {
+  //     document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  //   };
+  // }, []);
+  const [showPopup, setShowPopup] = useState(false);
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -442,28 +442,28 @@ const [showPopup, setShowPopup] = useState(false);
 
               <div className='c-btn' >
 
-              <button onClick={togglePopup} ><IoIosExpand  style={{ fontSize: '22' }} /></button>
-              {showPopup && (
-              <div className="popup-modal" style={{
-                position: 'fixed',
-                top: '10%', left: '10%', right: '10%', bottom: '10%',
-                backgroundColor: 'white',
-                borderRadius: '10px',
-                boxShadow: '0 4px 8px rgba(0.5,0.5,0.5,0.5)',
-                zIndex: 1000,
-                height:'80%'
-              }}>
-                
+                <button onClick={togglePopup} ><IoIosExpand style={{ fontSize: '22' }} /></button>
+                {showPopup && (
+                  <div className="popup-modal" style={{
+                    position: 'fixed',
+                    top: '10%', left: '10%', right: '10%', bottom: '10%',
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 8px rgba(0.5,0.5,0.5,0.5)',
+                    zIndex: 1000,
+                    height: '80%'
+                  }}>
 
-                <div className="chat-details">
-                 <ChatM userId={selectedUserId}/>
-                </div>
-                <div>
-                <button onClick={togglePopup} style={{ position: 'absolute', top: '5px', right: '10px' }}><IoIosContract  style={{ fontSize: '15' }} /></button>
-                
-                </div>
-              </div>
-            )}
+
+                    <div className="chat-details">
+                      <ChatM userId={selectedUserId} />
+                    </div>
+                    <div>
+                      <button onClick={togglePopup} style={{ position: 'absolute', top: '5px', right: '10px' }}><IoIosContract style={{ fontSize: '15' }} /></button>
+
+                    </div>
+                  </div>
+                )}
 
 
                 {selectedUsername === 'SuperAdmin' ? null : (<button style={{ position: 'relative' }} onClick={handleBlock}><MdBlock style={{ color: 'white' }} />
@@ -521,9 +521,11 @@ const [showPopup, setShowPopup] = useState(false);
 
 
             </div>
-            {blockedByUsers.includes(selectedUserId) ? (
+            {(blockedByUsers?.includes(selectedUserId)) ? (
               <div>The user has blocked you. Learn <a href='#'>more</a></div>
-            ) : blockedUsers.includes(selectedUserId) ? (<div>You have blocked this user.Unblock to continue chat</div>) : (
+            ) : (blockedUsers?.includes(selectedUserId)) ? (
+              <div>You have blocked this user. Unblock to continue chat</div>
+            ) : (
               <div className='msg'>
                 <label style={{ padding: '10px', backgroundColor: '#e3e5e8', border: 'none', borderRadius: '10%', cursor: 'pointer', textAlign: 'center', width: '20%' }}>
                   <input type="file" style={{ display: 'none' }} onChange={sendFile} />

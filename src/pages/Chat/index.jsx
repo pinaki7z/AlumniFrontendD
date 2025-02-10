@@ -77,7 +77,7 @@ const Chat = ({userId}) => {
   
   const connectToWs = () => {
     console.log('connecting')
-    const ws = new WebSocket('ws://alumni-backend-chi.vercel.app/');
+    const ws = new WebSocket('ws://api.alumnify.in/');
     setWs(ws);
     ws.addEventListener('message', handleMessage);
   };
