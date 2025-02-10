@@ -309,22 +309,41 @@ const DonSponRequest = ({ name, edit }) => {
                 }
 
                 console.log('formData to  send ', formDataToSend)
-
-                const response = await fetch(`${baseUrl}/donations/create`, {
-                    method: 'POST',
-                    body: formDataToSend,
-                });
-
-                if (response.ok) {
-                    console.log('Data saved successfully');
-                    toast.success("Created");
-                    window.location.href = '/donations';
-                    return;
-                } else {
-                    const errorData = await response.json();
-                    console.error('Failed to save data', errorData);
-                    return;
+                if(!edit){
+                    const response = await fetch(`${baseUrl}/donations/create`, {
+                        method: 'POST',
+                        body: formDataToSend,
+                    });
+    
+                    if (response.ok) {
+                        console.log('Data saved successfully');
+                        toast.success("Created");
+                        window.location.href = '/home/donations';
+                        return;
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Failed to save data', errorData);
+                        return;
+                    }
                 }
+                else{
+                    const response = await fetch(
+                        `${baseUrl}/${name}s/${_id}`,
+                        {
+                            method: 'PUT',
+                            body: formDataToSend,
+                        }
+                    );
+                    
+                    if (response.status === 200) {
+                        console.log('Data updated successfully');
+                        toast.success("Updated");
+                        window.location.href = `/home/${name}s`;
+                    } else {
+                        console.error('Failed to update data', response.data);
+                    }
+                }
+                
             } catch (error) {
                 console.error('Error:', error);
                 return;

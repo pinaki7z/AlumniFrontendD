@@ -84,7 +84,7 @@ function App() {
 
           {/* Twitter Card for social sharing */}
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="My React App" />
+          <meta name="twitter:title" content="Alumnify by InsideOut" />
           <meta
             name="twitter:description"
             content="This is an awesome web app!"
