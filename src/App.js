@@ -66,13 +66,12 @@ function App() {
 
   return (
     <>
-        <Helmet>
+        {/* <Helmet>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>My React App</title>
+          <title>Alumnify by InsideOut</title>
           <meta name="description" content="This is an awesome web app!" />
 
-          {/* Open Graph Meta Tags */}
           <meta property="og:title" content="Alumnify by InsideOut" />
           <meta
             property="og:description"
@@ -82,7 +81,6 @@ function App() {
           <meta property="og:url" content={window.location.href} />
           <meta property="og:type" content="website" />
 
-          {/* Twitter Card for social sharing */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content="Alumnify by InsideOut" />
           <meta
@@ -90,7 +88,7 @@ function App() {
             content="This is an awesome web app!"
           />
           <meta name="twitter:image" content="https://alumnify.in/image.jpg" />
-        </Helmet>
+        </Helmet> */}
       <div className="App">
         <ToastContainer />
         <Router>

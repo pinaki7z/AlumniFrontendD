@@ -733,7 +733,7 @@ const ProfilePage = () => {
                 <img src={edit} alt="edit" />
                 <p style={{ marginBottom: '0px' }}>Edit Cover Picture </p>
               </button>
-              <Link to='/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
+              <Link to='/home/profile/profile-settings' style={{ textDecoration: 'none', color: 'black' }}>
                 <button style={{ backgroundColor: 'white', border: '2px solid #71be95', color: '#0a3a4c' }}>Edit Profile</button></Link>
             </div>
             <div style={{ textAlign: 'center' }}>
@@ -769,9 +769,9 @@ const ProfilePage = () => {
             </div> */}
             <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
               <div style={{ width: '40%', paddingTop: '100px' }}>
-                <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName} {profile.validated === true ? <HiMiniCheckBadge style={{ color: '#51a8f5' }} /> : null}</p>
+                <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{profile.firstName} {profile.lastName} {profile.validated === true ? <HiMiniCheckBadge style={{ color: '#51a8f5' }} /> : null}</p>
                 <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPERADMIN'}</p>
-                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>{member.aboutMe}</p>
+                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>{profile.aboutMe}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                   <div style={{ cursor: 'pointer' }}>
                     <Link to={`/home/groups/${profile._id}/joined-groups`} style={{ textDecoration: 'none', color: 'black' }}>
@@ -876,9 +876,9 @@ const ProfilePage = () => {
                 <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>About Me</p>
               </div>
               <p style={{ backgroundColor: '#efeff0', borderRadius: '0px 0px 12px 12px', padding: '10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>
-                {member.linkedIn ? (
-                  <a href={member.linkedIn} target="_blank" rel="noopener noreferrer" style={{ color: '#0072b1', textDecoration: 'none' }}>
-                    <span style={{fontWeight: '500'}}>LinkedIn:</span> {member.linkedIn}
+                {profile.linkedIn ? (
+                  <a href={profile.linkedIn} target="_blank" rel="noopener noreferrer" style={{ color: '#0072b1', textDecoration: 'none' }}>
+                    <span style={{fontWeight: '500'}}>LinkedIn:</span> {profile.linkedIn}
                   </a>
                 ) : (
                   'User has not updated his Bio'

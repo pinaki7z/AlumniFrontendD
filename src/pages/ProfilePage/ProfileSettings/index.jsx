@@ -162,10 +162,11 @@ export const ProfileSettings = () => {
 
       if (response.ok) {
         const responseData = await response.json();
+        console.log('response data edit',responseData)
         dispatch(updateProfile(responseData));
         toast.success('User Updated Successfully');
         setLoading(false);
-        navigateTo("/profile");
+        navigateTo("/home/profile");
 
       } else {
         console.error('Failed to update user');
@@ -285,7 +286,7 @@ export const ProfileSettings = () => {
                   name="linkedIn"
                   value={formData.linkedIn}
                   onChange={handleInputChange}
-                  required
+                  //required
                 />
               </Form.Group>
             </Col>
@@ -410,7 +411,7 @@ export const ProfileSettings = () => {
               {loading ? 'Submitting...' : 'Submit'}
             </Button>
             <Button type="reset" style={{ backgroundColor: '#174873' }} onClick={() => {
-              navigateTo('/profile')
+              navigateTo('/home/profile')
             }}>
               Cancel
             </Button>
