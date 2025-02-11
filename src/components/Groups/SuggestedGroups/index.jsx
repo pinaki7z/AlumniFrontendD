@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import baseUrl from "../../../config";
-const SuggestedGroups = () => {
+const SuggestedGroups = ({ groupType, searchQuery }) => {
     const title = 'SuggestedGroups';
     const [groups, setGroups] = useState([]);
     const [totalGroups, setTotalGroups] = useState(0);
@@ -38,6 +38,13 @@ const SuggestedGroups = () => {
     useEffect(() => {
         getGroups();
       }, [page]);
+
+      const filteredGroups = groups.filter((group) => {
+        return (
+          (!groupType || group.groupType === groupType) &&
+          (!searchQuery || group.groupName.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+      })
       const handleLoadMore = () => {
         console.log('Update Donations');
         setPage(page + 1);
@@ -46,7 +53,7 @@ const SuggestedGroups = () => {
       return (
         <div style={{ paddingBottom: '3vh' }}>
     
-          <DisplayPost title={title} groups={groups} loading={loading}/>
+          <DisplayPost title={title} groups={filteredGroups} loading={loading}/>
           {console.log('page,totalgroups,LIMIT', page, totalGroups,LIMIT)}
           {page <= totalGroups / LIMIT && (
                 <div style={{textAlign: 'center', marginTop: '3vh'}}>

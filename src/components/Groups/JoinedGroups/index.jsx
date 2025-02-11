@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../../config";
-const JoinedGroups = () => {
+const JoinedGroups = ({ groupType, searchQuery }) => {
   const title = 'JoinedGroups';
   const { id } = useParams();
   const [groups, setGroups] = useState([]);
@@ -38,6 +38,14 @@ const JoinedGroups = () => {
   useEffect(() => {
     getGroups();
   }, [page]);
+
+  const filteredGroups = groups.filter((group) => {
+    return (
+      (!groupType || group.groupType === groupType) &&
+      (!searchQuery || group.groupName.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  })
+
   const handleLoadMore = () => {
     console.log('Update Groups');
     setPage(page + 1);
@@ -45,7 +53,7 @@ const JoinedGroups = () => {
   return (
     <div style={{ paddingBottom: '3vh' }}>
 
-      <DisplayPost title={title} groups={groups} loading={loading} joined={true}/>
+      <DisplayPost title={title} groups={filteredGroups} loading={loading} joined={true}/>
       {page < totalGroups / LIMIT && (
         <div style={{ textAlign: 'center', marginTop: '3vh' }}>
           <button className="load-more-button" onClick={handleLoadMore}>

@@ -17,11 +17,12 @@ import { LuHeartHandshake } from 'react-icons/lu';
 import io from "../../images/IO _123.png";
 import gallery from "../../images/gallery.svg";
 import { GrGallery } from "react-icons/gr";
+import { useSelector } from "react-redux";
 
 
 const LeftSidebar = () => {
     console.log('env ', process.env.REACT_APP_URL)
-
+    const profile = useSelector((state) => state.profile);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -54,7 +55,7 @@ const LeftSidebar = () => {
                     <li><Link to="/home" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></Link></li>
                     {/* <li><Link to="/socialWall" style={{ textDecoration: 'none' }}><FaHeart style={{ color: '#fd546b' }} /><p>Social Wall</p></Link></li> */}
                     <li><Link to="/home/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>
-                    <li><Link to="/home/groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link></li>
+                    <li>{(profile.profileLevel===0 || profile.profileLevel===1) ? <Link to="/home/groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link>: <Link to="/home/groups/suggested-groups" style={{ textDecoration: 'none' }}><HiUserGroup className="dashboard-icon" /><p>Groups</p></Link>}</li>
                     {/* <li><Link to="/chat" style={{ textDecoration: 'none' }}><MdSettings style={{ color: '#b744b7' }} /><p>Chat</p></Link></li> */}
                     <li><Link to="/home/forums" style={{ textDecoration: 'none' }}><MdForum className="dashboard-icon" /><p>Forums</p></Link></li>
                     <li><Link to="/home/news" style={{ textDecoration: 'none' }}><BiNews className="dashboard-icon" /><p>News</p></Link></li>

@@ -34,7 +34,7 @@ import {
 } from "react-share";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
-  console.log('video pathh',video)
+  console.log('video pathh', video)
 
 
   const PrevButton = ({ onClick }) => {
@@ -206,45 +206,47 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           )}
         </div>
         <div>
-        <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }}>
-        {text && (
-          <div className='texxt'>
-            <p>{text}</p>
-          </div>
-        )}
-        {image.length > 1 ? (
-          <Slider {...settings}>
-            {image.map((img, index) => (
-              <div key={index} className='image'>
-                <img src={img} alt={`Post Image ${index + 1}`} />
+          <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }}>
+            {text && (
+              <div className='texxt'>
+                <p>{text}</p>
               </div>
-            ))}
-          </Slider>
-        ) : image.length === 1 ? (
-          <div>
-            <img src={image} alt={`image`} style={{ width: '-webkit-fill-available' }} />
-          </div>
-        ) : null
-        }
+            )}
+            {image && image.length > 1 ? (
+              <Slider {...settings}>
+                {image.map((img, index) => (
+                  img ? (
+                    <div key={index} className='image'>
+                      <img src={img} alt={`Post Image ${index + 1}`} />
+                    </div>
+                  ) : null
+                ))}
+              </Slider>
+            ) : image && image.length === 1 && image[0] ? (
+              <div>
+                <img src={image[0]} alt={`image`} style={{ width: '-webkit-fill-available' }} />
+              </div>
+            ) : null}
 
-        {video && (
-          <div className='video'>
-            <video
-              ref={videoRef}
-              autoPlay={isPlaying}
-              preload="auto"
-              controls={false}
-              onClick={handlePlay}
-            >
-              <source src={video.videoPath} type='video/mp4' />
-              Your browser does not support the video tag.
-            </video>
-            <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
-              <PlayCircleOutlineRoundedIcon fontSize='large' />
-            </div>
-          </div>
-        )}
-        </Link>
+
+            {video && (
+              <div className='video'>
+                <video
+                  ref={videoRef}
+                  autoPlay={isPlaying}
+                  preload="auto"
+                  controls={false}
+                  onClick={handlePlay}
+                >
+                  <source src={video.videoPath} type='video/mp4' />
+                  Your browser does not support the video tag.
+                </video>
+                <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
+                  <PlayCircleOutlineRoundedIcon fontSize='large' />
+                </div>
+              </div>
+            )}
+          </Link>
         </div>
         {console.log('entity type1', entityType)}
         {entityType === 'posts' && (
@@ -271,14 +273,14 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       </>)}
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleShareClose}>
         <MenuItem>
-        <FacebookShareButton url={shareUrl}><FacebookIcon/></FacebookShareButton>
+          <FacebookShareButton url={shareUrl}><FacebookIcon /></FacebookShareButton>
         </MenuItem>
         {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
         <MenuItem onClick={handleLinkedInShare}>
-                <IoLogoLinkedin />
-                </MenuItem>
+          <IoLogoLinkedin />
+        </MenuItem>
         <MenuItem >
-        <TwitterShareButton url={shareUrl}><TwitterIcon/></TwitterShareButton>
+          <TwitterShareButton url={shareUrl}><TwitterIcon /></TwitterShareButton>
         </MenuItem>
       </Menu>
     </div>

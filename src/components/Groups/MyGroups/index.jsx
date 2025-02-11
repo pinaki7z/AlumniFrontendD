@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from 'react-redux';
 import baseUrl from "../../../config";
-const MyGroups = () => {
+const MyGroups = ({ groupType, searchQuery }) => {
   const title = 'MyGroups';
   const [groups, setGroups] = useState([]);
   const [totalGroups, setTotalGroups] = useState(0);
@@ -57,6 +57,13 @@ const MyGroups = () => {
   useEffect(() => {
     getGroups();
   }, [page]);
+
+  const filteredGroups = groups.filter((group) => {
+    return (
+      (!groupType || group.groupType === groupType) &&
+      (!searchQuery || group.groupName.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  })
   const handleLoadMore = () => {
     console.log('Update Donations');
     setPage(page + 1);
@@ -64,7 +71,7 @@ const MyGroups = () => {
   return (
     <div style={{ paddingBottom: '3vh' }}>
 
-      <DisplayPost title={title} groups={groups} loading={loading}/>
+      <DisplayPost title={title} groups={filteredGroups} loading={loading}/>
       {page < totalGroups / LIMIT && (
             <div style={{textAlign: 'center', marginTop: '3vh'}}>
             <button className="load-more-button" onClick={handleLoadMore}>
