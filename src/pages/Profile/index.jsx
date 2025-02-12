@@ -13,6 +13,7 @@ import Feeed from "../../components/Feeed";
 import about from "../../images/about.svg";
 import work from "../../images/work.svg";
 import location from "../../images/location.svg";
+import profilePic from "../../images/profilepic.jpg"
 import time from "../../images/Time.svg";
 import arrowRight from "../../images/arrowRight.svg";
 
@@ -44,7 +45,7 @@ const Profile = () => {
           }}>
           </div>
           <div style={{ position: 'absolute', top: '10vh', left: '50%', transform: 'translateX(-50%) translateY(50%)' }}>
-            <img src={member.profilePicture} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
+            <img src={member.profilePicture ? member.profilePicture : profilePic} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
           </div>
           <div className="lower-div" style={{
             backgroundColor: '#efeff0',

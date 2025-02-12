@@ -206,7 +206,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           )}
         </div>
         <div>
-          <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }}>
+          <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} style={{textDecoration: 'none'}}>
             {text && (
               <div className='texxt'>
                 <p>{text}</p>

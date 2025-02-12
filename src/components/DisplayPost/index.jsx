@@ -26,6 +26,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [selectedGroupName, setSelectedGroupName] = useState("");
   const [selectedGroupUserId, setSelectedGroupUserId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
   console.log('groups display post', groups)
   const admin = profile.profileLevel === 0;
@@ -149,6 +150,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
     const handleAddMember = async (groupId) => {
       console.log('adding member', groupId);
       try {
+        setIsLoading(true);
         const response = await axios.put(`${baseUrl}/groups/members/${groupId}`, {
           members: {
             userId: profile._id,
@@ -162,19 +164,26 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           const { isUserAdded } = response.data;
           if (isUserAdded === true) {
             toast.success('added')
-            navigateTo(`/groups/${groupId}`)
+            navigateTo(`/home/groups/${groupId}`)
+            setIsLoading(false);
           }
           if (isUserAdded === false) {
             toast.success('removed')
+            setIsLoading(false);
+            navigateTo(`/home/groups/${groupId}`)
           }
+          setIsLoading(false);
           console.log('User added/removed to/from the group:', isUserAdded);
+          navigateTo(`/home/groups/${groupId}`)
         } else {
 
           console.error('Failed to add/remove user to/from the group');
+          setIsLoading(false);
         }
       } catch (error) {
 
         console.error('Error adding/removing user to/from the group:', error);
+        setIsLoading(false);
       }
     };
 
@@ -267,7 +276,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           !group.members.some(member => member.userId === profile._id) && (
             <div className='display-post-edit'>
               {group.groupType === 'Public' ? (
-                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#0a3a4c',color: '#F8F8FF' }}>Join</button>
+                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#0a3a4c',color: '#F8F8FF' }}>{isLoading ? 'Loading...' : 'Join'}</button>
               ) : (profile.department === group.department || group.category === "Business Connect" || group.department === 'All') && (
                 <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#0a3a4c',color: '#F8F8FF' }} onClick={() => {
                   if (group.category === "Business Connect") {
