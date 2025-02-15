@@ -115,7 +115,7 @@ const Chat = () => {
     }
   
     // Create a new WebSocket connection
-    const newWs = new WebSocket('ws://api.alumnify.in/');
+    const newWs = new WebSocket('wss://api.alumnify.in/');
     
     newWs.addEventListener('open', () => {
       console.log("WebSocket connection opened.");
