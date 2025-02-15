@@ -423,7 +423,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
     formData.append("userId", profile._id);
     formData.append("description", input);
     formData.append("department", profile.department);
-    formData.append("profilePicture", profile.profilePicture)
+    //formData.append("profilePicture", profile.profilePicture)
     if (_id) formData.append("groupID", _id);
 
     if (selectedFile) {
@@ -597,8 +597,8 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
     <div className={`social-media-post ${isExpanded ? 'expanded' : ''}`}>
       <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
       <div className={`card ${isExpanded ? 'expanded' : ''}`} style={{ border: 'none', paddingTop: '50px' }}>
-        <div className="card-header" style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className={`card-header ${isExpanded ? 'expanded' : ''}`} style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px'}}  className={`status-field ${isExpanded ? 'expanded' : ''}`}>
             <img
               src={profile.profilePicture || picture}
               alt='Profile'
@@ -606,11 +606,13 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
               height='75px'
               style={{ borderRadius: '50%' }}
             />
-            <div style={{ borderBottom: '1px solid #ccc', width: '93%' }}>
+            <div style={{ borderBottom: '1px solid #ccc', width: '93%' }} className={`text-field ${isExpanded ? 'expanded' : ''}`}>
               <textarea
                 value={input}
+                onClick={handleInputClick}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="What's going on??"
+                className={`text-area ${isExpanded ? 'expanded' : ''}`}
                 rows={1} // Set the default number of rows
                 style={{
                   width: '100%',
@@ -619,7 +621,8 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
                   resize: 'none',
                   padding: '8px',
                   fontSize: '16px',
-                  fontFamily: 'inherit'
+                  fontFamily: 'inherit',
+                  height: '100%'
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
@@ -631,7 +634,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
             </div>
           </div>
         </div>
-        <div className={`img-job-vide ${isExpanded ? 'expanded' : ''}`}>
+        <div className={`img-job-vide`}>
           <label style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', gap: '5px', width: '18%' }}>
             <img src={gallery} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Image</p>
             <input
