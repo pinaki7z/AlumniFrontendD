@@ -106,18 +106,29 @@ const Chat = () => {
   }, [selectedUserId]);
 
   const connectToWs = () => {
-    console.log("Connecting to WS")
-    if (ws === null || !ws || ws) {
-      console.log("Connecting..")
-      const ws = new WebSocket('wss://api.alumnify.in/');
-      ws.addEventListener('message', handleMessage);
-      setWs(ws);
-
+    console.log("Connecting to WS");
+    
+    // Ensure we don't create multiple connections
+    if (ws && ws.readyState !== WebSocket.CLOSED) {
+      console.log("WebSocket is already connected or connecting.");
+      return;
     }
-    // if (ws) {
-    //   alert('ws is present')
-    // }
-    return;
+  
+    // Create a new WebSocket connection
+    const newWs = new WebSocket('ws://api.alumnify.in/');
+    
+    newWs.addEventListener('open', () => {
+      console.log("WebSocket connection opened.");
+    });
+    
+    newWs.addEventListener('close', () => {
+      console.log("WebSocket connection closed. Attempting to reconnect...");
+      setTimeout(connectToWs, 3000); // Reconnect after 3 seconds
+    });
+  
+    newWs.addEventListener('message', handleMessage);
+    
+    setWs(newWs);
   };
   console.log('ws creation', ws)
 
@@ -166,6 +177,12 @@ const Chat = () => {
     console.log('sending message');
     if (ev) {
       ev.preventDefault();
+    }
+
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      console.log("WebSocket is not open. Reconnecting...");
+      connectToWs();
+      return;
     }
 
     try {
