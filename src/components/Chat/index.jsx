@@ -114,8 +114,7 @@ const Chat = () => {
       return;
     }
   
-    // Create a new WebSocket connection
-    const newWs = new WebSocket('wss://api.alumnify.in/');
+    const newWs = new WebSocket('wss://54.242.12.119:5000/');
     
     newWs.addEventListener('open', () => {
       console.log("WebSocket connection opened.");
@@ -123,7 +122,7 @@ const Chat = () => {
     
     newWs.addEventListener('close', () => {
       console.log("WebSocket connection closed. Attempting to reconnect...");
-      setTimeout(connectToWs, 3000); // Reconnect after 3 seconds
+      setTimeout(connectToWs, 3000); 
     });
   
     newWs.addEventListener('message', handleMessage);

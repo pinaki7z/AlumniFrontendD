@@ -748,7 +748,7 @@ const IntJobs = (props) => {
                     {profile.profileLevel === 2 ? (
                         <div>
                             <Link
-                                to="/jobs/create"
+                                to="/home/jobs/create"
                             >
                                 <button
                                     style={{

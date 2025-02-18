@@ -357,6 +357,7 @@ import { Link } from "react-router-dom";
 import baseUrl from "../../config";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { toast } from "react-toastify";
+import { filter } from "lodash";
 
 export const NotificationsP = ({ sendNotificationCount }) => {
   const [notificationList, setNotificationList] = useState([]);
@@ -512,7 +513,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
         (notification) => notification.status === false
       );
       setNotificationList(filteredData);
-      sendNotificationCount(filteredData.length);
+      //sendNotificationCount(filteredData.length);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching request:", error);
@@ -522,6 +523,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
 
   useEffect(() => {
     getRequest();
+    //sendNotificationCount(filteredNotifications.length)
   }, [isAdded]);
 
   const handleImageClick = (image) => {
@@ -556,6 +558,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
         (notification) => notification.ownerId === profile._id
       );
 
+  sendNotificationCount(filteredNotifications.length)    
   const handleAlumniSearch = async (e, userInput) => {
     e.preventDefault();
 

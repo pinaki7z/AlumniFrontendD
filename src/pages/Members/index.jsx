@@ -37,14 +37,24 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const totalMembers = membersred.length;
 
   // Generate last 100 years for graduatingYear and batch ranges
+  // const generateYears = () => {
+  //   const currentYear = new Date().getFullYear();
+  //   const years = [];
+  //   for (let i = currentYear; i >= currentYear - 100; i--) {
+  //     years.push(i);
+  //   }
+  //   return years;
+  // };
+
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
-    const years = [];
+    const years = ['Graduated'];
     for (let i = currentYear; i >= currentYear - 100; i--) {
-      years.push(i);
+      years.push(i.toString()); // Convert to string
     }
     return years;
   };
+
   const generateBatches = () => {
     const currentYear = new Date().getFullYear();
     const batches = [];

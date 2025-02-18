@@ -72,7 +72,7 @@ export const DisplayNews = ({ userId, postId, title,description, createdAt, pict
     };
 
     const handleReadMore = () => {
-        navigate(`/news/news/${postId}`, {
+        navigate(`/home/news/news/${postId}`, {
             state: {
                 userId,
                 postId,

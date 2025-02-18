@@ -59,7 +59,7 @@ const RegisterPage = () => {
 
       console.log('Registration successful!', response.data);
       toast.success("User Registered successfully!");
-      navigateTo('/');
+      navigateTo('/login');
       setLoading(false);
 
     } catch (error) {
@@ -77,6 +77,16 @@ const RegisterPage = () => {
     }
     return years;
   };
+
+  const generateGraduatingYears = () => {
+    const currentYear = new Date().getFullYear();
+    const years = ['Graduated'];
+    for (let i = currentYear; i >= currentYear - 100; i--) {
+      years.push(i);
+    }
+    return years;
+  };
+
   return (
     <div className="register">
       <main className="rectangle-parent">
@@ -198,6 +208,17 @@ const RegisterPage = () => {
                 </div>
               </div>
               <div className="last-name-field5">
+                <div className="last-name-field">Graduating Year</div>
+                <div className="batch1">
+                  <select name='graduatingYear' id='graduatingYear' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
+                    <option value='' disabled selected>Select Graduating Year</option>
+                    {generateGraduatingYears().map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div className="batch">Batch</div>
                 <div className="batch1">
                   <select name='batch' id='batch' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>

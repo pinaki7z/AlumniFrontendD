@@ -275,7 +275,7 @@ const DonSponRequest = ({ name, edit }) => {
                 console.log('Registration successful!', response.data);
                 toast.success("User Registered successfully!");
                 setLoading(false);
-                navigateTo('/members');
+                navigateTo('/home/members');
 
                 return;
 
@@ -380,7 +380,7 @@ const DonSponRequest = ({ name, edit }) => {
                 if (response.ok) {
                     console.log('Data saved successfully');
                     toast.success("Created");
-                    window.location.href = '/sponsorships';
+                    window.location.href = '/home/sponsorships';
                     return;
                 } else {
                     const errorData = await response.json();
@@ -697,7 +697,7 @@ const DonSponRequest = ({ name, edit }) => {
                     <input type="text" id="phone" name="phone" style={{ borderRadius: '6px', height: '5.5vh' }} value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
-                    <label htmlFor="amount">Investment Amount (Rupees):</label>
+                    <label htmlFor="amount">Investment Amount (₹):</label>
                     <input type="number" id="amount" name="amount" style={{ borderRadius: '6px', height: '5.5vh' }} value={amount} onChange={(e) => setAmount(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
@@ -793,7 +793,7 @@ const DonSponRequest = ({ name, edit }) => {
                     <input type="tel" id="contactNumber" name="number" required onChange={handleSponsorshipChange} style={{ borderRadius: '6px', height: '5.5vh' }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
-                    <label for="sponsorshipAmount">Total Sponsorship Amount Required (Rupees):</label>
+                    <label for="sponsorshipAmount">Total Sponsorship Amount Required (₹):</label>
                     <input type="number" id="sponsorshipAmount" name="sponsorshipAmount" onChange={handleSponsorshipChange} required style={{ borderRadius: '6px', height: '5.5vh' }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>

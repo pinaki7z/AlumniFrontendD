@@ -29,8 +29,8 @@ const NotificationsPage=()=>{
     display: 'inline-block',}}>{notificationCount}</span>
     </>);
     let buttontext2 = '';
-    const buttontext1Link = "/notifications";
-    const buttontext2Link = "/notifications/declined";
+    const buttontext1Link = "/home/notifications";
+    const buttontext2Link = "/home/notifications/declined";
     const profile = useSelector((state)=> state.profile);
     if (profile.profileLevel === 0 || profile.profileLevel === 1) {
       buttontext2 = 'Declined';

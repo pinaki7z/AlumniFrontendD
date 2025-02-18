@@ -80,15 +80,15 @@ const Jobs = () => {
             setButtontext3('Applied');
             setButtontext4('Archive');
             setButtontext5('My Jobs');
-            setButtontext2Link('/jobs/starred');
-            setButtontext3Link('/jobs/applied');
-            setButtontext4Link('/jobs/archive');
-            setButtontext5Link('/jobs/myJobs');
+            setButtontext2Link('/home/jobs/starred');
+            setButtontext3Link('/home/jobs/applied');
+            setButtontext4Link('/home/jobs/archive');
+            setButtontext5Link('/home/jobs/myJobs');
         } else {
             setButtontext2('Starred');
             setButtontext3('Applied');
-            setButtontext2Link('/jobs/starred');
-            setButtontext3Link('/jobs/applied');
+            setButtontext2Link('/home/jobs/starred');
+            setButtontext3Link('/home/jobs/applied');
         }
     }, [profile.profileLevel]);
 
