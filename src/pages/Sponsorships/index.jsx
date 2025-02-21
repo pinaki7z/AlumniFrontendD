@@ -96,7 +96,7 @@ const Sponsorships = () => {
             onClick={() => navigate('/home/sponsorships/create')}
             style={{
               padding: '10px 20px',
-              backgroundColor: '#6c63ff',
+              backgroundColor: '#71be95',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',

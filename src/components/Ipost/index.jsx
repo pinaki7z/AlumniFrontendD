@@ -5,8 +5,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Menu, MenuItem } from '@mui/material';
-import { FacebookShareButton, LinkedinShareButton, TwitterShareButton } from 'react-share';
-import { FacebookIcon, LinkedinIcon, TwitterIcon } from 'react-share';
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton,WhatsappShareButton } from 'react-share';
+import { FacebookIcon, LinkedinIcon, TwitterIcon,WhatsappIcon } from 'react-share';
 
 import profilePic from '../../images/profilepic.jpg';
 import liked from '../../images/liked.svg';
@@ -106,12 +106,17 @@ export const Ipost = () => {
           </FacebookShareButton>
         </MenuItem>
         <MenuItem onClick={handleLinkedInShare}>
-        <IoLogoLinkedin />
+        <IoLogoLinkedin style={{width: '33px', height: '33px'}}/>
         </MenuItem>
         <MenuItem>
           <TwitterShareButton url={shareUrl}>
             <TwitterIcon size={32} round />
           </TwitterShareButton>
+        </MenuItem>
+        <MenuItem>
+          <WhatsappShareButton url={shareUrl}>
+            <WhatsappIcon size={32} round />
+          </WhatsappShareButton>
         </MenuItem>
       </Menu>
     </div>

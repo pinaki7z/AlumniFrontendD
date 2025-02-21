@@ -752,10 +752,11 @@ const IntJobs = (props) => {
                             >
                                 <button
                                     style={{
-                                        backgroundColor: '#efeff0',
+                                        backgroundColor: '#71be95',
                                         color: 'black',
                                         border: 'none',
                                         padding: '10px 20px',
+                                        color: 'white',
                                         cursor: 'pointer',
                                         borderRadius: '4px'
                                     }}>Create</button>

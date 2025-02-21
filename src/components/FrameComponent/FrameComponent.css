@@ -785,9 +785,9 @@
   justify-content: center;
   z-index: 1;
 }
-.register-button:hover {
+/* .register-button:hover {
   background-color: var(--color-gray-100);
-}
+} */
 .first-name-field {
   margin: 0;
   flex-direction: column;

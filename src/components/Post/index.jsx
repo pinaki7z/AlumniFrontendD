@@ -24,13 +24,15 @@ import { IoLogoLinkedin } from "react-icons/io5";
 import {
   FacebookShareButton,
   LinkedinShareButton,
-  TwitterShareButton
+  TwitterShareButton,
+  WhatsappShareButton
 } from "react-share";
 
 import {
   FacebookIcon,
   LinkedinIcon,
-  TwitterIcon
+  TwitterIcon,
+  WhatsappIcon
 } from "react-share";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, handleComments, className, onDeletePost, entityType, showDeleteButton, groupID }) {
@@ -277,10 +279,13 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         </MenuItem>
         {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
         <MenuItem onClick={handleLinkedInShare}>
-          <IoLogoLinkedin />
+          <IoLogoLinkedin style={{width: '70px', height: '70px'}}/>
         </MenuItem>
         <MenuItem >
           <TwitterShareButton url={shareUrl}><TwitterIcon /></TwitterShareButton>
+        </MenuItem>
+        <MenuItem >
+          <WhatsappShareButton url={shareUrl}><WhatsappIcon /></WhatsappShareButton>
         </MenuItem>
       </Menu>
     </div>

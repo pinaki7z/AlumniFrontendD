@@ -91,7 +91,7 @@ const Donations = () => {
             onClick={() => navigate('/home/donations/create')}
             style={{
               padding: '10px 20px',
-              backgroundColor: '#6c63ff',
+              backgroundColor: '#71be95',
               color: '#fff',
               border: 'none',
               borderRadius: '8px',
@@ -99,7 +99,7 @@ const Donations = () => {
               fontSize: '16px'
             }}
           >
-            Create Donation
+            Create Business Donation Request
           </button>
         </div>
       )}

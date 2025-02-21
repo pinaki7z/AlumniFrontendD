@@ -554,7 +554,8 @@ import { useNavigate } from 'react-router-dom';
 import { updateProfile } from "../../store/profileSlice";
 import { toast } from 'react-toastify';
 import { lineSpinner } from 'ldrs';
-import profilePic from "../../images/profilepic.jpg"
+import profilePic from "../../images/profilepic.jpg";
+import { MdOutlineDelete } from "react-icons/md";
 
 lineSpinner.register()
 
@@ -703,6 +704,55 @@ const ProfilePage = () => {
     }
   };
 
+  const handleDeleteCoverPic = async () => {
+    try {
+      if (!profile?._id) {
+        toast.error("User ID not found.");
+        return;
+      }
+  
+      const response = await axios.put(`${baseUrl}/alumni/delete/coverPicture`, {
+        userId: profile._id
+      });
+  
+      if (response.status === 200) {
+       
+        const { user,message } = response.data;
+        dispatch(updateProfile(user));
+        toast.success(message);
+        // Optionally, update the UI or refresh user data
+      }
+    } catch (error) {
+      console.error("Error deleting profile picture:", error);
+      toast.error(error.response?.data?.message || "Failed to delete profile picture.");
+    }
+  };
+  
+
+  const handleDeleteProfilePic = async () => {
+    try {
+      if (!profile?._id) {
+        toast.error("User ID not found.");
+        return;
+      }
+  
+      const response = await axios.put(`${baseUrl}/alumni/delete/profilePicture`, {
+        userId: profile._id
+      });
+  
+      if (response.status === 200) {
+        const { user,message } = response.data;
+        dispatch(updateProfile(user));
+        toast.success(message);
+        // Optionally, update the UI or refresh user data
+      }
+    } catch (error) {
+      console.error("Error deleting profile picture:", error);
+      toast.error(error.response?.data?.message || "Failed to delete profile picture.");
+    }
+  };
+  
+
   return (
     <>
       <div style={{ width: '100%', padding: '0 5%', paddingTop: '4%' }}>
@@ -715,6 +765,10 @@ const ProfilePage = () => {
             backgroundPosition: 'center',
             borderRadius: '12px 12px 0px 0px'
           }}>
+            <div style={{ width: '40px', height: '40px', position: 'absolute', left: '10px', top: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'white', borderRadius: '50%', border: '1px solid black', cursor: 'pointer' }} onClick={handleDeleteCoverPic}>
+              <MdOutlineDelete style={{ width: '30px', height: '30px' }} />
+            </div>
+
             <div style={{ paddingBottom: "1.5em", display: 'flex', justifyContent: 'center' }}>
               {renderExpirationDateMessage() && (
                 <p style={{ color: 'orangered', margin: '0', fontSize: '25px', fontWeight: '600', backgroundColor: 'cornsilk', width: '70%', padding: '10px', borderRadius: '5px', marginBottom: '10px' }}>
@@ -751,6 +805,9 @@ const ProfilePage = () => {
             <div style={{ position: 'relative' }}>
               <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
               <input type="file" name="profilePicture" id="profilePicture" onChange={(event) => handleFileChange(event, 'profilePicture')} style={{ display: 'none' }} />
+              <div style={{ width: '40px', height: '40px', position: 'absolute', left: '4px', top: '3px', background: 'white', borderRadius: '50%', border: '1px solid black', cursor: 'pointer' }} onClick={handleDeleteProfilePic}>
+                <MdOutlineDelete style={{ width: '30px', height: '30px', position: 'absolute', left: '4px', top: '3px' }} />
+              </div>
               <img src={editProfilePicture} alt="profile-picture" style={{ borderRadius: '50%', border: '5px solid white', position: 'absolute', bottom: '20px', right: '5px', cursor: 'pointer' }} onClick={() => document.getElementById('profilePicture').click()} />
             </div>
 
@@ -878,7 +935,7 @@ const ProfilePage = () => {
               <p style={{ backgroundColor: '#efeff0', borderRadius: '0px 0px 12px 12px', padding: '10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>
                 {profile.linkedIn ? (
                   <a href={profile.linkedIn} target="_blank" rel="noopener noreferrer" style={{ color: '#0072b1', textDecoration: 'none' }}>
-                    <span style={{fontWeight: '500'}}>LinkedIn:</span> {profile.linkedIn}
+                    <span style={{ fontWeight: '500' }}>LinkedIn:</span> {profile.linkedIn}
                   </a>
                 ) : (
                   'User has not updated his Bio'
