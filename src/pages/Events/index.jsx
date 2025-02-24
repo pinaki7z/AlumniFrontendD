@@ -2,8 +2,8 @@ import format from "date-fns/format";
 import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
-import React, { useState, useEffect, useRef } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Calendar, dateFnsLocalizer, momentLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -110,11 +110,11 @@ function MyVerticallyCenteredModal(props) {
           "Content-Type": "application/json",
         },
       });
-  
+
       setAllEvents([...allEvents, response.data]);
       setLoading(false);
       window.location.reload();
-  
+
       setNewEvent({
         title: "",
         start: "",
@@ -136,16 +136,16 @@ function MyVerticallyCenteredModal(props) {
   const handleEditEvent = async () => {
     const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
     const eventId = props.selectedEvent._id;
-  
+
     if (!title || !start || !end) {
       alert("Please provide title, start date, and end date.");
       return;
     }
-  
+
     try {
       const formattedStart = format(new Date(start), "yyyy-MM-dd");
       const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-  
+
       const updatedEvent = {
         title,
         start: formattedStart,
@@ -161,17 +161,17 @@ function MyVerticallyCenteredModal(props) {
         amount: priceType === "paid" ? amount : "0",
         currency: priceType === "paid" ? currency : "",
       };
-  
+
       await axios.put(`${baseUrl}/events/${eventId}`, updatedEvent, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-  
+
       const updatedEvents = allEvents.map((event) =>
         event._id === eventId ? updatedEvent : event
       );
-  
+
       setAllEvents(updatedEvents);
       setSelectedEvent(null);
       props.onHide();
@@ -231,7 +231,7 @@ function MyVerticallyCenteredModal(props) {
       </Modal.Header>
       <Modal.Body
         style={{
-          backgroundColor: "rgb(243, 244, 246)", // Equivalent to Tailwind's .bg-gray-100
+          //backgroundColor: "rgb(243, 244, 246)", // Equivalent to Tailwind's .bg-gray-100
           padding: "1rem",
           margin: "15px",
           borderRadius: 5,
@@ -479,6 +479,19 @@ function Events() {
       checkAttendanceStatus(eventId); // Call checkAttendanceStatus only after eventId is set
     }
   }, [eventId]);
+
+  const [view, setView] = useState(Views.MONTH); // Default view
+
+  // Define dynamic formats based on the selected view
+  const formats = {
+    timeGutterFormat: (date, culture, localizer) =>
+      view === Views.WEEK ? format(date, "HH:mm") : format(date, "hh:mm a"),
+  };
+
+  // Handle view change
+  const handleViewChange = useCallback((newView) => {
+    setView(newView);
+  }, []);
 
 
 
@@ -800,7 +813,7 @@ function Events() {
 
   return (
     <div className="Events mx-auto px-4 py-8">
-      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#a98de3' }}>
+      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
         <h2 style={{ margin: '0', color: 'white' }}>Event Calendar</h2>
         <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
           Stay updated on upcoming events and opportunities to connect.
@@ -822,9 +835,12 @@ function Events() {
           events={allEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: '60vh', fontWeight: '600' }}
+          style={{ height: '60vh', fontWeight: '600',backgroundColor: '#71be95' }}
           selectable
           onSelectEvent={handleEventClick}
+          view={view}
+          onView={handleViewChange}
+          formats={formats}
         />
 
         {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
