@@ -43,7 +43,7 @@ const SideWidgets = () => {
     const [isFollowing, setIsFollowing] = useState(false);
     const itemsPerPage = 3;
     const dispatch = useDispatch();
-    console.log('notifications1', notifications,profile);
+    console.log('notifications1', notifications, profile);
 
 
     const popover = (popoverVisibility) => {
@@ -106,25 +106,25 @@ const SideWidgets = () => {
         const now = new Date();
         const notificationDate = new Date(date);
         const diffInSeconds = Math.floor((now - notificationDate) / 1000);
-    
+
         const intervals = [
-          { label: 'year', seconds: 31536000 },
-          { label: 'month', seconds: 2592000 },
-          { label: 'day', seconds: 86400 },
-          { label: 'hour', seconds: 3600 },
-          { label: 'minute', seconds: 60 },
-          { label: 'second', seconds: 1 },
+            { label: 'year', seconds: 31536000 },
+            { label: 'month', seconds: 2592000 },
+            { label: 'day', seconds: 86400 },
+            { label: 'hour', seconds: 3600 },
+            { label: 'minute', seconds: 60 },
+            { label: 'second', seconds: 1 },
         ];
-    
+
         for (const interval of intervals) {
-          const count = Math.floor(diffInSeconds / interval.seconds);
-          if (count >= 1) {
-            return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
-          }
+            const count = Math.floor(diffInSeconds / interval.seconds);
+            if (count >= 1) {
+                return `${count} ${interval.label}${count !== 1 ? 's' : ''} ago`;
+            }
         }
-    
+
         return 'just now';
-      };
+    };
 
     return (
         <div className="sideWidget-feed">
@@ -171,8 +171,8 @@ const SideWidgets = () => {
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
                         <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>5</span></a></li>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>1</span></a></li>
-                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>1</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.following.length}</span></a></li>
+                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.followers.length}</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -185,8 +185,15 @@ const SideWidgets = () => {
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {displayedMembers.map((member, index) => (
                         <div key={member._id} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', border: '1px solid #e9e9e9', borderRadius: '10px', width: '100%' }}>
-                            {member.profilePicture ? <img src={member.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} /> : <img src={profilepic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />}
-                            <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.firstName}</p>
+                            <div>
+                                <Link
+                                    to={`/home/members/${member._id}`}
+                                    style={{ textDecoration: "none", color: "black",display: 'flex', alignItems: 'center',gap: '10px' }}
+                                >
+                                    {member.profilePicture ? <img src={member.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} /> : <img src={profilepic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />}
+                                    <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.firstName}</p>
+                                </Link>
+                            </div>
                             <button onClick={() => handleFollowToggle(member._id, member.firstName, member.lastName)} style={{ backgroundColor: '#71be95', color: 'white', borderRadius: '32px', border: 'none', marginLeft: 'auto', color: '#F8F8FF', padding: '8px 32px', pointer: 'cursor' }}>{isloading[member._id] ? <l-line-spinner
                                 size="20"
                                 stroke="3"

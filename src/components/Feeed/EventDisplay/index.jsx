@@ -9,6 +9,7 @@ import { lineSpinner } from 'ldrs';
 import format from "date-fns/format";
 import baseUrl from "../../../config";
 import * as XLSX from 'xlsx';  // Import the XLSX library
+import { Link } from "react-router-dom";
 
 lineSpinner.register();
 
@@ -19,6 +20,9 @@ const EventDisplay = ({ event }) => {
     const [attendees, setAttendees] = useState();
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+
+
+    let toastId = null; // Global variable to track the toast
 
     useEffect(() => {
         checkAttendanceStatus();
@@ -73,7 +77,12 @@ const EventDisplay = ({ event }) => {
             );
 
             if (response.status === 200) {
-                toast.success('Vote submitted successfully.');
+                if (toastId) {
+                    toast.dismiss(toastId);
+                }
+                // Show the new toast and store its ID
+                toastId = toast.success('Vote submitted successfully.');
+                // toast.success('Vote submitted successfully.');
                 setNewEvent(response.data.event);
                 checkAttendanceStatus();
             } else {
@@ -132,7 +141,7 @@ const EventDisplay = ({ event }) => {
         if (!attendees) {
             return;
         }
-    
+
         // Helper function to map user data
         const mapAttendees = (attendeesList) => {
             return attendeesList.map(attendee => ({
@@ -142,43 +151,48 @@ const EventDisplay = ({ event }) => {
                 'Department': attendee.department || 'N/A'  // Default to 'N/A' if not available
             }));
         };
-    
+
         // Extract attendee details with the new columns
         const willAttendNames = mapAttendees(attendees.willAttend);
         const mightAttendNames = mapAttendees(attendees.mightAttend);
         const willNotAttendNames = mapAttendees(attendees.willNotAttend);
-    
+
         // Create worksheets for each attendance choice
         const willAttendSheet = XLSX.utils.json_to_sheet(willAttendNames, { header: ['Name', 'Graduating Year', 'Class', 'Department'] });
         const mightAttendSheet = XLSX.utils.json_to_sheet(mightAttendNames, { header: ['Name', 'Graduating Year', 'Class', 'Department'] });
         const willNotAttendSheet = XLSX.utils.json_to_sheet(willNotAttendNames, { header: ['Name', 'Graduating Year', 'Class', 'Department'] });
-    
+
         // Create a new workbook
         const workbook = XLSX.utils.book_new();
-    
+
         // Append sheets to the workbook
         XLSX.utils.book_append_sheet(workbook, willAttendSheet, "Will Attend");
         XLSX.utils.book_append_sheet(workbook, mightAttendSheet, "Might Attend");
         XLSX.utils.book_append_sheet(workbook, willNotAttendSheet, "Will Not Attend");
-    
+
         // Write the workbook to a file
         XLSX.writeFile(workbook, `${event.title}_Attendees.xlsx`);
     };
-    
+
 
 
     return (
         <>
             <div className='top'>
-                {event.profilePicture ? (
-                    <img src={event.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-                ) : (
-                    <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
-                )}
-                <div className='info'>
-                    <h4>{event.userName ? event.userName : null}</h4>
-                    <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(event.createdAt)}</span>
-                </div>
+                <Link
+                    to={`/home/members/${event.userId}`}
+                    style={{ textDecoration: "none", color: "black", display: 'flex', alignItems: 'center' }}
+                >
+                    {event.profilePicture ? (
+                        <img src={event.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                    ) : (
+                        <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
+                    )}
+                    <div className='info'>
+                        <h4>{event.userName ? event.userName : null}</h4>
+                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(event.createdAt)}</span>
+                    </div>
+                </Link>
                 {event.userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
                     <img src={postDelete} onClick={handleDeleteEvent} />
                 </IconButton>}
@@ -198,9 +212,9 @@ const EventDisplay = ({ event }) => {
             <div className="options-container">
                 {event.userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={handleOpen}>See event attendees</div>}
                 <div>
-                    <ul style={{ paddingLeft: '0px',display: 'flex', justifyContent: 'space-evenly' }}>
+                    <ul style={{ paddingLeft: '0px', display: 'flex', justifyContent: 'space-evenly' }}>
                         <div className="percentage-bar-container">
-                            <label style={{display: 'flex', gap: '5px'}}>
+                            <label style={{ display: 'flex', gap: '5px' }}>
                                 <input
                                     type="checkbox"
                                     checked={attendanceStatus === 0}
@@ -215,29 +229,29 @@ const EventDisplay = ({ event }) => {
                                         }
                                     }}
                                 />
-                                I will attend 
+                                I will attend
                                 {/* {attendanceStatus === 0 && <span>✔</span>} */}
                             </label>
                         </div>
                         <div className="percentage-bar-container">
-                            <label style={{display: 'flex', gap: '5px'}}>
+                            <label style={{ display: 'flex', gap: '5px' }}>
                                 <input
                                     type="checkbox"
                                     checked={attendanceStatus === 1}
                                     onChange={() => handleAttendance(1, event._id)}
                                 />
-                                I might attend 
+                                I might attend
                                 {/* {attendanceStatus === 1 && <span>✔</span>} */}
                             </label>
                         </div>
                         <div className="percentage-bar-container" onClick={() => handleAttendance(2, event._id)}>
-                            <label style={{display: 'flex', gap: '5px'}}>
+                            <label style={{ display: 'flex', gap: '5px' }}>
                                 <input
                                     type="checkbox"
                                     checked={attendanceStatus === 2}
                                     onChange={() => handleAttendance(2, event._id)}
                                 />
-                                I will not attend 
+                                I will not attend
                                 {/* {attendanceStatus === 2 && <span>✔</span>} */}
                             </label>
                         </div>

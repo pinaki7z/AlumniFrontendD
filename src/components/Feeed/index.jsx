@@ -173,8 +173,8 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
     <div className='feed'>
       {showCreatePost && <CreatePost1 photoUrl={photoUrl} username={username} onNewPost={handleNewPost} entityType={entityType} />}
       {showCreateButton &&
-        <div style={{width: '100%'}}>
-          <button style={{fontFamily: 'Inter', fontWeight: '500', fontSize: '18px',backgroundColor:'#efeff0',padding: '20px',borderRadius: '8px', border: 'none',height: '0vh', width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px'}}>
+        <div style={{ width: '100%' }}>
+          <button style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '18px', backgroundColor: '#efeff0', padding: '20px', borderRadius: '8px', border: 'none', height: '0vh', width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
             Create
           </button>
         </div>}
@@ -201,8 +201,15 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   groupID={post.groupID}
                 />
                 {console.log("entityType", entityType)}
-                {(entityType === 'posts' || entityType === 'forums') && (<CommentSection entityId={post._id} entityType="posts" onCommentSubmit={refreshComments}
-                  onDeleteComment={refreshComments} comments={post ? post.comments : null} />)}
+                {(entityType === 'posts' || entityType === 'forums') && (
+                  <CommentSection
+                    entityId={post._id}
+                    entityType="posts"
+                    onCommentSubmit={refreshComments}
+                    onDeleteComment={refreshComments}
+                    comments={post ? post.comments.filter(comment => !comment.reported) : null}
+                  />
+                )}
               </div>
             );
           } else if (post.type === 'Job' && (post.groupID === _id)) {
