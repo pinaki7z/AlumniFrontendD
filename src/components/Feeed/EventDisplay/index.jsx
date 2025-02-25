@@ -77,12 +77,13 @@ const EventDisplay = ({ event }) => {
             );
 
             if (response.status === 200) {
+                console.log('toast id',toastId)
                 if (toastId) {
+                    console.log('dismiss toast',toastId)
                     toast.dismiss(toastId);
                 }
-                // Show the new toast and store its ID
+                toast.dismiss();
                 toastId = toast.success('Vote submitted successfully.');
-                // toast.success('Vote submitted successfully.');
                 setNewEvent(response.data.event);
                 checkAttendanceStatus();
             } else {
