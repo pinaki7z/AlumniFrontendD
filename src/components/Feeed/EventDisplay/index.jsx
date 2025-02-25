@@ -22,7 +22,6 @@ const EventDisplay = ({ event }) => {
     const [open, setOpen] = useState(false);
 
 
-    let toastId = null; // Global variable to track the toast
 
     useEffect(() => {
         checkAttendanceStatus();
@@ -77,13 +76,8 @@ const EventDisplay = ({ event }) => {
             );
 
             if (response.status === 200) {
-                console.log('toast id',toastId)
-                if (toastId) {
-                    console.log('dismiss toast',toastId)
-                    toast.dismiss(toastId);
-                }
                 toast.dismiss();
-                toastId = toast.success('Vote submitted successfully.');
+                toast.success('Vote submitted successfully.');
                 setNewEvent(response.data.event);
                 checkAttendanceStatus();
             } else {
