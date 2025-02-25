@@ -178,11 +178,15 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             Create
           </button>
         </div>}
-      <div className='infiniteScroll' ref={scrollContainerRef} style={{ height: "80%", overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div  ref={scrollContainerRef}
+      //  style={{ height: "80%", overflowY: "auto", width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}
+      className='infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[80%]'
+       
+       >
         {posts.map((post, index) => {
           if (post.type === 'Post' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <Post
                   userId={post.userId}
                   postId={post._id}
@@ -207,7 +211,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'Job' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="job-box" style={{ width: '100%' }}>
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -224,13 +228,13 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'poll') {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <PollDisplay poll={post} />
               </div>
             );
           } else if (post.type === 'event') {
             return (
-              <div key={post._id} className="post-box">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <EventDisplay event={post} />
               </div>
             );
@@ -238,7 +242,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           else if (post.type === 'news') {
             console.log('newssssss')
             return (
-              <div key={post._id} style={{ width: '100%' }}>
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}

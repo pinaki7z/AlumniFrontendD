@@ -193,13 +193,15 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className={`post ${className}`}>
+    <div className={`flex flex-col gap-3 w-full`}>
       {loading ? (<div> Loading...</div>) : (<>
-        <div className='top'>
-          <img src={profilePic} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-          <div className='info'>
-            <h4>{username}</h4>
-            <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(timestamp)}</span>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <img src={profilePic} className='w-10 h-10 rounded-full object-cover' />
+            <div className=''>
+              <h4>{username}</h4>
+              <span className="text-xs">{formatCreatedAt(timestamp)}</span>
+            </div>
           </div>
           {(admin || userId === profile._id) && (
             <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
@@ -208,7 +210,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           )}
         </div>
         <div>
-          <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} style={{textDecoration: 'none'}}>
+          <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} style={{ textDecoration: 'none' }}>
             {text && (
               <div className='texxt'>
                 <p>{text}</p>
@@ -279,7 +281,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         </MenuItem>
         {/* <MenuItem onClick={() => handleShare('instagram')}>Share to Instagram</MenuItem> */}
         <MenuItem onClick={handleLinkedInShare}>
-          <IoLogoLinkedin style={{width: '70px', height: '70px'}}/>
+          <IoLogoLinkedin style={{ width: '70px', height: '70px' }} />
         </MenuItem>
         <MenuItem >
           <TwitterShareButton url={shareUrl}><TwitterIcon /></TwitterShareButton>

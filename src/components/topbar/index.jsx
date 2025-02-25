@@ -133,8 +133,10 @@ const TopBar = ({ handleLogout }) => {
 
     return (
         <>
-            <div className="top-bar">
-                <div className="topBar">
+            <div className="bg-[rgba(111,188,148,0.15)] flex justify-center sticky top-0 z-3 py-2 pl-[2%]"
+            >
+                <div className="h-full flex items-center  text-white w-[94%] justify-between pr-[70px]"
+                >
                     {/* <div className='top'>
                         <img src={logo} alt="io" width='150px' height='40px' />
                         <div>
@@ -176,45 +178,31 @@ const TopBar = ({ handleLogout }) => {
                     </div> */}
 
                     <div className="search" style={{ display: 'flex', width: '67%' }}>
-                        <form onSubmit={handleSearch} style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                            <div style={{ position: 'relative', width: '100%' }}>
+                        <form onSubmit={handleSearch} className="flex items-center w-full">
+                            <div className="relative w-full bg-[#E9F5EF] border-2 border-[#508f9fa3] rounded-md">
                                 <input
                                     type="search"
                                     name="search"
                                     id="search"
-                                    placeholder="Search for people, forums and groups"
+                                    placeholder="Search for people, forums, and groups"
                                     value={searchText}
                                     onChange={handleChange}
-                                    style={{ width: '100%', padding: '10px 40px 10px 10px', border: '1px solid #0a3a4c' }}
+                                    className="w-full  bg-transparent p-2  outline-none "
                                 />
                                 <button
                                     type="submit"
-                                    style={{
-                                        position: 'absolute',
-                                        right: '10px',
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        backgroundColor: '#efeff0',
-                                        border: 'none',
-                                        padding: '5px',
-                                        color: 'white',
-                                        cursor: 'pointer'
-                                    }}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent text-[#0a3a4c] p-1"
                                 >
                                     {searchLoading ? (
-                                        <l-line-spinner
-                                            size="15"
-                                            stroke="3"
-                                            speed="1"
-                                            color="white"
-                                        ></l-line-spinner>
+                                        <l-line-spinner size="15" stroke="3" speed="1" color="#0a3a4c"></l-line-spinner>
                                     ) : (
-                                        <IoSearchSharp style={{ color: '#0a3a4c', width: '25px', height: '25px' }} />
+                                        <IoSearchSharp className="w-5 h-5" />
                                     )}
                                 </button>
                             </div>
-
                         </form>
+
+
                     </div>
                     <div className="profile-list">
                         <LuMessageSquare style={{ cursor: 'pointer', display: 'none' }} onClick={() => {
@@ -247,7 +235,8 @@ const TopBar = ({ handleLogout }) => {
                                 setShowNotifications(false);
                                 setShowProfileOptions(!showProfileOptions);
                             }} >
-                            <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt='profile-pic' width='40px' height='40px' style={{ borderRadius: '50%' }} />
+                            <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt='profile-pic' className="w-[40px] h-[40px] rounded-full object-cover"
+                            />
                             <p style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
                         </div>
                         {showProfileOptions && (

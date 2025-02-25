@@ -594,7 +594,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
 
 
   return (
-    <div className={`social-media-post ${isExpanded ? 'expanded' : ''}`}>
+    <div className={` p-4 mb-1 rounded-xl w-full  md:w-3/4 xl:w-[700px] ${isExpanded ? 'expanded' : ''}`}>
       <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
       <div className={`card ${isExpanded ? 'expanded' : ''}`} style={{ border: 'none', paddingTop: '50px' }}>
         <div className={`card-header ${isExpanded ? 'expanded' : ''}`} style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
@@ -602,9 +602,8 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
             <img
               src={profile.profilePicture || picture}
               alt='Profile'
-              width='75px'
-              height='75px'
-              style={{ borderRadius: '50%' }}
+              className='w-[60px] h-[60px] rounded-full'
+              
             />
             <div style={{ borderBottom: '1px solid #ccc', width: '93%' }} className={`text-field ${isExpanded ? 'expanded' : ''}`}>
               <textarea

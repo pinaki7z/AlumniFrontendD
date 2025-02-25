@@ -51,7 +51,7 @@ const LeftSidebar = () => {
                 </a>
             </div>
             <div className='sideBar'>
-                <ul style={{ paddingLeft: '0px', width: '100%' }}>
+                <ul className='p-0 w-full text-[20px]'>
                     <li><Link to="/home" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></Link></li>
                     {/* <li><Link to="/socialWall" style={{ textDecoration: 'none' }}><FaHeart style={{ color: '#fd546b' }} /><p>Social Wall</p></Link></li> */}
                     <li><Link to="/home/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>
