@@ -70,6 +70,7 @@ const IForum = () => {
     try {
       const response = await axios.get(`${baseUrl}/forums/${id}/members`);
       setMembers(response.data.members);
+      setSelectedMembers(response.data.members);
     } catch (error) {
       console.error('Error fetching forum members:', error);
     }
@@ -174,21 +175,30 @@ const IForum = () => {
   );
 
   const handleMemberSelect = (memberId) => {
-    setSelectedMembers((prevSelected) =>
-      prevSelected.includes(memberId)
-        ? prevSelected.filter((id) => id !== memberId)
-        : [...prevSelected, memberId]
-    );
+    if (!selectedMembers.includes(memberId)) {
+      setSelectedMembers((prevSelected) => [...prevSelected, memberId]); // Add if not present
+    }
+    setMembers((prevMembers) => {
+      if (prevMembers.includes(memberId)) {
+        return prevMembers.filter(id => id !== memberId); // Remove from frontend UI (but keep in selectedMembers)
+      }
+      return [...prevMembers, memberId]; // Add if not present
+    });
   };
+  
+
 
   const handleSaveMembers = async () => {
     console.log('selectedMembers', selectedMembers)
     try {
+      const body = {
+        userId: selectedMembers
+      };
+
+      console.log('body', body)
       const response = await axios.put(
         `${baseUrl}/forums/members/${id}`,
-        {
-          userId: selectedMembers,
-        }
+        body
       );
       setShowModal(false);
       getForumMembers();
@@ -315,7 +325,13 @@ const IForum = () => {
                       <span className="member-role">{member.profileLevel === 0 ? 'Super Admin' : member.profileLevel === 1 ? 'Admin' : member.profileLevel === 2 ? 'Alumni' : 'Student'}</span>
                     </div>
                   </div>
-                  <input type="checkbox" checked={members.includes(member._id)} onChange={() => handleMemberSelect(member._id)} />
+                  <input
+                    type="checkbox"
+                    checked={members.includes(member._id)} // Only updates UI, not selectedMembers
+                    onChange={() => handleMemberSelect(member._id)}
+                  />
+
+
                 </li>
               ))}
             </ul>

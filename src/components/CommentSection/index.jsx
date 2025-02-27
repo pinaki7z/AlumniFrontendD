@@ -10,6 +10,7 @@ import { MdOutlineDelete } from "react-icons/md";
 import replyy from "../../images/reply.svg";
 import deletee from "../../images/delete.svg";
 import baseUrl from "../../config";
+import profilePic from "../../images/profilepic.jpg"
 
 const reactions = ['😍', '😂', '😡', '😞', '🤩'];
 
@@ -88,7 +89,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
             <div className="comment">
               <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #eee', padding: '10px', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
                 <div style={{ display: 'flex' }}>
-                  <img src={comment.profilePicture} width="40px" height="40px" style={{borderRadius: '50%'}}/>
+                  <img src={comment.profilePicture ? comment.profilePicture : profilePic} width="40px" height="40px" style={{borderRadius: '50%'}}/>
                   <p style={{ fontWeight: '500' }}>{comment.userName}</p></div>
                 <div>
                   <p style={{ padding: '10px', display: 'flex', justifyContent: 'space-between' }}>{comment.content}
