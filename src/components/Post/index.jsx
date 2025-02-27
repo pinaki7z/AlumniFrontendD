@@ -195,20 +195,24 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   return (
     <div className={`flex flex-col gap-3 w-full`}>
       {loading ? (<div> Loading...</div>) : (<>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-2'>
-            <img src={profilePic} className='w-10 h-10 rounded-full object-cover' />
-            <div className=''>
+        <Link
+          to={`/home/members/${userId}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <div className='top'>
+            <img src={profilePic} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+            <div className='info'>
               <h4>{username}</h4>
-              <span className="text-xs">{formatCreatedAt(timestamp)}</span>
+              <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(timestamp)}</span>
             </div>
+            {(admin || userId === profile._id) && (
+              <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
+                <img src={postDelete} />
+              </IconButton>
+            )}
+
           </div>
-          {(admin || userId === profile._id) && (
-            <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
-              <img src={postDelete} />
-            </IconButton>
-          )}
-        </div>
+        </Link>
         <div>
           <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} style={{ textDecoration: 'none' }}>
             {text && (

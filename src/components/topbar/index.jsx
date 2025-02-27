@@ -41,6 +41,15 @@ const TopBar = ({ handleLogout }) => {
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState(null);
     const [searchLoading, setSearchLoading] = useState(false);
+    const [notificationCount, setNotificationCount] = useState(0);
+
+
+    const updateNotificationCount = (count) => {
+        setNotificationCount(count); // Update the count from the child component
+      };
+
+
+
 
 
     const settings = useSelector((state) => {
@@ -225,7 +234,7 @@ const TopBar = ({ handleLogout }) => {
                         {showNotifications && (
                             <div className="notifications-card">
 
-                                <NotificationsP />
+                                <NotificationsP sendNotificationCount={updateNotificationCount}/>
                             </div>
                         )}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1vw', cursor: 'pointer' }} ref={profileOptionsRef}

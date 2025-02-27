@@ -114,7 +114,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
                                         <div className="donation-amount">
                                             <span style={{ fontSize: '15px', fontWeight: '500' }}>Total amount:-</span>
                                             <span id="raised-amount" style={{ fontSize: '15px' }}>
-                                                {donation.amount ? donation.amount : donation.sponsorshipAmount}
+                                            ₹ {donation.amount ? donation.amount : donation.sponsorshipAmount}
                                             </span>
                                         </div>
                                         {/* <div className='ids-bar'>

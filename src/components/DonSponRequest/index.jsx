@@ -63,7 +63,7 @@ const DonSponRequest = ({ name, edit }) => {
                 console.log('Registration successful!', response.data);
                 toast.success("User Registered successfully!");
                 setLoading(false);
-                navigateTo('/members');
+                navigateTo('/home/members');
 
             } catch (error) {
                 console.error('Registration failed!', error.response.data);
@@ -521,6 +521,15 @@ const DonSponRequest = ({ name, edit }) => {
         return years;
     };
 
+    const generateGraduatingYears = () => {
+        const currentYear = new Date().getFullYear();
+        const years = ['Graduated'];
+        for (let i = currentYear; i >= currentYear - 100; i--) {
+          years.push(i);
+        }
+        return years;
+      };
+
     let extraFields = null;
     if (name === 'group') {
         extraFields = (
@@ -667,6 +676,17 @@ const DonSponRequest = ({ name, edit }) => {
                                 {year}
                             </option>
                         ))}
+                    </select>
+                </div>
+                <div className='form-fields' style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                    <label style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '18px' }}>Graduating Year*</label><br />
+                    <select name='graduatingYear' id='graduatingYear' onChange={handleChange} disabled={isAdmin || isSpecialRole} style={{ backgroundColor: (isAdmin || isSpecialRole) ? '#f2f2f2' : 'white', width: '65%', height: '48px', border: '2px solid #0a3a4c', borderRadius: '6px', padding: '9px', color: '#71be95' }} required>
+                        <option value='' disabled selected>Select Graduating Year</option>
+                        {generateGraduatingYears().map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
                     </select>
                 </div>
                 <div style={{width: '100%'}}>
