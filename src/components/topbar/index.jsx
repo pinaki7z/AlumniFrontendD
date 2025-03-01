@@ -142,7 +142,7 @@ const TopBar = ({ handleLogout }) => {
 
     return (
         <>
-            <div className="bg-[rgba(111,188,148,0.15)] flex justify-center sticky top-0 z-3 py-2 pl-[2%]"
+            <div className="bg-[rgba(111,188,148,0.15)] flex justify-center sticky top-0 z-3 py-4 pl-[2%]"
             >
                 <div className="h-full flex items-center  text-white w-[94%] justify-between pr-[70px]"
                 >
