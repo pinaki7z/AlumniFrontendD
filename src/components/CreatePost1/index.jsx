@@ -98,7 +98,7 @@ function MyVerticallyCenteredModal(props) {
       .then((createdEvent) => {
         //setAllEvents([...allEvents, createdEvent]);
         setLoading(false);
-        window.location.reload();
+        //window.location.reload();
 
         setNewEvent({ title: "", start: "", end: "", startTime: "", endTime: "", picture: null, cEmail: "", cName: "", cNumber: "", location: "" });
       })
@@ -152,7 +152,7 @@ function MyVerticallyCenteredModal(props) {
           setSelectedEvent(null);
           props.onHide();
           toast.success("Event updated successfully.");
-          window.location.reload();
+          //window.location.reload();
         })
         .catch((error) => console.error("Error updating event:", error));
     } catch (jsonError) {
@@ -515,7 +515,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
         onNewPost(newPost);
         setInput("");
         setImgUrl("");
-        window.location.reload();
+        //window.location.reload();
       } catch (error) {
         console.error("Error posting:", error);
       }
@@ -540,7 +540,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       setInput("");
       setImgUrl("");
       setSelectedFile(null);
-      window.location.reload();
+     // window.location.reload();
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -559,7 +559,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       setInput("");
       setImgUrl("");
       setSelectedFile(null);
-      window.location.reload();
+      //window.location.reload();
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -585,7 +585,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       onNewPost(newPoll);
       setInput("");
       setShowPollModal(false);
-      window.location.reload();
+      //window.location.reload();
     } catch (error) {
       console.error("Error creating poll:", error);
     }
