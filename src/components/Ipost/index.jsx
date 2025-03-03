@@ -5,8 +5,8 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Menu, MenuItem } from '@mui/material';
-import { FacebookShareButton, LinkedinShareButton, TwitterShareButton,WhatsappShareButton } from 'react-share';
-import { FacebookIcon, LinkedinIcon, TwitterIcon,WhatsappIcon } from 'react-share';
+import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from 'react-share';
+import { FacebookIcon, LinkedinIcon, TwitterIcon, WhatsappIcon } from 'react-share';
 
 import profilePic from '../../images/profilepic.jpg';
 import liked from '../../images/liked.svg';
@@ -24,7 +24,7 @@ export const Ipost = () => {
 
   const [isLiked, setIsLiked] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const shareUrl = window.location.href; 
+  const shareUrl = window.location.href;
   if (!postId) {
     return <div>Post not found.</div>;
   }
@@ -74,7 +74,7 @@ export const Ipost = () => {
         {video && (
           <div className="video">
             <video autoPlay={false} controls>
-              <source src={video.videoPath} type="video/mp4" />
+              <source src={`${process.env.REACT_APP_API_URL}/${video.videoPath}`} type="video/mp4" />
             </video>
             <div className="play-button">
               <PlayCircleOutlineRoundedIcon fontSize="large" />
@@ -106,7 +106,7 @@ export const Ipost = () => {
           </FacebookShareButton>
         </MenuItem>
         <MenuItem onClick={handleLinkedInShare}>
-        <IoLogoLinkedin style={{width: '33px', height: '33px'}}/>
+          <IoLogoLinkedin style={{ width: '33px', height: '33px' }} />
         </MenuItem>
         <MenuItem>
           <TwitterShareButton url={shareUrl}>

@@ -246,7 +246,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   controls={false}
                   onClick={handlePlay}
                 >
-                  <source src={video.videoPath} type='video/mp4' />
+                  <source src={`${process.env.REACT_APP_API_URL}/${video.videoPath}`} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
                 <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
