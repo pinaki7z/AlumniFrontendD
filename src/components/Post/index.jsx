@@ -193,7 +193,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className={`flex flex-col gap-3 w-full`}>
+    <div className={`post ${className}`}>
       {loading ? (<div> Loading...</div>) : (<>
         <Link
           to={`/home/members/${userId}`}
@@ -206,9 +206,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(timestamp)}</span>
             </div>
             {(admin || userId === profile._id) && (
-              <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
-                <img src={postDelete} />
-              </IconButton>
+              // <IconButton onClick={() => handleDeletePost(userId)} className='delete-button'>
+                <img className='delete-button' src={postDelete} />
+              // </IconButton>
             )}
 
           </div>
@@ -246,7 +246,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   controls={false}
                   onClick={handlePlay}
                 >
-                  <source src={`${process.env.REACT_APP_API_URL}/${video.videoPath}`} type="video/mp4" />
+                  <source src={video.videoPath} type='video/mp4' />
                   Your browser does not support the video tag.
                 </video>
                 <div className={`play-button ${isPlaying ? '' : ''}`} onClick={handlePlay}>
@@ -258,12 +258,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         </div>
         {console.log('entity type1', entityType)}
         {entityType === 'posts' && (
-          <div className='bottomAction'>
-            <div className='action'>
-              <img src={commentIcon} alt='comment-icon' className={`postAction grey`} />
-              <h4>Comment</h4>
+          <div className='flex justify-between px-5 py-3'>
+            <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg '>
+              <img src={commentIcon} alt='comment-icon' className='h-[20px]'  />
+              <h4 className='font-semibold'>Comments</h4>
             </div>
-            <div className='action' onClick={handleLike}>{
+            <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg font-semibold ' onClick={handleLike}>{
               isliked ? (
                 <img src={liked} alt="" srcset="" />
               ) : (
@@ -272,7 +272,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             } <h4>{isliked ? 'Liked' : 'Like'}</h4>
             </div>
 
-            <div className='action' onClick={handleShareClick}>
+            <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg font-semibold' onClick={handleShareClick}>
               <img src={share} alt='share-icon' className={`postAction grey`} />
               <h4>Share</h4>
             </div>

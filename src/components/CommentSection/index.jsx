@@ -83,65 +83,78 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
     }
 
     return (
-      <ul className="comment-list">
+      <ul className="">
         {commentsArray.map((comment) => (
           <li key={comment._id}>
-            <div className="comment">
-              <div style={{ display: 'flex', flexDirection: 'column', border: '1px solid #eee', padding: '10px', borderRadius: '10px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
-                <div style={{ display: 'flex' }}>
-                  <img src={comment.profilePicture ? comment.profilePicture : profilePic} width="40px" height="40px" style={{borderRadius: '50%'}}/>
-                  <p style={{ fontWeight: '500' }}>{comment.userName}</p></div>
+            <div className="p-2">
+              <div className='bg-white px-3 py-2 rounded-lg shadow-md ' >
+                {/* comment upper row */}
+
+                <div className='flex justify-between '>
+                  <div className='flex items-center gap-2'>
+                    <img src={comment.profilePicture ? comment.profilePicture : profilePic} className='w-[24px] h-[24px] object-cover rounded-full' />
+                    <p className='text-sm font-semibold'>{comment.userName}</p>
+                  </div>
+                  <div className="comment-menu">
+                    <div className="menu-container">
+                      <div className="menu-trigger" style={{ cursor: 'pointer' }} onClick={() => handleReportToggle(comment._id)}>&#8286;</div>
+                      {showReport[comment._id] && (
+                        <div className="menu-options">
+                          <button onClick={() => handleReport(comment._id, comment.userId)}>Report</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+
+
+                </div>
+                {/* comment text here */}
                 <div>
                   <p style={{ padding: '10px', display: 'flex', justifyContent: 'space-between' }}>{comment.content}
-                    <div className="comment-menu">
-                      <div className="menu-container">
-                        <div className="menu-trigger" style={{ cursor: 'pointer' }} onClick={() => handleReportToggle(comment._id)}>&#8286;</div>
-                        {showReport[comment._id] && (
-                          <div className="menu-options">
-                            <button onClick={() => handleReport(comment._id, comment.userId)}>Report</button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
                   </p>
+                </div>
+                {/* comment like button started here */}
+                <div className="flex justify-end gap-2">
+                  <div className="" onMouseLeave={() => setLikes({ ...likes, hoverComment: null })} >
+                    <button
+                      onClick={() => handleLikeToggle(comment._id)}
+                      onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
+                      //onMouseLeave={() => setLikes({ ...likes, hoverComment: null })}
+                      className='bg-[#136175] px-3 py-1 text-white rounded-lg  '
+
+                    >
+                      {likes[comment._id] || 'Like'}
+                    </button>
+                    {likes.hoverComment === comment._id && (
+                      <div className="reaction-emojis" style={{ position: 'absolute', top: '0px', left: '-40px', display: 'flex', gap: '5px', background: '#fff', border: '1px solid #ddd', padding: '5px', borderRadius: '5px' }}>
+                        {reactions.map((reaction, index) => (
+                          <span
+                            key={index}
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => handleLikeToggle(comment._id, reaction)}
+                          >
+                            {reaction}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {comment.userId === profile._id || profile.profileLevel === 0 ?
+                    <div onClick={() => handleCommentDelete(comment._id)} className='flex gap-1 cursor-pointer bg-[#136175] px-2  text-white rounded-lg  '>
+                      {/* <img src={deletee} alt="" srcset="" className='text-white' /> */}
+                      <img src='/images/delete_svg.svg' className='w-[20px]' />
+                      {/* <button onClick={() => handleCommentDelete(comment._id)}>Delete</button> */}
+                    </div> : null}
+                  <div className='flex gap-1 cursor-pointer bg-[#136175] px-2  text-white rounded-lg '>
+                    {/* <img src={replyy} alt="" srcset="" /> */}
+                    <button onClick={() => handleCommentReply(comment._id)}>Reply</button>
+                  </div>
 
                 </div>
-
               </div>
 
-              <div className="comment-buttons">
-                {comment.userId === profile._id || profile.profileLevel === 0 ? <div style={{fontSize: '18px', display: 'flex', alignItems: 'center'}}>
-                <img src={deletee} alt="" srcset="" />
-                 <button onClick={() => handleCommentDelete(comment._id)}>Delete</button> 
-                </div> : null}
-                <div style={{fontSize: '18px'}}>
-                <img src={replyy} alt="" srcset=""/>
-                  <button onClick={() => handleCommentReply(comment._id)}>Reply</button>
-                </div>
-                <div className="like-container" onMouseLeave={() => setLikes({ ...likes, hoverComment: null })} style={{ position: 'relative', fontSize: '18px' }}>
-                  <button
-                    onClick={() => handleLikeToggle(comment._id)}
-                    onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
-                    //onMouseLeave={() => setLikes({ ...likes, hoverComment: null })}
-                    style={{position: 'absolute', top: '25px', left: '-40px'}}
-                  >
-                    {likes[comment._id] || 'Like'}
-                  </button>
-                  {likes.hoverComment === comment._id && (
-                    <div className="reaction-emojis" style={{ position: 'absolute', top: '0px', left: '-40px', display: 'flex', gap: '5px', background: '#fff', border: '1px solid #ddd', padding: '5px', borderRadius: '5px' }}>
-                      {reactions.map((reaction, index) => (
-                        <span
-                          key={index}
-                          style={{ cursor: 'pointer' }}
-                          onClick={() => handleLikeToggle(comment._id, reaction)}
-                        >
-                          {reaction}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+
               {replyToCommentId === comment._id && (
                 <div className="reply-form">
                   <input
@@ -163,7 +176,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   };
 
   const handleCommentReply = (commentId) => {
-    if(!replyToCommentId)  setReplyToCommentId(commentId);
+    if (!replyToCommentId) setReplyToCommentId(commentId);
     else setReplyToCommentId(null)
     setContent('');
   };
@@ -187,24 +200,26 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   };
 
   return (
-    <div style={{ backgroundColor: 'white', borderRadius: '6px' }}>
-      <div className="comment-box" style={{ padding: '15px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><img src={profile.profilePicture} style={{ width: '60px', height: '55px', borderRadius: '55%' }} />
-          <p style={{ marginBottom: '0px', fontWeight: '600', fontSize: '18px' }}>{profile.firstName}</p>
+    <>
+      <div className='bg-white pt-3 pb-2 px-2 rounded-lg shadow-md'>
+        <div className="" >
+          <div className='flex items-center gap-2' ><img src={profile.profilePicture} className='rounded-full h-[30px] w-[30px] object-cover ' />
+            <p className='text-base font-semibold '>{profile.firstName}</p>
+          </div>
+          <input
+            className=" outline-none w-full  border-b border-[#71be95] py-2"
+            placeholder="Add a comment"
+            value={content}
+            onChange={(e) => setContent(e.target.value)} 
+          />
+          <div style={{ display: 'flex', justifyContent: 'end', textAlign: 'center', paddingTop: '15px' }}>
+            <button onClick={handleCommentSubmit} className=' bg-[#136175] px-3  text-white text-lg rounded-lg  py-2 font-semibold'>Comment</button>
+          </div>
         </div>
-        <input
-          className="comment-input"
-          placeholder="Add a comment"
-          value={content}
-          onChange={(e) => setContent(e.target.value)} style={{ width: '100%', border: 'none', borderBottom: '1px solid #71be95', paddingTop: '25px' }}
-        />
-        <div style={{ display: 'flex', justifyContent: 'end', textAlign: 'center', paddingTop: '15px' }}>
-          <button onClick={handleCommentSubmit} style={{ color: '#F8F8FF', backgroundColor: '#0a3a4c', padding: '8px 20px 8px 20px', borderRadius: '8px' }}>Comment</button>
-        </div>
-      </div>
 
+      </div>
       {renderComments(comments)}
-    </div>
+    </>
   );
 };
 

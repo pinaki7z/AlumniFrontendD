@@ -204,7 +204,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   onDeletePost={() => handleDeletePost(post._id)}
                   groupID={post.groupID}
                 />
-                {console.log("entityType", entityType)}
+                {/* {console.log("entityType", entityType)} */}
                 {(entityType === 'posts' || entityType === 'forums') && (
                   <CommentSection
                     entityId={post._id}
@@ -218,7 +218,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'Job' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -235,13 +235,13 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'poll') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
                 <PollDisplay poll={post} />
               </div>
             );
           } else if (post.type === 'event') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
                 <EventDisplay event={post} />
               </div>
             );
@@ -249,7 +249,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           else if (post.type === 'news') {
             console.log('newssssss')
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}
