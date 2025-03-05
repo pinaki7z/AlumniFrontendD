@@ -193,7 +193,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className={`post ${className}`}>
+    <div className={``}>
       {loading ? (<div> Loading...</div>) : (<>
         <Link
           to={`/home/members/${userId}`}
@@ -232,7 +232,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               </Slider>
             ) : image && image.length === 1 && image[0] ? (
               <div>
-                <img src={image[0]} alt={`image`} style={{ width: '-webkit-fill-available' }} />
+                <img src={image[0]} alt={`image`}  />
               </div>
             ) : null}
 
@@ -258,23 +258,23 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         </div>
         {console.log('entity type1', entityType)}
         {entityType === 'posts' && (
-          <div className='flex justify-between px-5 py-3'>
+          <div className='flex justify-between px-2 md:px-5  py-3'>
             <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg '>
               <img src={commentIcon} alt='comment-icon' className='h-[20px]'  />
-              <h4 className='font-semibold'>Comments</h4>
+              <h4 className='font-semibold hidden md:block'>Comments</h4>
             </div>
-            <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg font-semibold ' onClick={handleLike}>{
+            <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 md:px-2 rounded-lg font-semibold ' onClick={handleLike}>{
               isliked ? (
                 <img src={liked} alt="" srcset="" />
               ) : (
                 <img src={unliked} alt="" srcset="" />
               )
-            } <h4>{isliked ? 'Liked' : 'Like'}</h4>
+            } <h4 className='hidden md:block'>{isliked ? 'Liked' : 'Like'}</h4>
             </div>
 
             <div className='flex gap-1 text-[#136175] cursor-pointer hover:bg-[#6fbc9461] py-2 px-2 rounded-lg font-semibold' onClick={handleShareClick}>
               <img src={share} alt='share-icon' className={`postAction grey`} />
-              <h4>Share</h4>
+              <h4 className='hidden md:block'>Share</h4>
             </div>
           </div>
         )}

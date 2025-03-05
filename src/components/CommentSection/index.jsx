@@ -116,7 +116,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
                 </div>
                 {/* comment like button started here */}
                 <div className="flex justify-end gap-2">
-                  <div className="" onMouseLeave={() => setLikes({ ...likes, hoverComment: null })} >
+                  <div className="relative" onMouseLeave={() => setLikes({ ...likes, hoverComment: null })} >
                     <button
                       onClick={() => handleLikeToggle(comment._id)}
                       onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
@@ -127,7 +127,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
                       {likes[comment._id] || 'Like'}
                     </button>
                     {likes.hoverComment === comment._id && (
-                      <div className="reaction-emojis" style={{ position: 'absolute', top: '0px', left: '-40px', display: 'flex', gap: '5px', background: '#fff', border: '1px solid #ddd', padding: '5px', borderRadius: '5px' }}>
+                      <div className="reaction-emojis" style={{ position: 'absolute', top: '-20px', left: '-40px', display: 'flex', gap: '5px', background: '#fff', border: '1px solid #ddd', padding: '5px', borderRadius: '5px' }}>
                         {reactions.map((reaction, index) => (
                           <span
                             key={index}
@@ -156,15 +156,18 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
 
 
               {replyToCommentId === comment._id && (
-                <div className="reply-form">
+                <div className="flex items-end bg-white rounded-lg  my-2 mx-3 px-3 py-2">
                   <input
-                    className="comment-input"
+                    className="outline-none"
                     placeholder="Reply to this comment"
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                     style={{ width: '100%', border: 'none', borderBottom: '1px solid #71be95', paddingTop: '25px' }}
                   />
-                  <button onClick={() => handleReplySubmit(comment._id)} style={{ color: '#F8F8FF', backgroundColor: '#0a3a4c', padding: '8px 20px 8px 20px', borderRadius: '8px', float: 'right', marginTop: '10px', marginLeft: '20px', position: 'relative', zIndex: '1' }}>Submit Reply</button>
+                  <div>
+                  <button onClick={() => handleReplySubmit(comment._id)} className='bg-[#136175] px-1 py-1 text-white rounded-lg ' >Reply</button>
+
+                  </div>
                 </div>
               )}
               {renderComments(comment.comments)}

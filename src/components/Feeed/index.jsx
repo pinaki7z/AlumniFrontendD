@@ -218,7 +218,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'Job' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -235,13 +235,13 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'poll') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <PollDisplay poll={post} />
               </div>
             );
           } else if (post.type === 'event') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <EventDisplay event={post} />
               </div>
             );
@@ -249,7 +249,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           else if (post.type === 'news') {
             console.log('newssssss')
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[800px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}

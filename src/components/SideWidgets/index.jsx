@@ -160,13 +160,13 @@ const SideWidgets = () => {
                 </OverlayTrigger>
             </div>
 
-            <div className="sideWidget-post-card">
+            <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center py-5 mt-20">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={profile.profilePicture ? profile.profilePicture : profilepic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />
+                    <img src={profile.profilePicture ? profile.profilePicture : profilepic} alt="Profile" className='rounded-full object-cover w-[70px] h-[70px]' />
                     <Link to='/profile' style={{ textDecoration: 'none', color: 'black' }}>
-                        <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>{profile.firstName}</p>
+                        <p className='text-lg font-semibold mb-2'>{profile.firstName}</p>
                     </Link>
-                    <p style={{ marginBottom: '0rem', fontSize: '14px', backgroundColor: '#71be95', paddingLeft: '5px', paddingRight: '5px' }}>@{profile.firstName}</p>
+                    <p className='text-sm cursor-pointer  text-green-700 bg-[#6FBC9499] rounded-lg px-1 py-1'>@{profile.firstName}</p>
                 </div>
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
@@ -177,20 +177,24 @@ const SideWidgets = () => {
                 </div>
             </div>
 
-            <div className='sideWidget2-post-card'>
+            <div className='w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center mt-4'>
                 <div className="sideWidget2-post-header">
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>People You May Know</p>
                     <button style={{ border: 'none', backgroundColor: '#0a3a4c' }}><TbReload style={{ color: '#F8F8FF' }} /></button>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className='w-full px-2'>
                     {displayedMembers.map((member, index) => (
                         <div key={member._id} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', border: '1px solid #e9e9e9', borderRadius: '10px', width: '100%' }}>
-                            <div>
+                            <div className='w-full'>
                                 <Link
-                                    to={`/home/members/${member._id}`}
-                                    style={{ textDecoration: "none", color: "black",display: 'flex', alignItems: 'center',gap: '10px' }}
+                                    to={`/home/members/${member._id}`} className='w-full'
+                                    style={{ textDecoration: "none", color: "black", display: 'flex', alignItems: 'center', gap: '10px' }}
                                 >
-                                    {member.profilePicture ? <img src={member.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} /> : <img src={profilepic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />}
+                                    {
+                                        member.profilePicture ?
+                                            <img src={member.profilePicture} className='w-[45px] h-[45px] object-cover rounded-full ' />
+                                            : <img src={profilepic} className='w-[45px] h-[45px] object-cover rounded-full ' />
+                                    }
                                     <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.firstName}</p>
                                 </Link>
                             </div>
@@ -215,7 +219,7 @@ const SideWidgets = () => {
                     <p style={{ marginBottom: '0rem', marginTop: '0rem' }}>1</p>
                 </div>
             </div>
-            <div className="sideWidget2-post-card">
+            <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center mt-4">
                 <div className="sideWidget2-post-header">
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Latest Activities</p>
                     <button style={{ border: 'none', backgroundColor: '#0a3a4c' }}><TbReload onClick={fetchNotifications} style={{

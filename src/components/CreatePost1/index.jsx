@@ -540,7 +540,7 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
       setInput("");
       setImgUrl("");
       setSelectedFile(null);
-     // window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -594,16 +594,16 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
 
 
   return (
-    <div className={` py-5 mb-1 rounded-xl w-full  md:w-3/4 xl:w-[700px] ${isExpanded ? 'expanded' : ''}`}>
+    <div className={` pt-4 pb-4 mb-1 rounded-xl w-full  md:w-3/4 xl:w-[700px] ${isExpanded ? 'expanded' : ''}`}>
       <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
       <div className={`card border-0 pt-1 ${isExpanded ? 'expanded' : ''}`} >
         <div className={`card-header ${isExpanded ? 'expanded' : ''}`} style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px'}}  className={`status-field ${isExpanded ? 'expanded' : ''}`}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} className={`status-field ${isExpanded ? 'expanded' : ''}`}>
             <img
               src={profile.profilePicture || picture}
               alt='Profile'
               className='w-[60px] h-[60px] rounded-full object-cover'
-              
+
             />
             <div style={{ borderBottom: '1px solid #ccc', width: '93%' }} className={`text-field ${isExpanded ? 'expanded' : ''}`}>
               <textarea
@@ -633,9 +633,11 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
             </div>
           </div>
         </div>
-        <div className={`img-job-vide`}>
-          <label style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px', gap: '5px', width: '18%' }}>
-            <img src={gallery} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Image</p>
+        <div className={`flex justify-between mt-2 `}>
+          {/* create post all 3 buttons */}
+          <div className='flex gap-2'>
+          <label className='flex gap-1 items-center font-semibold px-3 py-2 md:p-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100'>
+            <img src={gallery} className='h-[20px] w-[20px] ' alt="" srcset="" /><p className="md:block hidden" >Image</p>
             <input
               type='file'
               accept='image/*'
@@ -644,12 +646,12 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
               multiple
             />
           </label>
-          <button 
-          className="bg-white text-black px-[10px] py-[5px] ml-0 flex items-center gap-[5px] text-[15px] w-[18%] rounded-3xl border border-[#71be95]"
- onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Poll</p></button>
+          <label
+            className="flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100"
+            onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="md:block hidden" style={{ marginBottom: '0px' }}>Poll</p></label>
 
 
-          <label style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
+          <label className='flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100' >
             <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Video</p>
             <input
               type='file'
@@ -661,15 +663,15 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
           {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
             <img src={video} alt="" srcset="" />Event
           </label>}
+          </div>
           <div style={{ marginTop: '4px', marginLeft: 'auto' }}>
-            <button onClick={handleSubmit}
-            style={{
-              float: 'right', color: '#ffffff',
-              backgroundColor: '#71be95',
-              borderColor: '#174873',
-              fontSize: '16px', 
-              fontWeight: '500',
-            }}>Post</button>
+            <div
+              onClick={handleSubmit}
+              className="float-right cursor-pointer hover:bg-green-500 text-white bg-[#71be95] border border-[#174873] text-[16px] font-medium px-4 py-2 rounded"
+            >
+              Post
+            </div>
+
           </div>
         </div>
       </div>
