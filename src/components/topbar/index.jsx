@@ -22,6 +22,8 @@ import { lineSpinner } from 'ldrs';
 import baseUrl from '../../config';
 import profilePic from "../../images/profilepic.jpg";
 import { NotificationsP } from '../NotificationsP';
+import { Drawer, IconButton } from '@mui/material';
+import LeftSidebar from '../left-sidebar';
 
 lineSpinner.register()
 
@@ -47,8 +49,18 @@ const TopBar = ({ handleLogout }) => {
     const updateNotificationCount = (count) => {
         setNotificationCount(count); // Update the count from the child component
       };
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
 
+      const toggleDrawer = (open) => (event) => {
+        if (
+          event.type === "keydown" &&
+          (event.key === "Tab" || event.key === "Shift")
+        ) {
+          return;
+        }
+        setDrawerOpen(open);
+      };
 
 
 
@@ -144,7 +156,7 @@ const TopBar = ({ handleLogout }) => {
         <>
             <div className="bg-[rgba(111,188,148,0.15)] flex justify-center sticky top-0 z-3 py-4 pl-[2%]"
             >
-                <div className="h-full flex items-center  text-white w-[94%] justify-between pr-[70px]"
+                <div className="h-full flex items-center  text-white w-[94%] justify-between md:pr-[70px]"
                 >
                     {/* <div className='top'>
                         <img src={logo} alt="io" width='150px' height='40px' />
@@ -185,6 +197,35 @@ const TopBar = ({ handleLogout }) => {
                             </OverlayTrigger>
                         </div>
                     </div> */}
+                     {/* Hamburger Menu for Mobile */}
+        <div className="md:hidden  " style={{ zIndex: 50 }}>
+          <IconButton onClick={toggleDrawer(true)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="36"
+              height="36"
+              fill="currentColor"
+              class="bi bi-list"
+              viewBox="0 0 16 16"
+              className="text-[#004C8A]"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+              />
+            </svg>
+          </IconButton>
+
+          <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
+          <div
+            role="presentation"
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+          >
+            <LeftSidebar />
+          </div>
+        </Drawer>
+        </div>
 
                     <div className="search" style={{ display: 'flex', width: '67%' }}>
                         <form onSubmit={handleSearch} className="flex items-center w-full">
@@ -246,7 +287,7 @@ const TopBar = ({ handleLogout }) => {
                             }} >
                             <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt='profile-pic' className="w-[40px] h-[40px] rounded-full object-cover"
                             />
-                            <p style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
+                            <p className='hidden md:block' style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
                         </div>
                         {showProfileOptions && (
                             <ul className="profile-options" >

@@ -144,17 +144,15 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
   return (
     <>
       <div
-        className="card"
+        className="card flex flex-col justify-between"
         style={{
-          width: "17vw",
+          // width: "17vw",
           backgroundPosition: "center",
-          backgroundColor:"#efeff0",
+          backgroundColor:"#E9F5EF",
           WebkitBackgroundSize: "cover",
           position: 'relative',
-          height: '45vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          // height: '45vh',
+     
         }}
       >
         {addButton && (
@@ -174,6 +172,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
         <Link
           to={isFollowPresent ? `/home/members/${member.userId}` : `/home/members/${member._id}`}
           style={{ textDecoration: "none", color: "black" }}
+          className="mb-2"
         >
           <div style={{ textAlign: 'center' }}>
             <h3 style={{ paddingTop: "1em", fontWeight: "600", fontSize: '20px', fontFamily: 'Inter', color: '#000000' }}>
@@ -197,7 +196,8 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
             </div>
           </div>
         </Link>
-        {loading ? (
+       <div>
+       {loading ? (
           <div style={{ textAlign: 'center' }}>
             <l-orbit
               size="35"
@@ -211,7 +211,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
               onClick={handleFollowToggle}
               style={{
                 width: '100%',
-                position: 'absolute',
+                position: '',
                 bottom: '0px',
                 display: 'flex',
                 alignItems: 'center',
@@ -228,6 +228,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
             </button>
           )
         )}
+       </div>
       </div>
     </>
   );

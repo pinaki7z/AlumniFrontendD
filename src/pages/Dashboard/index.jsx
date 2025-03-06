@@ -194,25 +194,7 @@ const Dashboard = ({ handleLogout }) => {
           </div>
         </Drawer>
 
-        {/* Hamburger Menu for Mobile */}
-        <div className="d-lg-none position-fixed start-0 top-0" style={{ zIndex: 50 }}>
-          <IconButton onClick={toggleDrawer(true)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36"
-              height="36"
-              fill="currentColor"
-              class="bi bi-list"
-              viewBox="0 0 16 16"
-              className="text-[#004C8A]"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-              />
-            </svg>
-          </IconButton>
-        </div>
+       
       </div>
     </>
   );
