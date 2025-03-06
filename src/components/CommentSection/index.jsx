@@ -25,6 +25,9 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   const [likes, setLikes] = useState({});
 
   const handleCommentSubmit = async () => {
+    if (content === ''){
+      return;
+    }
     try {
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         userId: profile._id,
@@ -185,6 +188,9 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   };
 
   const handleReplySubmit = async (parentCommentId) => {
+    if(reply === ''){
+      return;
+    }
     try {
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         content: reply,
