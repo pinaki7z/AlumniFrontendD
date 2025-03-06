@@ -346,11 +346,14 @@ function MyVerticallyCenteredModal(props) {
 
 
 
-const CreatePost1 = ({ name, onNewPost, entityType }) => {
+const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
+  loadingPost,
+  setLoadingPost}) => {
   const { _id } = useParams();
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [picturePath, setPicturePath] = useState("");
+  const [videoPath, setVideoPath] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -363,6 +366,8 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const onHideModal = (modalVisibility) => {
     setShowModal(modalVisibility);
@@ -415,6 +420,120 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
 
     console.log(selectedFiles);
   };
+
+  const handleImageChange = async (e) => {
+    const files = e.target.files;
+    if (!files.length) return;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("images", files[i]);
+    }
+
+    try {
+      // Post the images to the server
+      const response = await axios.post(`${baseUrl}/uploadImage/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // Update gallery with uploaded image URLs
+      setPicturePath(response.data);
+    } catch (error) {
+      console.error("Error uploading files", error);
+    }
+  };
+
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    console.log("file", file);
+
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('video', file); // 'video' should match the field name expected by the server
+
+    // Send the FormData via Axios
+    axios.post(`${baseUrl}/uploadImage/video`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+      .then(res => {
+        setVideoPath(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+
+  const simulateUpload = () => {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setUploadProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => setUploadProgress(0), 1000);
+      }
+    }, 500);
+  };
+
+  const removeMedia = (index) => {
+    const newPicturePath = [...picturePath];
+    newPicturePath.splice(index, 1);
+    setPicturePath(newPicturePath);
+
+    if (selectedFile && index === 0) {
+      setSelectedFile(null);
+    } else {
+      const newSelectedFiles = [...selectedFiles];
+      newSelectedFiles.splice(index, 1);
+      setSelectedFiles(newSelectedFiles);
+    }
+  };
+
+
+  const newHandleSubmit = async (event) => {
+    console.log('postingggggg');
+    if (input === ''){
+      setLoadingPost(false)
+      return;
+    }
+
+    event.preventDefault();
+    setLoadingPost(true);
+    console.log('loading t/f', loading);
+
+    const payload = {
+      userId: profile._id,
+      description: input,
+      department: profile.department,
+      profilePicture: profile.profilePicture,
+    };
+
+    if (_id) payload.groupID = _id;
+    if (picturePath) payload.picturePath = picturePath;
+    if (videoPath) payload.videoPath = videoPath;
+
+    console.log("payload", payload);
+
+    try {
+      await axios.post(`${baseUrl}/${entityType}/create`, payload);
+      setImgUrl("");
+      setSelectedFile(null);
+      setPicturePath([]);
+      setVideoPath({});
+      setInput("");
+      getPosts(1);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      setLoadingPost(false);
+    }
+  };
+
 
 
   const handleSubmit = async (event) => {
@@ -626,50 +745,111 @@ const CreatePost1 = ({ name, onNewPost, entityType }) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault(); // Prevents new line
-                    handleSubmit(); // Call the submit function
+                    newHandleSubmit(); // Call the submit function
                   }
                 }}
               />
             </div>
+            {/* {close && <button onClick={closeButton}>Close</button>} */}
           </div>
         </div>
+        {picturePath.length > 0 && (
+          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            {picturePath.map((path, index) => (
+              <div key={index} className="relative">
+
+                <img
+                  src={path}
+                  alt="Preview"
+                  className="w-full h-32 object-cover rounded"
+                />
+
+                <button
+                  onClick={() => removeMedia(index)}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+
+
+          </div>
+
+
+        )}
+
+        {videoPath?.videoPath &&
+          <div className="w-50 ">
+
+            <video
+              src={videoPath?.videoPath}
+              className="h-40  object-cover rounded"
+              controls
+            />
+            <div className="flex justify-center bg-red">
+              <button
+                onClick={() => setVideoPath({})}
+                className=" text-white rounded-full p-1 w-full  flex items-center justify-end"
+              >
+                Remove
+              </button>
+            </div>
+
+
+          </div>
+        }
+
+        {uploadProgress > 0 && (
+          <div className="mt-2 w-full">
+            <div className="bg-gray-200 rounded-full h-2.5 w-full">
+              <div
+                className="bg-blue-600 h-2.5 rounded-full"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">
+              {uploadProgress}% uploaded
+            </p>
+          </div>
+        )}
         <div className={`flex justify-between mt-2 `}>
           {/* create post all 3 buttons */}
           <div className='flex gap-2'>
-          <label className='flex gap-1 items-center font-semibold px-3 py-2 md:p-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100'>
-            <img src={gallery} className='h-[20px] w-[20px] ' alt="" srcset="" /><p className="md:block hidden" >Image</p>
-            <input
-              type='file'
-              accept='image/*'
-              style={{ display: 'none' }}
-              onChange={handleFileInputChange}
-              multiple
-            />
-          </label>
-          <label
-            className="flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100"
-            onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="md:block hidden" style={{ marginBottom: '0px' }}>Poll</p></label>
+            <label className='flex gap-1 items-center font-semibold px-3 py-2 md:p-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100'>
+              <img src={gallery} className='h-[20px] w-[20px] ' alt="" srcset="" /><p className="md:block hidden" >Image</p>
+              <input
+                type='file'
+                accept='image/*'
+                style={{ display: 'none' }}
+                onChange={handleImageChange}
+                multiple
+              />
+            </label>
+            <label
+              className="flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100"
+              onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="md:block hidden" style={{ marginBottom: '0px' }}>Poll</p></label>
 
 
-          <label className='flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100' >
-            <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Video</p>
-            <input
-              type='file'
-              accept='video/*'
-              style={{ display: 'none' }}
-              onChange={handleFileInputChange}
-            />
-          </label>
-          {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
-            <img src={video} alt="" srcset="" />Event
-          </label>}
+            <label className='flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100' >
+              <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Video</p>
+              <input
+                type='file'
+                accept='video/*'
+                style={{ display: 'none' }}
+                onChange={handleVideoChange}
+              />
+            </label>
+            {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
+              <img src={video} alt="" srcset="" />Event
+            </label>}
           </div>
           <div style={{ marginTop: '4px', marginLeft: 'auto' }}>
             <div
-              onClick={handleSubmit}
+              onClick={newHandleSubmit}
               className="float-right cursor-pointer hover:bg-green-500 text-white bg-[#71be95] border border-[#174873] text-[16px] font-medium px-4 py-2 rounded"
             >
-              Post
+               {loadingPost ? 'Posting...' : 'Post'}
             </div>
 
           </div>

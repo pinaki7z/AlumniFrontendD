@@ -23,6 +23,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
   const [posts, setPosts] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
+  const [loadingPost, setLoadingPost] = useState(false);
   const scrollContainerRef = useRef(null);
   const [totalPosts, setTotalPosts] = useState(0);
   const activePageRef = useRef(1);
@@ -142,6 +143,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         setPosts((prevItems) => [...prevItems, ...postsData]);
         setTotalPosts(response.data.total);
         lastFetchedPageRef.current = page;
+        setLoadingPost(false);
       } else if (groupID) {
         const response = await axios.get(
           `${baseUrl}/groups/groups/${groupID}?page=${page}&size=${LIMIT}`
@@ -150,6 +152,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         setPosts((prevItems) => [...prevItems, ...postsData]);
         setTotalPosts(response.data.total);
         lastFetchedPageRef.current = page;
+        setLoadingPost(false);
       }
       else {
         const response = await axios.get(
@@ -159,9 +162,11 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         setPosts((prevItems) => [...prevItems, ...postsData]);
         setTotalPosts(response.data.total);
         lastFetchedPageRef.current = page;
+        setLoadingPost(false);
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
+      setLoadingPost(false);
     }
     isFetchingRef.current = true;
     setLoading(false);
@@ -171,7 +176,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
 
   return (
     <div className='feed'>
-      {showCreatePost && <CreatePost1 photoUrl={photoUrl} username={username} onNewPost={handleNewPost} entityType={entityType} />}
+      {showCreatePost && <CreatePost1 photoUrl={photoUrl} username={username} onNewPost={handleNewPost} entityType={entityType} setLoadingPost={setLoadingPost} loadingPost={loadingPost} getPosts={getPosts}/>}
       {showCreateButton &&
         <div style={{ width: '100%' }}>
           <button style={{ fontFamily: 'Inter', fontWeight: '500', fontSize: '18px', backgroundColor: '#efeff0', padding: '20px', borderRadius: '8px', border: 'none', height: '0vh', width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
