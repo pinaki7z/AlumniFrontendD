@@ -103,7 +103,7 @@ const Donations = () => {
           </button>
         </div>
       )}
-
+      {/* tabs here */}
       <Routes>
         <Route
           path="/"
@@ -170,6 +170,7 @@ const Donations = () => {
             element={<BrowseDonations donSpon={userDonations} name="donations" />}
           />
         )}
+        {/* browse businesses */}
         <Route
           path="/"
           element={

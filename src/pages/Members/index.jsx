@@ -222,8 +222,8 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         }}
       >
         <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-          <h2 className='text-white font-bold text-2xl md:text-4xl mb-3'>Members</h2>
-          <p className='mt-1 text-gray-100 font-bold text-xl ' >
+          <h2 className='text-green-900 font-bold text-2xl md:text-4xl mb-3'>Members</h2>
+          <p className='mt-1 text-green-900 font-bold text-xl ' >
             Explore profiles and expand your network with fellow members.
           </p>
         </div>
