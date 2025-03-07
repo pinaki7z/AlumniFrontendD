@@ -101,7 +101,11 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
                                         </h3>
 
                                         <p className="text-gray-500 text-sm mt-1">{formatDate(donation.createdAt)}</p>
-                                        <p className="text-gray-700 text-sm mt-2">{donation.eventDescription}</p>
+                                        <p className="text-gray-700 text-sm mt-2">
+                                            {donation.eventDescription?.length > 40
+                                                ? `${donation.eventDescription.substring(0, 40)}...`
+                                                : donation.eventDescription}
+                                        </p>
                                     </div>
 
                                     {/* Actions */}
