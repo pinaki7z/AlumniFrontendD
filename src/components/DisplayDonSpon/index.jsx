@@ -82,7 +82,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
                     donations.map((donation) => (
                         <Link to={`/home/${name}/${donation._id}`} className=''>
                             <div className="px-2">
-                                <div className="p-4 rounded-xl shadow-md hover:shadow-2xl transition duration-300 bg-[#EAF5EF]">
+                                <div className="p-4 rounded-xl shadow-md hover:shadow-lg transition duration-300 bg-[#EAF5EF] border border-[#0A3A4C]">
                                     {/* Image */}
                                     <div className="w-full rounded-xl overflow-hidden">
                                         <img
