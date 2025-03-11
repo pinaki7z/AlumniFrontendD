@@ -146,7 +146,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
       <div
         className="card flex flex-col justify-between"
         style={{
-          // width: "17vw",
+          //width: "40%",
           backgroundPosition: "center",
           backgroundColor:"#E9F5EF",
           WebkitBackgroundSize: "cover",
@@ -187,11 +187,11 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
             <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
               <div>
                 <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Followers</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member.followers.length}</p>
+                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member?.followers?.length ? member.followers.length : null}</p>
               </div>
               <div>
                 <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Following</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member.following.length}</p>
+                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member?.following?.length ? member.following.length : null}</p>
               </div>
             </div>
           </div>

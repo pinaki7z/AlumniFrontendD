@@ -118,9 +118,11 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
     // Apply search filter
     if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filteredMembers = filteredMembers.filter(
         (member) =>
-          member.firstName.toLowerCase().includes(searchQuery.toLowerCase())
+          member.firstName.toLowerCase().includes(query) ||
+          member.lastName.toLowerCase().includes(query)
       );
     }
 

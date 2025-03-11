@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import picture from '../../../images/d-group.jpg';
+import picture from '../../../images/placement-banner-1.jpg';
 import { Link } from "react-router-dom";
 import './IndividualGroup.css';
 import SocialMediaPost from "../../Social-wall-post";
@@ -237,7 +237,7 @@ const IndividualGroup = () => {
                             <div key={groupItem._id} className="ig-container">
                                 <div className="container-div" style={{ width: '100%', borderRadius: '12px', position: 'relative' }}>
                                     <div className="upper-div" style={{
-                                        backgroundImage: `url(${profile.coverPicture})`,
+                                        backgroundImage: `url(${groupItem.groupPicture ? groupItem.groupPicture : picture})`,
                                         width: '100%',
                                         minHeight: '35vh',
                                         backgroundSize: 'cover',
