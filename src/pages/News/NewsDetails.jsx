@@ -1,12 +1,12 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import './NewsDetails.css';
 
 const NewsDetails = () => {
     const location = useLocation();
-    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost } = location.state;
+    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost } = location.state || {};
 
     const formatDate = (dateString) => {
+        if (!dateString) return '';
         const dateParts = dateString.split(" ");
         const day = parseInt(dateParts[1], 10);
         const month = dateParts[2].substring(0, 3);
@@ -21,46 +21,39 @@ const NewsDetails = () => {
                 default: return 'th';
             }
         };
-
         return `${day}${daySuffix(day)} ${month} ${year}`;
     };
 
-    // Dummy placeholders
     const dummyImage = "https://via.placeholder.com/800x400.png?text=No+Image+Available";
-    const dummyDescription =
-        "No description provided. This is a placeholder description for the news content.";
+    const dummyDescription = "No description provided. This is a placeholder description for the news content.";
 
     return (
-        <div className="news-details">
-            <div className="news-card-header">
-                            <h1 className="news-title">{title? title : 'News Headline'}</h1>
-                            <span style={{ color: 'gray', fontSize: '14px', fontWeight:'600' }}>
-                                Posted on {formatDate(createdAt)}
-                            </span>
-                            <br />
-                            <span style={{ color: 'gray', fontWeight:'600' }}>By SuperAdmin</span>
-                        </div>
-            {/* <h1 className="news-title">News Headline</h1>
-            <p className="news-meta">
-                Posted on {createdAt}<br/><br/>
-                By SuperAdmin
-            </p> */}
-            <div className="news-media">
-            {picturePath || videoPath ? (
+        <div className=" mx-3 md:mx-8 bg-white shadow-md h-screen rounded-lg overflow-hidden my-4 py-3 md:my-8  md:p-6">
+            <div className="border-b pb-4 mb-4 px-3">
+                <h1 className="text-2xl md:text-4xl font-bold text-gray-800">{title || 'News Headline'}</h1>
+                <p className="text-gray-600 text-sm md:text-base">Posted on {formatDate(createdAt)}</p>
+                <p className="text-gray-600 text-sm md:text-lg font-semibold">By SuperAdmin</p>
+            </div>
+
+            <div className="w-full flex justify-center px-3">
+                {picturePath || videoPath ? (
                     <>
-                        {picturePath && <img src={picturePath} alt="News" />}
+                        {picturePath && <img src={picturePath} alt="News" className="w-full max-h-[400px] object-cover rounded-md" />}
                         {videoPath && (
-                            <video controls>
+                            <video controls className="w-full max-h-[400px] mt-4 rounded-md">
                                 <source src={videoPath} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         )}
                     </>
                 ) : (
-                    <img src={dummyImage} alt="Dummy News" />
+                     <img src={dummyImage} alt="Dummy News" className="w-full max-h-[400px] object-cover rounded-md " />
                 )}
             </div>
-            <p className="individual-news-description">{description || dummyDescription}</p>
+
+            <p className="text-gray-700 text-base mt-4 leading-relaxed px-3">
+                {description || dummyDescription}
+            </p>
         </div>
     );
 };
