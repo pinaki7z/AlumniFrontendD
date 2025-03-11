@@ -198,11 +198,11 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
         <div className="flex justify-center gap-6 mt-3">
           <div className="text-center">
             <p className="text-gray-500 text-sm font-medium">Followers</p>
-            <p className="text-lg font-semibold">{member.followers.length}</p>
+            <p className="text-lg font-semibold">{member?.followers?.length ? member.followers.length : null}</p>
           </div>
           <div className="text-center">
             <p className="text-gray-500 text-sm font-medium">Following</p>
-            <p className="text-lg font-semibold">{member.following.length}</p>
+            <p className="text-lg font-semibold">{member?.following?.length ? member.following.length : null}</p>
           </div>
         </div>
       </Link>
