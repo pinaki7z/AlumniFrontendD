@@ -47,13 +47,13 @@ export const Following = () => {
   }
 
   return (
-    <div style={{ width: '60%', marginTop:'20px'}}>
+    <div style={{ width: '100%', marginTop:'20px'}}>
       <PageTitle title={title} icon={icon} />
       {loading && (
         <div style={{textAlign: 'center'}}> Loading...</div>
       )}
       {members.length > 0 && !loading && (
-        <div style={{marginTop: '15px',display: 'flex', gap: '30px', flexWrap: 'wrap'}}>
+        <div style={{marginTop: '15px',display: 'flex', gap: '30px', flexWrap: 'wrap',margin: '5%'}}>
           {members.map((member) => (
             <Profilecard key={member._id} member={member} name='follow'/>
           ))}

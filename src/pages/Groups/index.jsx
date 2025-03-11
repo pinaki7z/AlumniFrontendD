@@ -284,7 +284,7 @@ const Groups = () => {
             element={
               <div className="flex" style={{ marginTop: "25px" }}>
                 <Link
-                  to={`/groups/create`}
+                  to={`/home/groups/create`}
                   style={{ textDecoration: "none", color: "black" }}
                   className=""
                 >

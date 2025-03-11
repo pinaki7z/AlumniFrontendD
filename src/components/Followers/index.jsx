@@ -50,13 +50,13 @@ export const Followers = () => {
   };
 
   return (
-    <div style={{ width: '60%', marginTop: '20px' }}>
+    <div style={{ width: '100%', marginTop: '20px' }}>
       <PageTitle title={title} icon={icon} />
       {loading ? ( // Conditionally render loading message
         <div style={{ textAlign: 'center' }}> Loading...</div>
       ) : members!== undefined && members.length > 0 ? (
         <>
-          <div style={{ marginTop: '15px', display: 'flex', gap: '30px', flexWrap: 'wrap' }}>
+          <div style={{ marginTop: '15px', display: 'flex', gap: '30px', flexWrap: 'wrap',margin: '5%' }}>
             {members.map((member) => (
               <Profilecard key={member._id} member={member} name='follow' />
             ))}
