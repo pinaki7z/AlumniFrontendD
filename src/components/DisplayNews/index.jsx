@@ -11,13 +11,13 @@ import baseUrl from "../../config";
 import newsImage from "../../images/d-group.jpg";
 import { FaArrowCircleRight } from 'react-icons/fa';
 
-export const DisplayNews = ({ userId, postId, title,description, createdAt, picturePath, videoPath, department, onDeletePost }) => {
+export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost }) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
     const profile = useSelector((state) => state.profile);
     const [loading, setLoading] = useState(false);
     const isUserDepartment = profile.department === 'All' || profile.department === department || department === 'All';
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     let admin;
     if (profile.profileLevel === 0) {
         admin = true;
@@ -90,31 +90,42 @@ export const DisplayNews = ({ userId, postId, title,description, createdAt, pict
     return (
         <>
             {isUserDepartment && (
-                <div className="news-card">
-                    <div className="news-card-image">
-                        <img src={picturePath || newsImage} alt="News" />
-                    </div>
-                    <div className="news-card-content">
-                        <div className="news-card-header">
-                            {/* <h3 className="news-title">{title? title : 'News Headline'}</h3> */}
-                            <span style={{ color: 'gray', fontSize: '14px', fontWeight:'600' }}>
-                                Posted on {formatDate(createdAt)}
-                            </span>
-                            <br />
-                            <span style={{ color: 'gray', fontWeight:'600' }}>By SuperAdmin</span>
+                <div className="bg-[#E9F5EF] shadow-md rounded-lg overflow-hidden border border-gray-200 p-2 flex flex-col md:flex-row">
+                    {/* Left Section - Text Content */}
+                    <div className="p-4 flex-1">
+                        <h3 className="text-lg md:text-xl font-bold text-[#0A3A4C]">{title || "News Headline"}</h3>
+                        <div className="text-gray-600 text-sm font-semibold mt-1">
+                            Posted on {formatDate(createdAt)}
                         </div>
-                        <p className="news-description">{description}</p>
-                        <button className="read-more" onClick={handleReadMore}>
-                            Read More <FaArrowCircleRight className="arrow-icon" />
+                        <div className="text-gray-600 font-semibold text-sm">By SuperAdmin</div>
+
+                        <button
+                            className="mt-4 flex items-center gap-2 text-white py-2 px-3 rounded-lg bg-[#0A3A4C] font-semibold hover:text-blue-800 transition"
+                            onClick={handleReadMore}
+                        >
+                            Read More <FaArrowCircleRight className="w-4 h-4" />
                         </button>
                     </div>
-                    {(admin || userId === profile._id) && (
-                        <IconButton onClick={handleDeletePost} style={{ color: 'red' }} className="delete-button">
-                            <DeleteRounded />
-                        </IconButton>
-                    )}
+
+                    {/* Right Section - Image */}
+                    <div className="relative flex-1">
+                        <img
+                            src={picturePath || newsImage}
+                            alt="News"
+                            className="w-full h-48 object-cover rounded-lg"
+                        />
+                        {(admin || userId === profile._id) && (
+                            <button
+                                onClick={handleDeletePost}
+                                className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
+                            >
+                                <DeleteRounded className="w-5 h-5" />
+                            </button>
+                        )}
+                    </div>
                 </div>
             )}
+
         </>
     );
 };

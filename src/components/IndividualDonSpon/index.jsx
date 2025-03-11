@@ -1,4 +1,4 @@
-    import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import backgroundPicture1 from '../../images/pexels-mohamed-abdelghaffar-771742.jpg';
@@ -95,92 +95,129 @@ const IndividualDonSpon = () => {
             ) : (
                 donations.map((donation) => (
                     <div key={donation._id} className="sponsorship-content">
-                        <h1 className="sponsorship-title">{donation.nameOfEvent || "Sponsorship Title"}</h1>
-                        <p className="sponsorship-date">
-                            Posted on {formatDate(donation.createdAt)}<br/> By {donation.userName || "Superadmin"}
+                        <h1 className="text-3xl md:text-4xl font-bold text-[#136175]">{donation.nameOfEvent || "Sponsorship Title"}</h1>
+                        <p className="text-lg  mt-4 ">
+                            Posted on {formatDate(donation.createdAt)}<br /> By <span className='font-bold text-xl  text-[#136175]'>{donation.userName || "Superadmin"}</span>
                         </p>
-                        <img
-                            src={donation.picturePath || picture}
-                            alt={location.pathname.includes('/home/sponsorships') ? 'sponsorship image' : 'donation image'} 
-                            className="sponsorship-image"
-                        />
-                        {/* <div className="ids-amount">
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-fill"
-                                    style={{
-                                        width: `${(donation.raisedAmount / donation.totalAmount) * 100}%`
-                                    }}
-                                ></div>
+                        <div className=' py-4'>
+                            <img
+                                src={donation.picturePath || picture}
+                                alt={location.pathname.includes('/home/sponsorships') ? 'sponsorship image' : 'donation image'}
+                                className=" rounded-xl h-[400px] w-full object-cover"
+                            />
+                        </div>
+
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <div>
+
+                                <p className="text-lg md:text-lg font-semibold">
+                                    {donation.eventDescription || "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
+                                </p>
                             </div>
-                            <p className="amount-text">
-                                ₹ {donation.raisedAmount} raised of ₹ {donation.totalAmount}
-                            </p>
-                        </div> */}
-                        <p className="sponsorship-description">
-                            {donation.eventDescription || "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."}
-                        </p>
-                        <div className="ids-amount">
-                                 <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Total Amount:-(₹) {donation.amount ? donation.amount : donation.sponsorshipAmount}</p>
-                                 <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Name:- {donation.name ? donation.name : donation.nameOfOrganiser}</p>
-                                 <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Contact Number:- {donation.phone ? donation.phone : donation.number}</p>
-                                <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Email:- {donation.email ? donation.email : donation.emailOfOrganiser}</p>
-                                {donation.businessPlan && <div style={{ display: 'flex', gap: '1vw', marginTop: '1rem' }}>
-                                    <p style={{ fontWeight: '500', fontSize: '15px', marginBottom: '0px' }}>BusinessPlan: </p><a href={`${baseUrl}/uploads/${donation.businessPlan}`} target="_blank" rel="noopener noreferrer">{donation.businessPlan}</a>
-                               </div>}
-                                {donation.currentRevenue && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Current Revenue:-(₹) {donation.currentRevenue}</p>}
-                                {donation.targetMarket && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Target Market:- {donation.targetMarket}</p>}
-                               {donation.industry && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Industry:- {donation.industry}</p>}
-                                {donation.teamExperience && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Team Experience:- {donation.teamExperience}</p>}
-                                 {donation.competitiveAdvantage && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Competitive Advantage:- {donation.competitiveAdvantage}</p>}
-                                 {donation.eventDescription && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Event Description:- {donation.eventDescription}</p>}
-                                 {donation.location && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Event Location:- {donation.location}</p>}
-                                 {donation.expectedAttendees && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Expected Attendees:- {donation.expectedAttendees}</p>}
-                                 {donation.sponsorshipBenefits && <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '15px', fontWeight: '500' }}>Sponsorship Benefits:- {donation.sponsorshipBenefits}</p>}
-                                 {profile._id !== donation.userId && (
-                                    <button
-                                        style={{ width: '30%', padding: '10px', marginTop: '10px', backgroundColor:"#efeff0" }}
-                                        onClick={() => window.open('https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt', '_blank')}
-                                    >
-                                       Donate
-                                    </button>
-                                )}
 
 
-                                {/* <p>Raised of ₹{donation.totalAmount}</p>
-                                <div className="ids-bar">
-                                    <div
-                                        className="ids-fill-bar"
-                                        style={{
-                                            width: `${(donation.raisedAmount / donation.totalAmount) * 100}%`,
-                                            backgroundColor: 'greenyellow'
-                                        }}
-                                    ></div>
-                                </div>
-                                <p style={{ marginTop: '1rem', marginBottom: '0rem', color: '#174873', fontSize: '30px', fontWeight: '400' }}>{donation.totalContributions}</p>
-                                <p>Total Contributions</p>
-                                <div ref={shareButtonRef} >
-                                    <button className="ids-amount-button" onClick={handleShareClick}>Share</button>
-                                    {showShareOptions && (
-                                        <div className="share-options">
-                                            <button onClick={() => handleShareOptionClick('https://www.facebook.com')}><FaFacebookSquare /></button>
-                                            <button onClick={() => handleShareOptionClick('https://www.twitter.com')}><FaTwitter /></button>
-                                            <button onClick={() => handleShareOptionClick('https://www.instagram.com')}><FaInstagram /></button>
-                                            <button onClick={() => handleShareOptionClick('https://www.linkedin.com')}><FaLinkedin /></button>
-                                            <button onClick={() => handleShareOptionClick('https://www.pinterest.com')}><FaPinterestSquare /></button>
+                            {/* donation detail card */}
+                            <div className="bg-white borer w-full rounded-2xl p-6 border border-gray-200 max-w-md mx-auto md:text-lg">
+                                <h2 className="text-2xl font-semibold text-gray-800 mb-3">Donation Details</h2>
+
+                                <div className="space-y-2 text-gray-700">
+                                    <p className="font-medium">
+                                        <span className="text-blue-800">Total Amount (₹):</span> {donation.amount || donation.sponsorshipAmount}
+                                    </p>
+                                    <p className="font-medium">
+                                        <span className="text-blue-800">Name:</span> {donation.name || donation.nameOfOrganiser}
+                                    </p>
+                                    <p className="font-medium">
+                                        <span className="text-blue-800">Contact:</span> {donation.phone || donation.number}
+                                    </p>
+                                    <p className="font-medium">
+                                        <span className="text-blue-800">Email:</span> {donation.email || donation.emailOfOrganiser}
+                                    </p>
+
+                                    {donation.businessPlan && (
+                                        <div className="flex gap-2 mt-2">
+                                            <p className="font-medium text-blue-800">Business Plan:</p>
+                                            <a
+                                                href={`${baseUrl}/uploads/${donation.businessPlan}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-500 hover:underline"
+                                            >
+                                                View Plan
+                                            </a>
                                         </div>
                                     )}
-                                    
+
+                                    {donation.currentRevenue && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Current Revenue (₹):</span> {donation.currentRevenue}
+                                        </p>
+                                    )}
+
+                                    {donation.targetMarket && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Target Market:</span> {donation.targetMarket}
+                                        </p>
+                                    )}
+
+                                    {donation.industry && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Industry:</span> {donation.industry}
+                                        </p>
+                                    )}
+
+                                    {donation.teamExperience && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Team Experience:</span> {donation.teamExperience}
+                                        </p>
+                                    )}
+
+                                    {donation.competitiveAdvantage && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Competitive Advantage:</span> {donation.competitiveAdvantage}
+                                        </p>
+                                    )}
+
+                                    {donation.eventDescription && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Event Description:</span> {donation.eventDescription}
+                                        </p>
+                                    )}
+
+                                    {donation.location && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Event Location:</span> {donation.location}
+                                        </p>
+                                    )}
+
+                                    {donation.expectedAttendees && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Expected Attendees:</span> {donation.expectedAttendees}
+                                        </p>
+                                    )}
+
+                                    {donation.sponsorshipBenefits && (
+                                        <p className="font-medium">
+                                            <span className="text-blue-800">Sponsorship Benefits:</span> {donation.sponsorshipBenefits}
+                                        </p>
+                                    )}
                                 </div>
-                                {donations[0]?.userId !== profile._id && ( 
-                                        <button className="ids-amount-button" style={{backgroundColor: '#f44336', marginTop: '25px'}}>Donate</button>
-                                    )} */}
+
+                                {profile._id !== donation.userId && (
+                                    <button
+                                        className="w-full mt-4 py-2 text-white bg-[#0A3A4C] hover:bg-[#136175] rounded-lg transition"
+                                        onClick={() => window.open("https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt", "_blank")}
+                                    >
+                                        Donate
+                                    </button>
+                                )}
                             </div>
+                        </div>
                     </div>
                 ))
             )}
         </div>
-       
+
     );
 
 

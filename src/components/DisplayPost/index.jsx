@@ -189,12 +189,12 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
 
     function formatDate(isoDate) {
       const date = new Date(isoDate);
-    
+
       // Extract day, month, and year
       const day = date.getDate();
       const month = date.toLocaleString('default', { month: 'long' }); // Full month name
       const year = date.getFullYear();
-    
+
       // Determine the day suffix
       const suffix = (d) => {
         if (d > 3 && d < 21) return "th"; // Special case for 11th to 19th
@@ -209,76 +209,79 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             return "th";
         }
       };
-    
+
       return `${day}${suffix(day)} ${month} ${year}`;
     }
+    const isMember =
+      profile.profileLevel === 0 ||
+      (group.groupType === "Public" &&
+        group.members.some((member) => member.userId === profile._id)) ||
+      (group.groupType === "Private" &&
+        group.members.some((member) => member.userId === profile._id)) ||
+      group.businessConnect === true;
 
     return (
-      <div key={group._id} className='display-post-card'>
-        {console.log('group individual post', group)}
-        {profile.profileLevel === 0 ||
-          (group.groupType === 'Public' && group.members.some(member => member.userId === profile._id)) ||
-          (group.groupType === 'Private' && group.members.some(member => member.userId === profile._id)) ||
-          group.businessConnect === true ? (
-          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#efeff0'
-          }}>
-            <Link to={`/home/groups/${group._id}`} style={{ textDecoration: 'none', color: 'black' }}>
-              <div className='display-post-image' style={{ position: 'relative' }}>
-                {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
-                <div style={{
-                  width: '100%', height: '100%', backgroundImage: group.groupPicture ? `url(${group.groupPicture})` : `url(${groupPic})`,
-                  backgroundColor: group.groupPicture ? 'transparent' : '#FFFFFF',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                }}></div>
-                <p style={{ position: 'absolute', top: '10px', right: '20px', backgroundColor: '#FFFFFF', padding: '8px 32px', border: '1px solid', fontWeight: '500', fontSize: '12px', fontFamily: 'Inter' }}>{group.groupType}</p>
+      <div key={group._id} className='w-full'>
+        <div className="w-full h-80 border border-gray-300 bg-[#EAF5EF] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+          {isMember ? (
+            <Link to={`/home/groups/${group._id}`} className="text-black">
+              <div className="relative w-full h-48 rounded-t-lg overflow-hidden">
+                <div
+                  className="w-full h-full bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${group.groupPicture || groupPic})`,
+                  }}
+                ></div>
+                <p className="absolute top-3 right-5 bg-white text-black px-5 py-1 border border-gray-400 text-xs font-medium rounded-lg">
+                  {group.groupType}
+                </p>
               </div>
-              <div className='display-post-title'>
-                <p style={{ marginBottom: '0rem', fontWeight: '600', fontSize: '20px', fontWeight: '600', fontFamily: 'Inter' }}>{group.groupName}</p>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <img src={groupMembers} alt="" srcSet="" style={{color: '#0a3a4c'}}/>
-                  <p style={{ marginBottom: '0rem', color: '#7b7b7b', fontWeight: '500', fontSize: '16px', fontWeight: 'Inter' }}>{group.members.length} </p>
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-[#136175]">
+                  {group.groupName}
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <img src={groupMembers} alt="Members" className="w-5 h-5" />
+                  <p className="text-gray-600 text-sm">{group.members.length}</p>
                 </div>
-              </div>
-              <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-              {formatDate(group.createdAt)}
+                <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
               </div>
             </Link>
-          </div>
-        ) : (
-          <div style={{ width: '100%', height: '80%', border: '1px solid black',background: '#efeff0'
-          }}>
-            <div className='display-post-image' style={{ position: 'relative' }}>
-              {/* <img src={picture} alt="" width="100px" height="100px" style={{ position: 'absolute' }} /> */}
-              <div style={{ width: '100%', height: '100%', backgroundImage: group.groupPicture ? `url(${group.groupPicture})` : `url(${groupPic})`,
-                  backgroundColor: group.groupPicture ? 'transparent' : '#FFFFFF',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center', }}></div>
-              <p style={{ position: 'absolute', top: '10px', right: '20px', backgroundColor: '#FFFFFF', padding: '8px 32px', border: '1px solid', fontWeight: '500', fontSize: '12px', fontFamily: 'Inter' }}>{group.groupType}</p>
-            </div>
-            <div className='display-post-title'>
-              <p style={{ marginBottom: '0rem', fontWeight: '600', fontSize: '20px', fontWeight: '600', fontFamily: 'Inter' }}>{group.groupName}</p>
-              <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                <img src={groupMembers} alt="" srcSet="" />
-                <p style={{ marginBottom: '0rem', color: '#7b7b7b', fontWeight: '500', fontSize: '16px', fontWeight: 'Inter' }}>{group.members.length} </p>
+          ) : (
+            <div>
+              <div className="relative w-full h-48 rounded-t-lg overflow-hidden">
+                <div
+                  className="w-full h-full bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${group.groupPicture || groupPic})`,
+                  }}
+                ></div>
+                <p className="absolute top-3 right-5 bg-white text-black px-5 py-1 border border-gray-400 text-xs font-medium rounded-lg">
+                  {group.groupType}
+                </p>
+              </div>
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-[#136175]">
+                  {group.groupName}
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <img src={groupMembers} alt="Members" className="w-5 h-5" />
+                  <p className="text-gray-600 text-sm">{group.members.length}</p>
+                </div>
+                <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
               </div>
             </div>
-            <div style={{ padding: '0px 12px', fontWeight: '500', fontSize: '12px' }}>
-            {formatDate(group.createdAt)}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {console.log('groupType', group.groupType, group.members)}
+        {/* {console.log('groupType', group.groupType, group.members)} */}
         {(group.groupType === 'Public' || group.groupType === 'Private') &&
           !group.members.some(member => member.userId === profile._id) && (
             <div className='display-post-edit'>
               {group.groupType === 'Public' ? (
-                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#0a3a4c',color: '#F8F8FF' }}>{isLoading ? 'Loading...' : 'Join'}</button>
+                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#0a3a4c', color: '#F8F8FF' }}>{isLoading ? 'Loading...' : 'Join'}</button>
               ) : (profile.department === group.department || group.category === "Business Connect" || group.department === 'All') && (
-                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px',backgroundColor: '#0a3a4c',color: '#F8F8FF' }} onClick={() => {
+                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#0a3a4c', color: '#F8F8FF' }} onClick={() => {
                   if (group.category === "Business Connect") {
                     if (requestStatus === 'Requested') {
                       handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);
@@ -315,7 +318,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
 
 
   return (
-    <div className="display-post-container">
+    <div className="">
       {loading ? (
         <div style={{ display: 'flex', width: '100%', height: '40vh', alignItems: 'center', justifyContent: 'center' }}>
           <l-line-spinner
@@ -325,9 +328,12 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             color="black"
           ></l-line-spinner>
         </div>
-      ) : filteredGroups.length > 0 ? (
-        filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)
-      ) : (
+        
+      ) : filteredGroups.length > 0 ? 
+       <div className='grid grid-cols-1 md:grid-cols-3 gap-2 px-2 py-3 '>
+        { filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)}
+       </div>
+       : (
         <div className='display-post-noGroups'>No groups</div>
       )}
 

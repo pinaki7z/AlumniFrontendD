@@ -13,14 +13,17 @@ const News = () => {
 
   return (
     <div>
-      <div style={{borderRadius: '12px',padding: '30px',backgroundColor: '#71be95'}}>
-        <div style={{fontFamily: 'Inter', fontSize: '32px',fontWeight: '600', color: 'white'}}>
-          News
+      
+
+
+      <div className='w-full'>
+            <div className="bg-[#cef3df] p-4 rounded-lg ">
+            
+            <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>News</h2>
+            <p className='text-base md:text-lg text-[#136175]'> Welcome to our dynamic Alumni Portal News Page, your source for the latest updates, inspiring stories, and exclusive opportunities tailored for our esteemed alumni community.</p>
+            </div>
+            
         </div>
-        <p style={{fontFamily: 'Inter', fontSize: '16px', fontWeight: '400',paddingTop: '20px'}}>
-          Welcome to our dynamic Alumni Portal News Page, your source for the latest updates, inspiring stories, and exclusive opportunities tailored for our esteemed alumni community.
-        </p>
-      </div>
       {admin ?
         <Feed showCreatePost={true} showCreateButton={false} entityType="news" entityId="id" showDeleteButton={true} />
         :

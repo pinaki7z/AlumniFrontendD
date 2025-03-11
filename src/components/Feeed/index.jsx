@@ -191,7 +191,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
         {posts.map((post, index) => {
           if (post.type === 'Post' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[650px] ">
                 <Post
                   userId={post.userId}
                   postId={post._id}
@@ -223,7 +223,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'Job' && (post.groupID === _id)) {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[650px] ">
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -240,21 +240,21 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
             );
           } else if (post.type === 'poll') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[650px] ">
                 <PollDisplay poll={post} />
               </div>
             );
           } else if (post.type === 'event') {
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[650px] ">
                 <EventDisplay event={post} />
               </div>
             );
           }
           else if (post.type === 'news') {
-            console.log('newssssss')
+            // console.log('newssssss')
             return (
-              <div key={post._id} className="bg-[rgba(111,188,148,0.15)] p-4 mb-4 rounded-xl w-full  md:w-full xl:w-[700px] ">
+              <div key={post._id} className="p-4 rounded-xl w-full  md:w-full xl:min-w-[650px] ">
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}

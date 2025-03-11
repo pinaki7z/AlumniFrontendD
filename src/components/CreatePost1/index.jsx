@@ -713,7 +713,7 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
 
 
   return (
-    <div className={` pt-4 pb-4 mb-1 rounded-xl w-full  md:w-3/4 xl:w-[700px] ${isExpanded ? 'expanded' : ''}`}>
+    <div className={` pt-4 pb-4 mb-1 rounded-xl w-full  md:w-3/4 xl:min-w-[650px] ${isExpanded ? 'expanded' : ''}`}>
       <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
       <div className={`card border-0 pt-1 ${isExpanded ? 'expanded' : ''}`} >
         <div className={`card-header ${isExpanded ? 'expanded' : ''}`} style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>

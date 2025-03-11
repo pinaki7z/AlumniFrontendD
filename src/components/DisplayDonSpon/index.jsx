@@ -20,7 +20,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
     const navigateTo = useNavigate();
     const [displayCount, setDisplayCount] = useState(2);
     console.log('sponsorships', donations)
-   
+
 
     useEffect(() => {
         console.log('checking for editing')
@@ -77,61 +77,61 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
 
     return (
         <>
-            <div className="donSpon-container">
+            <div className="grid grid-cols-1 md:grid-cols-3  gap-2 px-2 py-3">
                 {donations !== undefined && donations.length > 0 ? (
                     donations.map((donation) => (
-                        <Link to={`/home/${name}/${donation._id}`} style={{ textDecoration: 'none', color: 'black',width: '48%' }}>
-                            <div key={donation._id} className='donSpon-card'>
-                                <div className="donation-card-image">
-                                    <img src={donation.picturePath ? donation.picturePath : picture} alt="" className="src" />
-                                </div>
-                                <div style={{ paddingLeft: '12px', paddingTop: '10px' }}>
+                        <Link to={`/home/${name}/${donation._id}`} className=''>
+                            <div className="px-2">
+                                <div className="p-4 rounded-xl shadow-md hover:shadow-lg transition duration-300 bg-[#EAF5EF] border border-[#0A3A4C]">
+                                    {/* Image */}
+                                    <div className="w-full rounded-xl overflow-hidden">
+                                        <img
+                                            src={donation.picturePath ? donation.picturePath : picture}
+                                            alt="Event"
+                                            className="h-[180px] w-full object-cover rounded-xl"
+                                        />
+                                    </div>
 
-                                    <button style={{ border: '1px', padding: '5px', backgroundColor: "white" }}>
-                                        <div className="donation-card-title">
-                                            <h2>{donation.nameOfEvent ? donation.nameOfEvent : null}</h2>
-                                            <h3>{donation.name ? donation.name : donation.nameOfOrganiser}</h3>
-                                        </div>
-                                    </button>
+                                    {/* Content */}
+                                    <div className="mt-4">
+                                        <h2 className="text-2xl font-bold capitalize text-[#136175]">{donation.nameOfEvent || ""}</h2>
 
-                                    <div className="user-details" style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-                                        {/* <img src={donation.profilePic} alt="Profile Image" /> */}
-                                        <p>
-                                            {formatDate(donation.createdAt)}
+                                        <h3 className="text-lg font-semibold capitalize text-[#136175] mt-1">
+                                            {donation.name || donation.nameOfOrganiser}
+                                        </h3>
+
+                                        <p className="text-gray-500 text-sm mt-1">{formatDate(donation.createdAt)}</p>
+                                        <p className="text-gray-700 text-sm mt-2">
+                                            {donation.eventDescription?.length > 40
+                                                ? `${donation.eventDescription.substring(0, 40)}...`
+                                                : donation.eventDescription}
                                         </p>
-                                        <p className='spon-description'>{donation.eventDescription}</p>
                                     </div>
-                                </div>
-                                {edit ? (
-                                    <div className="edit-delete-buttons">
-                                        <Link to={`/home/${name}/edit/${donation._id}`} style={{ width: 'calc(50% - 18px)' }}>
-                                            <button style={{ width: '100%' }}>Edit</button>
-                                        </Link>
-                                        <button onClick={() => handleDelete(donation._id)} style={{ backgroundColor: 'rgb(244 67 54 / 20%)', color: '#f44336' }}>Delete</button>
-                                    </div>
-                                ) : (
-                                    <div className="donation-card-bar">
-                                        <div className="donation-amount">
-                                            <span style={{ fontSize: '15px', fontWeight: '500' }}>Total amount:-</span>
-                                            <span id="raised-amount" style={{ fontSize: '15px' }}>
-                                            ₹ {donation.amount ? donation.amount : donation.sponsorshipAmount}
-                                            </span>
+
+                                    {/* Actions */}
+                                    {edit ? (
+                                        <div className="mt-4 flex gap-2">
+                                            <Link to={`/home/${name}/edit/${donation._id}`} className="w-1/2">
+                                                <button className="w-full py-2 rounded-lg bg-blue-500 text-white font-semibold hover:bg-blue-600 transition">
+                                                    Edit
+                                                </button>
+                                            </Link>
+                                            <button
+                                                onClick={() => handleDelete(donation._id)}
+                                                className="w-1/2 py-2 rounded-lg bg-red-100 text-red-600 font-semibold hover:bg-red-200 transition"
+                                            >
+                                                Delete
+                                            </button>
                                         </div>
-                                        {/* <div className='ids-bar'>
-                                        <div
-                                            className='ids-fill-bar'
-                                            style={{
-                                                width: `${(donation.raisedAmount / donation.totalAmount) * 100}%`,
-                                                backgroundColor: 'greenyellow'
-                                            }}
-                                        ></div>
-                                    </div> */}
-                                        {/* <div className="donation-target">
-                                        <span style={{ fontSize: '15px' }}>of Rs </span>
-                                        <span id="target-amount" style={{ fontSize: '15px' }}>{donation.totalAmount}</span>
-                                    </div> */}
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div className="mt-2">
+                                            <p className="text-lg font-semibold text-[#136175]">
+                                                <span>Total amount: </span>
+                                                <span className="font-bold">₹ {donation.amount || donation.sponsorshipAmount}</span>
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </Link>
                     ))

@@ -88,22 +88,24 @@ const Donations = () => {
       {admin && (
         <div style={{ margin: '1rem 0', textAlign: 'right' }}>
           <button
+          className='hover:bg-[#136175] bg-[#0A3A4C] text-white py-3 px-4 rounded-md font-semibold'
             onClick={() => navigate('/home/donations/create')}
             style={{
-              padding: '10px 20px',
-              backgroundColor: '#71be95',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px'
+              // padding: '10px 20px',
+              // backgroundColor: '#0A3A4C',
+              // color: '#fff',
+              // border: 'none',
+              // borderRadius: '8px',
+              // cursor: 'pointer',
+              // fontSize: '16px',
+              // fontWeight: '500',
             }}
           >
             Create Business Donation Request
           </button>
         </div>
       )}
-
+      {/* tabs here */}
       <Routes>
         <Route
           path="/"
@@ -170,6 +172,7 @@ const Donations = () => {
             element={<BrowseDonations donSpon={userDonations} name="donations" />}
           />
         )}
+        {/* browse businesses */}
         <Route
           path="/"
           element={

@@ -223,9 +223,9 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
           paddingTop: '25px'
         }}
       >
-        <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-          <h2 className='text-white font-bold text-2xl md:text-4xl mb-3'>Members</h2>
-          <p className='mt-1 text-gray-100 font-bold text-xl ' >
+        <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
+          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Members</h2>
+          <p className='text-base md:text-lg text-[#136175]' >
             Explore profiles and expand your network with fellow members.
           </p>
         </div>
@@ -266,7 +266,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
           {/* New Filters */}
           <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <select
-              className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#E9F5EF] text-gray-700 cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none"
+              className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none"
               value={memberRole}
               onChange={handleMemberRoleChange}
             >
@@ -277,14 +277,14 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
             </select>
 
 
-            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#E9F5EF] text-gray-700 cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={graduatingYear} onChange={handleGraduatingYearChange}>
+            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={graduatingYear} onChange={handleGraduatingYearChange}>
               <option value="">All Graduating Years</option>
               {generateYears().map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
 
-            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#E9F5EF] text-gray-700 cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={department} onChange={handleDepartmentChange}>
+            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={department} onChange={handleDepartmentChange}>
               <option value="">All Departments</option>
               <option value="Agricultural Engineering">Agricultural</option>
               <option value="Gastroenterology">Gastroenterology</option>
@@ -293,7 +293,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               <option value="Vocal Music">Vocal Music</option>
             </select>
 
-            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#E9F5EF] text-gray-700 cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={batch} onChange={handleBatchChange}>
+            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={batch} onChange={handleBatchChange}>
               <option value="">All Batches</option>
               {generateBatches().map(batch => (
 
@@ -317,7 +317,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         <Route path="/" element={
           <>
             {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
                 {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                   <Link to={`/home/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
                     <div

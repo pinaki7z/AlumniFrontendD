@@ -4,7 +4,7 @@ import DisplayDonSpon from '../DisplayDonSpon';
 const BrowseDonations = ({donSpon,name,updateDonations,totalDonations,page,limit,loading,isLoading,getPosts}) => {
     
     return(
-        <div style={{ width: '100%'}}>
+        <div className='w-full'>
            <DisplayDonSpon donations={donSpon} name={name} updateDonations={updateDonations} totalDonations={totalDonations} page={page} limit={limit} loading={loading} isLoading={isLoading} />
         </div>
     )

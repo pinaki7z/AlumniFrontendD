@@ -143,93 +143,86 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
 
   return (
     <>
-      <div
-        className="card flex flex-col justify-between"
-        style={{
-          //width: "40%",
-          backgroundPosition: "center",
-          backgroundColor:"#E9F5EF",
-          WebkitBackgroundSize: "cover",
-          position: 'relative',
-          // height: '45vh',
-     
-        }}
-      >
-        {addButton && (
-          <button
-            onClick={isOwner ? null : () => handleAddMember(_id ? _id : id, member._id)}
-            disabled={isOwner}
-          >
-            {isOwner ? "Group Admin" : isAdded ? "Remove" : <BiUserPlus style={{ fontSize: '17px' }} />}
-          </button>
-        )}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <img src={member.profilePicture ? member.profilePicture : picture} alt="" style={{ width: '150px', height:'150px' }} />
-          {admin && deleteButton && !(profile.profileLevel === 1 && member.profileLevel === 1) && (
-            <>{member.accountDeleted === true ? <MdOutlineRestore onClick={handleDelete} style={{ width: '25px', height: '25px', position: 'absolute', right: '15px', top: '10px', cursor: 'pointer' }} /> : <img src={delButton} onClick={handleDelete} style={{ position: 'absolute', right: '15px', top: '10px', backgroundColor: 'white', cursor: 'pointer' }} />}</>
-          )}
-        </div>
-        <Link
-          to={isFollowPresent ? `/home/members/${member.userId}` : `/home/members/${member._id}`}
-          style={{ textDecoration: "none", color: "black" }}
-          className="mb-2"
+      <div className="bg-[#E9F5EF] rounded-lg shadow-md border flex flex-col justify-between p-2 relative ">
+      {addButton && (
+        <button
+          onClick={isOwner ? null : () => handleAddMember(_id || id, member._id)}
+          disabled={isOwner}
+          className={`px-4 py-1 text-white text-sm rounded-md absolute top-3 right-3 ${
+            isOwner ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+          }`}
         >
-          <div style={{ textAlign: 'center' }}>
-            <h3 style={{ paddingTop: "1em", fontWeight: "600", fontSize: '20px', fontFamily: 'Inter', color: '#000000' }}>
-              {member.userName ? member.userName : `${member.firstName} ${member.lastName}`}
-            </h3>
-            <p style={{ fontSize: '14px', fontWeight: '300', fontFamily: 'Inter', color: '#3A3A3A' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPER ADMIN'}</p>
-            <p style={{ fontSize: '14px', fontWeight: '300', fontFamily: 'Inter', color: '#3A3A3A' }}>{member.department}</p>
-            <p style={{ fontSize: '14px', fontWeight: '300', fontFamily: 'Inter', color: '#3A3A3A' }}>
-              {member.graduatingYear ? member.graduatingYear : (member.class ? member.class : null)}
-            </p>
-
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-              <div>
-                <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Followers</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member?.followers?.length ? member.followers.length : null}</p>
-              </div>
-              <div>
-                <p style={{ color: '#636364', fontWeight: '500', fontSize: '14px', fontFamily: 'Inter' }}>Following</p>
-                <p style={{ color: '#000000', fontWeight: '500', fontSize: '16px', fontFamily: 'Inter' }}>{member?.following?.length ? member.following.length : null}</p>
-              </div>
-            </div>
+          {isOwner ? "Group Admin" : isAdded ? "Remove" : <BiUserPlus size={17} />}
+        </button>
+      )}
+      <div className="flex flex-col items-center relative">
+        <img
+          src={member.profilePicture || picture}
+          alt="Profile"
+          className="w-36 h-36 rounded-full object-cover border-4 border-white shadow-md"
+        />
+        {admin && deleteButton && !(profile.profileLevel === 1 && member.profileLevel === 1) && (
+          <>
+            {member.accountDeleted ? (
+              <MdOutlineRestore
+                onClick={handleDelete}
+                className="w-6 h-6 absolute top-2 right-2 cursor-pointer text-green-600 hover:text-green-700"
+              />
+            ) : (
+              <img
+                src={delButton}
+                onClick={handleDelete}
+                className="w-6 h-6 absolute top-2 right-2 bg-white cursor-pointer rounded-full shadow-md"
+                alt="Delete"
+              />
+            )}
+          </>
+        )}
+      </div>
+      <Link
+        to={isFollowPresent ? `/home/members/${member.userId}` : `/home/members/${member._id}`}
+        className="text-center text-black mt-2"
+      >
+        <h3 className="text-lg font-semibold">{member.userName || `${member.firstName} ${member.lastName}`}</h3>
+        <p className="text-sm font-light text-gray-600">
+          {member.profileLevel === 1
+            ? "ADMIN"
+            : member.profileLevel === 2
+            ? "ALUMNI"
+            : member.profileLevel === 3
+            ? "STUDENT"
+            : "SUPER ADMIN"}
+        </p>
+        <p className="text-sm text-gray-600">{member.department}</p>
+        <p className="text-sm text-gray-600">{member.graduatingYear || member.class}</p>
+        <div className="flex justify-center gap-6 mt-3">
+          <div className="text-center">
+            <p className="text-gray-500 text-sm font-medium">Followers</p>
+            <p className="text-lg font-semibold">{member.followers.length}</p>
           </div>
-        </Link>
-       <div>
-       {loading ? (
-          <div style={{ textAlign: 'center' }}>
-            <l-orbit
-              size="35"
-              speed="1.5"
-              color="black"
-            ></l-orbit>
+          <div className="text-center">
+            <p className="text-gray-500 text-sm font-medium">Following</p>
+            <p className="text-lg font-semibold">{member.following.length}</p>
+          </div>
+        </div>
+      </Link>
+      <div className="mt-4">
+        {loading ? (
+          <div className="text-center">
+            <l-orbit size="35" speed="1.5" color="black"></l-orbit>
           </div>
         ) : (
           name !== "follow" && (
             <button
               onClick={handleFollowToggle}
-              style={{
-                width: '100%',
-                position: '',
-                bottom: '0px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '8px 8px 0px 0px',
-                height: '6vh',
-                fontSize: '20px',
-                fontWeight: '500',
-                fontFamily: 'Inter',
-                backgroundColor: '#0a3a4c',
-              }}
+              className="w-full flex items-center justify-center py-3 rounded-b-lg text-lg font-medium text-white bg-[#0a3a4c] hover:bg-[#082b3a]"
             >
-              {isFollowing ? "Following" : <><BiUserPlus style={{ fontSize: "17px" }} /> Follow</>}
+              {isFollowing ? "Following" : <><BiUserPlus size={17} /> Follow</>}
             </button>
           )
         )}
-       </div>
       </div>
+    </div>
     </>
   );
 };
