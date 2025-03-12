@@ -94,7 +94,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
 
                                     {/* Content */}
                                     <div className="mt-4">
-                                        <h2 className="text-2xl font-bold capitalize text-[#136175]">{donation?.businessName || "Title"}</h2>
+                                        <h2 className="text-2xl font-bold capitalize text-[#136175]">{donation.businessName || donation.nameOfEvent || "Title"}</h2>
 
                                         <h3 className="text-lg font-semibold capitalize text-[#136175] mt-1">
                                             {donation.name || donation.nameOfOrganiser}
