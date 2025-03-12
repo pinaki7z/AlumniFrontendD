@@ -14,7 +14,7 @@ import profilePic from "../../images/profilepic.jpg"
 
 const reactions = ['😍', '😂', '😡', '😞', '🤩'];
 
-const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDeleteComment }) => {
+const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDeleteComment,postUserId }) => {
   const [content, setContent] = useState('');
   const [replyToCommentId, setReplyToCommentId] = useState(null);
   const [reply, setReply] = useState('');
@@ -23,6 +23,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   const profile = useSelector((state) => state.profile);
   const [showReport, setShowReport] = useState({});
   const [likes, setLikes] = useState({});
+  console.log('comments', comments)
 
   const handleCommentSubmit = async () => {
     if (content === ''){
@@ -32,8 +33,9 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         userId: profile._id,
         content: content,
-        userName: profile.firstName,
+        userName: `${profile.firstName} ${profile.lastName}`,
         parentCommentId: null,
+        postUserId: postUserId,
         profilePicture: profile.profilePicture,
       });
       const postId = response.data._id;

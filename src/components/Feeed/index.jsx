@@ -215,6 +215,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                     entityId={post._id}
                     entityType="posts"
                     onCommentSubmit={refreshComments}
+                    postUserId={post.userId}
                     onDeleteComment={refreshComments}
                     comments={post ? post.comments.filter(comment => !comment.reported) : null}
                   />

@@ -656,7 +656,21 @@ export const NotificationsP = ({ sendNotificationCount }) => {
               {filteredNotifications.map((notification) => (
                 <div key={notification._id}>
                   <div className="text-lg py-4 font-semibold">
-                    {notification.link ? (
+                    {notification.commented ? (
+                        <span>
+                        <Link to={`/members/${notification.userId}`} className="notification-link">
+                          {notification.requestedUserName}
+                        </Link>{" "}
+                        has commented on your{" "}
+                        <a
+                          href={`/home/posts/${notification.postId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          post
+                        </a>.
+                      </span>
+                    ) : notification.link ? (
                                          <span>
                                             <Link to={`/members/${notification.userId}`} className="notification-link">
                                                  {notification.requestedUserName}
@@ -777,7 +791,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
                   </div>
                   <div className="flex gap-4 mb-3 items-center justify-start ">
                     <div className="">
-                      {notification.link ? (
+                      {notification.commented ? null : notification.link ? (
                                          <button className="accept-button" onClick={() => handleAddLink(notification._id, notification.link,notification.department)}>
                                              Accept Link
                                          </button>
@@ -823,7 +837,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
                         </div>
                       )}
                     </div>
-                    <div className="">
+                    {notification.commented === true ? null : <div className="">
                       <div
                         onClick={() => {
                           if (notification.ID) {
@@ -856,9 +870,10 @@ export const NotificationsP = ({ sendNotificationCount }) => {
                         }}
                         className="border w-20 px-3 p-1 rounded hover:bg-red-600 font-semibold cursor-pointer  text-center text-white bg-red-500 "
                       >
-                        Reject
+                       {notification.commented === undefined && 'Reject'}
+
                       </div>
-                    </div>
+                    </div>}
                   </div>
                   <hr className="border mb-2"></hr>
                  
