@@ -10,8 +10,9 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import baseUrl from "../../config";
 import newsImage from "../../images/d-group.jpg";
 import { FaArrowCircleRight } from 'react-icons/fa';
+import Slider from 'react-slick';
 
-export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost }) => {
+export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost ,author}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
     const profile = useSelector((state) => state.profile);
@@ -81,7 +82,8 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
                 picturePath,
                 videoPath,
                 department,
-                title
+                title,
+                author
                 //onDeletePost
             }
         }); // Pass props through state
@@ -95,9 +97,9 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
                     <div className="p-4 flex-1">
                         <h3 className="text-lg md:text-xl font-bold text-[#0A3A4C]">{title || "News Headline"}</h3>
                         <div className="text-gray-600 text-sm font-semibold mt-1">
-                            Posted on {formatDate(createdAt)}
+                            Posted on {createdAt}
                         </div>
-                        <div className="text-gray-600 font-semibold text-sm">By SuperAdmin</div>
+                        <div className="text-gray-600 font-semibold text-sm">By {author}</div>
 
                         <button
                             className="mt-4 flex items-center gap-2 text-white py-2 px-3 rounded-lg bg-[#0A3A4C] font-semibold hover:text-blue-800 transition"
@@ -109,12 +111,12 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
 
                     {/* Right Section - Image */}
                     <div className="relative flex-1">
-                        <img
+                        {/* <img
                             src={picturePath || newsImage}
                             alt="News"
                             className="w-full h-48 object-cover rounded-lg"
-                        />
-                        {(admin || userId === profile._id) && (
+                        /> */}
+                        {(profile.profileLevel === 0 ||(userId === profile._id)) && (
                             <button
                                 onClick={handleDeletePost}
                                 className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"

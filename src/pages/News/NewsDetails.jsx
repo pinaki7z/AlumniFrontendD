@@ -1,9 +1,29 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import Slider from 'react-slick';
 
 const NewsDetails = () => {
     const location = useLocation();
-    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost } = location.state || {};
+    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost,author } = location.state || {};
+
+    const PrevButton = ({ onClick }) => {
+        return <button className="slick-arrow slick-prev" style={{ background: 'black' }} onClick={onClick}>Previous</button>;
+      };
+    
+      const NextButton = ({ onClick }) => {
+        return <button className="slick-arrow slick-next" style={{ background: 'black' }} onClick={onClick}>Next</button>;
+      };
+      const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000,
+        prevArrow: <PrevButton />,
+        nextArrow: <NextButton />
+      };
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -31,14 +51,29 @@ const NewsDetails = () => {
         <div className=" mx-3 md:mx-8 bg-white shadow-md h-screen rounded-lg overflow-hidden my-4 py-3 md:my-8  md:p-6">
             <div className="border-b pb-4 mb-4 px-3">
                 <h1 className="text-2xl md:text-4xl font-bold text-gray-800">{title || 'News Headline'}</h1>
-                <p className="text-gray-600 text-sm md:text-base">Posted on {formatDate(createdAt)}</p>
-                <p className="text-gray-600 text-sm md:text-lg font-semibold">By SuperAdmin</p>
+                <p className="text-gray-600 text-sm md:text-base">Posted on {createdAt}</p>
+                <p className="text-gray-600 text-sm md:text-lg font-semibold">By {author}</p>
             </div>
 
             <div className="w-full flex justify-center px-3">
-                {picturePath || videoPath ? (
+            {picturePath && picturePath.length > 1 ? (
+              <Slider {...settings}>
+                {picturePath.map((img, index) => (
+                  img ? (
+                    <div key={index} className='image'>
+                      <img src={img} alt={`Post Image ${index + 1}`} />
+                    </div>
+                  ) : null
+                ))}
+              </Slider>
+            ) : picturePath && picturePath.length === 1 && picturePath[0] ? (
+              <div>
+                <img src={picturePath[0]} alt={`image`}  />
+              </div>
+            ) : null}
+                {videoPath ? (
                     <>
-                        {picturePath && <img src={picturePath} alt="News" className="w-full max-h-[400px] object-cover rounded-md" />}
+                        {/* {picturePath && <img src={picturePath} alt="News" className="w-full max-h-[400px] object-cover rounded-md" />} */}
                         {videoPath && (
                             <video controls className="w-full max-h-[400px] mt-4 rounded-md">
                                 <source src={videoPath} type="video/mp4" />
@@ -46,9 +81,7 @@ const NewsDetails = () => {
                             </video>
                         )}
                     </>
-                ) : (
-                     <img src={dummyImage} alt="Dummy News" className="w-full max-h-[400px] object-cover rounded-md " />
-                )}
+                ) : null}
             </div>
 
             <p className="text-gray-700 text-base mt-4 leading-relaxed px-3">

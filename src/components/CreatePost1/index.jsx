@@ -346,13 +346,14 @@ function MyVerticallyCenteredModal(props) {
 
 
 
-const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
+const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
   loadingPost,
-  setLoadingPost}) => {
+  setLoadingPost }) => {
   const { _id } = useParams();
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [picturePath, setPicturePath] = useState("");
+  const [author, setAuthor] = useState("");
   const [videoPath, setVideoPath] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -497,7 +498,7 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
 
   const newHandleSubmit = async (event) => {
     console.log('postingggggg');
-    if (input === ''){
+    if (input === '') {
       setLoadingPost(false)
       return;
     }
@@ -511,6 +512,7 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
       description: input,
       department: profile.department,
       profilePicture: profile.profilePicture,
+      author: author
     };
 
     if (_id) payload.groupID = _id;
@@ -526,6 +528,7 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
       setPicturePath([]);
       setVideoPath({});
       setInput("");
+      setAuthor("");
       getPosts(1);
       window.location.reload();
     } catch (err) {
@@ -840,6 +843,10 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
                 onChange={handleVideoChange}
               />
             </label>
+            {entityType === 'news' && (<>
+              <label>Add a author</label>
+              <input type="text" name="" id="" onChange={(e) => setAuthor(e.target.value)}/>
+            </>)}
             {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
               <img src={video} alt="" srcset="" />Event
             </label>}
@@ -849,7 +856,7 @@ const CreatePost1 = ({ name, onNewPost, entityType,getPosts,
               onClick={newHandleSubmit}
               className="float-right cursor-pointer hover:bg-green-500 text-white bg-[#71be95] border border-[#174873] text-[16px] font-medium px-4 py-2 rounded"
             >
-               {loadingPost ? 'Posting...' : 'Post'}
+              {loadingPost ? 'Posting...' : 'Post'}
             </div>
 
           </div>
