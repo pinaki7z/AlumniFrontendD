@@ -1,34 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
-import './commentSection.css';
-import pic from "../../images/odA9sNLrE86.jpg";
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { PiArrowBendDownLeftBold } from "react-icons/pi";
 import { MdOutlineDelete } from "react-icons/md";
-import replyy from "../../images/reply.svg";
-import deletee from "../../images/delete.svg";
 import baseUrl from "../../config";
-import profilePic from "../../images/profilepic.jpg"
+import pic from "../../images/odA9sNLrE86.jpg";
+import profilePic from "../../images/profilepic.jpg";
 
 const reactions = ['😍', '😂', '😡', '😞', '🤩'];
 
-const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDeleteComment,postUserId }) => {
+const CommentSection = ({
+  comments,
+  entityId,
+  entityType,
+  onCommentSubmit,
+  onDeleteComment,
+  postUserId,
+  onClose,
+  individualPost,
+}) => {
   const [content, setContent] = useState('');
   const [replyToCommentId, setReplyToCommentId] = useState(null);
   const [reply, setReply] = useState('');
   const [cookie] = useCookies(['access_token']);
-  const forumId = '64f5ce5db9cddde68ba64b75';
   const profile = useSelector((state) => state.profile);
   const [showReport, setShowReport] = useState({});
   const [likes, setLikes] = useState({});
-  console.log('comments', comments)
 
   const handleCommentSubmit = async () => {
-    if (content === ''){
-      return;
-    }
+    if (!content.trim()) return;
     try {
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         userId: profile._id,
@@ -56,7 +58,7 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
   };
 
   const handleReportToggle = (commentId) => {
-    setShowReport(prevState => ({
+    setShowReport((prevState) => ({
       ...prevState,
       [commentId]: !prevState[commentId]
     }));
@@ -64,135 +66,26 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
 
   const handleReport = async (commentId, userId) => {
     try {
-      const response = await axios.put(`${baseUrl}/${entityType}/${entityId}/report`, {
+      await axios.put(`${baseUrl}/${entityType}/${entityId}/report`, {
         commentId: commentId,
         userId: userId,
       });
-      toast.success('reported');
+      toast.success('Comment Reported');
       onCommentSubmit(entityId);
     } catch (error) {
-      console.error('Error adding reply:', error);
+      console.error('Error reporting comment:', error);
     }
   };
 
   const handleLikeToggle = (commentId, reaction = '❤️') => {
-    setLikes(prevLikes => ({
+    setLikes((prevLikes) => ({
       ...prevLikes,
       [commentId]: prevLikes[commentId] === reaction ? null : reaction
     }));
   };
 
-  const renderComments = (commentsArray) => {
-    if (!commentsArray || commentsArray.length === 0) {
-      return null;
-    }
-
-    return (
-      <ul className="">
-        {commentsArray.map((comment) => (
-          <li key={comment._id}>
-            <div className="p-2">
-              <div className='bg-white px-3 py-2 rounded-lg shadow-md ' >
-                {/* comment upper row */}
-
-                <div className='flex justify-between '>
-                  <div className='flex items-center gap-2'>
-                    <img src={comment.profilePicture ? comment.profilePicture : profilePic} className='w-[24px] h-[24px] object-cover rounded-full' />
-                    <p className='text-sm font-semibold'>{comment.userName}</p>
-                  </div>
-                  <div className="comment-menu">
-                    <div className="menu-container">
-                      <div className="menu-trigger" style={{ cursor: 'pointer' }} onClick={() => handleReportToggle(comment._id)}>&#8286;</div>
-                      {showReport[comment._id] && (
-                        <div className="menu-options">
-                          <button onClick={() => handleReport(comment._id, comment.userId)}>Report</button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-
-
-                </div>
-                {/* comment text here */}
-                <div>
-                  <p style={{ padding: '10px', display: 'flex', justifyContent: 'space-between' }}>{comment.content}
-                  </p>
-                </div>
-                {/* comment like button started here */}
-                <div className="flex justify-end gap-2">
-                  <div className="relative" onMouseLeave={() => setLikes({ ...likes, hoverComment: null })} >
-                    <button
-                      onClick={() => handleLikeToggle(comment._id)}
-                      onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
-                      //onMouseLeave={() => setLikes({ ...likes, hoverComment: null })}
-                      className='bg-[#136175] px-3 py-1 text-white rounded-lg  '
-
-                    >
-                      {likes[comment._id] || 'Like'}
-                    </button>
-                    {likes.hoverComment === comment._id && (
-                      <div className="reaction-emojis" style={{ position: 'absolute', top: '-20px', left: '-40px', display: 'flex', gap: '5px', background: '#fff', border: '1px solid #ddd', padding: '5px', borderRadius: '5px' }}>
-                        {reactions.map((reaction, index) => (
-                          <span
-                            key={index}
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => handleLikeToggle(comment._id, reaction)}
-                          >
-                            {reaction}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  {comment.userId === profile._id || profile.profileLevel === 0 ?
-                    <div onClick={() => handleCommentDelete(comment._id)} className='flex gap-1 cursor-pointer bg-[#136175] px-2  text-white rounded-lg  '>
-                      {/* <img src={deletee} alt="" srcset="" className='text-white' /> */}
-                      <img src='/images/delete_svg.svg' className='w-[20px]' />
-                      {/* <button onClick={() => handleCommentDelete(comment._id)}>Delete</button> */}
-                    </div> : null}
-                  <div className='flex gap-1 cursor-pointer bg-[#136175] px-2  text-white rounded-lg '>
-                    {/* <img src={replyy} alt="" srcset="" /> */}
-                    <button onClick={() => handleCommentReply(comment._id)}>Reply</button>
-                  </div>
-
-                </div>
-              </div>
-
-
-              {replyToCommentId === comment._id && (
-                <div className="flex items-end bg-white rounded-lg  my-2 mx-3 px-3 py-2">
-                  <input
-                    className="outline-none"
-                    placeholder="Reply to this comment"
-                    value={reply}
-                    onChange={(e) => setReply(e.target.value)}
-                    style={{ width: '100%', border: 'none', borderBottom: '1px solid #71be95', paddingTop: '25px' }}
-                  />
-                  <div>
-                  <button onClick={() => handleReplySubmit(comment._id)} className='bg-[#136175] px-1 py-1 text-white rounded-lg ' >Reply</button>
-
-                  </div>
-                </div>
-              )}
-              {renderComments(comment.comments)}
-            </div>
-          </li>
-        ))}
-      </ul>
-    );
-  };
-
-  const handleCommentReply = (commentId) => {
-    if (!replyToCommentId) setReplyToCommentId(commentId);
-    else setReplyToCommentId(null)
-    setContent('');
-  };
-
   const handleReplySubmit = async (parentCommentId) => {
-    if(reply === ''){
-      return;
-    }
+    if (!reply.trim()) return;
     try {
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         content: reply,
@@ -210,27 +103,194 @@ const CommentSection = ({ comments, entityId, entityType, onCommentSubmit, onDel
     }
   };
 
+  // Recursive function to render nested comments
+  const renderComments = (commentsArray) => {
+    return (
+      <ul className="space-y-4 ">
+        {commentsArray.map((comment) => (
+          <li key={comment._id}>
+            <div className="flex items-start gap-2">
+              {/* Profile Image */}
+              <img
+                src={comment.profilePicture ? comment.profilePicture : profilePic}
+                alt="Profile"
+                className="w-9 h-9 rounded-full object-cover"
+              />
+
+              <div className="">
+                {/* Comment bubble and top row */}
+                <div className="bg-gray-100 rounded-lg px-3 py-2 relative">
+                  {/* Ellipsis / Report button (top-right) */}
+                  <div className="absolute top-2 right-2">
+                    <button
+                      onClick={() => handleReportToggle(comment._id)}
+                      className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                    >
+                      &#8942;
+                    </button>
+                    {showReport[comment._id] && (
+                      <div className="absolute right-0 mt-2 w-28 bg-white border rounded shadow z-10">
+                        <button
+                          onClick={() => handleReport(comment._id, comment.userId)}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                        >
+                          Report
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* User Name & Content */}
+                  <p className="font-semibold text-sm text-gray-800">{comment.userName}</p>
+                  <p className="text-sm text-gray-800 mt-1">{comment.content}</p>
+                </div>
+
+                {/* Action buttons row: Like, Reply, Delete */}
+                <div className="flex items-center gap-4 mt-1 text-xs text-gray-500 pl-1">
+                  {/* Like with Reaction Popover */}
+                  <div
+                    className="relative"
+                    onMouseLeave={() => setLikes({ ...likes, hoverComment: null })}
+                  >
+                    <button
+                      onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
+                      onClick={() => handleLikeToggle(comment._id)}
+                      className="hover:underline hover:text-blue-600 focus:outline-none transition"
+                    >
+                      {likes[comment._id] || 'Like'}
+                    </button>
+                    {likes.hoverComment === comment._id && (
+                      <div className="absolute bottom-full mb-2 left-0 flex gap-2 bg-white border rounded shadow p-2 transition">
+                        {reactions.map((reaction, index) => (
+                          <span
+                            key={index}
+                            className="cursor-pointer text-xl"
+                            onClick={() => handleLikeToggle(comment._id, reaction)}
+                          >
+                            {reaction}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Reply */}
+                  <button
+                    onClick={() =>
+                      setReplyToCommentId(
+                        replyToCommentId === comment._id ? null : comment._id
+                      )
+                    }
+                    className="hover:underline hover:text-blue-600 focus:outline-none transition"
+                  >
+                    Reply
+                  </button>
+
+                  {/* Delete (only owner or admin) */}
+                  {(comment.userId === profile._id || profile.profileLevel === 0) && (
+                    <button
+                      onClick={() => handleCommentDelete(comment._id)}
+                      className="hover:underline hover:text-blue-600 focus:outline-none transition"
+                    >
+                      Delete
+                    </button>
+                  )}
+
+                  {/* (Optional) You can add a timestamp here if you want, e.g. '3h' */}
+                  {/* <span>3h</span> */}
+                </div>
+
+                {/* Reply input box */}
+                {replyToCommentId === comment._id && (
+                  <div className="mt-2 pl-2">
+                    <div className="flex items-center bg-gray-50 border border-gray-200 rounded-lg p-2">
+                      <input
+                        className="flex-1 bg-transparent outline-none text-gray-800 text-sm"
+                        placeholder="Write a reply..."
+                        value={reply}
+                        onChange={(e) => setReply(e.target.value)}
+                      />
+                      <button
+                        onClick={() => handleReplySubmit(comment._id)}
+                        className="ml-3 text-blue-600 font-semibold text-sm focus:outline-none"
+                      >
+                        Reply
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Render nested comments if any */}
+                {comment.comments && comment.comments.length > 0 && (
+                  <div className="ml-10 mt-3">{renderComments(comment.comments)}</div>
+                )}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
-    <>
-      <div className='bg-white pt-3 pb-2 px-2 rounded-lg shadow-md'>
-        <div className="" >
-          <div className='flex items-center gap-2' ><img src={profile.profilePicture} className='rounded-full h-[30px] w-[30px] object-cover ' />
-            <p className='text-base font-semibold '>{profile.firstName}</p>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      {/* Blurred overlay */}
+      <div 
+        className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity"
+        onClick={onClose}
+      ></div>
+
+      {/* Modal content */}
+      <div className="relative  bg-white rounded-lg shadow p-6 overflow-y-auto w-full max-w-3xl max-h-[650px] z-10">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-600 text-2xl font-bold focus:outline-none"
+        >
+          &times;
+        </button>
+
+        {/* Comment input area */}
+        <div className="mb-4">
+          <div className="flex items-center gap-3">
+            <img
+              src={profile.profilePicture || profilePic}
+              alt="Profile"
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <p className="text-base font-semibold text-gray-800">
+              {profile.firstName}
+            </p>
           </div>
-          <input
-            className=" outline-none w-full  border-b border-[#71be95] py-2"
-            placeholder="Add a comment"
+          <textarea
+            className="w-full mt-3 p-3 bg-gray-100 rounded focus:ring-2 focus:ring-blue-400 outline-none text-sm"
+            placeholder="Add a comment..."
             value={content}
-            onChange={(e) => setContent(e.target.value)} 
+            onChange={(e) => setContent(e.target.value)}
+            rows={2}
           />
-          <div style={{ display: 'flex', justifyContent: 'end', textAlign: 'center', paddingTop: '15px' }}>
-            <button onClick={handleCommentSubmit} className=' bg-[#136175] px-3  text-white text-lg rounded-lg  py-2 font-semibold'>Comment</button>
+          <div className="flex justify-end mt-3">
+            <button
+              onClick={handleCommentSubmit}
+              className="bg-blue-600 text-white px-5 py-2 rounded font-semibold text-sm transition hover:bg-blue-700 focus:outline-none"
+            >
+              Comment
+            </button>
           </div>
         </div>
 
+        {/* Comments list */}
+        <div className="max-h-[350px] thin-scroller overflow-y-auto custom-scrollbar">
+          {comments && comments.length > 0 ? (
+            renderComments(comments)
+          ) : (
+            <p className="text-center text-base text-gray-500">
+              No comments yet. Be the first to comment!
+            </p>
+          )}
+        </div>
       </div>
-      {renderComments(comments)}
-    </>
+    </div>
   );
 };
 

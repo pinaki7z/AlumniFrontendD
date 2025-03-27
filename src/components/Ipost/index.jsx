@@ -32,7 +32,11 @@ export const Ipost = () => {
   const { postId: statePostId, username: stateUsername, text: stateText, timestamp: stateTimestamp, image: stateImage = [], video: stateVideo } = location.state || {};
 
   const postId = statePostId || _id;
+  const [visibleComments, setVisibleComments] = useState(false);
 
+  const toggleComments = (postId) => {
+    setVisibleComments((prev)=>!prev);
+  };
   const [postData, setPostData] = useState({
     username: stateUsername || '',
     text: stateText || '',
@@ -137,7 +141,7 @@ export const Ipost = () => {
 
       {/* Bottom Actions: Like, Comment, Share */}
       <div className="bottomAction">
-        <div className="action">
+        <div className="action" onClick={toggleComments}>
           <img src={commentIcon} alt="comment-icon" className="postAction grey" />
           <h4>Comment</h4>
         </div>
@@ -171,14 +175,16 @@ export const Ipost = () => {
           </WhatsappShareButton>
         </MenuItem>
       </Menu>
-      <CommentSection
+    {  visibleComments &&  <CommentSection
                     entityId={_id}
                     entityType="posts"
                     //onCommentSubmit={refreshComments}
                     postUserId={userId}
                     //onDeleteComment={refreshComments}
                     comments={comments ? comments.filter(comment => !comment.reported) : null}
-                  />
+                    onClose={() => toggleComments()}
+                    individualPost={true}
+                  />}
     </div>
   );
 };
