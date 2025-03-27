@@ -28,9 +28,16 @@ const CommentSection = ({
   const profile = useSelector((state) => state.profile);
   const [showReport, setShowReport] = useState({});
   const [likes, setLikes] = useState({});
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCommentSubmit = async () => {
-    if (!content.trim()) return;
+    if (!content.trim()) {
+      setError('Comment cannot be blank');
+      return;
+    }
+    setError('');
+    setIsLoading(true);
     try {
       const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
         userId: profile._id,
@@ -45,6 +52,8 @@ const CommentSection = ({
       onCommentSubmit(postId);
     } catch (error) {
       console.error('Error adding comment:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +115,7 @@ const CommentSection = ({
   // Recursive function to render nested comments
   const renderComments = (commentsArray) => {
     return (
-      <ul className="space-y-4 ">
+      <ul className="space-y-4">
         {commentsArray.map((comment) => (
           <li key={comment._id}>
             <div className="flex items-start gap-2">
@@ -195,9 +204,6 @@ const CommentSection = ({
                       Delete
                     </button>
                   )}
-
-                  {/* (Optional) You can add a timestamp here if you want, e.g. '3h' */}
-                  {/* <span>3h</span> */}
                 </div>
 
                 {/* Reply input box */}
@@ -241,7 +247,7 @@ const CommentSection = ({
       ></div>
 
       {/* Modal content */}
-      <div className="relative  bg-white rounded-lg shadow p-6 overflow-y-auto w-full max-w-3xl max-h-[650px] z-10">
+      <div className="relative bg-white rounded-lg shadow p-6 overflow-y-auto w-full max-w-3xl max-h-[650px] z-10">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -262,19 +268,30 @@ const CommentSection = ({
               {profile.firstName}
             </p>
           </div>
+          {error && (
+            <p className="mt-2 text-red-600 text-sm">{error}</p>
+          )}
           <textarea
             className="w-full mt-3 p-3 bg-gray-100 rounded focus:ring-2 focus:ring-blue-400 outline-none text-sm"
             placeholder="Add a comment..."
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => {
+              setContent(e.target.value);
+              if(e.target.value.trim()) setError('');
+            }}
             rows={2}
           />
           <div className="flex justify-end mt-3">
             <button
               onClick={handleCommentSubmit}
-              className="bg-blue-600 text-white px-5 py-2 rounded font-semibold text-sm transition hover:bg-blue-700 focus:outline-none"
+              disabled={isLoading}
+              className={`px-5 py-2 rounded font-semibold text-sm transition focus:outline-none ${
+                isLoading
+                  ? 'bg-blue-400 cursor-not-allowed'
+                  : 'bg-[#0A3A4C] hover:bg-blue-800 text-white'
+              }`}
             >
-              Comment
+              {isLoading ? 'Posting...' : 'Comment'}
             </button>
           </div>
         </div>
