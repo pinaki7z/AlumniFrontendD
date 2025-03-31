@@ -155,7 +155,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-400 p-4">
+    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-4">
       {loading ? (
         <div className="text-center">Loading...</div>
       ) : (

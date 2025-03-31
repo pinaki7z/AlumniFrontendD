@@ -2,6 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -26,7 +28,7 @@ code {
 
 /* Target the scrollbar for webkit browsers */
 .thin-scroller::-webkit-scrollbar {
-  width: 4px; /* Adjust width to make scrollbar thinner */
+  width: 6px; /* Adjust width to make scrollbar thinner */
 }
 
 /* Style the scrollbar track */

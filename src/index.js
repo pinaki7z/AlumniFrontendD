@@ -10,6 +10,7 @@ import storePromise from "./store";
 //import 'react-loading-skeleton/dist/skeleton.css';
 import { tailChase } from "ldrs";
 
+
 tailChase.register();
 
 function AppLoader() {

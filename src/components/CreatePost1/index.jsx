@@ -346,9 +346,15 @@ function MyVerticallyCenteredModal(props) {
 
 
 
-const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
+
+const CreatePost1 = ({
+  name,
+  onNewPost,
+  entityType,
+  getPosts,
   loadingPost,
-  setLoadingPost }) => {
+  setLoadingPost,
+}) => {
   const { _id } = useParams();
   const [isExpanded, setExpanded] = useState(false);
   const [input, setInput] = useState('');
@@ -363,7 +369,7 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
   const [cookie, setCookie] = useCookies(["access_token"]);
   const profile = useSelector((state) => state.profile);
   const [showPollModal, setShowPollModal] = useState(false);
-  const [modalShow, setModalShow] = React.useState(false);
+  const [modalShow, setModalShow] = useState(false);
   const [selectedEventDetails, setSelectedEventDetails] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -385,7 +391,6 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
       console.log("ONLY ONE IMAGE");
       const file = files[0];
       setSelectedFile(file);
-
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -452,7 +457,7 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
 
     // Create a FormData object
     const formData = new FormData();
-    formData.append('video', file); // 'video' should match the field name expected by the server
+    formData.append('video', file);
 
     // Send the FormData via Axios
     axios.post(`${baseUrl}/uploadImage/video`, formData, {
@@ -467,7 +472,6 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         console.log(err);
       });
   };
-
 
   const simulateUpload = () => {
     let progress = 0;
@@ -495,15 +499,16 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
     }
   };
 
-
   const newHandleSubmit = async (event) => {
-    console.log('postingggggg');
-    if (input === '') {
-      setLoadingPost(false)
+    event.preventDefault();
+
+    // Prevent blank posts from being submitted
+    if (input.trim() === '') {
+      alert("Post cannot be blank.");
+      setLoadingPost(false);
       return;
     }
 
-    event.preventDefault();
     setLoadingPost(true);
     console.log('loading t/f', loading);
 
@@ -537,15 +542,19 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
     }
   };
 
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Prevent blank posts from being submitted
+    if (input.trim() === '') {
+      alert("Post cannot be blank.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("userId", profile._id);
     formData.append("description", input);
     formData.append("department", profile.department);
-    //formData.append("profilePicture", profile.profilePicture)
     if (_id) formData.append("groupID", _id);
 
     if (selectedFile) {
@@ -555,17 +564,13 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         const reader = new window.FileReader();
         reader.onload = function (event) {
           const dataURL = event.target.result;
-
           const formDataObject = {
             picturePath: picturePath
           };
 
-
           for (let pair of formData.entries()) {
             const key = pair[0];
             const value = pair[1];
-
-
             formDataObject[key] = value;
             console.log("FORMDATAOBJECT:", formDataObject)
           }
@@ -577,19 +582,15 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         formData.append("videoPath", selectedFile);
         const formDataObject = {};
 
-
         for (let pair of formData.entries()) {
           const key = pair[0];
           const value = pair[1];
-
-
           formDataObject[key] = value;
         }
 
         const currentDate = new Date();
         const folderName = currentDate.toISOString().split("T")[0];
         console.log("folder name:", folderName)
-
         uploadData(formDataObject, folderName);
       }
     } else if (selectedFiles) {
@@ -598,7 +599,6 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         picturePath: picturePath
       };
 
-
       for (let pair of formData.entries()) {
         const key = pair[0];
         const value = pair[1];
@@ -606,24 +606,18 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
       }
       console.log("FORMDATAOBJECT:", formDataObject);
       uploadImage(formDataObject);
-    }
-
-    else {
+    } else {
       console.log('elseee')
       const formDataObject = {};
-
 
       for (let pair of formData.entries()) {
         const key = pair[0];
         const value = pair[1];
-
-        // Check if the key is 'picturePath' and if the value is an array
         if (key === "picturePath" && Array.isArray(value)) {
-          formDataObject[key] = value.join(","); // Convert array to a comma-separated string
+          formDataObject[key] = value.join(",");
         } else {
-          formDataObject[key] = value; // Assign the value as it is for other keys
+          formDataObject[key] = value;
         }
-
         console.log("FORMDATAOBJECT:", formDataObject);
       }
 
@@ -631,13 +625,11 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         const response = await axios.post(
           `${baseUrl}/${entityType}/create`,
           formDataObject,
-
         );
         const newPost = await response.data;
         onNewPost(newPost);
         setInput("");
         setImgUrl("");
-        //window.location.reload();
       } catch (error) {
         console.error("Error posting:", error);
       }
@@ -662,7 +654,6 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
       setInput("");
       setImgUrl("");
       setSelectedFile(null);
-      // window.location.reload();
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -674,14 +665,12 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
       const response = await axios.post(
         `${baseUrl}/${entityType}/create`,
         formDataObject,
-
       );
       const newPost = await response.data;
       onNewPost(newPost);
       setInput("");
       setImgUrl("");
       setSelectedFile(null);
-      //window.location.reload();
     } catch (error) {
       console.error("Error posting:", error);
     }
@@ -707,66 +696,49 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
       onNewPost(newPoll);
       setInput("");
       setShowPollModal(false);
-      //window.location.reload();
     } catch (error) {
       console.error("Error creating poll:", error);
     }
   };
 
-
-
   return (
-    <div className={` pt-4 pb-4 mb-1 rounded-xl w-full  md:w-3/4 xl:min-w-[650px] ${isExpanded ? 'expanded' : ''}`}>
-      <div className={`overlay ${isExpanded ? 'expanded' : ''}`} onClick={handleInputClick}></div>
-      <div className={`card border-0 pt-1 ${isExpanded ? 'expanded' : ''}`} >
-        <div className={`card-header ${isExpanded ? 'expanded' : ''}`} style={{ backgroundColor: 'white', borderBottom: 'none', padding: '0px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} className={`status-field ${isExpanded ? 'expanded' : ''}`}>
+    <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-3/4 xl:min-w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
+      <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
+      <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
+        <div className={`card-header bg-white border-b-0 p-0`}>
+          <div className="flex items-center gap-4 px-4 py-2">
             <img
               src={profile.profilePicture || picture}
-              alt='Profile'
-              className='w-[60px] h-[60px] rounded-full object-cover'
-
+              alt="Profile"
+              className="w-16 h-16 rounded-full object-cover"
             />
-            <div style={{ borderBottom: '1px solid #ccc', width: '93%' }} className={`text-field ${isExpanded ? 'expanded' : ''}`}>
+            <div className="w-full border-b border-gray-300">
               <textarea
                 value={input}
                 onClick={handleInputClick}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="What's going on??"
-                className={`text-area ${isExpanded ? 'expanded' : ''}`}
-                rows={1} // Set the default number of rows
-                style={{
-                  width: '100%',
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'none',
-                  padding: '8px',
-                  fontSize: '16px',
-                  fontFamily: 'inherit',
-                  height: '100%'
-                }}
+                className="w-full resize-none border-none outline-none placeholder-gray-500 text-lg p-2"
+                rows={isExpanded ? 3 : 1}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault(); // Prevents new line
-                    newHandleSubmit(); // Call the submit function
+                    e.preventDefault();
+                    newHandleSubmit(e);
                   }
                 }}
               />
             </div>
-            {/* {close && <button onClick={closeButton}>Close</button>} */}
           </div>
         </div>
         {picturePath.length > 0 && (
-          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 px-4">
             {picturePath.map((path, index) => (
               <div key={index} className="relative">
-
                 <img
                   src={path}
                   alt="Preview"
-                  className="w-full h-32 object-cover rounded"
+                  className="w-full h-32 object-cover rounded-md"
                 />
-
                 <button
                   onClick={() => removeMedia(index)}
                   className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
@@ -775,36 +747,29 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
                 </button>
               </div>
             ))}
-
-
           </div>
-
-
         )}
 
-        {videoPath?.videoPath &&
-          <div className="w-50 ">
-
+        {videoPath?.videoPath && (
+          <div className="w-full px-4 mt-2">
             <video
               src={videoPath?.videoPath}
-              className="h-40  object-cover rounded"
+              className="w-full h-40 object-cover rounded-md"
               controls
             />
-            <div className="flex justify-center bg-red">
+            <div className="flex justify-end mt-1">
               <button
                 onClick={() => setVideoPath({})}
-                className=" text-white rounded-full p-1 w-full  flex items-center justify-end"
+                className="bg-red-500 text-white text-sm px-3 py-1 rounded-full"
               >
                 Remove
               </button>
             </div>
-
-
           </div>
-        }
+        )}
 
         {uploadProgress > 0 && (
-          <div className="mt-2 w-full">
+          <div className="mt-2 w-full px-4">
             <div className="bg-gray-200 rounded-full h-2.5 w-full">
               <div
                 className="bg-blue-600 h-2.5 rounded-full"
@@ -816,49 +781,69 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
             </p>
           </div>
         )}
-        <div className={`flex justify-between mt-2 `}>
-          {/* create post all 3 buttons */}
-          <div className='flex gap-2'>
-            <label className='flex gap-1 items-center font-semibold px-3 py-2 md:p-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100'>
-              <img src={gallery} className='h-[20px] w-[20px] ' alt="" srcset="" /><p className="md:block hidden" >Image</p>
+
+        <div className="flex items-center justify-between mt-4 px-4">
+          <div className="flex gap-3">
+            <label className="flex gap-1 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
+              <img src={gallery} alt="Gallery" className="w-5 h-5" />
+              <p className="hidden md:block">Image</p>
               <input
-                type='file'
-                accept='image/*'
-                style={{ display: 'none' }}
+                type="file"
+                accept="image/*"
+                className="hidden"
                 onChange={handleImageChange}
                 multiple
               />
             </label>
             <label
-              className="flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100"
-              onClick={() => setShowPollModal(true)}><img src={poll} alt="" srcset="" /><p className="md:block hidden" style={{ marginBottom: '0px' }}>Poll</p></label>
-
-
-            <label className='flex gap-2 px-3 items-center font-semibold py-2 rounded-full  border-1 border-[#6FBC94] cursor-pointer hover:bg-green-100' >
-              <img src={video} alt="" srcset="" /><p className="d-none d-lg-block" style={{ marginBottom: '0px' }}>Video</p>
+              className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors"
+              onClick={() => setShowPollModal(true)}
+            >
+              <img src={poll} alt="Poll" className="w-5 h-5" />
+              <p className="hidden md:block">Poll</p>
+            </label>
+            <label className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
+              <img src={video} alt="Video" className="w-5 h-5" />
+              <p className="hidden lg:block">Video</p>
               <input
-                type='file'
-                accept='video/*'
-                style={{ display: 'none' }}
+                type="file"
+                accept="video/*"
+                className="hidden"
                 onChange={handleVideoChange}
               />
             </label>
-            {entityType === 'news' && (<>
-              <label>Add a author</label>
-              <input type="text" name="" id="" onChange={(e) => setAuthor(e.target.value)}/>
-            </>)}
-            {_id && <label onClick={() => setModalShow(true)} style={{ border: '1px solid #71be95', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em', fontSize: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '18%', gap: '5px' }}>
-              <img src={video} alt="" srcset="" />Event
-            </label>}
+            {entityType === 'news' && (
+              <>
+                <label className="font-semibold">Add an author</label>
+                <input
+                  type="text"
+                  className="border border-gray-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-300"
+                  onChange={(e) => setAuthor(e.target.value)}
+                />
+              </>
+            )}
+            {_id && (
+              <label
+                onClick={() => setModalShow(true)}
+                className="flex items-center gap-2 border border-green-400 text-black px-4 py-1 rounded-full cursor-pointer text-sm hover:bg-green-100 transition-colors"
+              >
+                <img src={video} alt="Event" className="w-5 h-5" />
+                Event
+              </label>
+            )}
           </div>
-          <div style={{ marginTop: '4px', marginLeft: 'auto' }}>
-            <div
+          <div>
+            <button
               onClick={newHandleSubmit}
-              className="float-right cursor-pointer hover:bg-green-500 text-white bg-[#71be95] border border-[#174873] text-[16px] font-medium px-4 py-2 rounded"
+              disabled={loadingPost}
+              style={{
+                backgroundColor: loadingPost ? "#ccc" : "#0A3A4C",
+                cursor: loadingPost ? "not-allowed" : "pointer",
+              }}
+              className="px-6 py-2 text-white text-lg font-medium rounded shadow transition-colors"
             >
               {loadingPost ? 'Posting...' : 'Post'}
-            </div>
-
+            </button>
           </div>
         </div>
       </div>
@@ -877,8 +862,6 @@ const CreatePost1 = ({ name, onNewPost, entityType, getPosts,
         }}
       />
     </div>
-
   );
 };
-
 export default CreatePost1;
