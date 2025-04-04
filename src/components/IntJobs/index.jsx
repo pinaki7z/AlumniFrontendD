@@ -547,7 +547,7 @@ const IntJobs = (props) => {
                                     <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
                                     <Dropdown.Item eventKey="Admin & Office" >Admin & Office</Dropdown.Item>
                                     <Dropdown.Item eventKey="Art & Design" >Art & Design</Dropdown.Item>
-                                    
+
                                 </div>
                             </DropdownButton>
                         </Form.Group>
@@ -637,9 +637,9 @@ const IntJobs = (props) => {
         <>
 
             <div style={{ width: '100%' }}>
-                <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-                    <h2 style={{ margin: '0', color: 'white' }}>{title}</h2>
-                    <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
+                <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
+                    <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Jobs</h2>
+                    <p className='text-base md:text-lg text-[#136175]' >
                         Discover, explore, and submit applications for job openings on the Alumni Portal.
                     </p>
                 </div>

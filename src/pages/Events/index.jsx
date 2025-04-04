@@ -813,9 +813,9 @@ function Events() {
 
   return (
     <div className="Events mx-auto px-4 py-8">
-      <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-        <h2 style={{ margin: '0', color: 'white' }}>Event Calendar</h2>
-        <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
+      <div className='bg-[#cef3df] p-4 rounded-lg mb-3' style={{textAlign: 'left'}}>
+        <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Event Calendar</h2>
+        <p className='text-base md:text-lg text-[#136175]' >
           Stay updated on upcoming events and opportunities to connect.
         </p>
       </div>
@@ -835,7 +835,7 @@ function Events() {
           events={allEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: '60vh', fontWeight: '600',backgroundColor: '#71be95' }}
+          style={{ height: '60vh', fontWeight: '600', backgroundColor: '#71be95' }}
           selectable
           onSelectEvent={handleEventClick}
           view={view}

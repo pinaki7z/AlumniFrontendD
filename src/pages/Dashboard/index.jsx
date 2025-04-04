@@ -37,6 +37,7 @@ import { useEffect } from "react";
 import PhotoGallery from "../PhotoGallery/index.jsx";
 import { CreateJob } from "../Jobs/CreateJob/index.jsx";
 import { InterestedJobCandidates } from "../Jobs/InterestedJobCandidates/index.jsx";
+import { CreateNews } from "../News/CreateNews/index.jsx";
 import NewsDetails from "../News/NewsDetails.jsx";
 import { Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -179,6 +180,7 @@ const Dashboard = ({ handleLogout }) => {
 
             />
             <Route path="/news/:id/*" element={<NewsDetails />} />
+            <Route path="/news/createNews" element={<CreateNews />} />
           </Routes>
           <div className="chatbox-container" style={{ position: 'fixed', right: '0', bottom: '0', width: '300px', backgroundColor: 'white' }}>
             <Chatbox />

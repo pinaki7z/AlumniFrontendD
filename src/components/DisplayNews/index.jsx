@@ -12,7 +12,7 @@ import newsImage from "../../images/d-group.jpg";
 import { FaArrowCircleRight } from 'react-icons/fa';
 import Slider from 'react-slick';
 
-export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost ,author}) => {
+export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost ,author,picture}) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
     const profile = useSelector((state) => state.profile);
@@ -83,7 +83,8 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
                 videoPath,
                 department,
                 title,
-                author
+                author,
+                picture
                 //onDeletePost
             }
         }); // Pass props through state

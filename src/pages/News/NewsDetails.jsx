@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 
 const NewsDetails = () => {
     const location = useLocation();
-    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost,author } = location.state || {};
+    const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost,author,picture } = location.state || {};
 
     const PrevButton = ({ onClick }) => {
         return <button className="slick-arrow slick-prev" style={{ background: 'black' }} onClick={onClick}>Previous</button>;
@@ -84,9 +84,15 @@ const NewsDetails = () => {
                 ) : null}
             </div>
 
-            <p className="text-gray-700 text-base mt-4 leading-relaxed px-3">
-                {description || dummyDescription}
+            <p className="text-gray-700 text-base mt-4 leading-relaxed px-3" dangerouslySetInnerHTML={{ __html: description }}>
             </p>
+            {picture && (
+                  <img
+                    src={picture}
+                    alt="Forum Image"
+                    style={{ width: '300px', height: '300px', objectFit: 'cover', borderRadius: '10px', paddingBottom: '10px' }}
+                  />
+                )}
         </div>
     );
 };
