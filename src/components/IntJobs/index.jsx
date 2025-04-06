@@ -547,7 +547,7 @@ const IntJobs = (props) => {
                                     <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
                                     <Dropdown.Item eventKey="Admin & Office" >Admin & Office</Dropdown.Item>
                                     <Dropdown.Item eventKey="Art & Design" >Art & Design</Dropdown.Item>
-                                    
+
                                 </div>
                             </DropdownButton>
                         </Form.Group>
@@ -632,14 +632,26 @@ const IntJobs = (props) => {
         return { categoryTitle, jobTypeTitle };
     };
 
+    const employmentTypes = ['Full-time', 'Part-time', 'Internship', 'Volunteer', 'Contract'];
+    const categories = [
+        'Other',
+        'Admin & Office',
+        'Art & Design',
+        'Business Operations',
+        'Healthcare',
+        'Management',
+        'Retail & Sales',
+    ];
+
 
     return (
         <>
 
             <div style={{ width: '100%' }}>
-                <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-                    <h2 style={{ margin: '0', color: 'white' }}>{title}</h2>
-                    <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
+
+                <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
+                    <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>{title}</h2>
+                    <p className='text-base md:text-lg text-[#136175]' >
                         Discover, explore, and submit applications for job openings on the Alumni Portal.
                     </p>
                 </div>
@@ -674,77 +686,43 @@ const IntJobs = (props) => {
                 </div>
 
                 {/* Dropdowns */}
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', width: '100%' }}>
-                    <DropdownButton
-                        id="employment-type-dropdown"
-                        title={<span style={{ paddingRight: '8px' }}>{selectedEmploymentType !== 'All' ? selectedEmploymentType : 'Employment Type'}</span>}
-                        onSelect={(selectedOption) => handleSearchChange('', selectedOption, 'employmentType')}
-                        className="custom-dropdown"
-                        style={{ color: 'black', borderRadius: 5, width: '500px' }}
-                        variant="light"
-                    >
-                        <Dropdown.Item eventKey="Full-time">Full-time</Dropdown.Item>
-                        <Dropdown.Item eventKey="Part-time">Part-time</Dropdown.Item>
-                        <Dropdown.Item eventKey="Internship">Internship</Dropdown.Item>
-                        <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
-                        <Dropdown.Item eventKey="Contract">Contract</Dropdown.Item>
-                    </DropdownButton>
-                    <DropdownButton
-                        id="categories-dropdown"
-                        title={<span style={{ paddingRight: '8px' }}>{selectedCategory !== 'All' ? selectedCategory : 'Category'}</span>}
-                        onSelect={(selectedOption) => handleSearchChange('', selectedOption, 'category')}
-                        className="custom-dropdown"
-                        style={{ color: 'black', borderRadius: 5, width: '500px' }}
-                        variant="light"
-                    >
-                        <Dropdown.Item eventKey="Other" >Other</Dropdown.Item>
-                        <Dropdown.Item eventKey="Admin & Office">Admin & Office</Dropdown.Item>
-                        <Dropdown.Item eventKey="Art & Design">Art & Design</Dropdown.Item>
-                        <Dropdown.Item eventKey="Business Operations">Business Operations</Dropdown.Item>
-                        <Dropdown.Item eventKey="Healthcare">Healthcare</Dropdown.Item>
-                        <Dropdown.Item eventKey="Management">Management</Dropdown.Item>
-                        <Dropdown.Item eventKey="Retail & Sales">Retail & Sales</Dropdown.Item>
-                    </DropdownButton>
-                </div>
+                <div className="flex gap-3 mb-5 w-full">
+            {/* Employment Type Dropdown */}
+            <div className="relative w-[500px]">
+                <select
+                    value={selectedEmploymentType}
+                    onChange={(e) => handleSearchChange('', e.target.value, 'employmentType')}
+                    className="w-full p-3 border border-gray-300 rounded-md font-semibold text-white bg-[#0A3A4C] outline-none cursor-pointer"
+                >
+                    <option value="All" disabled>Employment Type</option>
+                    {employmentTypes.map((type) => (
+                        <option key={type} value={type}>
+                            {type}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Category Dropdown */}
+            <div className="relative w-[500px]">
+                <select
+                    value={selectedCategory}
+                    onChange={(e) => handleSearchChange('', e.target.value, 'category')}
+                    className="w-full p-3 border border-gray-300 rounded-md text-white font-semibold bg-[#0A3A4C] outline-none cursor-pointer"
+                >
+                    <option value="All" disabled>Category</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                            {cat}
+                        </option>
+                    ))}
+                </select>
+            </div>
+        </div>
 
                 {/* Buttons */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                    {/* <button
-                        style={{
-                            backgroundColor: '#efeff0',
-                            border: '1px solid #ced4da',
-                            padding: '5px 10px',
-                            cursor: 'pointer',
-                            borderRadius: '5px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                        }}
-                    >
-                        View Interested Candidates <span style={{
-                            backgroundColor: "#301c5B", borderRadius: 5, padding: '0px 2px', color: 'white', width: '15px',
-                            height: '20px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '12px'
-                        }}>1</span>
-                    </button> */}
-                    {/* {profile.profileLevel === 2 && (
-                        <button
-                            style={{
-                                backgroundColor: '#efeff0',
-                                color: 'black',
-                                border: 'none',
-                                padding: '10px 20px',
-                                cursor: 'pointer',
-                                borderRadius: '4px'
-                            }}
-                            onClick={() => setModalShow(true)}
-                        >
-                            Create
-                        </button>
-                    )} */}
+
                     {profile.profileLevel === 2 ? (
                         <div>
                             <Link
@@ -772,80 +750,7 @@ const IntJobs = (props) => {
             />
 
 
-            {/* <div className="jobs-page" style={{ width: '100%' }}>
-            <div className="jobs-title">
-                <p>{title}</p>
-                <p>Discover, explore, and submit applications for job openings on the Alumni Portal.</p>
-                <div className="centered-content">
-                    <div className="jobs-search-box">
-                        <div className="jobs-card">
-                            <div className="card-body">
-                                <Form>
-                                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                                        <Form.Control type="text" onChange={(e) => handleSearchChange(e, e.target.value, 'text')} placeholder={`Search for jobs/internships`} />
-                                    </Form.Group>
-                                </Form>
-                                <div className="jobs-dropdowns" style={{ fontSize: '15px' }}>
-                                    <DropdownButton id="job-type-dropdown" onSelect={(selectedOption) => handleSearchChange('', selectedOption, 'employmentType')} title={generateTitle().jobTypeTitle} className="custom-dropdown">
-                                        <div className="scrollable-dropdown">
-                                            <Dropdown.Item eventKey="">Employment Type</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Full-time">Full-time</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Part-time">Part-time</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Internship">Internship</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Volunteer">Volunteer</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Contract">Contract</Dropdown.Item>
-                                        </div>
-                                    </DropdownButton>
-                                    <DropdownButton style={{ fontSize: '15px' }} id="categories-dropdown" onSelect={(selectedOption) => handleSearchChange('', selectedOption, 'category')} title={generateTitle().categoryTitle} className="custom-dropdown">
-                                        <div className="scrollable-dropdown">
-                                            <Dropdown.Item eventKey="">Category</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Other">Other</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Admin & Office">Admin & Office</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Art & Design">Art & Design</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Business Operations">Business Operations</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Cleaning & Facilities">Cleaning & Facilities</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Community & Social Services">Community & Social Services</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Computer & Data">Computer & Data</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Construction & Mining">Construction & Mining</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Education">Education</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Farming & Forestry">Farming & Forestry</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Healthcare">Healthcare</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Installation,Maintenance & Repair">Installation,Maintenance & Repair</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Legal">Legal</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Management">Management</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Manufacturing">Manufacturing</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Media & Communication">Media & Communication</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Personal Care">Personal Care</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Protective Services">Protective Services</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Restaurants & Hospitality">Restaurants & Hospitality</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Retail & Sales">Retail & Sales</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Science & Engineering">Science & Engineering</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Sports & Entertainment">Sports & Entertainment</Dropdown.Item>
-                                            <Dropdown.Item eventKey="Transportation">Transportation</Dropdown.Item>
-                                        </div>
-                                    </DropdownButton>
-                                    {profile.profileLevel === 2 ? (
-                                        <div className="pt-4 flex justify-start">
-                                            <Link
-                                                to="/jobs/create"
-                                                style={{border: '1px solid black'}}
-                                            >
-                                                Create
-                                            </Link>
-                                        </div>
-                                    ) : null}
 
-                                    <MyVerticallyCenteredModal
-                                        show={modalShow}
-                                        onHide={() => setModalShow(false)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> */}
         </>
     );
 }

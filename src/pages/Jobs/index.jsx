@@ -173,21 +173,35 @@ const Jobs = () => {
                     }}
                 />
 
-                <div style={{ margin: '20px 0', zIndex: '1', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <label>Filter by Verification: </label>
-                    <select value={verifiedFilter} onChange={handleVerifiedFilterChange} style={{ backgroundColor: '#efeff0', marginLeft: '10px', color: 'black', borderColor: '#ced4da', padding: '5px 10px', borderRadius: 5 }}>
-                        <option value="all">All Jobs</option>
-                        <option value="verified">Verified Jobs</option>
-                        <option value="unverified">Unverified Jobs</option>
-                    </select>
-                </div>
-                <div style={{ margin: '20px 0', zIndex: '1', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <label>View Type:</label>
-                    <select value={viewType} onChange={(e) => setViewType(e.target.value)} style={{ marginLeft: '10px' }}>
-                        <option value="grid">Grid</option>
-                        <option value="list">List</option>
-                    </select>
-                </div>
+<div className="flex flex-col md:flex-row gap-4 my-5 z-[1] ">
+  {/* Verification Filter */}
+  <div className="flex items-center justify-start gap-3">
+    <label className="text-black font-medium">Filter by Verification:</label>
+    <select
+      value={verifiedFilter}
+      onChange={handleVerifiedFilterChange}
+      className="bg-[#0A3A4C] text-white border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      <option value="all">All Jobs</option>
+      <option value="verified">Verified Jobs</option>
+      <option value="unverified">Unverified Jobs</option>
+    </select>
+  </div>
+
+  {/* View Type Filter */}
+  <div className="flex items-center justify-start gap-3">
+    <label className="text-black font-medium">View Type:</label>
+    <select
+      value={viewType}
+      onChange={(e) => setViewType(e.target.value)}
+      className="bg-[#0A3A4C] text-white border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      <option value="grid">Grid</option>
+      <option value="list">List</option>
+    </select>
+  </div>
+</div>
+
                 <Routes>
                     <Route path="/" element={
                         <div style={{ marginTop: '20px', zIndex: '1' }}>
@@ -310,7 +324,7 @@ const Jobs = () => {
                     } />
                     <Route path="/" element={
                         <div className="job-poztt">
-                            <div style={{ display: 'flex', flexDirection: 'row', gap: '1vw', flexWrap: 'wrap', paddingTop: '20px' }}>
+                            <div className="grid grid-cols-1 md:grid-cols-4 mt-4 gap-4">
                                 {loading ? (
                                     <div>Loading.....</div>
                                 ) : filteredJobs.length ? (
@@ -318,7 +332,7 @@ const Jobs = () => {
                                         <div
                                             key={job._id}
                                             className="job-post"
-                                            style={{ width: viewType === 'grid' ? '30%' : '100%' }}
+                                          
                                         >
                                             <JobPost
                                                 userId={job.userId}

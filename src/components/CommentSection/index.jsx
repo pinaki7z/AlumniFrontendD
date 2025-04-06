@@ -184,7 +184,7 @@ const CommentSection = ({
                   </div>
 
                   {/* Reply */}
-                  <button
+                  {/* <button
                     onClick={() =>
                       setReplyToCommentId(
                         replyToCommentId === comment._id ? null : comment._id
@@ -193,7 +193,7 @@ const CommentSection = ({
                     className="hover:underline hover:text-blue-600 focus:outline-none transition"
                   >
                     Reply
-                  </button>
+                  </button> */}
 
                   {/* Delete (only owner or admin) */}
                   {(comment.userId === profile._id || profile.profileLevel === 0) && (
@@ -216,12 +216,12 @@ const CommentSection = ({
                         value={reply}
                         onChange={(e) => setReply(e.target.value)}
                       />
-                      <button
+                      {/* <button
                         onClick={() => handleReplySubmit(comment._id)}
                         className="ml-3 text-blue-600 font-semibold text-sm focus:outline-none"
                       >
                         Reply
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 )}
