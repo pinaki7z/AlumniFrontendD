@@ -66,18 +66,12 @@ const Forum = () => {
     <>
       <div className='forum' style={{ width: '100%', padding: '2% 5%' }}>
         <div>
-          <div style={{
-            textAlign: 'left',
-            padding: '20px',
-            borderRadius: '10px',
-            marginBottom: '10px',
-            backgroundColor: '#71be95'
-          }}>
-            <h2 style={{ margin: '0', color: 'white' }}>Forums</h2>
-            <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
-              Engage in meaningful discussions and share insights with the community.
-            </p>
-          </div>
+        <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
+          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Forums</h2>
+          <p className='text-base md:text-lg text-[#136175]' >
+          Engage in meaningful discussions and share insights with the community.
+          </p>
+        </div>
           <div style={{ display: 'flex', paddingTop: '25px', justifyContent: 'space-between', width: '100%' }}>
             <div className="search" style={{ display: 'flex', width: '75%' }}>
               <form style={{ display: 'flex', alignItems: 'center', width: '100%' }} onSubmit={(e) => e.preventDefault()}>

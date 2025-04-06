@@ -262,6 +262,7 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   department={post.department}
                   title={post.title}
                   author={post.author}
+                  picture={post.picture}
                   onDeletePost={() => handleDeletePost(post._id)}
                 />
               </div>

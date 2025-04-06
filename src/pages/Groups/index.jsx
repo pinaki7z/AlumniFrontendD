@@ -55,19 +55,15 @@ const Groups = () => {
           path="/"
           element={
             <>
-              <p
-                style={{
-                  fontWeight: "600",
-                  paddingBottom: "0px",
-                  color: "#3A3A3A",
-                  fontSize: "32px",
-                }}
-              >
-                Groups
-              </p>
+              <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
+                <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Groups</h2>
+                <p className='text-base md:text-lg text-[#136175]' >
+                Join communities based on interests like music, sports, and tech. Connect, share updates, and engage with like-minded people in discussions and events.
+                </p>
+              </div>
               <div
-                 style={{ display: 'flex', justifyContent: 'space-between' }}
-                //className="grid grid-cols-1 lg:grid-cols-2 lg:flex  gap-3"
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              //className="grid grid-cols-1 lg:grid-cols-2 lg:flex  gap-3"
               >
                 <div
                   className="search"

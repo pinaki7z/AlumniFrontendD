@@ -648,9 +648,8 @@ const IntJobs = (props) => {
         <>
 
             <div style={{ width: '100%' }}>
-
                 <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
-                    <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>{title}</h2>
+                    <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Jobs</h2>
                     <p className='text-base md:text-lg text-[#136175]' >
                         Discover, explore, and submit applications for job openings on the Alumni Portal.
                     </p>

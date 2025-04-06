@@ -1,5 +1,6 @@
 import Feed from '../../components/Feeed';
 import { useSelector } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 
 const News = () => {
@@ -8,6 +9,8 @@ const News = () => {
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
     admin = true;
   }
+
+  const navigate = useNavigate();
 
 
 
@@ -24,11 +27,19 @@ const News = () => {
             </div>
             
         </div>
-      {admin ?
+      {/* {admin ?
         <Feed showCreatePost={true} showCreateButton={false} entityType="news" entityId="id" showDeleteButton={true} />
         :
         <Feed showCreatePost={false} entityType="news" entityId="id" showDeleteButton={true} />
-      }
+      } */}
+       {admin && (
+        <button onClick={() => navigate("/home/news/createNews")}>Create News</button>
+      )}
+      {admin ?
+        <Feed showCreatePost={false} showCreateButton={false} entityType="news" entityId="id" showDeleteButton={true} />
+        :
+        <Feed showCreatePost={false} entityType="news" entityId="id" showDeleteButton={true} />
+      } 
     </div>
   )
 }
