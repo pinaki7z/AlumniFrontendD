@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { IoIosExpand } from "react-icons/io";
 import ChatM from "../../../src/pages/Chat";
 import baseUrl from '../../config';
+
 const Chat = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [ws, setWs] = useState(null);
@@ -47,11 +48,10 @@ const Chat = () => {
 
   //const socket = io("http://localhost:5000");
 
-  const SOCKET_URL = "http://localhost:5000"; // or https://your-backend-url.com
+  const SOCKET_URL = "https://api.alumnify.in"; 
+  const socketRef = useRef(null);
 
-  const socket = io(SOCKET_URL, {
-    withCredentials: true, // allow cookie token to be sent
-  });
+  
 
 
 
@@ -160,30 +160,42 @@ const Chat = () => {
   // };
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to socket:", socket.id);
+    socketRef.current = io(SOCKET_URL, {
+      withCredentials: true,
     });
-
-    socket.on("online-users", (users) => {
+  
+    socketRef.current.on("connect", () => {
+      console.log("Connected to socket:", socketRef.current.id);
+    });
+  
+    socketRef.current.on("online-users", (users) => {
       setOnlineUsers(users);
     });
-
-    socket.on("message", (data) => {
+  
+    socketRef.current.on("message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
-
+  
     return () => {
-      socket.off("message");
-      socket.off("online-users");
+      socketRef.current?.off("message");
+      socketRef.current?.off("online-users");
+      socketRef.current?.disconnect();
     };
   }, []);
 
   const sendMessage = () => {
+    console.log('sendMessage')
+    if (!socketRef.current || socketRef.current.disconnected) {
+      console.warn("Socket not connected. Message not sent.");
+      return;
+    }
+  
     const message = {
-      recipient: recipientId,
-      text: messageText,
+      recipient: selectedUserId,
+      text: newMessageText,
     };
-
+    console.log('message',message)
+  
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -192,16 +204,38 @@ const Chat = () => {
           name: selectedFile.name,
           data: base64Data,
         };
-        socket.emit("message", message);
+        socketRef.current.emit("message", message);
       };
       reader.readAsDataURL(selectedFile);
+      setMessages(prev => ([
+        ...prev,
+        {
+          file: selectedFile.name,
+          sender: profile._id,
+          recipient: selectedUserId,
+          _id: Date.now(),
+          createdAt: Date.now(),
+        },
+      ]));
     } else {
-      socket.emit("message", message);
+      socketRef.current.emit("message", message);
+      setNewMessageText('');
+        setMessages(prev => ([
+          ...prev,
+          {
+            text: newMessageText,
+            sender: profile._id,
+            recipient: selectedUserId,
+            _id: Date.now(),
+            createdAt: Date.now(),
+          },
+        ]));
     }
-
+  
     setMessageText("");
     setSelectedFile(null);
   };
+  
 
 
 
