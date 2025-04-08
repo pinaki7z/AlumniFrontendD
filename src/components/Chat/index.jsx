@@ -191,6 +191,7 @@ const Chat = () => {
     }
   
     const message = {
+      sender: profile._id,
       recipient: selectedUserId,
       text: newMessageText,
     };
@@ -406,6 +407,7 @@ const Chat = () => {
         },
       }).then(res => {
         setMessages(res.data);
+        console.log('respnse data',res.data)
       })
     }
 
