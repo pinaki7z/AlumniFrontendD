@@ -685,7 +685,7 @@ const IntJobs = (props) => {
                 </div>
 
                 {/* Dropdowns */}
-                <div className="flex gap-3 mb-5 w-full">
+                <div className="flex gap-3 mb-4 w-full">
             {/* Employment Type Dropdown */}
             <div className="relative w-[500px]">
                 <select

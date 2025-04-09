@@ -173,7 +173,7 @@ const Jobs = () => {
                     }}
                 />
 
-<div className="flex flex-col md:flex-row gap-4 my-5 z-[1] ">
+<div className="flex flex-col md:flex-row gap-4 mb-10 z-[1] ">
   {/* Verification Filter */}
   <div className="flex items-center justify-start gap-3">
     <label className="text-black font-medium">Filter by Verification:</label>
@@ -202,7 +202,7 @@ const Jobs = () => {
   </div>
 </div>
 
-                <Routes>
+                {/* <Routes>
                     <Route path="/" element={
                         <div style={{ marginTop: '20px', zIndex: '1' }}>
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
@@ -228,7 +228,7 @@ const Jobs = () => {
                             <PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext3={buttontext3} buttontext4={buttontext4} buttontext5={buttontext5} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} buttontext3Link={buttontext3Link} buttontext4Link={buttontext4Link} buttontext5Link={buttontext5Link} name='jobs' create={false} />
                         </div>
                     } />
-                </Routes>
+                </Routes> */}
                 <Routes>
                     <Route path="/archive" element={
                         <div className="job-poztt">
