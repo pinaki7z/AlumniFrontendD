@@ -22,7 +22,7 @@ import { IoLogoLinkedin } from "react-icons/io5";
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, LinkedinIcon, TwitterIcon, WhatsappIcon } from "react-share";
 
-function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick  }) {
+function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick }) {
   const PrevButton = ({ onClick }) => {
     return <button className="slick-arrow slick-prev bg-gray-800 text-white py-1 px-3 rounded" onClick={onClick}>Previous</button>;
   };
@@ -160,29 +160,29 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         <div className="text-center">Loading...</div>
       ) : (
         <>
-         <div className='flex items-center justify-between'>
-         <Link to={`/home/members/${userId}`} className="flex items-center gap-4 no-underline text-black">
-            <img src={profilePic} alt="profile" className="w-12 h-12 rounded-full object-cover" />
-            <div className="flex flex-col">
-              <h4 className="font-semibold">{username}</h4>
-              <span className="text-sm text-gray-600">{formatCreatedAt(timestamp)}</span>
-            </div>
-           
-          </Link>
-          {(admin || userId === profile._id) && (
-              <img 
+          <div className='flex items-center justify-between'>
+            <Link to={`/home/members/${userId}`} className="flex items-center gap-4 no-underline text-black">
+              <img src={profilePic} alt="profile" className="w-12 h-12 rounded-full object-cover" />
+              <div className="flex flex-col">
+                <h4 className="font-semibold">{username}</h4>
+                <span className="text-sm text-gray-600">{formatCreatedAt(timestamp)}</span>
+              </div>
+
+            </Link>
+            {(admin || userId === profile._id) && (
+              <img
                 onClick={() => handleDeletePost(userId)}
-                className="w-6 h-6 cursor-pointer" 
-                src={postDelete} 
-                alt="delete" 
+                className="w-6 h-6 cursor-pointer"
+                src={postDelete}
+                alt="delete"
               />
             )}
-         </div>
+          </div>
           <div className="mt-4">
             <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} className="no-underline">
               {text && (
                 <div className="mb-4">
-                  <p className="text-gray-800">{text}</p>
+                  <p className="text-gray-800 whitespace-pre-wrap">{text}</p>
                 </div>
               )}
               {image && image.length > 1 ? (
@@ -213,7 +213,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                     <source src={video.videoPath} type='video/mp4' />
                     Your browser does not support the video tag.
                   </video>
-                  <div 
+                  <div
                     className="absolute inset-0 flex items-center justify-center cursor-pointer"
                     onClick={handlePlay}
                   >
@@ -225,8 +225,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           </div>
           {entityType === 'posts' && (
             <div className="flex justify-between items-center mt-4 px-2 py-3 border-t border-gray-200">
-              <div  onClick={onCommentIconClick} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
-                <img src={commentIcon} alt="comment-icon" className="w-5"  />
+              <div onClick={onCommentIconClick} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
+                <img src={commentIcon} alt="comment-icon" className="w-5" />
                 <h4 className="hidden md:block font-semibold text-green-700">Comments</h4>
               </div>
               <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleLike}>
