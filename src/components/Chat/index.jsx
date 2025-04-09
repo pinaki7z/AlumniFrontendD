@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './chat.css';
 import Picture from '../../images/profilepic.jpg';
 import { FaFaceSmile } from 'react-icons/fa6';
+import { io } from "socket.io-client";
 import { FiSend } from 'react-icons/fi';
 import Picker from 'emoji-picker-react';
 import { MdOutlineOpenInNew } from "react-icons/md";
@@ -19,6 +20,7 @@ import { toast } from "react-toastify";
 import { IoIosExpand } from "react-icons/io";
 import ChatM from "../../../src/pages/Chat";
 import baseUrl from '../../config';
+
 const Chat = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [ws, setWs] = useState(null);
@@ -35,6 +37,21 @@ const Chat = () => {
   const [blockedByUsers, setBlockedByUsers] = useState([]);
   const [blockedUsers, setBlockedUsers] = useState([]);
   const [blockLoading, setBlockLoading] = useState(false);
+
+
+
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [messageText, setMessageText] = useState("");
+  //const [messages, setMessages] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const recipientId = "RECIPIENT_USER_ID";
+
+  //const socket = io("http://localhost:5000");
+
+  const SOCKET_URL = "https://api.alumnify.in"; 
+  const socketRef = useRef(null);
+
+  
 
 
 
@@ -89,58 +106,137 @@ const Chat = () => {
 
 
 
-  useEffect(() => {
-    fetchBlockedByUsers();
-    fetchBlockedUsers();
-    connectToWs();
+  // useEffect(() => {
+  //   fetchBlockedByUsers();
+  //   fetchBlockedUsers();
+  //   connectToWs();
 
+  //   return () => {
+  //     disconnectFromWs();
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchBlockedByUsers();
+  //   fetchBlockedUsers();
+
+  // }, [selectedUserId]);
+
+  // const connectToWs = () => {
+  //   console.log("Connecting to WS");
+
+  //   // Ensure we don't create multiple connections
+  //   if (ws && ws.readyState !== WebSocket.CLOSED) {
+  //     console.log("WebSocket is already connected or connecting.");
+  //     return;
+  //   }
+
+  //   const newWs = new WebSocket('wss://54.242.12.119:5000/');
+
+  //   newWs.addEventListener('open', () => {
+  //     console.log("WebSocket connection opened.");
+  //   });
+
+  //   newWs.addEventListener('close', () => {
+  //     console.log("WebSocket connection closed. Attempting to reconnect...");
+  //     setTimeout(connectToWs, 3000);
+  //   });
+
+  //   newWs.addEventListener('message', handleMessage);
+
+  //   setWs(newWs);
+  // };
+  // console.log('ws creation', ws)
+
+  // const disconnectFromWs = () => {
+  //   console.log("Disconnecting from WS");
+  //   console.log('ws', ws)
+  //   if (ws) {
+  //     console.log('ws present for deletion')
+  //     ws.close();
+  //     setWs(null);
+  //     console.log('WebSocket connection closed');
+  //   }
+  // };
+
+  useEffect(() => {
+    socketRef.current = io(SOCKET_URL, {
+      withCredentials: true,
+    });
+  
+    socketRef.current.on("connect", () => {
+      console.log("Connected to socket:", socketRef.current.id);
+    });
+  
+    socketRef.current.on("online-users", (users) => {
+      setOnlineUsers(users);
+    });
+  
+    socketRef.current.on("message", (data) => {
+      setMessages((prev) => [...prev, data]);
+    });
+  
     return () => {
-      disconnectFromWs();
+      socketRef.current?.off("message");
+      socketRef.current?.off("online-users");
+      socketRef.current?.disconnect();
     };
   }, []);
 
-  useEffect(() => {
-    fetchBlockedByUsers();
-    fetchBlockedUsers();
-
-  }, [selectedUserId]);
-
-  const connectToWs = () => {
-    console.log("Connecting to WS");
-    
-    // Ensure we don't create multiple connections
-    if (ws && ws.readyState !== WebSocket.CLOSED) {
-      console.log("WebSocket is already connected or connecting.");
+  const sendMessage = () => {
+    console.log('sendMessage')
+    if (!socketRef.current || socketRef.current.disconnected) {
+      console.warn("Socket not connected. Message not sent.");
       return;
     }
   
-    const newWs = new WebSocket('wss://54.242.12.119:5000/');
-    
-    newWs.addEventListener('open', () => {
-      console.log("WebSocket connection opened.");
-    });
-    
-    newWs.addEventListener('close', () => {
-      console.log("WebSocket connection closed. Attempting to reconnect...");
-      setTimeout(connectToWs, 3000); 
-    });
+    const message = {
+      sender: profile._id,
+      recipient: selectedUserId,
+      text: newMessageText,
+    };
+    console.log('message',message)
   
-    newWs.addEventListener('message', handleMessage);
-    
-    setWs(newWs);
-  };
-  console.log('ws creation', ws)
-
-  const disconnectFromWs = () => {
-    console.log("Disconnecting from WS");
-    console.log('ws', ws)
-    if (ws) {
-      console.log('ws present for deletion')
-      ws.close();
-      setWs(null);
-      console.log('WebSocket connection closed');
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Data = reader.result.split(",")[1];
+        message.file = {
+          name: selectedFile.name,
+          data: base64Data,
+        };
+        socketRef.current.emit("message", message);
+      };
+      reader.readAsDataURL(selectedFile);
+      setMessages(prev => ([
+        ...prev,
+        {
+          file: selectedFile.name,
+          sender: profile._id,
+          recipient: selectedUserId,
+          _id: Date.now(),
+          createdAt: Date.now(),
+        },
+      ]));
+    } else {
+      socketRef.current.emit("message", message);
+      setNewMessageText('');
+        setMessages(prev => ([
+          ...prev,
+          {
+            text: newMessageText,
+            sender: profile._id,
+            recipient: selectedUserId,
+            _id: Date.now(),
+            createdAt: Date.now(),
+          },
+        ]));
     }
+  
+    setMessageText("");
+    setSelectedFile(null);
   };
+  
 
 
 
@@ -172,70 +268,70 @@ const Chat = () => {
   }
   console.log('selectedUserId', selectedUserId)
 
-  const sendMessage = async (ev, file = null) => {
-    console.log('sending message');
-    if (ev) {
-      ev.preventDefault();
-    }
+  // const sendMessage = async (ev, file = null) => {
+  //   console.log('sending message');
+  //   if (ev) {
+  //     ev.preventDefault();
+  //   }
 
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
-      console.log("WebSocket is not open. Reconnecting...");
-      connectToWs();
-      return;
-    }
+  //   // if (!ws || ws.readyState !== WebSocket.OPEN) {
+  //   //   console.log("WebSocket is not open. Reconnecting...");
+  //   //   connectToWs();
+  //   //   return;
+  //   // }
 
-    try {
-      await fetchBlockedByUsers();
-      console.log('blockedByUsers:', blockedByUsers);
+  //   try {
+  //     await fetchBlockedByUsers();
+  //     console.log('blockedByUsers:', blockedByUsers);
 
-      if (blockedByUsers.includes(selectedUserId)) {
-        console.log("The user has blocked you");
-        return;
-      }
+  //     if (blockedByUsers.includes(selectedUserId)) {
+  //       console.log("The user has blocked you");
+  //       return;
+  //     }
 
-      ws.send(JSON.stringify({
-        recipient: selectedUserId,
-        text: newMessageText,
-        file,
-      }));
+  //     // ws.send(JSON.stringify({
+  //     //   recipient: selectedUserId,
+  //     //   text: newMessageText,
+  //     //   file,
+  //     // }));
 
-      if (file) {
-        console.log('file', file);
-        const res = await axios.get(`${baseUrl}/messages/${selectedUserId}`, {
-          headers: {
-            Authorization: `Bearer ${cookie.token}`,
-          },
-        });
-        console.log('message file', res.data);
-        setMessages(prev => ([
-          ...prev,
-          {
-            file: file.name,
-            sender: profile._id,
-            recipient: selectedUserId,
-            _id: Date.now(),
-            createdAt: Date.now(),
-          },
-        ]));
-      } else {
-        console.log('no file message');
-        setNewMessageText('');
-        setMessages(prev => ([
-          ...prev,
-          {
-            text: newMessageText,
-            sender: profile._id,
-            recipient: selectedUserId,
-            _id: Date.now(),
-            createdAt: Date.now(),
-          },
-        ]));
-      }
-    } catch (error) {
-      console.error('Error sending message:', error.message);
-      // Optionally handle the error here
-    }
-  };
+  //     if (file) {
+  //       console.log('file', file);
+  //       const res = await axios.get(`${baseUrl}/messages/${selectedUserId}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${cookie.token}`,
+  //         },
+  //       });
+  //       console.log('message file', res.data);
+  //       setMessages(prev => ([
+  //         ...prev,
+  //         {
+  //           file: file.name,
+  //           sender: profile._id,
+  //           recipient: selectedUserId,
+  //           _id: Date.now(),
+  //           createdAt: Date.now(),
+  //         },
+  //       ]));
+  //     } else {
+  //       console.log('no file message');
+  //       setNewMessageText('');
+  //       setMessages(prev => ([
+  //         ...prev,
+  //         {
+  //           text: newMessageText,
+  //           sender: profile._id,
+  //           recipient: selectedUserId,
+  //           _id: Date.now(),
+  //           createdAt: Date.now(),
+  //         },
+  //       ]));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error sending message:', error.message);
+  //     // Optionally handle the error here
+  //   }
+  // };
 
 
 
@@ -311,6 +407,7 @@ const Chat = () => {
         },
       }).then(res => {
         setMessages(res.data);
+        console.log('respnse data',res.data)
       })
     }
 
