@@ -214,7 +214,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   };
 
   return (
-    <div className="member-container">
+    <div className="">
       <div
         style={{
           paddingBottom: '2em',

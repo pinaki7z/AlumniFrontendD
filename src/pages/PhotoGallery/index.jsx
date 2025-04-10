@@ -109,7 +109,7 @@ const PhotoGallery = () => {
   }
 
   return (
-    <div className="photoGallery" style={{ width: "100%", padding: "2% 5%" }}>
+    <div className="photoGallery min-h-[80vh]" style={{ width: "100%", padding: "2% 5%" }}>
       {/* <div
         style={{
           textAlign: "left",

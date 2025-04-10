@@ -265,22 +265,35 @@ const TopBar = ({ handleLogout }) => {
                                 No New Messages
                             </div>
                         )}
-                        <div ref={notificationsOptionsRef}>
-                            <FaBell style={{ cursor: 'pointer', color: '#0a3a4c' }} onClick={() => {
-                                setShowProfileOptions(false);
-                                setShowMessages(false);
-                                setShowNotifications(true);
-                            }} />
-                        </div>
-                        {showNotifications && (
-                            <div className="notifications-card">
+                       <div className="relative" ref={notificationsOptionsRef}>
+  <button
+    onClick={() => {
+      setShowProfileOptions(false);
+      setShowMessages(false);
+      setShowNotifications(!showNotifications);
+    }}
+    className="relative p-2 text-[#0a3a4c] hover:text-yellow-600 transition-colors"
+    title="Notifications"
+  >
+    <FaBell className="w-6 h-6" />
+    {notificationCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
+        {notificationCount}
+      </span>
+    )}
+  </button>
 
-                                <NotificationsP sendNotificationCount={updateNotificationCount}/>
-                            </div>
-                        )}
+  {showNotifications && (
+    <div className="absolute right-0 mt-2 w-[60vw] max-w-[600px] thin-scroller bg-white border border-gray-200 rounded-md shadow-xl z-[99999] overflow-hidden ">
+      <div className="h-[500px] overflow-y-auto thin-scroller scrollbar-track-gray-100 z-[99999] ">
+        <NotificationsP sendNotificationCount={updateNotificationCount} topBar={true} />
+      </div>
+    </div>
+  )}
+</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1vw', cursor: 'pointer' }} ref={profileOptionsRef}
                             onClick={() => {
-                                console.log('clicked image')
+                                console.log('clicked image')    
                                 setShowMessages(false);
                                 setShowNotifications(false);
                                 setShowProfileOptions(!showProfileOptions);

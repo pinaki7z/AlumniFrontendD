@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import baseUrl from "../../config";
 import { toast } from "react-toastify";
 
-export const NotificationsP = ({ sendNotificationCount }) => {
+export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   const [notificationList, setNotificationList] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
@@ -177,8 +177,8 @@ export const NotificationsP = ({ sendNotificationCount }) => {
   };
 
   return (
-    <div className="pt-5 px-4">
-      <form
+    <div className="pt-5 px-4 z-[999999999999999] ">
+     {!topBar && <form
         className="flex flex-col lg:flex-row lg:justify-end gap-4 mb-6"
         onSubmit={handleAlumniSearch}
       >
@@ -195,20 +195,20 @@ export const NotificationsP = ({ sendNotificationCount }) => {
         >
           Search
         </button>
-      </form>
+      </form>}
 
       {loading ? (
         <div className="flex justify-center py-10">
           <l-line-spinner size="24" stroke="4" speed="1" color="#1F2937" />
         </div>
       ) : filteredNotifications.length ? (
-        <div className="space-y-6">
+        <div className="">
           {filteredNotifications.map((notification) => (
             <div
               key={notification._id}
-              className="bg-white shadow-md rounded-lg p-6"
+              className={`rounded-lg py-3 px-3 border border-gray-600 mb-1 hover:bg-gray-100 ${topBar && "overflow-x-hidden"}`}
             >
-              <div className="text-lg font-medium text-gray-800 mb-4">
+              <div className={` font-medium text-gray-800 ${topBar?"text-sm":"text-lg"}`}>
                 {notification.commented ? (
                   <span>
                     <Link
@@ -335,7 +335,7 @@ export const NotificationsP = ({ sendNotificationCount }) => {
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-4 mb-4">
+              <div className="flex flex-wrap gap-4 ">
                 {/* Accept */}
                 {notification.commented ? null : notification.link ? (
                   <button
@@ -431,7 +431,6 @@ export const NotificationsP = ({ sendNotificationCount }) => {
                 )}
               </div>
 
-              <hr className="border-gray-200" />
             </div>
           ))}
         </div>

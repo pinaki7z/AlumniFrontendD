@@ -13,7 +13,7 @@ export const Followers = () => {
   const [members, setMembers] = useState([]);
   const [cookie, setCookie] = useCookies(['access_token']);
   const profile = useSelector((state) => state.profile);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const LIMIT = 6;
   const [totalFollowers, setTotalFollowers] = useState(0);
   const activePage = useRef(1);
@@ -50,28 +50,41 @@ export const Followers = () => {
   };
 
   return (
-    <div style={{ width: '100%', marginTop: '20px' }}>
-      <PageTitle title={title} icon={icon} />
-      {loading ? ( // Conditionally render loading message
-        <div style={{ textAlign: 'center' }}> Loading...</div>
-      ) : members!== undefined && members.length > 0 ? (
-        <>
-          <div style={{ marginTop: '15px', display: 'flex', gap: '30px', flexWrap: 'wrap',margin: '5%' }}>
-            {members.map((member) => (
-              <Profilecard key={member._id} member={member} name='follow' />
-            ))}
-          </div>
-          {activePage.current < totalFollowers / LIMIT && (
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <button className="load-more-button" onClick={updateFollowers}>
-                Load More
-              </button>
+    <div style={{ width: '100%', padding: '0% 5%' }}>
+      <div style={{
+        paddingBottom: '2em',
+        display: 'flex',
+        flexDirection: 'column',
+        paddingTop: '25px',
+      }}>
+        <div className='bg-[#cef3df] p-4 rounded-lg mb-3 '>
+          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Followers</h2>
+          <p className='text-base md:text-lg text-[#136175]' >
+            {`See who’s following you and connect with your audience.`}
+          </p>
+        </div>
+        {loading ? ( // Conditionally render loading message
+          <div style={{ textAlign: 'center' }}> Loading...</div>
+        ) : members !== undefined && members.length > 0 ? (
+          <>
+            <div style={{ marginTop: '15px', display: 'flex', gap: '30px', flexWrap: 'wrap', margin: '5%' }}>
+              {members.map((member) => (
+                <Profilecard key={member._id} member={member} name='follow' />
+              ))}
             </div>
-          )}
-        </>
-      ): (
-        <div style={{textAlign: 'center'}}>No Followers</div>
-      )}
+            {activePage.current < totalFollowers / LIMIT && (
+              <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                <button className="load-more-button" onClick={updateFollowers}>
+                  Load More
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ textAlign: 'center' }}>No Followers</div>
+        )}
+
+      </div>
     </div>
   );
 };

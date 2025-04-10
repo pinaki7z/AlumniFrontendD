@@ -793,47 +793,55 @@ function Events() {
   };
 
   return (
-      <div className="Events mx-auto px-[5%] py-[38px] mt-3 ">
-        {/* <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
+    <div className="Events mx-auto px-[5%] py-[38px] mt-3 ">
+      {/* <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
         <h2 style={{ margin: '0', color: 'white' }}>Event Calendar</h2>
         <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
           Stay updated on upcoming events and opportunities to connect.
         </p>
       </div> */}
 
-        <div className='bg-[#cef3df] p-4 rounded-lg mb-3 text-start'>
-          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Event Calendar</h2>
-          <p className='text-base md:text-lg text-[#136175]' >
-            Stay updated on upcoming events and opportunities to connect.
-          </p>
-        </div>
+      <div className='bg-[#cef3df] p-4 rounded-lg mb-3 text-start'>
+        <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Event Calendar</h2>
+        <p className='text-base md:text-lg text-[#136175]' >
+          Stay updated on upcoming events and opportunities to connect.
+        </p>
+      </div>
 
 
 
-        <div class="bg-white rounded-lg p-4 shadow-lg" ref={calendarRef}>
-          <MyVerticallyCenteredModal
-            show={modalShow}
-            isEditing={isEditing}
-            selectedEvent={selectedEvent}
-            onHide={() => {
-              setModalShow(false);
-              setSelectedEventDetails(null);
-            }}
-          />
+      <div class="bg-white rounded-lg p-4 shadow-lg" ref={calendarRef}>
+        <MyVerticallyCenteredModal
+          show={modalShow}
+          isEditing={isEditing}
+          selectedEvent={selectedEvent}
+          onHide={() => {
+            setModalShow(false);
+            setSelectedEventDetails(null);
+          }}
+        />
+        <div className="relative z-[0]">
           <Calendar
             localizer={localizer}
             events={allEvents}
             startAccessor="start"
             endAccessor="end"
-            style={{ height: '60vh', fontWeight: '600', backgroundColor: 'white' }}
+            style={{
+              height: '60vh',
+              fontWeight: '600',
+              backgroundColor: 'white',
+              zIndex: 1, // Important fallback
+              position: 'relative'
+            }}
             selectable
             onSelectEvent={handleEventClick}
             view={view}
             onView={handleViewChange}
             formats={formats}
           />
+        </div>
 
-          {/* <FullCalendar
+        {/* <FullCalendar
   plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
   initialView="dayGridMonth"
   headerToolbar={{
@@ -852,337 +860,337 @@ function Events() {
   // Add any additional FullCalendar configurations as needed
 /> */}
 
-          {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-            <Button
-              className="add-event-button"
-              variant="primary"
-              onClick={() => {
-                setModalShow(true);
-                setIsEditing(false);
-              }}
-              style={{
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                position: 'absolute',
-                backgroundColor: '#301c5B'
-              }}
-            >
-              <FaCalendarPlus />
-            </Button>)}
+        {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+          <Button
+            className="add-event-button"
+            variant="primary"
+            onClick={() => {
+              setModalShow(true);
+              setIsEditing(false);
+            }}
+            style={{
+              borderRadius: '50%',
+              width: '60px',
+              height: '60px',
+              position: 'absolute',
+              backgroundColor: '#301c5B'
+            }}
+          >
+            <FaCalendarPlus />
+          </Button>)}
 
 
-          {selectedEventDetails && (
-            // Outer modal wrapper (Center + Backdrop)
-            <div className="fixed inset-0 z-50 flex items-center justify-center">
-              {/* Backdrop */}
-              <div
-                className="absolute inset-0 bg-black/50"
-                onClick={() => setSelectedEventDetails(null)}
-              ></div>
+        {selectedEventDetails && (
+          // Outer modal wrapper (Center + Backdrop)
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setSelectedEventDetails(null)}
+            ></div>
 
-              {/* Modal Container */}
-              <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4">
-                {/* Header */}
-                <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl">
-                  <h2 className="text-white text-xl font-semibold">
-                    Event Details
-                  </h2>
-                  <button
-                    onClick={() => setSelectedEventDetails(null)}
-                    className="text-white text-2xl leading-none hover:text-gray-300"
-                  >
-                    &times;
-                  </button>
+            {/* Modal Container */}
+            <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4">
+              {/* Header */}
+              <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl">
+                <h2 className="text-white text-xl font-semibold">
+                  Event Details
+                </h2>
+                <button
+                  onClick={() => setSelectedEventDetails(null)}
+                  className="text-white text-2xl leading-none hover:text-gray-300"
+                >
+                  &times;
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6  rounded-b-xl">
+                {/* Top section: event info + image */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Left side: event info */}
+                  <div className="md:col-span-2">
+                    <div className="bg-white rounded-md  p-4 space-y-2">
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">Title:</span>
+                        <span className="text-gray-800">{selectedEventDetails.title}</span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">Start Date:</span>
+                        <span className="text-gray-800">
+                          {formatDate(selectedEventDetails.start)}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">End Date:</span>
+                        <span className="text-gray-800">
+                          {formatDate(selectedEventDetails.end)}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">Start Time:</span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.startTime} hrs
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">End Time:</span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.endTime} hrs
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">
+                          Coordinator:
+                        </span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.cName}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">Phone:</span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.cNumber}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">Email:</span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.cEmail}
+                        </span>
+                      </div>
+                      <div className="flex items-center text-start font-semibold">
+                        <span className="font-semibold w-28 text-gray-700">
+                          Location:
+                        </span>
+                        <span className="text-gray-800">
+                          {selectedEventDetails.location}
+                        </span>
+                      </div>
+                      {/* Display whether event is paid/free */}
+                      {selectedEventDetails.priceType === "paid" ? (
+                        <p className="mt-4 text-red-500 font-semibold">
+                          This is a paid event
+                        </p>
+                      ) : selectedEventDetails.priceType === "free" ? (
+                        <p className="mt-4 text-green-600 font-semibold">
+                          This is a free event
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {/* Right side: event image */}
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={selectedEventDetails.picture}
+                      alt="Event"
+                      className="h-48 w-auto rounded-md shadow"
+                    />
+                  </div>
                 </div>
 
-                {/* Body */}
-                <div className="p-6  rounded-b-xl">
-                  {/* Top section: event info + image */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Left side: event info */}
-                    <div className="md:col-span-2">
-                      <div className="bg-white rounded-md  p-4 space-y-2">
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">Title:</span>
-                          <span className="text-gray-800">{selectedEventDetails.title}</span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">Start Date:</span>
-                          <span className="text-gray-800">
-                            {formatDate(selectedEventDetails.start)}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">End Date:</span>
-                          <span className="text-gray-800">
-                            {formatDate(selectedEventDetails.end)}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">Start Time:</span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.startTime} hrs
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">End Time:</span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.endTime} hrs
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">
-                            Coordinator:
-                          </span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.cName}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">Phone:</span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.cNumber}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">Email:</span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.cEmail}
-                          </span>
-                        </div>
-                        <div className="flex items-center text-start font-semibold">
-                          <span className="font-semibold w-28 text-gray-700">
-                            Location:
-                          </span>
-                          <span className="text-gray-800">
-                            {selectedEventDetails.location}
-                          </span>
-                        </div>
-                        {/* Display whether event is paid/free */}
-                        {selectedEventDetails.priceType === "paid" ? (
-                          <p className="mt-4 text-red-500 font-semibold">
-                            This is a paid event
-                          </p>
-                        ) : selectedEventDetails.priceType === "free" ? (
-                          <p className="mt-4 text-green-600 font-semibold">
-                            This is a free event
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    {/* Right side: event image */}
-                    <div className="flex items-center justify-center">
-                      <img
-                        src={selectedEventDetails.picture}
-                        alt="Event"
-                        className="h-48 w-auto rounded-md shadow"
+                {/* Attendance Options */}
+                <div className="mt-8 bg-white rounded-md shadow p-4">
+                  <p className="text-gray-700 text-xl font-medium mb-4">Your Attendance:</p>
+                  <div className="flex flex-wrap items-center justify-around gap-6">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-5 w-5 text-indigo-600"
+                        checked={attendanceStatus === 0}
+                        onChange={() => {
+                          if (selectedEventDetails.priceType === "free") {
+                            handleAttendance(0, selectedEventDetails._id);
+                          } else if (selectedEventDetails.priceType === "paid") {
+                            window.open(
+                              "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
+                              "_blank"
+                            );
+                          }
+                        }}
                       />
-                    </div>
+                      <span>I will attend</span>
+                    </label>
+
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-5 w-5 text-indigo-600"
+                        checked={attendanceStatus === 1}
+                        onChange={() => handleAttendance(1, selectedEventDetails._id)}
+                      />
+                      <span>I might attend</span>
+                    </label>
+
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        className="form-checkbox h-5 w-5 text-indigo-600"
+                        checked={attendanceStatus === 2}
+                        onChange={() => handleAttendance(2, selectedEventDetails._id)}
+                      />
+                      <span>I will not attend</span>
+                    </label>
+
+                    {attendanceLoading && (
+                      <l-line-spinner
+                        size="20"
+                        stroke="3"
+                        speed="1"
+                        color="black"
+                      ></l-line-spinner>
+                    )}
                   </div>
+                </div>
 
-                  {/* Attendance Options */}
-                  <div className="mt-8 bg-white rounded-md shadow p-4">
-                    <p className="text-gray-700 text-xl font-medium mb-4">Your Attendance:</p>
-                    <div className="flex flex-wrap items-center justify-around gap-6">
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox h-5 w-5 text-indigo-600"
-                          checked={attendanceStatus === 0}
-                          onChange={() => {
-                            if (selectedEventDetails.priceType === "free") {
-                              handleAttendance(0, selectedEventDetails._id);
-                            } else if (selectedEventDetails.priceType === "paid") {
-                              window.open(
-                                "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
-                                "_blank"
-                              );
-                            }
-                          }}
-                        />
-                        <span>I will attend</span>
-                      </label>
-
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox h-5 w-5 text-indigo-600"
-                          checked={attendanceStatus === 1}
-                          onChange={() => handleAttendance(1, selectedEventDetails._id)}
-                        />
-                        <span>I might attend</span>
-                      </label>
-
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox h-5 w-5 text-indigo-600"
-                          checked={attendanceStatus === 2}
-                          onChange={() => handleAttendance(2, selectedEventDetails._id)}
-                        />
-                        <span>I will not attend</span>
-                      </label>
-
-                      {attendanceLoading && (
-                        <l-line-spinner
-                          size="20"
-                          stroke="3"
-                          speed="1"
-                          color="black"
-                        ></l-line-spinner>
-                      )}
+                <div className="flex justify-between items-center">
+                  {/* See Attendees (if user is event creator) */}
+                  {selectedEventDetails.userId === profile._id && (
+                    <div className="mt-4 text-right">
+                      <button
+                        onClick={() => handleOpenModal(selectedEventDetails._id)}
+                        className="text-indigo-600 hover:underline"
+                      >
+                        See event attendees
+                      </button>
                     </div>
-                  </div>
-
-                  <div className="flex justify-between items-center">
-                    {/* See Attendees (if user is event creator) */}
-                    {selectedEventDetails.userId === profile._id && (
-                      <div className="mt-4 text-right">
+                  )}
+                  {/* Edit/Delete Buttons (if user is event creator or admin) */}
+                  {(selectedEventDetails.userId === profile._id ||
+                    profile.profileLevel === 0) && (
+                      <div className="mt-6 flex justify-start space-x-4">
                         <button
-                          onClick={() => handleOpenModal(selectedEventDetails._id)}
-                          className="text-indigo-600 hover:underline"
+                          onClick={() => setModalShow(true)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                         >
-                          See event attendees
+                          Edit Event
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleDeleteEvent();
+                            setSelectedEventDetails(null);
+                          }}
+                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+                        >
+                          Delete Event
                         </button>
                       </div>
                     )}
-                    {/* Edit/Delete Buttons (if user is event creator or admin) */}
-                    {(selectedEventDetails.userId === profile._id ||
-                      profile.profileLevel === 0) && (
-                        <div className="mt-6 flex justify-start space-x-4">
-                          <button
-                            onClick={() => setModalShow(true)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                          >
-                            Edit Event
-                          </button>
-                          <button
-                            onClick={() => {
-                              handleDeleteEvent();
-                              setSelectedEventDetails(null);
-                            }}
-                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-                          >
-                            Delete Event
-                          </button>
-                        </div>
-                      )}
 
 
-                  </div>
+                </div>
 
-                  {/* Attendees Modal */}
-                  {open && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center">
-                      {/* Backdrop */}
-                      <div
-                        className="absolute inset-0 bg-black/50"
-                        onClick={handleCloseModal}
-                      ></div>
+                {/* Attendees Modal */}
+                {open && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center">
+                    {/* Backdrop */}
+                    <div
+                      className="absolute inset-0 bg-black/50"
+                      onClick={handleCloseModal}
+                    ></div>
 
-                      {/* Attendees Modal Container */}
-                      <div className="relative bg-white rounded-md shadow-2xl max-w-xl w-full mx-4">
-                        {/* Header */}
-                        <div className="bg-[#02172B] px-4 py-3 flex justify-between items-center">
-                          <h2 className="text-white text-lg font-semibold">
-                            Event Attendees
-                          </h2>
-                          <button
-                            onClick={handleCloseModal}
-                            className="text-white text-2xl leading-none hover:text-gray-300"
-                          >
-                            &times;
-                          </button>
-                        </div>
+                    {/* Attendees Modal Container */}
+                    <div className="relative bg-white rounded-md shadow-2xl max-w-xl w-full mx-4">
+                      {/* Header */}
+                      <div className="bg-[#02172B] px-4 py-3 flex justify-between items-center">
+                        <h2 className="text-white text-lg font-semibold">
+                          Event Attendees
+                        </h2>
+                        <button
+                          onClick={handleCloseModal}
+                          className="text-white text-2xl leading-none hover:text-gray-300"
+                        >
+                          &times;
+                        </button>
+                      </div>
 
-                        {/* Body */}
-                        <div className="p-6 bg-[#f8fafc]">
-                          <div className="grid grid-cols-1 gap-6">
-                            {/* Will Attend */}
-                            <div>
-                              <h3 className="font-semibold text-gray-700">Will Attend</h3>
-                              <p className="text-sm text-gray-600">
-                                Total: {attendees?.willAttend.length}
-                              </p>
-                              {attendees?.willAttend.map((user) => (
-                                <div
-                                  key={user.userId}
-                                  className="flex items-center space-x-2 mt-2"
-                                >
-                                  <Avatar
-                                    src={user.profilePicture || pic}
-                                    alt={user.userName}
-                                    className="h-8 w-8 rounded-full"
-                                  />
-                                  <span>{user.userName}</span>
-                                </div>
-                              ))}
-                            </div>
+                      {/* Body */}
+                      <div className="p-6 bg-[#f8fafc]">
+                        <div className="grid grid-cols-1 gap-6">
+                          {/* Will Attend */}
+                          <div>
+                            <h3 className="font-semibold text-gray-700">Will Attend</h3>
+                            <p className="text-sm text-gray-600">
+                              Total: {attendees?.willAttend.length}
+                            </p>
+                            {attendees?.willAttend.map((user) => (
+                              <div
+                                key={user.userId}
+                                className="flex items-center space-x-2 mt-2"
+                              >
+                                <Avatar
+                                  src={user.profilePicture || pic}
+                                  alt={user.userName}
+                                  className="h-8 w-8 rounded-full"
+                                />
+                                <span>{user.userName}</span>
+                              </div>
+                            ))}
+                          </div>
 
-                            {/* Might Attend */}
-                            <div>
-                              <h3 className="font-semibold text-gray-700">Might Attend</h3>
-                              <p className="text-sm text-gray-600">
-                                Total: {attendees?.mightAttend.length}
-                              </p>
-                              {attendees?.mightAttend.map((user) => (
-                                <div
-                                  key={user.userId}
-                                  className="flex items-center space-x-2 mt-2"
-                                >
-                                  <Avatar
-                                    src={user.profilePicture || pic}
-                                    alt={user.userName}
-                                    className="h-8 w-8 rounded-full"
-                                  />
-                                  <span>{user.userName}</span>
-                                </div>
-                              ))}
-                            </div>
+                          {/* Might Attend */}
+                          <div>
+                            <h3 className="font-semibold text-gray-700">Might Attend</h3>
+                            <p className="text-sm text-gray-600">
+                              Total: {attendees?.mightAttend.length}
+                            </p>
+                            {attendees?.mightAttend.map((user) => (
+                              <div
+                                key={user.userId}
+                                className="flex items-center space-x-2 mt-2"
+                              >
+                                <Avatar
+                                  src={user.profilePicture || pic}
+                                  alt={user.userName}
+                                  className="h-8 w-8 rounded-full"
+                                />
+                                <span>{user.userName}</span>
+                              </div>
+                            ))}
+                          </div>
 
-                            {/* Will Not Attend */}
-                            <div>
-                              <h3 className="font-semibold text-gray-700">
-                                Will Not Attend
-                              </h3>
-                              <p className="text-sm text-gray-600">
-                                Total: {attendees?.willNotAttend.length}
-                              </p>
-                              {attendees?.willNotAttend.map((user) => (
-                                <div
-                                  key={user.userId}
-                                  className="flex items-center space-x-2 mt-2"
-                                >
-                                  <Avatar
-                                    src={user.profilePicture || pic}
-                                    alt={user.userName}
-                                    className="h-8 w-8 rounded-full"
-                                  />
-                                  <span>{user.userName}</span>
-                                </div>
-                              ))}
-                            </div>
+                          {/* Will Not Attend */}
+                          <div>
+                            <h3 className="font-semibold text-gray-700">
+                              Will Not Attend
+                            </h3>
+                            <p className="text-sm text-gray-600">
+                              Total: {attendees?.willNotAttend.length}
+                            </p>
+                            {attendees?.willNotAttend.map((user) => (
+                              <div
+                                key={user.userId}
+                                className="flex items-center space-x-2 mt-2"
+                              >
+                                <Avatar
+                                  src={user.profilePicture || pic}
+                                  alt={user.userName}
+                                  className="h-8 w-8 rounded-full"
+                                />
+                                <span>{user.userName}</span>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {selectedEventDetailsPopup && (
-            <div className="event-details-popup">
-              <div className="event-details-popup-content" style={{ textAlign: 'left' }}>
-                <span className="close-btn-event" onClick={() => setSelectedEventDetailsPopup(null)}>&times;</span>
+        {selectedEventDetailsPopup && (
+          <div className="event-details-popup">
+            <div className="event-details-popup-content" style={{ textAlign: 'left' }}>
+              <span className="close-btn-event" onClick={() => setSelectedEventDetailsPopup(null)}>&times;</span>
 
-                <h2 align='center'>Event Details</h2>
+              <h2 align='center'>Event Details</h2>
 
-                <EventDisplay event={selectedEventDetailsPopup} />
-                {/* {(selectedEventDetailsPopup.userId === profile._id || profile.profileLevel === 0) && (
+              <EventDisplay event={selectedEventDetailsPopup} />
+              {/* {(selectedEventDetailsPopup.userId === profile._id || profile.profileLevel === 0) && (
                 <div className="event-edit-delete">
                   <Button variant="primary" onClick={() => setModalShow(true)}>
                     Edit Event
@@ -1195,17 +1203,17 @@ function Events() {
                   </Button>
                 </div>
               )} */}
-              </div>
             </div>
-          )}
-          {loading && <><l-line-spinner
-            size="40"
-            stroke="3"
-            speed="1"
-            color="black"
-          ></l-line-spinner></>}
-        </div>
+          </div>
+        )}
+        {loading && <><l-line-spinner
+          size="40"
+          stroke="3"
+          speed="1"
+          color="black"
+        ></l-line-spinner></>}
       </div>
+    </div>
   );
 }
 
