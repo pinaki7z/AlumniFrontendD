@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { IoIosExpand } from "react-icons/io";
 import ChatM from "../../../src/pages/Chat";
 import baseUrl from '../../config';
+import socket from '../../socket';
 
 const Chat = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -44,12 +45,13 @@ const Chat = () => {
   const [messageText, setMessageText] = useState("");
   //const [messages, setMessages] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const recipientId = "RECIPIENT_USER_ID";
+  //const recipientId = "RECIPIENT_USER_ID";
 
-  //const socket = io("http://localhost:5000");
+  //const SOCKET_URL = "http://localhost:5000";
 
-  const SOCKET_URL = "https://api.alumnify.in"; 
-  const socketRef = useRef(null);
+  //const SOCKET_URL = "https://api.alumnify.in"; 
+  // const socketRef = useRef(null);
+  const socketRef = useRef(socket);
 
   
 
@@ -160,17 +162,22 @@ const Chat = () => {
   // };
 
   useEffect(() => {
-    socketRef.current = io(SOCKET_URL, {
-      withCredentials: true,
-    });
-  
+    // socketRef.current = io(SOCKET_URL, {
+    //   withCredentials: true,
+    // });
+    socketRef.current.connect();
+
     socketRef.current.on("connect", () => {
       console.log("Connected to socket:", socketRef.current.id);
     });
   
-    socketRef.current.on("online-users", (users) => {
-      setOnlineUsers(users);
-    });
+    // socketRef.current.on("connect", () => {
+    //   console.log("Connected to socket:", socketRef.current.id);
+    // });
+  
+    // socketRef.current.on("online-users", (users) => {
+    //   setOnlineUsers(users);
+    // });
   
     socketRef.current.on("message", (data) => {
       setMessages((prev) => [...prev, data]);
@@ -178,7 +185,7 @@ const Chat = () => {
   
     return () => {
       socketRef.current?.off("message");
-      socketRef.current?.off("online-users");
+      //socketRef.current?.off("online-users");
       socketRef.current?.disconnect();
     };
   }, []);
@@ -195,7 +202,7 @@ const Chat = () => {
       recipient: selectedUserId,
       text: newMessageText,
     };
-    console.log('message',message)
+
   
     if (selectedFile) {
       const reader = new FileReader();

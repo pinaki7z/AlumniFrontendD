@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import profilepic from "../../images/profilepic.jpg";
 import './sideWidgets.css';
 import picture from '../../images/pexels-damon-hall-2274725.jpg';
@@ -23,6 +23,8 @@ import { updateProfile } from '../../store/profileSlice';
 import { toast } from "react-toastify";
 import { lineSpinner } from 'ldrs';
 import baseUrl from '../../config';
+//import io from 'socket.io-client';
+import socket from '../../socket';
 
 lineSpinner.register()
 
@@ -44,6 +46,14 @@ const SideWidgets = () => {
     const itemsPerPage = 3;
     const dispatch = useDispatch();
     console.log('notifications1', notifications, profile);
+    const triggerRef = useRef(null);       
+    const popoverRef = useRef(null);
+    // const socket = io('http://localhost:5000');
+    const [onlineCount, setOnlineCount] = useState(0);
+
+    //const SOCKET_URL = "http://localhost:5000";
+    //const socketRef = useRef(null);
+    const socketRef = useRef(socket);
 
 
     const popover = (popoverVisibility) => {
@@ -69,6 +79,63 @@ const SideWidgets = () => {
     useEffect(() => {
         fetchNotifications();
     }, [isloading]);
+
+    // useEffect(() => {
+    //     return () => {
+    //       socket.off('onlineUsers');
+    //     };
+    //   }, []);
+
+      useEffect(() => {
+        // socketRef.current = io(SOCKET_URL, {
+        //   withCredentials: true,
+        // });
+        socketRef.current.connect();
+      
+        socketRef.current.on("connect", () => {
+          console.log("Connected to socket:", socketRef.current.id);
+        });
+      
+        socketRef.current.on('onlineUsers', (count) => {
+            setOnlineCount(count);
+          });
+      
+      
+        // socketRef.current.on("message", (data) => {
+        //   setMessages((prev) => [...prev, data]);
+        // });
+      
+        return () => {
+          //socketRef.current?.off("message");
+          socketRef.current?.off("online-users");
+          socketRef.current?.disconnect();
+        };
+      }, []);  
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            //triggerRef.current &&
+            !triggerRef.current.contains(event.target) 
+            //&&
+            //popoverRef.current &&
+            //!popoverRef.current.contains(event.target)
+          ) {
+            console.log('if clicked')
+            setShowPopover(false);
+          }else{
+            console.log('else clicked')
+            //setShowPopover(!showPopover)
+          }
+        };
+    
+        document.addEventListener("mousedown", handleClickOutside);
+    
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
+    
 
 
 
@@ -128,14 +195,14 @@ const SideWidgets = () => {
 
     return (
         <div className="sideWidget-feed">
-            <div style={{ float: 'right' }}>
+            <div style={{ float: 'right' }} >
                 <OverlayTrigger
                     trigger="click"
                     key='bottom'
                     show={showPopover}
                     placement='bottom'
                     overlay={
-                        <Popover id={`popover-positioned-bottom`}>
+                        <Popover id={`popover-positioned-bottom`} ref={popoverRef}>
                             <Popover.Body>
                                 <div className='img-job-vide' style={{ flexDirection: 'column', gap: '10px' }}>
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
@@ -159,23 +226,23 @@ const SideWidgets = () => {
                         </Popover>
                     }
                 >
-                    <button onClick={() => setShowPopover(!showPopover)} style={{ backgroundColor: '#0a3a4c', color: '#FFFFF0', width: '125px', height: '45px', borderRadius: '8px', border: 'none', fontSize: '20px' }}>Create</button>
+                    <button onClick={() => setShowPopover(!showPopover)} style={{ backgroundColor: '#0a3a4c', color: '#FFFFF0', width: '125px', height: '45px', borderRadius: '8px', border: 'none', fontSize: '20px' }} ref={triggerRef}>Create</button>
                 </OverlayTrigger>
             </div>
 
             <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center py-5 mt-20">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={profile.profilePicture ? profile.profilePicture : profilepic} alt="Profile" className='rounded-full object-cover w-[70px] h-[70px]' />
-                    <Link to='/profile' style={{ textDecoration: 'none', color: 'black' }}>
+                    <Link to='/home/profile' style={{ textDecoration: 'none', color: 'black' }}>
                         <p className='text-lg font-semibold mb-2'>{profile.firstName}</p>
                     </Link>
                     <p className='text-sm cursor-pointer  text-green-700 bg-[#6FBC9499] rounded-lg px-1 py-1'>@{profile.firstName}</p>
                 </div>
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>5</span></a></li>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.following.length}</span></a></li>
-                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.followers.length}</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>5</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.following.length}</span></a></li>
+                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.followers.length}</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -219,7 +286,7 @@ const SideWidgets = () => {
                 <p style={{ marginBottom: '0rem', marginTop: '0rem', fontSize: '20px' }}>Online Users</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1vw' }}>
                     <img src={Groups} alt='group-icon' />
-                    <p style={{ marginBottom: '0rem', marginTop: '0rem' }}>1</p>
+                    <p style={{ marginBottom: '0rem', marginTop: '0rem' }}>{onlineCount}</p>
                 </div>
             </div>
             <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center mt-4">
