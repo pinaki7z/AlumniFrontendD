@@ -1,135 +1,250 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import "./profile.css";
-import picture from "../../images/d-cover.jpg";
-import { BiUserPlus } from 'react-icons/bi'
-import { LuMessageSquare } from 'react-icons/lu'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import Icons from '../../components/Icons'
-import Icons1 from "../../components/Icons1";
-import { useSelector } from "react-redux";
-import { height, padding } from "@mui/system";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Feeed from "../../components/Feeed";
+import picture from "../../images/d-cover.jpg";
 import about from "../../images/about.svg";
 import work from "../../images/work.svg";
 import location from "../../images/location.svg";
-import profilePic from "../../images/profilepic.jpg"
+import profilePic from "../../images/profilepic.jpg";
 import time from "../../images/Time.svg";
 import arrowRight from "../../images/arrowRight.svg";
+import { HiMiniCheckBadge } from "react-icons/hi2";
+import baseUrl from "../../config";
+import axios from "axios";
+import { updateProfile } from "../../store/profileSlice";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const { id } = useParams();
-  console.log('member id', id);
   const members = useSelector((state) => state.member);
-  const member = members.find(member => member._id === id);
+  const member = members.find((member) => member._id === id);
+  const profile = useSelector((state) => state.profile);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  let [isAdded, setIsAdded] = useState();
+ 
 
+  useEffect(() => {
+    const checkFollowingStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/alumni/${profile._id}/following/all`
+        );
+        const followingDetails = response.data.followingDetails;
+        const isUserFollowing = followingDetails.some(
+          (detail) => detail.userId === member._id
+        );
+        setIsFollowing(isUserFollowing);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error checking following status:", error);
+      }
+    };
+
+    checkFollowingStatus();
+  }, [member._id, profile._id]);
+
+
+  const handleFollowToggle = async () => {
+    setLoading(true);
+    try {
+      if (!isFollowing) {
+        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+          userId: profile._id,
+        });
+        if (response.status === 200) {
+          const responseData = await response.data;
+          const { alumni } = responseData;
+          dispatch(updateProfile(alumni));
+          toast.success('Followed');
+          setIsFollowing(true);
+          setLoading(false);
+        }
+
+      } else {
+        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+          userId: profile._id,
+        });
+        if (response.status === 200) {
+          const responseData = await response.data;
+          const { alumni } = responseData;
+          dispatch(updateProfile(alumni));
+          toast.success('Unfollowed');
+          setIsFollowing(false);
+          setLoading(false);
+        }
+
+      }
+    } catch (error) {
+      console.error("Error toggling follow status:", error);
+      setLoading(false);
+    }
+  };
+
+  const isGroupURL = window.location.href.includes("http://localhost:3000/groups/");
+  const isForumURL = window.location.href.includes("http://localhost:3000/forums/");
+
+  const currentWork = member.workExperience.find(
+    (exp) => exp.endMonth.toLowerCase() === "current"
+  );
   if (!member) {
-    return <div>Member not found</div>;
+    return <div className="p-4 text-center">Member not found</div>;
   }
-
-
-  const currentWork = member.workExperience.find(exp => exp.endMonth.toLowerCase() === 'current');
-  console.log('current work', member.workExperience)
-
   return (
-    <>
-      <div style={{ width: '100%', padding: '0 5%', paddingTop: '4%' }}>
-        <div className="container-div" style={{ width: '100%', borderRadius: '12px', position: 'relative' }}>
-          <div className="upper-div" style={{
-            backgroundImage: `url(${member.coverPicture})`,
-            width: '100%',
-            minHeight: '35vh',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '12px 12px 0px 0px'
-          }}>
-          </div>
-          <div style={{ position: 'absolute', top: '10vh', left: '50%', transform: 'translateX(-50%) translateY(50%)' }}>
-            <img src={member.profilePicture ? member.profilePicture : profilePic} alt="profile-picture" style={{ width: '200px', height: '200px', borderRadius: '50%', border: '5px solid white' }} />
-          </div>
-          <div className="lower-div" style={{
-            backgroundColor: '#efeff0',
-            width: '100%',
-            minHeight: '25vh',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            borderRadius: '0px 0px 12px 12px'
-          }}>
-            <div className="message-follow" style={{ display: 'flex', justifyContent: 'space-around', paddingTop: '20px' }}>
-              <button>Message</button>
-              <button>Follow</button>
-            </div>
-            <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ width: '40%', paddingTop: '20px' }}>
-                <p style={{ fontWeight: '700', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter' }}>{member.firstName} {member.lastName}</p>
-                <p style={{ fontWeight: '300', color: '#000000', fontSize: '14px', fontFamily: 'Inter' }}>{member.profileLevel === 1 ? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : member.profileLevel === 3 ? 'STUDENT' : 'SUPERADMIN'}</p>
-                <p style={{ fontWeight: '400', color: '#3A3A3A', fontSize: '16px', fontFamily: 'Inter' }}>Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully.</p>
-                <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                  <div>
-                    <p>Groups</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
-                  <div>
-                    <p>Followers</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
-                  <div>
-                    <p>Following</p>
-                    <p style={{ fontWeight: '500', color: '#3A3A3A', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
-                  </div>
-                </div>
-              </div>
+    <div className="container mx-auto p-4 space-y-3">
+      {/* Cover & Avatar */}
+      <div className="relative rounded-lg overflow-hidden shadow-lg ">
+        <div
+          className="h-60 bg-cover bg-center"
+          style={{ backgroundImage: `url(${member.coverPicture || picture})` }}
+        />
 
+      </div>
+      {/* Profile Card */}
+      <div className="relative bg-white rounded-lg shadow-lg -mt-24 pt-24 pb-10 mb-10 px-6">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="relative">
+            <img src={member.profilePicture} alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
+
+          </div>
+        </div>
+        <div className="bg-white-100 b-6 ">
+          <div className="text-center space-y-3">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {member.firstName} {member.lastName}
+            </h2>
+            <p className="text-sm uppercase text-gray-600">
+              {member.profileLevel === 1
+                ? "ADMIN"
+                : member.profileLevel === 2
+                  ? "ALUMNI"
+                  : member.profileLevel === 3
+                    ? "STUDENT"
+                    : "SUPERADMIN"}
+            </p>
+            <p className="text-base text-gray-700">
+              {member.aboutMe ||
+                "Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully."}
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="px-4 py-2 underline text-violet-500 font-semibold ">
+                Message
+              </button>
+              <button
+  onClick={handleFollowToggle}
+  className={`px-4 py-2  underline font-semibold ${isFollowing?"text-red-500":"text-blue-500"}`}
+> 
+  {isFollowing ? "Unfollow" : "Follow"}
+</button>
+            </div>
+            <div className="flex justify-around mt-6">
+              <div className="text-center">
+                <p className="font-medium text-gray-600">Groups</p>
+                <p className="text-xl font-semibold text-gray-800">
+                  {member.groupNames?.length || 0}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="font-medium text-gray-600">Followers</p>
+                <p className="text-xl font-semibold text-gray-800">
+                  {member.followers?.length || 0}
+                </p>
+              </div>
+              <div className="text-center">
+                <p className="font-medium text-gray-600">Following</p>
+                <p className="text-xl font-semibold text-gray-800">
+                  {member.following?.length || 0}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '2%' }}>
-          <div style={{ width: '70%' }}><Feeed entityType='posts' showCreatePost={false} showDeleteButton={true} userId={member._id} /></div>
-          <div style={{ width: '28%', paddingTop: '37px' }}>
-            <div>
-              <div style={{ backgroundColor: '#0a3a4c', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src={about} alt="" />
-                <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>About {member.firstName}</p>
-              </div>
-              <p style={{ backgroundColor: '#efeff0', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364' }}>{member.aboutMe ? member.aboutMe : 'User has not updated his Bio'}</p>
+
+
+
+      </div>
+
+
+
+      {/* Main Content */}
+      <div className="flex flex-col lg:flex-row gap-6 mt-8">
+        {/* Feed */}
+        <div className="flex-1">
+          <Feeed
+            entityType="posts"
+            showCreatePost={false}
+            showDeleteButton={true}
+            userId={member._id}
+          />
+        </div>
+
+        {/* Sidebar */}
+        <aside className="w-full lg:w-1/3 space-y-6">
+          {/* About Section */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="flex items-center space-x-3 bg-[#0A3A4C] p-4">
+              <img src={about} alt="About icon" className="w-6 h-6" />
+              <h3 className="text-lg font-semibold text-white">
+                About {member.firstName}
+              </h3>
             </div>
-            <div>
-              <div style={{ backgroundColor: '#0a3a4c', color: '#F8F8FF', borderRadius: '12px 12px 0px 0px', padding: '12px 16px 12px 16px', display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <img src={work} alt="" />
-                <p style={{ fontFamily: 'Inter', fontWeight: '600', fontSize: '20px', marginBottom: '0px' }}>Currently Working As</p>
-              </div>
-              <div style={{ backgroundColor: '#efeff0' }}>
-                <p style={{ backgroundColor: '#efeff0', borderRadius: '0px 0px 12px 12px', padding: '10px 16px 10px 16px', fontFamily: 'Inter', fontWeight: '500', fontSize: '16px', color: '#636364', marginBottom: '0px' }}>{currentWork && currentWork.title ? currentWork.title : 'User has not updated his current work title'}</p>
-                <div style={{ padding: '16px' }}>
-                  <p style={{ color: '#0a3a4c', fontWeight: '500', fontSize: '18px' }}>{currentWork && currentWork.companyName ? currentWork.companyName : 'User has not updated his current work place'}</p>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                        ? <img src={time} alt="" />: ''}
-                    <p style={{ marginBottom: '0px' }}>
-                      {currentWork && (currentWork.startMonth && currentWork.startYear && currentWork.endMonth)
-                        ? `${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`
-                        : ''}
+            <div className="bg-gray-100 p-4">
+              <p className="text-gray-700">
+                {member.aboutMe || "User has not updated his Bio"}
+              </p>
+            </div>
+          </div>
+
+          {/* Current Work Section */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="flex items-center space-x-3 bg-[#0A3A4C] p-4">
+              <img src={work} alt="Work icon" className="w-6 h-6" />
+              <h3 className="text-lg font-semibold text-white">
+                Currently Working As
+              </h3>
+            </div>
+            <div className="bg-gray-100 p-4 space-y-2">
+              <p className="font-medium text-gray-700">
+                {currentWork?.title ||
+                  "User has not updated his current work title"}
+              </p>
+              <div className="space-y-2">
+                <p className="text-gray-800 font-semibold">
+                  {currentWork?.companyName ||
+                    "User has not updated his current work place"}
+                </p>
+                {currentWork?.startMonth && currentWork?.startYear && (
+                  <div className="flex items-center space-x-2">
+                    <img src={time} alt="Time icon" className="w-4 h-4" />
+                    <p className="text-gray-600">
+                      {`${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', gap: '16px', paddingLeft: '3px' }}>
-                    {currentWork && (currentWork.location && currentWork.locationType) ? <img src={location} alt="" />: ''}
-                    <p style={{ marginBottom: '0px' }}>{currentWork && (currentWork.location && currentWork.locationType) ? `${currentWork.location} - ${currentWork.locationType}`: ''}</p>
+                )}
+                {currentWork?.location && currentWork?.locationType && (
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={location}
+                      alt="Location icon"
+                      className="w-4 h-4"
+                    />
+                    <p className="text-gray-600">
+                      {`${currentWork.location} - ${currentWork.locationType}`}
+                    </p>
                   </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '2px dotted green', padding: '13px 16px', cursor: 'pointer' }}>
-                  <p style={{ marginBottom: '0px' }}>Work Experience </p>
-                  <img src={arrowRight} alt="" />
-                </div>
-
-
-
+                )}
               </div>
-
+              <div className="flex items-center justify-between border-t-2 border-dotted border-green-500 pt-3 cursor-pointer">
+                <span className="text-gray-700">Work Experience</span>
+                <img src={arrowRight} alt="arrow" className="w-4 h-4" />
+              </div>
             </div>
           </div>
-        </div>
+        </aside>
       </div>
-    </>
+    </div>
   );
 };
 

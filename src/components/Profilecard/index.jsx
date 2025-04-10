@@ -34,7 +34,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     admin = true;
   }
   const isFollowPresent = window.location.href.includes('follow');
-  console.log('isFollowPresent', member)
+  // console.log('isFollowPresent', member)
 
 
   const isGroupURL = window.location.href.includes("http://localhost:3000/groups/");

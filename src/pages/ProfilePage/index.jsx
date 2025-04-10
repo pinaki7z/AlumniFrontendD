@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import picture from "../../images/d-cover.jpg";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
 import axios from 'axios';
@@ -86,7 +88,7 @@ const ProfilePage = () => {
     <div className="container mx-auto p-4 space-y-3">
       {/* Cover Section */}
       <div className="relative rounded-lg overflow-hidden shadow-lg">
-        <div className="h-60 bg-cover bg-center" style={{ backgroundImage: `url(${profile.coverPicture})` }} />
+        <div className="h-60 bg-cover bg-center" style={{ backgroundImage: `url(${profile.coverPicture || picture})` }} />
         <button onClick={() => handleDelete('cover')} className="absolute top-4 left-4 bg-white p-2 rounded-full shadow">
           <MdOutlineDelete className="w-6 h-6 text-gray-700" />
         </button>
