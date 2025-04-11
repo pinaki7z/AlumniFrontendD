@@ -312,9 +312,22 @@ export const WorkExperience = () => {
       }
 
     return (
-        <div style={{ width: '100%', marginTop: '15px', padding: '5% 5%' }}>
-            <PageTitle title='Work Experience' icon={icon} />
-            <div style={{paddingTop: '20px'}}>
+      <>
+      <div  style={{ width: '100%', padding: '0% 5%' }}>
+      <div style={{
+        paddingBottom: '2em',
+        display: 'flex',
+        flexDirection: 'column',
+        paddingTop: '25px',
+      }}>
+         <div className='bg-[#cef3df] p-4 rounded-lg mb-3 '>
+          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Work Experience</h2>
+          <p className='text-base md:text-lg text-[#136175]' >
+            {`  Showcase your professional journey and career milestones.`}
+          </p>
+        </div>
+            {/* <PageTitle title='Work Experience' icon={icon} /> */}
+         <div style={{paddingTop: '20px'}}>
             <button
                 type="button"
                 style={{ backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '7px', border: '2px solid #71be95', color: '#0a3a4c', borderRadius: '5px',padding: '10px' }}
@@ -341,5 +354,9 @@ export const WorkExperience = () => {
                 {(workExperiences.length === 0 && loading === false) && 'No work experience'}
             </div>
         </div>
+      </div>
+        
+       
+      </>
     );
 };

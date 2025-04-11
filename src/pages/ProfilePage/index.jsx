@@ -192,7 +192,7 @@ const ProfilePage = () => {
           </div>
 
           {/* Work Experience Link */}
-          <Link to='/home/profile/workExperience' className="block bg-white rounded-lg shadow-lg hover:shadow-xl transition p-4 flex items-center justify-between">
+          <Link to='/home/profile/workExperience' className=" bg-white rounded-lg shadow-lg hover:shadow-xl transition p-4 flex items-center justify-between">
             <p className="font-medium">Work Experience</p>
             <span className="text-gray-400">›</span>
           </Link>
