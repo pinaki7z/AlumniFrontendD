@@ -536,11 +536,11 @@ const DonSponRequest = ({ name, edit }) => {
             <>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label htmlFor="groupName">Group Name*</label>
-                    <input type="text" style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px' }} value={groupName} onChange={(e) => setGroupName(e.target.value)} required />
+                    <input type="text" style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px',border: '1px solid' }} value={groupName} onChange={(e) => setGroupName(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label htmlFor="groupType">Group Type*</label>
-                    <select style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px' }} value={groupType} onChange={(e) => setGroupType(e.target.value)} required>
+                    <select style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px',border: '1px solid' }} value={groupType} onChange={(e) => setGroupType(e.target.value)} required>
                         <option value="">Select Group Type</option>
                         <option value="Public">Public</option>
                         <option value="Private">Private</option>
@@ -548,7 +548,7 @@ const DonSponRequest = ({ name, edit }) => {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     <label htmlFor="category">Category*</label>
-                    <select style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px' }} value={category} onChange={(e) => setCategory(e.target.value)} required>
+                    <select style={{ borderRadius: '6px', height: '5.5vh', padding: '10px', marginTop: '10px',border: '1px solid' }} value={category} onChange={(e) => setCategory(e.target.value)} required>
                         <option value="">Select Category</option>
                         <option value="Cars and vehicles">Cars and Vehicles</option>
                         <option value="Comedy">Comedy</option>
@@ -706,27 +706,27 @@ const DonSponRequest = ({ name, edit }) => {
             <>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="name">Full Name:</label>
-                    <input type="text" id="name" name="name" style={{ borderRadius: '6px', height: '5.5vh' }} value={`${profile.firstName} ${profile.lastName}`} onChange={(e) => setFullName(e.target.value)} required />
+                    <input type="text" id="name" name="name" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={`${profile.firstName} ${profile.lastName}`} onChange={(e) => setFullName(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" style={{ borderRadius: '6px', height: '5.5vh' }} value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    <input type="email" id="email" name="email" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="phone">Phone Number:</label>
-                    <input type="text" id="phone" name="phone" style={{ borderRadius: '6px', height: '5.5vh' }} value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                    <input type="text" id="phone" name="phone" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="amount">Investment Amount (₹):</label>
-                    <input type="number" id="amount" name="amount" style={{ borderRadius: '6px', height: '5.5vh' }} value={amount} onChange={(e) => setAmount(e.target.value)} required />
+                    <input type="number" id="amount" name="amount" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={amount} onChange={(e) => setAmount(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="business_name">Business Name:</label>
-                    <input type="text" id="business_name" name="business_name" style={{ borderRadius: '6px', height: '5.5vh' }} value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
+                    <input type="text" id="business_name" name="business_name" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={businessName} onChange={(e) => setBusinessName(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="industry">Industry:</label>
-                    <select id="industry" name="industry" style={{ borderRadius: '6px', height: '5.5vh' }} value={industry} onChange={(e) => handleIndustryChange(e, setPicturePath)} required>
+                    <select id="industry" name="industry" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={industry} onChange={(e) => handleIndustryChange(e, setPicturePath)} required>
                         <option value="">Select Industry</option>
                         <option value="Technology">Technology</option>
                         <option value="Finance">Finance</option>
@@ -737,7 +737,7 @@ const DonSponRequest = ({ name, edit }) => {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="description">Business Description:</label>
-                    <textarea id="description" name="description" style={{ resize: 'none', borderRadius: '6px' }} value={businessDescription} onChange={(e) => setBusinessDescription(e.target.value)} required></textarea>
+                    <textarea id="description" name="description" style={{ resize: 'none', borderRadius: '6px',border: '1px solid' }} value={businessDescription} onChange={(e) => setBusinessDescription(e.target.value)} required></textarea>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="business_plan">Business Plan (PDF):</label>
@@ -745,27 +745,27 @@ const DonSponRequest = ({ name, edit }) => {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="target_market">Target Market:</label>
-                    <input type="text" id="target_market" name="target_market" style={{ borderRadius: '6px', height: '5.5vh' }} value={targetMarket} onChange={(e) => setTargetMarket(e.target.value)} required />
+                    <input type="text" id="target_market" name="target_market" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={targetMarket} onChange={(e) => setTargetMarket(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="competitive_advantage">Competitive Advantage:</label>
-                    <textarea id="competitive_advantage" name="competitive_advantage" style={{ resize: 'none', borderRadius: '6px' }} value={competitiveAdvantage} onChange={(e) => setCompetitiveAdvantage(e.target.value)} required></textarea>
+                    <textarea id="competitive_advantage" name="competitive_advantage" style={{ resize: 'none', borderRadius: '6px',border: '1px solid' }} value={competitiveAdvantage} onChange={(e) => setCompetitiveAdvantage(e.target.value)} required></textarea>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="current_revenue">Current Revenue (Rupees):</label>
-                    <input type="number" id="current_revenue" name="current_revenue" style={{ borderRadius: '6px', height: '5.5vh' }} value={currentRevenue} onChange={(e) => setCurrentRevenue(e.target.value)} required />
+                    <input type="number" id="current_revenue" name="current_revenue" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={currentRevenue} onChange={(e) => setCurrentRevenue(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="funding_goal">Funding Goal (Rupees):</label>
-                    <input type="number" id="funding_goal" name="funding_goal" style={{ borderRadius: '6px', height: '5.5vh' }} value={fundingGoal} onChange={(e) => setFundingGoal(e.target.value)} required />
+                    <input type="number" id="funding_goal" name="funding_goal" style={{ borderRadius: '6px', height: '5.5vh',border: '1px solid' }} value={fundingGoal} onChange={(e) => setFundingGoal(e.target.value)} required />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="team_experience">Team Experience:</label>
-                    <textarea id="team_experience" name="team_experience" style={{ resize: 'none', borderRadius: '6px' }} value={teamExperience} onChange={(e) => setTeamExperience(e.target.value)} required></textarea>
+                    <textarea id="team_experience" name="team_experience" style={{ resize: 'none', borderRadius: '6px',border: '1px solid' }} value={teamExperience} onChange={(e) => setTeamExperience(e.target.value)} required></textarea>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', width: '95%' }}>
                     <label htmlFor="marketing_strategy">Marketing Strategy:</label>
-                    <textarea id="marketing_strategy" name="marketing_strategy" style={{ resize: 'none', borderRadius: '6px' }} value={marketingStrategy} onChange={(e) => setMarketingStrategy(e.target.value)} required></textarea>
+                    <textarea id="marketing_strategy" name="marketing_strategy" style={{ resize: 'none', borderRadius: '6px',border: '1px solid' }} value={marketingStrategy} onChange={(e) => setMarketingStrategy(e.target.value)} required></textarea>
                 </div>
             </>
         );

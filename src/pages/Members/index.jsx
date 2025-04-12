@@ -23,7 +23,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const activePageRef = useRef(1);
-  const LIMIT = 6;
+  const LIMIT = 7;
   const [memberRole, setMemberRole] = useState('');
   const [graduatingYear, setGraduatingYear] = useState('');
   const [department, setDepartment] = useState('');
@@ -214,7 +214,16 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   };
 
   return (
-    <div className="member-container">
+    <div className="member-container"
+    style={{
+      paddingBottom: '40px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    height: '100%',
+    gap: '30px',
+    }}
+    >
       <div
         style={{
           paddingBottom: '2em',

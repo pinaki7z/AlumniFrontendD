@@ -47,8 +47,8 @@ const Groups = () => {
 
   return (
     <div
-      // style={{ width: '100%', padding: '5%' }}
-      className="p-5 lg:px-20"
+      style={{ width: '100%', paddingLeft: '5%', paddingTop: '25px', paddingRight: '5%' }}
+      //className="p-5 lg:px-20"
     >
       <Routes>
         <Route

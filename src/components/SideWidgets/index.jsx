@@ -46,10 +46,11 @@ const SideWidgets = () => {
     const itemsPerPage = 3;
     const dispatch = useDispatch();
     console.log('notifications1', notifications, profile);
-    const triggerRef = useRef(null);       
+    const triggerRef = useRef(null);
     const popoverRef = useRef(null);
     // const socket = io('http://localhost:5000');
     const [onlineCount, setOnlineCount] = useState(0);
+    const [email, setEmail] = useState('');
 
     //const SOCKET_URL = "http://localhost:5000";
     //const socketRef = useRef(null);
@@ -86,56 +87,71 @@ const SideWidgets = () => {
     //     };
     //   }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         // socketRef.current = io(SOCKET_URL, {
         //   withCredentials: true,
         // });
         socketRef.current.connect();
-      
+
         socketRef.current.on("connect", () => {
-          console.log("Connected to socket:", socketRef.current.id);
+            console.log("Connected to socket:", socketRef.current.id);
         });
-      
+
         socketRef.current.on('onlineUsers', (count) => {
             setOnlineCount(count);
-          });
-      
-      
+        });
+
+
         // socketRef.current.on("message", (data) => {
         //   setMessages((prev) => [...prev, data]);
         // });
-      
+
         return () => {
-          //socketRef.current?.off("message");
-          socketRef.current?.off("online-users");
-          socketRef.current?.disconnect();
+            //socketRef.current?.off("message");
+            socketRef.current?.off("online-users");
+            socketRef.current?.disconnect();
         };
-      }, []);  
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-          if (
-            //triggerRef.current &&
-            !triggerRef.current.contains(event.target) 
-            //&&
-            //popoverRef.current &&
-            //!popoverRef.current.contains(event.target)
-          ) {
-            console.log('if clicked')
-            setShowPopover(false);
-          }else{
-            console.log('else clicked')
-            //setShowPopover(!showPopover)
-          }
+            if (
+                //triggerRef.current &&
+                !triggerRef.current.contains(event.target)
+                //&&
+                //popoverRef.current &&
+                //!popoverRef.current.contains(event.target)
+            ) {
+                console.log('if clicked')
+                setShowPopover(false);
+            } else {
+                console.log('else clicked')
+                //setShowPopover(!showPopover)
+            }
         };
-    
+
         document.addEventListener("mousedown", handleClickOutside);
-    
+
         return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
-      }, []);
+    }, []);
+
+
+
+    const handleInvite = async () => {
+        if (!email) return alert("Please enter an email address.");
     
+        try {
+          const response = await axios.post(`${baseUrl}/invite`, { email });
+          alert("Invitation sent successfully!");
+          setEmail('');
+        } catch (error) {
+          console.error("Error sending invite:", error);
+          alert("Failed to send invitation.");
+        }
+      };
+
 
 
 
@@ -202,24 +218,28 @@ const SideWidgets = () => {
                     show={showPopover}
                     placement='bottom'
                     overlay={
-                        <Popover id={`popover-positioned-bottom`} ref={popoverRef}>
+                        <Popover id={`popover-positioned-bottom`}
+                        //ref={popoverRef}
+                        >
                             <Popover.Body>
-                                <div className='img-job-vide' style={{ flexDirection: 'column', gap: '10px' }}>
+                                <div className='img-job-vide'
+                                    style={{ flexDirection: 'column', paddingLeft: '0px' }}
+                                >
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/home/groups/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
+                                        <a href="/home/groups/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
                                     </label>
                                     {/* <button style={{ backgroundColor: '#f3f3f3', color: 'black', padding: '5px 10px' }} onClick={() => {
                                         setShowModal(true);
                                     }}><BiSolidBriefcase style={{ color: 'black' }} />Create Job</button>
                                     {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />} */}
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/home/jobs/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create a Job </a>
+                                        <a href="/home/jobs/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create a Job </a>
                                     </label>
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/home/donations/create" style={{ textDecoration: 'none', color: 'black' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
+                                        <a href="/home/donations/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
                                     </label>
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                        <a href="/home/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Create Sponsorships</a>
+                                        <a href="/home/sponsorships/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Create Sponsorships</a>
                                     </label>
                                 </div>
                             </Popover.Body>
@@ -335,9 +355,12 @@ const SideWidgets = () => {
                     <input
                         type="text"
                         placeholder='Enter E-mail address'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         style={{ width: '100%', padding: '10px 40px 10px 10px', boxSizing: 'border-box' }}
                     />
                     <button
+                        onClick={handleInvite}
                         style={{
                             position: 'absolute',
                             right: '10px',
