@@ -36,6 +36,7 @@ import { lineSpinner } from 'ldrs';
 import EventDisplay from "../../components/Feeed/EventDisplay";
 import baseUrl from "../../config";
 import { borderTop } from "@mui/system";
+import picture from "../../images/d-group.jpg"
 
 lineSpinner.register()
 
@@ -57,8 +58,8 @@ function MyVerticallyCenteredModal(props) {
 
   const [newEvent, setNewEvent] = useState({
     title: "",
-    start: "",
-    end: "",
+    start: new Date(),
+    end: new Date(),
     startTime: "00:00",
     endTime: "00:00",
     picture: "",
@@ -99,10 +100,10 @@ function MyVerticallyCenteredModal(props) {
     const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
       newEvent;
 
-    if (!title || !start || !end || !picture) {
-      alert("Please provide title, start date, end date and image");
-      return;
-    }
+    // if (!title || !start || !end || !picture) {
+    //   alert("Please provide title, start date, end date and image");
+    //   return;
+    // }
 
     const formattedStart = format(new Date(start), "yyyy-MM-dd");
     const formattedEnd = format(new Date(end), "yyyy-MM-dd");

@@ -23,7 +23,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const activePageRef = useRef(1);
-  const LIMIT = 6;
+  const LIMIT = 7;
   const [memberRole, setMemberRole] = useState('');
   const [graduatingYear, setGraduatingYear] = useState('');
   const [department, setDepartment] = useState('');

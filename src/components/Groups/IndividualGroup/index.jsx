@@ -307,7 +307,7 @@ const IndividualGroup = () => {
                                             <JoinGroup />
                                         </div>} />
                                     </Routes>
-                                    <div style={{ width: '35%', paddingTop: '50px' }}>
+                                    <div style={{ width: '35%', paddingTop: '50px',paddingBottom: '100px' }}>
                                         <div className="ig-lc-card">
                                             {(profile._id === groupItem.userId || admin) && <div>
                                                 <ul style={{ listStyle: 'none', padding: '16px', borderRadius: '12px', border: '1px solid' }}>
@@ -405,6 +405,10 @@ const IndividualGroup = () => {
                                                                 selectedMembers.some((selectedMember) => selectedMember.userId === member._id)
                                                             }
                                                             onChange={() => handleMemberSelect(member._id, member.profilePicture, member.firstName, member.lastName, member.profileLevel)}
+                                                            disabled={
+                                                                member._id === groupItem.userId ||
+                                                                member._id === '677e42e03041d82e4b54fdf6'
+                                                              }
                                                         />
 
                                                     </li>
