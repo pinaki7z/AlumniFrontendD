@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Picture from '../../../images/io.png';
+import commentIcon from "../../../images/comment.svg";
 import CommentSection from '../../CommentSection';
 import axios from 'axios';
 import './IForum.css';
@@ -26,11 +27,19 @@ const IForum = () => {
   const [notificationList, setNotificationList] = useState([]);
   const allMembers = useSelector((state) => state.member);
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [visibleComments, setVisibleComments] = useState({});
 
   let admin;
   if (profile.profileLevel === 0) {
     admin = true;
   }
+
+  const toggleComments = (forumId) => {
+    setVisibleComments(prevState => ({
+      ...prevState,
+      [forumId]: !prevState[forumId]
+    }));
+  };
 
   const getRequest = async () => {
     try {
@@ -185,7 +194,7 @@ const IForum = () => {
       return [...prevMembers, memberId]; // Add if not present
     });
   };
-  
+
 
 
   const handleSaveMembers = async () => {
@@ -275,13 +284,34 @@ const IForum = () => {
                         <>
                           Reported to super admin. Please wait while it is being verified.
                         </>
-                      ) : (
+                      ) :
+                        // (
+                        //   <CommentSection
+                        //     comments={forum.comments ? filterReportedComments(forum.comments) : null}
+                        //     entityId={id}
+                        //     entityType="forums"
+                        //     onCommentSubmit={refreshComments}
+                        //     onDeleteComment={refreshComments}
+                        //     onClose={() => toggleComments(post._id)}
+                        //   />
+                        // )
+                        (
+                          // <button onClick={() => toggleComments(forum._id)}> Comment</button>
+                          <div className="flex justify-between items-center mt-4 px-2 py-3 border-t border-gray-200">
+                            <div onClick={() => toggleComments(forum._id)} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
+                              <img src={commentIcon} alt="comment-icon" className="w-5" />
+                              <h4 className="hidden md:block font-semibold text-green-700">Comments</h4>
+                            </div>
+                          </div>
+                        )}
+                      {visibleComments[forum._id] && (
                         <CommentSection
                           comments={forum.comments ? filterReportedComments(forum.comments) : null}
                           entityId={id}
                           entityType="forums"
                           onCommentSubmit={refreshComments}
                           onDeleteComment={refreshComments}
+                          onClose={() => toggleComments(forum._id)}
                         />
                       )}
                     </>
@@ -339,6 +369,7 @@ const IForum = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
