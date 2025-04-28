@@ -534,8 +534,9 @@ const CreatePost1 = ({
       setVideoPath({});
       setInput("");
       setAuthor("");
-      getPosts(1);
-      window.location.reload();
+      // getPosts();
+      onNewPost()
+      // window.location.reload();
     } catch (err) {
       console.log(err);
       setLoadingPost(false);

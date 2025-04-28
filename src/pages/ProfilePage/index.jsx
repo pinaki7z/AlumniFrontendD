@@ -59,10 +59,21 @@ const ProfilePage = () => {
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => handleSubmit(reader.result, type);
-    reader.readAsDataURL(file);
+    const api = `${baseUrl}/uploadImage/singleImage`
+    const formData = new FormData();
+    formData.append('image', file);
+    axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then((res) => {
+      handleSubmit(res.data?.imageUrl, type);
+    }).catch((err) => {
+      toast.dismiss()
+      toast.error('Upload failed');
+    })
+    // if (!file) return;
+    // const reader = new FileReader();
+
+    // reader.onloadend = () => handleSubmit(reader.result, type);
+    // reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (fileData, fileType) => {
@@ -70,8 +81,11 @@ const ProfilePage = () => {
     try {
       const { data } = await axios.put(`${baseUrl}/alumni/${profile._id}`, {[fileType]: fileData}, { headers: { Authorization: `Bearer ${token}` }});
       dispatch(updateProfile(data));
+      toast.dismiss()
       toast.success(`${fileType === 'profilePicture' ? 'Profile Picture' : 'Cover Picture'} updated`);
-    } catch (err) { toast.error('Upload failed'); }
+    } catch (err) { 
+      toast.dismiss()
+      toast.error('Upload failed'); }
     setLoading(false);
   };
 

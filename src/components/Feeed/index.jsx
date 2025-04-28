@@ -10,143 +10,142 @@ import { useSelector } from 'react-redux';
 import { DisplayNews } from '../DisplayNews';
 import { dotPulse } from 'ldrs';
 import EventDisplay from './EventDisplay';
-import { useParams } from 'react-router-dom';
 import PollDisplay from './PollDisplay';
+import { useParams } from 'react-router-dom';
 import baseUrl from '../../config';
+
 dotPulse.register();
 
-function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDeleteButton, admin, userId, groupID, showCreateButton }) {
+function Feed({
+  photoUrl,
+  username,
+  showCreatePost,
+  entityId,
+  entityType,
+  showDeleteButton,
+  admin,
+  userId,
+  groupID,
+  showCreateButton
+}) {
   const [posts, setPosts] = useState([]);
-  const profile = useSelector((state) => state.profile);
   const [loading, setLoading] = useState(false);
   const [loadingPost, setLoadingPost] = useState(false);
-  const scrollContainerRef = useRef(null);
   const [totalPosts, setTotalPosts] = useState(0);
+  const profile = useSelector((state) => state.profile);
+  const scrollContainerRef = useRef(null);
   const activePageRef = useRef(1);
   const { _id } = useParams();
-  // NEW: Track visible comments for each post using post id as key.
+  const LIMIT = 40;
+
+  // Track which comment sections are expanded
   const [visibleComments, setVisibleComments] = useState({});
-
   const toggleComments = (postId) => {
-    setVisibleComments(prevState => ({
-      ...prevState,
-      [postId]: !prevState[postId]
-    }));
+    setVisibleComments(v => ({ ...v, [postId]: !v[postId] }));
   };
 
-  const LIMIT = 4;
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-
-    const handleScroll = () => {
-      if (container) {
-        const { scrollTop, clientHeight, scrollHeight } = container;
-        // Trigger fetching if scrolled near bottom, not already loading,
-        // and there are still more posts to load.
-        if (scrollTop + clientHeight >= scrollHeight - 10 && !loading && posts.length < totalPosts) {
-          activePageRef.current++;
-          getPosts(activePageRef.current);
-        }
-      }
-    };
-
-    container.addEventListener("scroll", handleScroll);
-
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [loading, posts.length, totalPosts]);
-
-  useEffect(() => {
-    // Initial fetch
-    getPosts(activePageRef.current);
-  }, []);
-
-  const handleDeletePost = () => {
-    getPosts(activePageRef.current);
-    toast.success('Deleted successfully!');
-    window.location.reload();
-  };
-
-  const handleLikes = async (entityId) => {
+  // Core fetch + dedupe logic
+  const getPosts = async (pageToLoad) => {
+    setLoading(true);
     try {
-      const response = await axios.get(`${baseUrl}/${entityType}/${entityId}`);
-      const updatedPost = response.data;
+      let url;
+      if (userId) {
+        url = `${baseUrl}/${entityType}/userPosts/${userId}?page=${pageToLoad}&size=${LIMIT}`;
+      } else if (groupID) {
+        url = `${baseUrl}/groups/groups/${groupID}?page=${pageToLoad}&size=${LIMIT}`;
+      } else {
+        url = `${baseUrl}/${entityType}?page=${pageToLoad}&size=${LIMIT}`;
+      }
 
-      setPosts((prevPosts) => {
-        return prevPosts.map((post) => {
-          if (post._id === entityId) {
-            return updatedPost;
-          }
-          return post;
-        });
+      const { data } = await axios.get(url);
+      const postsData = data.records;
+      setTotalPosts(data.total);
+
+      setPosts(prev => {
+        // build a set of existing IDs
+        const existing = new Set(prev.map(p => p._id));
+        // filter out any duplicates
+        const newOnes = postsData.filter(p => !existing.has(p._id));
+        return [...prev, ...newOnes];
       });
-    } catch (error) {
-      console.error("Error fetching likes:", error);
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+    } finally {
+      setLoading(false);
+      setLoadingPost(false);
     }
   };
 
-  const handleNewPost = () => {
-    toast.success('Posted successfully!');
-    window.location.reload();
+  // Infinite scroll handler
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const onScroll = () => {
+      const { scrollTop, clientHeight, scrollHeight } = container;
+      if (
+        scrollTop + clientHeight >= scrollHeight - 10 &&
+        !loading &&
+        posts.length < totalPosts
+      ) {
+        activePageRef.current += 1;
+        getPosts(activePageRef.current);
+      }
+    };
+    container.addEventListener('scroll', onScroll);
+    return () => container.removeEventListener('scroll', onScroll);
+  }, [loading, posts.length, totalPosts]);
+
+  // Initial load
+  useEffect(() => {
+    getPosts(activePageRef.current);
+  }, []);
+
+  // When a post is deleted we just re-fetch the current page
+  const handleDeletePost = () => {
+    toast.success('Deleted successfully!');
+    getPosts(activePageRef.current);
+    // you can remove window.reload if it's no longer needed
+  };
+
+  // Like / comment refresh handlers
+  const handleLikes = async (entityId) => {
+    try {
+      const { data: updatedPost } = await axios.get(`${baseUrl}/${entityType}/${entityId}`);
+      setPosts(prev =>
+        prev.map(p => (p._id === entityId ? updatedPost : p))
+      );
+    } catch (err) {
+      console.error('Error fetching likes:', err);
+    }
   };
 
   const refreshComments = async (postId) => {
     try {
-      const response = await axios.get(`${baseUrl}/${entityType}/${postId}`);
-      const updatedPost = response.data;
-      setPosts((prevPosts) => {
-        return prevPosts.map((post) => {
-          if (post._id === postId) {
-            return updatedPost;
-          }
-          return post;
-        });
-      });
-    } catch (error) {
-      console.error("Error fetching comments:", error);
+      const { data: updatedPost } = await axios.get(`${baseUrl}/${entityType}/${postId}`);
+      setPosts(prev =>
+        prev.map(p => (p._id === postId ? updatedPost : p))
+      );
+    } catch (err) {
+      console.error('Error fetching comments:', err);
     }
   };
 
-  const getPosts = async (page) => {
-    setLoading(true);
-    try {
-      if (userId) {
-        const response = await axios.get(
-          `${baseUrl}/${entityType}/userPosts/${userId}?page=${page}&size=${LIMIT}`
-        );
-        const postsData = response.data.records;
-        setPosts((prevItems) => [...prevItems, ...postsData]);
-        setTotalPosts(response.data.total);
-        setLoadingPost(false);
-      } else if (groupID) {
-        const response = await axios.get(
-          `${baseUrl}/groups/groups/${groupID}?page=${page}&size=${LIMIT}`
-        );
-        const postsData = response.data.records;
-        setPosts((prevItems) => [...prevItems, ...postsData]);
-        setTotalPosts(response.data.total);
-        setLoadingPost(false);
-      }
-      else {
-        const response = await axios.get(
-          `${baseUrl}/${entityType}?page=${page}&size=${LIMIT}`
-        );
-        const postsData = response.data.records;
-        setPosts((prevItems) => [...prevItems, ...postsData]);
-        setTotalPosts(response.data.total);
-        setLoadingPost(false);
-      }
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      setLoadingPost(false);
+  // ★ NEW: Prepend the brand-new post by resetting and reloading page 1
+  const handleNewPost = () => {
+    toast.success('Posted successfully!');
+    // clear out old posts so page 1 (with new item at the top) shows up
+    setPosts([]);
+    activePageRef.current = 1;
+    // scroll back to top
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
     }
-    setLoading(false);
+    getPosts(1);
   };
 
   return (
-    <div className='feed'>
+    <div className="feed">
       {showCreatePost && (
         <CreatePost1
           photoUrl={photoUrl}
@@ -155,40 +154,40 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
           entityType={entityType}
           setLoadingPost={setLoadingPost}
           loadingPost={loadingPost}
-          getPosts={getPosts}
         />
       )}
+
       {showCreateButton && (
         <div style={{ width: '100%' }}>
           <button
             style={{
               fontFamily: 'Inter',
-              fontWeight: '500',
-              fontSize: '18px',
+              fontWeight: 500,
+              fontSize: 18,
               backgroundColor: '#efeff0',
-              padding: '20px',
-              borderRadius: '8px',
+              padding: 20,
+              borderRadius: 8,
               border: 'none',
-              height: '0vh',
-              width: '10%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: '20px'
+              marginTop: 20,
             }}
           >
             Create
           </button>
         </div>
       )}
+
       <div
         ref={scrollContainerRef}
-        className='infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[80%]'
+        className="infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[80%]"
       >
-        {posts.map((post) => {
-          if (post.type === 'Post' && (post.groupID === _id)) {
+        {posts.map(post => {
+          // only render Post items belonging to this group
+          if (post.type === 'Post' && post.groupID === _id) {
             return (
-              <div key={post._id} className="mb-4 rounded-xl w-full md:w-full xl:w-[650px]">
+              <div
+                key={post._id}
+                className="mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+              >
                 <Post
                   userId={post.userId}
                   postId={post._id}
@@ -207,22 +206,28 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                   onDeletePost={() => handleDeletePost(post._id)}
                   groupID={post.groupID}
                 />
-                {((entityType === 'posts' || entityType === 'forums') && visibleComments[post._id]) && (
+
+                {visibleComments[post._id] && (
                   <CommentSection
                     entityId={post._id}
                     entityType="posts"
+                    comments={post.comments.filter(c => !c.reported)}
                     onCommentSubmit={refreshComments}
-                    postUserId={post.userId}
                     onDeleteComment={refreshComments}
-                    comments={post ? post.comments.filter(comment => !comment.reported) : null}
                     onClose={() => toggleComments(post._id)}
                   />
                 )}
               </div>
             );
-          } else if (post.type === 'Job' && (post.groupID === _id)) {
+          }
+
+          // Job, Poll, Event, News renderers...
+          if (post.type === 'Job' && post.groupID === _id) {
             return (
-              <div key={post._id} className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]">
+              <div
+                key={post._id}
+                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+              >
                 <JobIntDisplay
                   jobId={post._id}
                   picture={post.coverImage}
@@ -237,21 +242,36 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
                 />
               </div>
             );
-          } else if (post.type === 'poll') {
+          }
+
+          if (post.type === 'poll') {
             return (
-              <div key={post._id} className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]">
+              <div
+                key={post._id}
+                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+              >
                 <PollDisplay poll={post} />
               </div>
             );
-          } else if (post.type === 'event') {
+          }
+
+          if (post.type === 'event') {
             return (
-              <div key={post._id} className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]">
+              <div
+                key={post._id}
+                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+              >
                 <EventDisplay event={post} />
               </div>
             );
-          } else if (post.type === 'news') {
+          }
+
+          if (post.type === 'news') {
             return (
-              <div key={post._id} className="p-4 rounded-xl w-full md:w-full xl:min-w-[650px]">
+              <div
+                key={post._id}
+                className="p-4 rounded-xl w-full md:w-full xl:min-w-[650px]"
+              >
                 <DisplayNews
                   userId={post.userId}
                   postId={post._id}
@@ -268,13 +288,16 @@ function Feed({ photoUrl, username, showCreatePost, entityId, entityType, showDe
               </div>
             );
           }
+
           return null;
         })}
+
         {loading && (
           <div>
-            <l-dot-pulse size="35" speed="1.0" color="#b3b4b5"></l-dot-pulse>
+            <l-dot-pulse size="35" speed="1.0" color="#b3b4b5" />
           </div>
         )}
+
         {totalPosts !== 0 && posts.length >= totalPosts && (
           <p>You have seen all the {entityType}</p>
         )}

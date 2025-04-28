@@ -40,7 +40,7 @@ const LeftSidebar = () => {
             }
         };
 
-        fetchMembers();
+        // fetchMembers();
     }, []);
 
     return (
