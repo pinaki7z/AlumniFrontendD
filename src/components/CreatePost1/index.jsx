@@ -534,8 +534,9 @@ const CreatePost1 = ({
       setVideoPath({});
       setInput("");
       setAuthor("");
-      getPosts(1);
-      window.location.reload();
+      // getPosts();
+      onNewPost()
+      // window.location.reload();
     } catch (err) {
       console.log(err);
       setLoadingPost(false);
@@ -802,7 +803,7 @@ const CreatePost1 = ({
               <img src={poll} alt="Poll" className="w-5 h-5" />
               <p className="hidden md:block">Poll</p>
             </label>
-            <label className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
+            {/* <label className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
               <img src={video} alt="Video" className="w-5 h-5" />
               <p className="hidden lg:block">Video</p>
               <input
@@ -811,7 +812,7 @@ const CreatePost1 = ({
                 className="hidden"
                 onChange={handleVideoChange}
               />
-            </label>
+            </label> */}
             {entityType === 'news' && (
               <>
                 <label className="font-semibold">Add an author</label>
