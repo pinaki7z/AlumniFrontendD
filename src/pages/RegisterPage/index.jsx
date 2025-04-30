@@ -56,7 +56,7 @@ const RegisterPage = () => {
     console.log('handling reg submission 2')
     try {
       console.log('formData', formData);
-      const response = await axios.post(`${baseUrl}/alumni/register`, formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, formData);
 
       console.log('Registration successful!', response.data);
       toast.success("User Registered successfully!");

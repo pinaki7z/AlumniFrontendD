@@ -41,7 +41,7 @@ const PollDisplay = ({ poll }) => {
             };
 
             const response = await axios.put(
-                `${baseUrl}/poll/${poll._id}`,
+                `${process.env.REACT_APP_API_URL}/poll/${poll._id}`,
                 body
             );
 

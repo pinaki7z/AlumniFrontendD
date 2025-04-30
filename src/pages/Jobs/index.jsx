@@ -39,7 +39,7 @@ const Jobs = () => {
 
     const getData = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/internships`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/internships`);
 
             const filteredJobs = response.data.filter(job => !job.archive);
             const filteredArchivedJobs = response.data.filter(job => job.archive && job.approved && job.userId === profile._id);

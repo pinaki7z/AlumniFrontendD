@@ -30,7 +30,7 @@ const Profile = () => {
     const checkFollowingStatus = async () => {
       try {
         const response = await axios.get(
-          `${baseUrl}/alumni/${profile._id}/following/all`
+          `${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`
         );
         const followingDetails = response.data.followingDetails;
         const isUserFollowing = followingDetails.some(
@@ -51,7 +51,7 @@ const Profile = () => {
     setLoading(true);
     try {
       if (!isFollowing) {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         });
         if (response.status === 200) {
@@ -64,7 +64,7 @@ const Profile = () => {
         }
 
       } else {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         });
         if (response.status === 200) {

@@ -53,7 +53,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     const checkFollowingStatus = async () => {
       try {
         const response = await axios.get(
-          `${baseUrl}/alumni/${profile._id}/following/all`
+          `${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`
         );
         const followingDetails = response.data.followingDetails;
         const isUserFollowing = followingDetails.some(
@@ -73,7 +73,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     setLoading(true);
     try {
       if (!isFollowing) {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         });
         if (response.status === 200) {
@@ -86,7 +86,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
         }
 
       } else {
-        const response = await axios.patch(`${baseUrl}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         });
         if (response.status === 200) {
@@ -110,7 +110,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     setLoading(true)
     try {
       const response = await axios.put(
-        `${baseUrl}/${isGroupURL ? `groups/members/${groupId}` : isForumURL ? `forums/members/${groupId}` : ''}`,
+        `${process.env.REACT_APP_API_URL}/${isGroupURL ? `groups/members/${groupId}` : isForumURL ? `forums/members/${groupId}` : ''}`,
         {
           userId: memberId,
         }
@@ -185,13 +185,15 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
       >
         <h3 className="text-lg font-semibold">{member.userName || `${member.firstName} ${member.lastName}`}</h3>
         <p className="text-sm font-light text-gray-600">
-          {member.profileLevel === 1
+          {member.profileLevel === 0
+            ? "SUPER ADMIN"
+            : member.profileLevel === 1
             ? "ADMIN"
             : member.profileLevel === 2
             ? "ALUMNI"
             : member.profileLevel === 3
             ? "STUDENT"
-            : "SUPER ADMIN"}
+            : "STUDENT"}
         </p>
         <p className="text-sm text-gray-600">{member.department}</p>
         <p className="text-sm text-gray-600">{member.graduatingYear || member.class}</p>

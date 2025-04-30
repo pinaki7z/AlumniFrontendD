@@ -87,7 +87,7 @@ function MyVerticallyCenteredModal(props) {
     };
     console.log('eventData', eventData);
 
-    fetch(`${baseUrl}/events/createEvent`, {
+    fetch(`${process.env.REACT_APP_API_URL}/events/createEvent`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +136,7 @@ function MyVerticallyCenteredModal(props) {
 
       const jsonEventData = JSON.stringify(updatedEvent);
 
-      fetch(`${baseUrl}/events/${eventId}`, {
+      fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -438,7 +438,7 @@ const CreatePost1 = ({
 
     try {
       // Post the images to the server
-      const response = await axios.post(`${baseUrl}/uploadImage/image`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/image`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -460,7 +460,7 @@ const CreatePost1 = ({
     formData.append('video', file);
 
     // Send the FormData via Axios
-    axios.post(`${baseUrl}/uploadImage/video`, formData, {
+    axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/video`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -527,7 +527,7 @@ const CreatePost1 = ({
     console.log("payload", payload);
 
     try {
-      await axios.post(`${baseUrl}/${entityType}/create`, payload);
+      await axios.post(`${process.env.REACT_APP_API_URL}/${entityType}/create`, payload);
       setImgUrl("");
       setSelectedFile(null);
       setPicturePath([]);
@@ -624,7 +624,7 @@ const CreatePost1 = ({
 
       try {
         const response = await axios.post(
-          `${baseUrl}/${entityType}/create`,
+          `${process.env.REACT_APP_API_URL}/${entityType}/create`,
           formDataObject,
         );
         const newPost = await response.data;
@@ -641,7 +641,7 @@ const CreatePost1 = ({
     try {
       console.log("request body", formDataObject);
       const response = await axios.post(
-        `${baseUrl}/${entityType}/create?folder=${folderName}`,
+        `${process.env.REACT_APP_API_URL}/${entityType}/create?folder=${folderName}`,
         formDataObject,
         {
           headers: {
@@ -664,7 +664,7 @@ const CreatePost1 = ({
     try {
       console.log("request body", formDataObject);
       const response = await axios.post(
-        `${baseUrl}/${entityType}/create`,
+        `${process.env.REACT_APP_API_URL}/${entityType}/create`,
         formDataObject,
       );
       const newPost = await response.data;
@@ -690,7 +690,7 @@ const CreatePost1 = ({
 
     try {
       const response = await axios.post(
-        `${baseUrl}/poll/createPoll`,
+        `${process.env.REACT_APP_API_URL}/poll/createPoll`,
         pollData,
       );
       const newPoll = await response.data;

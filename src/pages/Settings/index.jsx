@@ -78,7 +78,7 @@ const Settings = () => {
             };
 
             const response = await axios.post(
-                `${baseUrl}/settings/createSetting`,
+                `${process.env.REACT_APP_API_URL}/settings/createSetting`,
                 body,
                 { headers }
             );

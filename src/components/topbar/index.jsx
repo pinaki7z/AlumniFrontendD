@@ -131,7 +131,7 @@ const TopBar = ({ handleLogout }) => {
         console.log('handling search', searchText)
 
         try {
-            // const response = await fetch(`${baseUrl}/search/search?keyword=${searchText}`);
+            // const response = await fetch(`${process.env.REACT_APP_API_URL}/search/search?keyword=${searchText}`);
             // if (!response.ok) {
             //     throw new Error('Network response was not ok');
             // }

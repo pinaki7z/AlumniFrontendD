@@ -13,7 +13,7 @@ const ForgotPasswordPage = () => {
     setLoading(true);
     // Handle the password reset logic here
     // console.log('Password reset request sent to:', email);
-    axios.post(`${baseUrl}/forgotPass`, { email })
+    axios.post(`${process.env.REACT_APP_API_URL}/forgotPass`, { email })
     .then((response) => {
       setLoading(false);
       setIsEmailSent(true);

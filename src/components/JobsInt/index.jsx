@@ -116,7 +116,7 @@ const JobsInt = ({modalShow: propModalShow,onHideModal,popover }) => {
     
         const handlePublish = async () => {
           try {
-            const response = await fetch(`${baseUrl}/${title}/create`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/${title}/create`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

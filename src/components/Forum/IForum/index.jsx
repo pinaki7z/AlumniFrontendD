@@ -43,7 +43,7 @@ const IForum = () => {
 
   const getRequest = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/groups/requests/req`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
       setNotificationList(response.data);
     } catch (error) {
       console.error("Error fetching request:", error);
@@ -68,7 +68,7 @@ const IForum = () => {
 
   const refreshComments = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/forums/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forums/${id}`);
       setForum(response.data);
     } catch (error) {
       console.error('Error fetching forum data:', error);
@@ -77,7 +77,7 @@ const IForum = () => {
 
   const getForumMembers = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/forums/${id}/members`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forums/${id}/members`);
       setMembers(response.data.members);
       setSelectedMembers(response.data.members);
     } catch (error) {
@@ -87,7 +87,7 @@ const IForum = () => {
 
   const getBlockedMembers = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/forums/${id}/blockedUserIds`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forums/${id}/blockedUserIds`);
       setBlockedUserIds(response.data.blockedUserIds);
     } catch (error) {
       console.error('Error fetching forum members:', error);
@@ -105,7 +105,7 @@ const IForum = () => {
 
   const handleDeletePost = async (forumId) => {
     try {
-      await axios.delete(`${baseUrl}/forums/${forumId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/forums/${forumId}`);
       toast.success('Deleted successfully!');
       navigateTo('/forums');
     } catch (error) {
@@ -124,7 +124,7 @@ const IForum = () => {
     };
     setRequestStatus('Loading...');
     try {
-      const response = await axios.post(`${baseUrl}/forums/createRequest`, body);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/forums/createRequest`, body);
       if (response.data.requested === true) setRequestStatus('Requested');
       else setRequestStatus('Request');
     } catch (error) {
@@ -152,7 +152,7 @@ const IForum = () => {
         forumName,
       };
 
-      const response = await axios.post(`${baseUrl}/forums/${forumId}/reportToSuperAdmin`, body);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/forums/${forumId}/reportToSuperAdmin`, body);
       getBlockedMembers();
     } catch (error) {
       console.error('Error while reporting:', error);
@@ -206,7 +206,7 @@ const IForum = () => {
 
       console.log('body', body)
       const response = await axios.put(
-        `${baseUrl}/forums/members/${id}`,
+        `${process.env.REACT_APP_API_URL}/forums/members/${id}`,
         body
       );
       setShowModal(false);

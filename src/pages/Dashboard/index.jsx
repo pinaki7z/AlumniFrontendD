@@ -43,6 +43,7 @@ import { Drawer, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import "./Dashboard.css"
+import MemberForm from "../Members/MemberForm.jsx";
 const Dashboard = ({ handleLogout }) => {
 
   const location = useLocation();
@@ -118,8 +119,8 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/sponsorships/*" element={<Sponsorships />} />
             <Route path="/members/*" element={<div style={{ width: '100%', padding: '0% 5%' }}><Members showHeading={true} /></div>} />
             <Route path="/members/create" element={
-              <div style={{ width: '100%', padding: '5%' }}>
-                <DonSponRequest name='member' />
+              <div style={{ width: '100%'}}>
+                <MemberForm name='member' />
               </div>
             } />
             <Route path="/members/:id/*" element={<Profile />} />
@@ -182,9 +183,9 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/news/:id/*" element={<NewsDetails />} />
             <Route path="/news/createNews" element={<CreateNews />} />
           </Routes>
-          <div className="chatbox-container" style={{ position: 'fixed', right: '0', bottom: '0', width: '300px', backgroundColor: 'white' }}>
+          {/* <div className="chatbox-container" style={{ position: 'fixed', right: '0', bottom: '0', width: '300px', backgroundColor: 'white' }}>
             <Chatbox />
-          </div>
+          </div> */}
         </div>
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
           <div

@@ -37,7 +37,7 @@ const JobPost = ({
   function MyVerticallyCenteredModal(props) {
     const handleArchive = async () => {
       try {
-        const response = await fetch(`${baseUrl}/${type + 's'}/${id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/${type + 's'}/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ const JobPost = ({
   const handleDelete = async () => {
     setDeleteModalShow(false);
     try {
-      const response = await fetch(`${baseUrl}/${type + 's'}/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/${type + 's'}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

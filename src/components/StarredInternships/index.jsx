@@ -12,7 +12,7 @@ export const StarredInternships = ({searchQuery}) => {
     useEffect(() => {
         const fetchStarredInternships = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/internships/starred/${profile._id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/internships/starred/${profile._id}`);
                 setStarredInternships(response.data.internships);
                 setLoading(false);
             } catch (error) {

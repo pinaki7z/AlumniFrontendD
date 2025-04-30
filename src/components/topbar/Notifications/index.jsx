@@ -30,11 +30,11 @@ export const Notifications = () => {
     try {
       let url = '';
       if (type === 'forum') {
-        url = `${baseUrl}/forums/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/forums/members/${groupId}`;
       } else if (type === 'group') {
-        url = `${baseUrl}/groups/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/groups/members/${groupId}`;
       } else if (type === 'ID') {
-        url = `${baseUrl}/alumni/alumni/validateId`;
+        url = `${process.env.REACT_APP_API_URL}/alumni/alumni/validateId`;
       }
       else {
         throw new Error('Invalid type provided');
@@ -62,7 +62,7 @@ export const Notifications = () => {
   const getRequest = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseUrl}/groups/requests/req`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
       setNotificationList(response.data);
       setLoading(false);
     } catch (error) {

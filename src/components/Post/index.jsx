@@ -89,7 +89,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/posts/${postId}/comments`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts/${postId}/comments`);
       const fetchedComments = response.data.comments;
       setComments(fetchedComments);
     } catch (error) {
@@ -101,7 +101,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     setLiked(!isliked);
     try {
       const response = await axios.patch(
-        `${baseUrl}/posts/${postId}/likes`,
+        `${process.env.REACT_APP_API_URL}/posts/${postId}/likes`,
         { userId: loggedInUserId, userName: username },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -115,7 +115,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const handleDeletePost = async (userId) => {
     if (userId === profile._id) {
       try {
-        await axios.delete(`${baseUrl}/${entityType}/${postId}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
         onDeletePost(postId);
       } catch (error) {
         console.error('Error deleting post:', error);

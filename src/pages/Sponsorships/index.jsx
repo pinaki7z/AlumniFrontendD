@@ -49,7 +49,7 @@ const Sponsorships = () => {
     }
     try {
       const response = await axios.get(
-        `${baseUrl}/sponsorships?page=${page}&size=${LIMIT}`
+        `${process.env.REACT_APP_API_URL}/sponsorships?page=${page}&size=${LIMIT}`
       );
       const postsData = response.data.records;
       setDonations((prevItems) => [...prevItems, ...postsData]);
@@ -73,7 +73,7 @@ const Sponsorships = () => {
   const getUserSponsorships = async () => {
     try {
       const response = await axios.get(
-        `${baseUrl}/sponsorships/user/${profile._id}`
+        `${process.env.REACT_APP_API_URL}/sponsorships/user/${profile._id}`
       );
       setUserDonations(response.data.sponsorships);
     } catch (error) {

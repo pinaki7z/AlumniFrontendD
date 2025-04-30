@@ -28,7 +28,7 @@ const LeftSidebar = () => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await fetch(`${baseUrl}/alumni/all`);
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/all`);
                 if (response.ok) {
                     const membersData = await response.json();
                     dispatch(updateMember(membersData));

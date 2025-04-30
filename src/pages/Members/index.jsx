@@ -92,7 +92,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const handleDelete = async (memberId) => {
     try {
       const token = cookie.token;
-      const response = await axios.delete(`${baseUrl}/alumni/${memberId}`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/${memberId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -273,7 +273,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               <option value="">All Members</option>
               <option value="1">Admin</option>
               <option value="2">Alumni</option>
-              <option value="3">Current Student</option>
+              <option value="">Student</option>
             </select>
 
 

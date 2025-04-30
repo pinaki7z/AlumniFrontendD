@@ -50,11 +50,11 @@ function Feed({
     try {
       let url;
       if (userId) {
-        url = `${baseUrl}/${entityType}/userPosts/${userId}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/${entityType}/userPosts/${userId}?page=${pageToLoad}&size=${LIMIT}`;
       } else if (groupID) {
-        url = `${baseUrl}/groups/groups/${groupID}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/groups/groups/${groupID}?page=${pageToLoad}&size=${LIMIT}`;
       } else {
-        url = `${baseUrl}/${entityType}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/${entityType}?page=${pageToLoad}&size=${LIMIT}`;
       }
 
       const { data } = await axios.get(url);
@@ -111,7 +111,7 @@ function Feed({
   // Like / comment refresh handlers
   const handleLikes = async (entityId) => {
     try {
-      const { data: updatedPost } = await axios.get(`${baseUrl}/${entityType}/${entityId}`);
+      const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}`);
       setPosts(prev =>
         prev.map(p => (p._id === entityId ? updatedPost : p))
       );
@@ -122,7 +122,7 @@ function Feed({
 
   const refreshComments = async (postId) => {
     try {
-      const { data: updatedPost } = await axios.get(`${baseUrl}/${entityType}/${postId}`);
+      const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
       setPosts(prev =>
         prev.map(p => (p._id === postId ? updatedPost : p))
       );

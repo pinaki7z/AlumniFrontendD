@@ -43,7 +43,7 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
     const handleDeletePost = async () => {
         if (userId === profile._id) {
             try {
-                await axios.delete(`${baseUrl}/news/${postId}`);
+                await axios.delete(`${process.env.REACT_APP_API_URL}/news/${postId}`);
                 onDeletePost(postId);
             } catch (error) {
                 console.error('Error deleting post:', error);

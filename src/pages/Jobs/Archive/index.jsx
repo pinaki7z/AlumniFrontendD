@@ -45,7 +45,7 @@ export const Archive = ({ userId, id, jobTitle, title, titleS, description, sala
         const handleArchive = async () => {
             try {
                 console.log('id', id)
-                const response = await fetch(`${baseUrl}/${type}s/${id}`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/${type}s/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -118,7 +118,7 @@ export const Archive = ({ userId, id, jobTitle, title, titleS, description, sala
     const handleDelete = async () => {
         try {
             console.log('id', id)
-            const response = await fetch(`${baseUrl}/${type+'s'}/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/${type+'s'}/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ export const Archive = ({ userId, id, jobTitle, title, titleS, description, sala
                         return (
                             <img
                                 key={index}
-                                src={`${baseUrl}/uploads/${attachment}`}
+                                src={`${process.env.REACT_APP_API_URL}/uploads/${attachment}`}
                                 alt=""
                                 className="src"
                             />

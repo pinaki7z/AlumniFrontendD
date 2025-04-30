@@ -13,7 +13,7 @@ export const StarredJobs = ({searchQuery}) => {
     useEffect(() => {
         const fetchStarredJobs = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/jobs/starred/${profile._id}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/jobs/starred/${profile._id}`);
                 const nonArchivedStarredJobs = response.data.jobs.filter(job => !job.archive);
                 setStarredJobs(nonArchivedStarredJobs);
                 setLoading(false);

@@ -33,7 +33,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
 
   const getRequest = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/groups/requests/req`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
       setNotificationList(response.data);
     } catch (error) {
       console.error("Error fetching request:", error);
@@ -112,7 +112,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
               'Content-Type': 'multipart/form-data'
             }
           };
-          const response = await axios.post(`${baseUrl}/groups/createRequest`, formData, config);
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, formData, config);
           setModalShow(false);
           getRequest();
           toast.success('requested');
@@ -137,7 +137,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
           groupName,
           requestedUserName
         };
-        const response = await axios.post(`${baseUrl}/groups/createRequest`, body);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, body);
         console.log('body', response.data);
         if (response.data.requested === true) setRequestStatus('Requested');
         else setRequestStatus('Request');
@@ -151,7 +151,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
       console.log('adding member', groupId);
       try {
         setIsLoading(true);
-        const response = await axios.put(`${baseUrl}/groups/members/${groupId}`, {
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/members/${groupId}`, {
           members: {
             userId: profile._id,
             profilePicture: profile.profilePicture,

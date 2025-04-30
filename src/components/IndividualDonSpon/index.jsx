@@ -18,8 +18,8 @@ const IndividualDonSpon = () => {
     const fetchData = async () => {
       try {
         const path = location.pathname.includes('/sponsorships')
-          ? `${baseUrl}/sponsorships/${_id}`
-          : `${baseUrl}/donations/${_id}`;
+          ? `${process.env.REACT_APP_API_URL}/sponsorships/${_id}`
+          : `${process.env.REACT_APP_API_URL}/donations/${_id}`;
         const response = await fetch(path);
         const data = await response.json();
         setDonations([data]);
@@ -120,7 +120,7 @@ const IndividualDonSpon = () => {
                     <div className="flex gap-2 mt-2">
                       <p className="font-medium text-blue-800">Business Plan:</p>
                       <a
-                        href={`${baseUrl}/uploads/${donation.businessPlan}`}
+                        href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"

@@ -133,7 +133,7 @@ function MyVerticallyCenteredModal(props) {
     console.log("eventData", eventData);
 
     try {
-      const response = await axios.post(`${baseUrl}/events/createEvent`, eventData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/events/createEvent`, eventData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -191,7 +191,7 @@ function MyVerticallyCenteredModal(props) {
         currency: priceType === "paid" ? currency : "",
       };
 
-      await axios.put(`${baseUrl}/events/${eventId}`, updatedEvent, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/events/${eventId}`, updatedEvent, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -554,7 +554,7 @@ function Events() {
       };
 
       const response = await axios.put(
-        `${baseUrl}/events/attendEvent/${eventId}`,
+        `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
         body
       );
 
@@ -644,7 +644,7 @@ function Events() {
 
   const fetchEventDetails = (eventId) => {
     setLoading(true);
-    fetch(`${baseUrl}/events/${eventId}`)
+    fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`)
       .then((response) => response.json())
       .then((data) => {
         setSelectedEventDetailsPopup(data);
@@ -660,7 +660,7 @@ function Events() {
   };
 
   const fetchEvents = () => {
-    fetch(`${baseUrl}/events`)
+    fetch(`${process.env.REACT_APP_API_URL}/events`)
       .then((response) => response.json())
       .then((data) => {
         // Filter events based on groupId or no groupId
@@ -704,7 +704,7 @@ function Events() {
 
     console.log('eventId check', eventId);
     try {
-      const response = await axios.get(`${baseUrl}/events/attendees/${eventId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events/attendees/${eventId}`);
       if (response.status === 200) {
         setAttendees(response.data);
         determineAttendanceStatus(response.data);
@@ -758,7 +758,7 @@ function Events() {
   const handleDeleteEvent = (e) => {
     const eventId = selectedEvent._id;
     console.log("id", eventId);
-    fetch(`${baseUrl}/events/${eventId}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`, {
       method: 'DELETE',
     })
       .then(() => {

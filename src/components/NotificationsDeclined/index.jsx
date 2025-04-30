@@ -23,11 +23,11 @@ export const NotificationsDeclined = () => {
     try {
       let url = '';
       if (type === 'forum') {
-        url = `${baseUrl}/forums/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/forums/members/${groupId}`;
       } else if (type === 'group') {
-        url = `${baseUrl}/groups/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/groups/members/${groupId}`;
       } else if (type === 'ID') {
-        url = `${baseUrl}/alumni/alumni/validateId`;
+        url = `${process.env.REACT_APP_API_URL}/alumni/alumni/validateId`;
       } else {
         throw new Error('Invalid type provided');
       }
@@ -54,7 +54,7 @@ export const NotificationsDeclined = () => {
   const handleDeleteNotification = async (notificationId) => {
     console.log('notificationId for delete:', notificationId);
     try {
-      const response = await axios.delete(`${baseUrl}/alumni/alumni/deleteNotification`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/alumni/deleteNotification`, {
         data: { notificationId }
       });
       console.log(response.data);
@@ -68,7 +68,7 @@ export const NotificationsDeclined = () => {
   const getRequest = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseUrl}/groups/requests/req`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
       const filteredData = response.data.filter(notification => notification.status === true);
       setNotificationList(filteredData);
       setLoading(false);
@@ -115,7 +115,7 @@ export const NotificationsDeclined = () => {
     e.preventDefault();
 
     try {
-        const response = await axios.get(`${baseUrl}/search/search/notifications?keyword=${user}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/search/search/notifications?keyword=${user}`);
         // Handle the response data, such as updating state with the search results
         console.log('search data',response.data);
         setNotificationList(response.data.filter(notification => notification.status === true))

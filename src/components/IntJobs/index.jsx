@@ -157,7 +157,7 @@ const IntJobs = (props) => {
             if (file) {
                 const imageFormData = new FormData();
                 imageFormData.append('image', file);
-                axios.post(`${baseUrl}/uploadImage/singleImage`, imageFormData, {
+                axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/singleImage`, imageFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -184,7 +184,7 @@ const IntJobs = (props) => {
                 });
 
                 // Send the FormData to the API
-                axios.post(`${baseUrl}/uploadImage/image`, data, {
+                axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/image`, data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -250,7 +250,7 @@ const IntJobs = (props) => {
                 // }
                 console.log('job formdata', formData)
                 console.log('job formdata to send', formDataToSend)
-                const response = await axios.post(`${baseUrl}/jobs/create`, formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/jobs/create`, formData);
                 if (response) {
                     console.log('Data saved successfully');
                     const successMessage = formData.type === 'Internship' ? 'The internship post is being validated by the admin' : 'The job post is being validated by the admin';

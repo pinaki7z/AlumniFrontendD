@@ -23,7 +23,7 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
     }
     try {
       const response = await axios.get(
-        `${baseUrl}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
+        `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
       );
       const postsData = response.data.records;
       setGroups((prevItems) => [...prevItems, ...postsData]);

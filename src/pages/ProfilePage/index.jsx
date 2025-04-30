@@ -39,7 +39,7 @@ const ProfilePage = () => {
 
   const fetchWorkExperiences = async () => {
     try {
-      const { data } = await axios.get(`${baseUrl}/alumni/workExperience/${profile._id}`, {
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWorkExperiences(data);
@@ -59,7 +59,7 @@ const ProfilePage = () => {
 
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
-    const api = `${baseUrl}/uploadImage/singleImage`
+    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formData = new FormData();
     formData.append('image', file);
     axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -79,7 +79,7 @@ const ProfilePage = () => {
   const handleSubmit = async (fileData, fileType) => {
     setLoading(true);
     try {
-      const { data } = await axios.put(`${baseUrl}/alumni/${profile._id}`, {[fileType]: fileData}, { headers: { Authorization: `Bearer ${token}` }});
+      const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}`, {[fileType]: fileData}, { headers: { Authorization: `Bearer ${token}` }});
       dispatch(updateProfile(data));
       toast.dismiss()
       toast.success(`${fileType === 'profilePicture' ? 'Profile Picture' : 'Cover Picture'} updated`);
@@ -91,7 +91,7 @@ const ProfilePage = () => {
 
   const handleDelete = async (type) => {
     try {
-      const url = type === 'cover' ? `${baseUrl}/alumni/delete/coverPicture` : `${baseUrl}/alumni/delete/profilePicture`;
+      const url = type === 'cover' ? `${process.env.REACT_APP_API_URL}/alumni/delete/coverPicture` : `${process.env.REACT_APP_API_URL}/alumni/delete/profilePicture`;
       const { data } = await axios.put(url, { userId: profile._id });
       dispatch(updateProfile(data.user));
       toast.success(data.message);
@@ -115,7 +115,7 @@ const ProfilePage = () => {
       <div className="relative bg-white rounded-lg shadow-lg -mt-24 pt-24 pb-6 px-6">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="relative">
-            <img src={profile.profilePicture} alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
+            <img src={profile.profilePicture || "/images/profilepic.jpg" } alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
             <button onClick={() => handleDelete('profile')} className="absolute top-1 left-1 bg-white p-1 rounded-full shadow">
               <MdOutlineDelete className="w-5 h-5 text-gray-700" />
             </button>

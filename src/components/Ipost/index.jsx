@@ -56,7 +56,7 @@ export const Ipost = () => {
     const fetchPostData = async () => {
       try {
         if (!statePostId && _id) {
-          const response = await fetch(`${baseUrl}/posts/${_id}`);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/posts/${_id}`);
           if (!response.ok) {
             throw new Error('Failed to fetch post');
           }

@@ -22,7 +22,7 @@ export const Followers = () => {
   const fetchMembers = async (page) => {
     try {
       console.log('page', page);
-      const response = await fetch(`${baseUrl}/alumni/${id}/followers?page=${page}&size=${LIMIT}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${id}/followers?page=${page}&size=${LIMIT}`);
       if (response.ok) {
         const data = await response.json();
         setTotalFollowers(data.totalFollowers);

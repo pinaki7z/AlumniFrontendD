@@ -49,7 +49,7 @@ const IndividualJobPost = () => {
     };
     const profile = useSelector((state) => state.profile);
     const fetchDonationPost = async () => {
-        const response = await axios.get(`${baseUrl}/${title}/${_id}`)
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/${title}/${_id}`)
         const data = response.data;
         setJobs(data);
         setLoading(false)
@@ -63,7 +63,7 @@ const IndividualJobPost = () => {
 
     const fetchAppliedUserIds = async () => {
         console.log('id', _id)
-        const response = await axios.get(`${baseUrl}/${title}/appliedCandidates/${_id}`)
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/${title}/appliedCandidates/${_id}`)
         const data = response.data;
         setAppliedCandidates(data.userIds);
         setAppliedCandidatesDetails(data.appliedCandidates);
@@ -114,7 +114,7 @@ const IndividualJobPost = () => {
 
         const handleSubmit = () => {
             setApplyLoading(true);
-            const apiUrl = `${baseUrl}/jobs/apply/${_id}`;
+            const apiUrl = `${process.env.REACT_APP_API_URL}/jobs/apply/${_id}`;
             const formData = new FormData();
             formData.append('userId', profile._id);
             formData.append('name', name);
@@ -205,7 +205,7 @@ const IndividualJobPost = () => {
         console.log('job id', status, comment, userId)
         setStatusLoading(status);
 
-        axios.put(`${baseUrl}/jobs/${_id}/updateJobStatus`, { userId, status, comment })
+        axios.put(`${process.env.REACT_APP_API_URL}/jobs/${_id}/updateJobStatus`, { userId, status, comment })
             .then(response => {
                 console.log("Job status updated successfully:", response.data.message);
                 fetchAppliedUserIds();
@@ -267,7 +267,7 @@ const IndividualJobPost = () => {
                         <Link to={`/members/${candidate.userId}`} style={{ textDecoration: 'underline', color: 'inherit' }}>{candidate.name}</Link></p>
                 </div>
                 <div style={{ display: 'flex', gap: '1vw' }}>
-                    <p style={{ fontWeight: '500' }}>Resume: </p><a href={`${baseUrl}/uploads/${candidate.resume}`} target="_blank" rel="noopener noreferrer">{candidate.resume}</a>
+                    <p style={{ fontWeight: '500' }}>Resume: </p><a href={`${process.env.REACT_APP_API_URL}/uploads/${candidate.resume}`} target="_blank" rel="noopener noreferrer">{candidate.resume}</a>
                 </div>
                 <div style={{ display: 'flex', gap: '1vw' }}>
                     <p style={{ fontWeight: '500' }}>Applied At: </p> <p>{formatCreatedAt(candidate.appliedAt)}</p>
@@ -412,7 +412,7 @@ const IndividualJobPost = () => {
             } else if (attachment.endsWith('.jpg') || attachment.endsWith('.jpeg') || attachment.endsWith('.png')) {
                 return (
                     <div key={index} className="image-link">
-                        <button style={{ border: 'none', borderBottom: 'solid 1px' }} onClick={() => handleImageClick(`${baseUrl}/uploads/${attachment}`)}>
+                        <button style={{ border: 'none', borderBottom: 'solid 1px' }} onClick={() => handleImageClick(`${process.env.REACT_APP_API_URL}/uploads/${attachment}`)}>
                             {attachment}
                         </button>
                     </div>
@@ -429,7 +429,7 @@ const IndividualJobPost = () => {
 
     const handleStarred = (jobId) => {
         setStarLoading(true);
-        axios.put(`${baseUrl}/${title}/${jobId}`, {
+        axios.put(`${process.env.REACT_APP_API_URL}/${title}/${jobId}`, {
             starred: true,
             userId: profile._id
         })

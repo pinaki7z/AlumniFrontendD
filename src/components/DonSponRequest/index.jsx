@@ -54,7 +54,7 @@ const DonSponRequest = ({ name, edit }) => {
                 const formData = new FormData();
                 formData.append('csv', fileInput.files[0]);
 
-                const response = await axios.post(`${baseUrl}/alumni/alumni/bulkRegister`, formData, {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/alumni/bulkRegister`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
@@ -88,7 +88,7 @@ const DonSponRequest = ({ name, edit }) => {
                         <p>Upload .csv file</p>
                         <input type="file" name="csv" id="csv" />
                         <a
-                            href={`${baseUrl}/uploads/Book-_1_.csv`}
+                            href={`${process.env.REACT_APP_API_URL}/uploads/Book-_1_.csv`}
                             download="Book-_1_.csv"
                         >
                             Download sample .csv file
@@ -271,7 +271,7 @@ const DonSponRequest = ({ name, edit }) => {
             }
             try {
                 console.log('formData member', formData)
-                const response = await axios.post(`${baseUrl}/alumni/register`, formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, formData);
                 console.log('Registration successful!', response.data);
                 toast.success("User Registered successfully!");
                 setLoading(false);
@@ -310,7 +310,7 @@ const DonSponRequest = ({ name, edit }) => {
 
                 console.log('formData to  send ', formDataToSend)
                 if(!edit){
-                    const response = await fetch(`${baseUrl}/donations/create`, {
+                    const response = await fetch(`${process.env.REACT_APP_API_URL}/donations/create`, {
                         method: 'POST',
                         body: formDataToSend,
                     });
@@ -328,7 +328,7 @@ const DonSponRequest = ({ name, edit }) => {
                 }
                 else{
                     const response = await fetch(
-                        `${baseUrl}/${name}s/${_id}`,
+                        `${process.env.REACT_APP_API_URL}/${name}s/${_id}`,
                         {
                             method: 'PUT',
                             body: formDataToSend,
@@ -369,7 +369,7 @@ const DonSponRequest = ({ name, edit }) => {
 
                 // }
 
-                const response = await fetch(`${baseUrl}/sponsorships/create`, {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/sponsorships/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -397,7 +397,7 @@ const DonSponRequest = ({ name, edit }) => {
         if (!edit) {
             console.log('body', body)
             try {
-                const response = await axios.post(`${baseUrl}/${name}s/create`,
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/${name}s/create`,
                     body,
                     {
                         "Content-Type": "application/json"
@@ -423,7 +423,7 @@ const DonSponRequest = ({ name, edit }) => {
         }
         else {
             try {
-                const response = await axios.put(`${baseUrl}/${name}s/${_id}`,
+                const response = await axios.put(`${process.env.REACT_APP_API_URL}/${name}s/${_id}`,
                     body,
                     {
                         "Content-Type": "application/json"

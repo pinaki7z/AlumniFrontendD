@@ -43,7 +43,7 @@ const Donations = () => {
     }
     try {
       const response = await axios.get(
-        `${baseUrl}/donations?page=${page}&size=${LIMIT}`
+        `${process.env.REACT_APP_API_URL}/donations?page=${page}&size=${LIMIT}`
       );
       const postsData = response.data.records;
       setDonations((prevItems) => [...prevItems, ...postsData]);
@@ -68,7 +68,7 @@ const Donations = () => {
   const getUserDonations = async () => {
     try {
       const response = await axios.get(
-        `${baseUrl}/donations/user/${profile._id}`
+        `${process.env.REACT_APP_API_URL}/donations/user/${profile._id}`
       );
       setUserDonations(response.data.donations);
     } catch (error) {

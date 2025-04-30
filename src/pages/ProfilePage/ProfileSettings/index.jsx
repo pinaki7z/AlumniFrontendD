@@ -34,7 +34,7 @@ export const ProfileSettings = () => {
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {
-  //       const response = await fetch(`${baseUrl}/alumni/${profile._id}`, {
+  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}`, {
   //         method: 'GET',
   //         headers: {
   //           'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ export const ProfileSettings = () => {
     const userID = profile._id;
 
     try {
-      const response = await fetch(`${baseUrl}/alumni/${userID}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${userID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ export const ProfileSettings = () => {
 
     if (value.length >= 3) {
       try {
-        const response = await fetch(`${baseUrl}/search/search/company?q=${value}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/search/search/company?q=${value}`);
         if (response.ok) {
           const data = await response.json();
           setSearchResults(data.companies);

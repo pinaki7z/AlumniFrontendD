@@ -59,7 +59,7 @@
 
 //   const fetchBlockedByUsers = async () => {
 //     try {
-//       const response = await fetch(`${baseUrl}/alumni/${profile._id}/blockedByUsers`);
+//       const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}/blockedByUsers`);
 //       if (!response.ok) {
 //         throw new Error('Failed to fetch blocked by users');
 //       }
@@ -72,7 +72,7 @@
 //   };
 //   const fetchBlockedUsers = async () => {
 //     try {
-//       const response = await fetch(`${baseUrl}/alumni/${profile._id}/blockedUsers`);
+//       const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}/blockedUsers`);
 //       if (!response.ok) {
 //         throw new Error('Failed to fetch blocked by users');
 //       }
@@ -201,7 +201,7 @@
 
 //       if (file) {
 //         console.log('file', file);
-//         const res = await axios.get(`${baseUrl}/messages/${selectedUserId}`, {
+//         const res = await axios.get(`${process.env.REACT_APP_API_URL}/messages/${selectedUserId}`, {
 //           headers: {
 //             Authorization: `Bearer ${cookie.token}`,
 //           },
@@ -283,7 +283,7 @@
 
 
 //   useEffect(() => {
-//     axios.get(`${baseUrl}/alumni/all/allAlumni`, {
+//     axios.get(`${process.env.REACT_APP_API_URL}/alumni/all/allAlumni`, {
 //       headers: {
 //         Authorization: `Bearer ${cookie.token}`,
 //       },
@@ -305,7 +305,7 @@
 //     console.log('selected user id in useEffect', selectedUserId)
 //     if (selectedUserId) {
 
-//       axios.get(`${baseUrl}/messages/${selectedUserId}`, {
+//       axios.get(`${process.env.REACT_APP_API_URL}/messages/${selectedUserId}`, {
 //         headers: {
 //           Authorization: `Bearer ${cookie.token}`,
 //         },
@@ -340,7 +340,7 @@
 //     const profileId = profile._id;
 
 //     setBlockLoading(true);
-//     axios.put(`${baseUrl}/alumni/${profileId}/blockUser`, { blockedUserId: userId })
+//     axios.put(`${process.env.REACT_APP_API_URL}/alumni/${profileId}/blockUser`, { blockedUserId: userId })
 //       .then(response => {
 //         console.log('User blocked successfully');
 //         setShowBlockModal(false);
@@ -522,7 +522,7 @@
 //                           {message.file && (
 //                             <div style={{ fontSize: '14px', display: 'flex', alignItems: 'center' }}>
 //                               <AiOutlinePaperClip />
-//                               <a href={`${baseUrl}/uploads/${message.file}`} target="_blank" rel="noopener noreferrer">{message.file}</a>
+//                               <a href={`${process.env.REACT_APP_API_URL}/uploads/${message.file}`} target="_blank" rel="noopener noreferrer">{message.file}</a>
 //                             </div>
 //                           )
 //                           }

@@ -37,7 +37,7 @@ const PhotoGallery = () => {
     setIsLoading(true);
     try {
       // Fetch Google Drive folder data (this contains the department as well)
-      const response = await axios.get(`${baseUrl}/images/getGoogleDriveFolders`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/images/getGoogleDriveFolders`);
       const folderData = response.data.folders;
 
       const departments = [...new Set(folderData.map((folder) => folder.department))]; // Get unique departments
@@ -49,7 +49,7 @@ const PhotoGallery = () => {
         const year = new Date(date).getFullYear();
 
         if (department === selectedDepartment || !selectedDepartment) { // Filter by department if selected
-          const imageResponse = await axios.post(`${baseUrl}/images/getImagesFromFolder`, { folderLink: link });
+          const imageResponse = await axios.post(`${process.env.REACT_APP_API_URL}/images/getImagesFromFolder`, { folderLink: link });
           const images = imageResponse.data.images;
 
           if (!imagesByYear[year]) {
@@ -81,7 +81,7 @@ const PhotoGallery = () => {
   const handleUploadSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${baseUrl}/uploadGoogleDrive`, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/uploadGoogleDrive`, {
         link: googleDriveLink,
         userId: profile._id,
         department: profile.department,

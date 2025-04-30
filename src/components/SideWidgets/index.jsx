@@ -68,7 +68,7 @@ const SideWidgets = () => {
     const fetchNotifications = async () => {
         setLoad(true);
         try {
-            const response = await axios.get(`${baseUrl}/notifications`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/notifications`);
             const sortedNotifications = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
             setNotifications(sortedNotifications);
         } catch (error) {
@@ -113,29 +113,29 @@ const SideWidgets = () => {
         };
     }, []);
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                //triggerRef.current &&
-                !triggerRef.current.contains(event.target)
-                //&&
-                //popoverRef.current &&
-                //!popoverRef.current.contains(event.target)
-            ) {
-                console.log('if clicked')
-                setShowPopover(false);
-            } else {
-                console.log('else clicked')
-                //setShowPopover(!showPopover)
-            }
-        };
+    // useEffect(() => {
+    //     const handleClickOutside = (event) => {
+    //         if (
+    //             //triggerRef.current &&
+    //             !triggerRef.current.contains(event.target)
+    //             //&&
+    //             //popoverRef.current &&
+    //             //!popoverRef.current.contains(event.target)
+    //         ) {
+    //             console.log('if clicked')
+    //             setShowPopover(false);
+    //         } else {
+    //             console.log('else clicked')
+    //             //setShowPopover(!showPopover)
+    //         }
+    //     };
 
-        document.addEventListener("mousedown", handleClickOutside);
+    //     document.addEventListener("mousedown", handleClickOutside);
 
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    //     return () => {
+    //         document.removeEventListener("mousedown", handleClickOutside);
+    //     };
+    // }, []);
 
 
 
@@ -143,7 +143,7 @@ const SideWidgets = () => {
         if (!email) return alert("Please enter an email address.");
     
         try {
-          const response = await axios.post(`${baseUrl}/invite`, { email });
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/invite`, { email });
           alert("Invitation sent successfully!");
           setEmail('');
         } catch (error) {
@@ -163,7 +163,7 @@ const SideWidgets = () => {
     const handleFollowToggle = async (memberId, firstName, lastName) => {
         setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: true }));
         try {
-            const response = await axios.patch(`${baseUrl}/alumni/${memberId}/follow`, {
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${memberId}/follow`, {
                 userId: profile._id,
                 requestedUserName: `${profile.firstName} ${profile.lastName}`,
                 followedUserName: `${firstName} ${lastName}`
@@ -212,14 +212,13 @@ const SideWidgets = () => {
     return (
         <div className="sideWidget-feed">
             <div style={{ float: 'right' }} >
-                <OverlayTrigger
+                {/* <OverlayTrigger
                     trigger="click"
                     key='bottom'
                     show={showPopover}
                     placement='bottom'
                     overlay={
                         <Popover id={`popover-positioned-bottom`}
-                        //ref={popoverRef}
                         >
                             <Popover.Body>
                                 <div className='img-job-vide'
@@ -228,10 +227,7 @@ const SideWidgets = () => {
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
                                         <a href="/home/groups/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
                                     </label>
-                                    {/* <button style={{ backgroundColor: '#f3f3f3', color: 'black', padding: '5px 10px' }} onClick={() => {
-                                        setShowModal(true);
-                                    }}><BiSolidBriefcase style={{ color: 'black' }} />Create Job</button>
-                                    {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />} */}
+                                   
                                     <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
                                         <a href="/home/jobs/create" style={{ textDecoration: 'none', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'space-evenly' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create a Job </a>
                                     </label>
@@ -247,10 +243,10 @@ const SideWidgets = () => {
                     }
                 >
                     <button onClick={() => setShowPopover(!showPopover)} style={{ backgroundColor: '#0a3a4c', color: '#FFFFF0', width: '125px', height: '45px', borderRadius: '8px', border: 'none', fontSize: '20px' }} ref={triggerRef}>Create</button>
-                </OverlayTrigger>
+                </OverlayTrigger> */}
             </div>
 
-            <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center py-5 mt-20">
+            <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center py-5 ">
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img src={profile.profilePicture ? profile.profilePicture : profilepic} alt="Profile" className='rounded-full object-cover w-[70px] h-[70px]' />
                     <Link to='/home/profile' style={{ textDecoration: 'none', color: 'black' }}>

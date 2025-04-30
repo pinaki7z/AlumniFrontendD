@@ -39,7 +39,7 @@ const CommentSection = ({
     setError('');
     setIsLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}/comments`, {
         userId: profile._id,
         content: content,
         userName: `${profile.firstName} ${profile.lastName}`,
@@ -59,7 +59,7 @@ const CommentSection = ({
 
   const handleCommentDelete = async (commentId) => {
     try {
-      await axios.delete(`${baseUrl}/${entityType}/${entityId}/comments/${commentId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}/comments/${commentId}`);
       onDeleteComment(entityId);
     } catch (error) {
       console.error('Error deleting comment:', error);
@@ -75,7 +75,7 @@ const CommentSection = ({
 
   const handleReport = async (commentId, userId) => {
     try {
-      await axios.put(`${baseUrl}/${entityType}/${entityId}/report`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}/report`, {
         commentId: commentId,
         userId: userId,
       });
@@ -96,7 +96,7 @@ const CommentSection = ({
   const handleReplySubmit = async (parentCommentId) => {
     if (!reply.trim()) return;
     try {
-      const response = await axios.post(`${baseUrl}/${entityType}/${entityId}/comments`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}/comments`, {
         content: reply,
         userName: profile.firstName,
         parentCommentId: parentCommentId,

@@ -51,7 +51,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
 
     const handleDelete = async (_id) => {
         try {
-            const response = await axios.delete(`${baseUrl}/${name}/${_id}`);
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/${name}/${_id}`);
             toast.success(`Successfully deleted ${name} details`);
             if (name === "donations") {
                 setTimeout(() => {

@@ -27,7 +27,7 @@ export const WorkExperience = () => {
     const fetchWorkExperiences = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${baseUrl}/alumni/workExperience/${profile._id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
                 headers: {
                     'Authorization': `Bearer ${cookie.token}`
                 }
@@ -92,7 +92,7 @@ export const WorkExperience = () => {
     
           let body = JSON.stringify(updatedForms);
     
-          fetch(`${baseUrl}/alumni/workExperience/${profile._id}`, {
+          fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
             method: 'PUT',
             body,
             headers: {

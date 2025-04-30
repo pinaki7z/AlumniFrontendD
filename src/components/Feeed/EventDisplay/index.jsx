@@ -31,7 +31,7 @@ const EventDisplay = ({ event }) => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `${baseUrl}/events/attendees/${event._id}`,
+                `${process.env.REACT_APP_API_URL}/events/attendees/${event._id}`,
             );
             if (response.status === 200) {
                 setAttendees(response.data);
@@ -71,7 +71,7 @@ const EventDisplay = ({ event }) => {
             };
 
             const response = await axios.put(
-                `${baseUrl}/events/attendEvent/${eventId}`,
+                `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
                 body
             );
 
@@ -113,7 +113,7 @@ const EventDisplay = ({ event }) => {
 
     const handleDeleteEvent = async () => {
         try {
-            const url = `${baseUrl}/events/${event._id}`;
+            const url = `${process.env.REACT_APP_API_URL}/events/${event._id}`;
             const requestBody = {
                 groupName: event.title
             };

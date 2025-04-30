@@ -12,7 +12,7 @@ const Bconnect = () => {
        
         try {
             const response = await axios.get(
-                `${baseUrl}/groups/groups/businessConnect`
+                `${process.env.REACT_APP_API_URL}/groups/groups/businessConnect`
             );
             const postsData = response.data.businessConnect;
             setGroups(postsData);

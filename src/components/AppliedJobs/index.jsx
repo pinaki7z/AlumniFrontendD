@@ -13,7 +13,7 @@ export const AppliedJobs = ({searchQuery}) => {
     useEffect(() => {
         const fetchAppliedJobs = async () => {
             try {
-                const response = await axios.get(`${baseUrl}/jobs/${profile._id}/appliedJobs`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/jobs/${profile._id}/appliedJobs`);
                 setAppliedJobs(response.data);
                 setLoading(false);
             } catch (error) {

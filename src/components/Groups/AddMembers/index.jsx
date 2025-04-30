@@ -16,7 +16,7 @@ export const AddMembers = ({type, members}) => {
   // useEffect(() => {
   //   const fetchMembers = async () => {
   //     try {
-  //       const response = await fetch(`${baseUrl}/groups/${_id}/members`);
+  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/groups/${_id}/members`);
   //       const data = await response.json();
   //       if (response.ok) {
   //         setMembers(data.members);
@@ -31,7 +31,7 @@ export const AddMembers = ({type, members}) => {
   //   const fetchForumMembers = async () => {
   //     console.log('Fetching forum members')
   //     try {
-  //       const response = await fetch(`${baseUrl}/forums/${id}/members`);
+  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/forums/${id}/members`);
   //       const data = await response.json();
   //       if (response.ok) {
   //         setMembers(data.members);

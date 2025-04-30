@@ -105,7 +105,7 @@ export const CreateJob = () => {
         formData.append(endpoint === 'singleImage' ? 'image' : 'images', file);
         setPicLoading(true);
 
-        axios.post(`${baseUrl}/uploadImage/${endpoint}`, formData, {
+        axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/${endpoint}`, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
             .then((res) => {
@@ -165,7 +165,7 @@ export const CreateJob = () => {
         console.log('job ', typeof formData.applyBy);
 
         try {
-            const response = await fetch(`${baseUrl}/jobs/create`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/jobs/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -220,7 +220,7 @@ export const CreateJob = () => {
             });
 
             // Send the FormData to the API
-            axios.post(`${baseUrl}/uploadImage/image`, data, {
+            axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/image`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

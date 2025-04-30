@@ -53,7 +53,7 @@ const GroupMembers = ({ members }) => {
           <option value="">All Roles</option>
           <option value="Admin">Admin</option>
           <option value="Alumni">Alumni</option>
-          <option value="Current Student">Current Student</option>
+          <option value="Student">Student</option>
         </select>
       </div>
       <div

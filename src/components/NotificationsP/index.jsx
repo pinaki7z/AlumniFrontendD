@@ -19,7 +19,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   const handleAddLink = async (notificationId, link, department) => {
     setLoading(true);
     try {
-      const response = await axios.post(`${baseUrl}/images/addLink`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/images/addLink`, {
         notificationId,
         link,
         userId: profile._id,
@@ -48,13 +48,13 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
     try {
       let url = "";
       if (type === "forum") {
-        url = `${baseUrl}/forums/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/forums/members/${groupId}`;
       } else if (type === "group") {
-        url = `${baseUrl}/groups/members/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/groups/members/${groupId}`;
       } else if (type === "ID") {
-        url = `${baseUrl}/alumni/alumni/validateId`;
+        url = `${process.env.REACT_APP_API_URL}/alumni/alumni/validateId`;
       } else if (type === "Job") {
-        url = `${baseUrl}/jobs/${groupId}`;
+        url = `${process.env.REACT_APP_API_URL}/jobs/${groupId}`;
       } else {
         throw new Error("Invalid type provided");
       }
@@ -99,7 +99,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
 
   const handleDeleteNotification = async (notificationId) => {
     try {
-      await axios.delete(`${baseUrl}/alumni/alumni/deleteNotification`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/alumni/deleteNotification`, {
         data: { notificationId },
       });
       getRequest();
@@ -117,7 +117,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   ) => {
     setLoading(true);
     try {
-      await axios.put(`${baseUrl}/forums/${forumId}/removeBlock`, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/forums/${forumId}/removeBlock`, {
         commentId,
         userId,
         notificationId,
@@ -134,7 +134,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   const getRequest = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${baseUrl}/groups/requests/req`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
       const filtered = response.data.filter((n) => n.status === false);
       setNotificationList(filtered);
     } catch (error) {
@@ -149,7 +149,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${baseUrl}/search/search/notifications?keyword=${user}`
+        `${process.env.REACT_APP_API_URL}/search/search/notifications?keyword=${user}`
       );
       setNotificationList(
         response.data.filter((notification) => notification.status === false)
@@ -273,7 +273,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
                     </Link>{" "}
                     has requested to validate for Business Connect.{" "}
                     <a
-                      href={`${baseUrl}/uploads/${notification.businessVerification}`}
+                      href={`${process.env.REACT_APP_API_URL}/uploads/${notification.businessVerification}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"

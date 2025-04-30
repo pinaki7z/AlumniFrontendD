@@ -18,7 +18,7 @@ const Forum = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${baseUrl}/forums`)
+    fetch(`${process.env.REACT_APP_API_URL}/forums`)
       .then((response) => response.json())
       .then((data) => {
         let filteredForums = [];

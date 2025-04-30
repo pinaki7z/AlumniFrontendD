@@ -46,7 +46,7 @@ export const CreateNews = () => {
         //profilePicture: profile.profilePicture
       };
 
-      await axios.post(`${baseUrl}/news/create`, body);
+      await axios.post(`${process.env.REACT_APP_API_URL}/news/create`, body);
       toast.success("News Created");
       navigateTo("/home/news");
     } catch (error) {

@@ -55,7 +55,7 @@ const IndividualGroup = () => {
     const getGroup = async () => {
         try {
             setPageLoading(true);
-            const response = await axios.get(`${baseUrl}/groups/${_id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/${_id}`);
             setGroup([response.data]);
             setGroupMembers(response.data.members)
             setSelectedMembers(response.data.members.map(member => ({
@@ -85,7 +85,7 @@ const IndividualGroup = () => {
         setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: true }));
         console.log('firstname lastname', userName)
         try {
-            const response = await axios.patch(`${baseUrl}/alumni/${memberId}/follow`, {
+            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${memberId}/follow`, {
                 userId: profile._id,
                 requestedUserName: `${profile.firstName} ${profile.lastName}`,
                 followedUserName: userName
@@ -155,7 +155,7 @@ const IndividualGroup = () => {
         try {
             setSaving(true);
             const response = await axios.put(
-                `${baseUrl}/groups/members/${group[0]._id}`,
+                `${process.env.REACT_APP_API_URL}/groups/members/${group[0]._id}`,
                 {
                     members: sendMembers,
                 }
@@ -194,7 +194,7 @@ const IndividualGroup = () => {
         }
 
         try {
-            const response = await axios.put(`${baseUrl}/groups/${_id}`, {
+            const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/${_id}`, {
                 [fileType]: fileData
             }, {
                 headers: {

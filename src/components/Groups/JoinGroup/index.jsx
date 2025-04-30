@@ -20,7 +20,7 @@ export const JoinGroup = () => {
 
   const getAllGroupMembers = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/groups/${_id}/members`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/${_id}/members`);
       if (response.status === 200) {
         setGroupMembersId(response.data.members);
       }
@@ -41,7 +41,7 @@ export const JoinGroup = () => {
 
   const handleAddMember = async () => {
     try {
-      const response = await axios.put(`${baseUrl}/groups/members/${_id}`, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/members/${_id}`, {
         member: {
           userId: profile._id,
           profilePicture: profile.profilePicture,

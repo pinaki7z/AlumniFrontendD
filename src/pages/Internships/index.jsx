@@ -34,7 +34,7 @@ const Internships = () => {
     
     const getData = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/${title}/`)
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/${title}/`)
             if (title === 'Jobs') {
                 const filteredJobs = response.data.filter(job => job.archive === false);
                 const filteredArchivedJobs = response.data.filter(job => job.archive === true);

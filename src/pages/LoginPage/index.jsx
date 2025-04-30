@@ -67,7 +67,7 @@ const LoginPage = ({ handleLogin }) => {
 
       await new Promise(resolve => setTimeout(resolve, 1000));
       const currentDate = new Date();
-      const response = await fetch(`${baseUrl}/alumni/login`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
