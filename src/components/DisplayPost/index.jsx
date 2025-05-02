@@ -229,7 +229,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                 <div
                   className="w-full h-full bg-cover bg-center"
                   style={{
-                    backgroundImage: `url(${group.groupPicture || groupPic})`,
+                    backgroundImage: `url(${group.groupPicture || group.groupLogo || groupPic})`,
                   }}
                 ></div>
                 <p className="absolute top-3 right-5 bg-white text-black px-5 py-1 border border-gray-400 text-xs font-medium rounded-lg">

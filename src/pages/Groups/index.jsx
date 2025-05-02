@@ -16,6 +16,7 @@ import { AddMembers } from "../../components/Groups/AddMembers";
 import GroupMembers from "../../components/Groups/GroupMembers";
 import { FaPlus } from "react-icons/fa";
 import { useState } from "react";
+import GroupRequest from "./GroupRequest";
 const Groups = () => {
   const profile = useSelector((state) => state.profile);
   const title = "Groups";
@@ -278,23 +279,16 @@ const Groups = () => {
           <Route
             path="/"
             element={
-              <div className="flex" style={{ marginTop: "25px" }}>
+              <div className="flex justify-end" style={{ marginTop: "25px" }}>
                 <Link
                   to={`/home/groups/create`}
-                  style={{ textDecoration: "none", color: "black" }}
+                  // style={{ textDecoration: "none", color: "black" }}
                   className=""
                 >
                   <button
-                    className="flex items-center text-center justify-center gap-3 w-full lg:w-[150px] "
-                    style={{
-                      padding: "8px 32px",
-                      borderRadius: "5px",
-                      border: "none",
-                      background: "#004C8A",
-                      color: "#ffffff",
-                    }}
+                    className="flex items-center justify-center gap-3 w-full lg:w-[150px] px-6 py-2 rounded-md bg-[#004C8A] text-white hover:bg-[#003561] transition duration-150 ease-in-out"
                   >
-                    <FaPlus /> Create
+                    <FaPlus className="text-xl" /> Create
                   </button>
                 </Link>
               </div>
@@ -401,11 +395,11 @@ const Groups = () => {
         )}
         <Route
           path="/create"
-          element={<DonSponRequest name="group" edit={false} />}
+          element={<GroupRequest name="group" edit={false} />}
         />
         <Route
           path="/edit/:_id"
-          element={<DonSponRequest name="group" edit={true} />}
+          element={<GroupRequest name="group" edit={true} />}
         />
       </Routes>
       <Routes>

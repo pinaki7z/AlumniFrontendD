@@ -44,8 +44,8 @@ const IndividualGroup = () => {
     const [pageLoading, setPageLoading] = useState(false);
     const [cookie, setCookie] = useCookies(["token"]);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [saving,setSaving]= useState(false);
-
+    const [saving, setSaving] = useState(false);
+    const [postCount, setPostCount] = useState(0);
     const token = cookie.token;
     let admin;
     if (profile.profileLevel === 0) {
@@ -219,6 +219,20 @@ const IndividualGroup = () => {
         }
     };
 
+    const countPost = ()=>{
+        const api  = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
+        axios.get(api).then((res)=>{
+            setPostCount(res.data.total)
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    useEffect(() => {
+        getGroup();
+        countPost();
+    }, []);
+
 
     return (
         <div style={{ width: '100%' }}>
@@ -237,7 +251,7 @@ const IndividualGroup = () => {
                             <div key={groupItem._id} className="ig-container">
                                 <div className="container-div" style={{ width: '100%', borderRadius: '12px', position: 'relative' }}>
                                     <div className="upper-div" style={{
-                                        backgroundImage: `url(${groupItem.groupPicture ? groupItem.groupPicture : picture})`,
+                                        backgroundImage: `url(${groupItem.groupBackground ? groupItem.groupBackground : picture})`,
                                         width: '100%',
                                         minHeight: '35vh',
                                         backgroundSize: 'cover',
@@ -245,47 +259,60 @@ const IndividualGroup = () => {
                                         borderRadius: '12px 12px 0px 0px'
                                     }}>
                                         <div className="message-follow" style={{ display: 'flex', justifyContent: 'end', paddingTop: '20px', paddingRight: '50px' }}>
-                                            {(profile._id === groupItem.userId || admin) && <Link to={`/groups/edit/${_id}`}>
-                                                <button style={{ backgroundColor: 'white', border: '2px solid rgb(111, 188, 148)', width: '100%', borderRadius: '32px', color: 'rgb(19, 97, 117)' }}>Edit</button>
+                                            {(profile._id === groupItem.userId || admin) && <Link to={`/home/groups/edit/${_id}`}>
+                                                <button className="bg-white border-2 border-green-600 w-full py-1 px-3 font-semibold text-lg rounded-xl shadow-lg text-gray-600 hover:scale-105">Edit</button>
                                             </Link>}
                                         </div>
                                     </div>
-                                    <div style={{ position: 'absolute', top: '3vh', left: '20%', transform: 'translateX(-50%) translateY(50%)' }}>
-                                        <div style={{ position: 'relative' }}>
-                                            <img src={groupItem.groupPicture ? groupItem.groupPicture : profilePic} alt="profile-picture" style={{ width: '250px', height: '250px', borderRadius: '50%', border: '5px solid white' }} />
-                                            <input type="file" name="profilePicture" id="profilePicture" style={{ display: 'none' }} onChange={(event) => handleFileChange(event, 'groupPicture')} />
-                                            <img src={editProfilePicture} alt="profile-picture" style={{ borderRadius: '50%', border: '5px solid white', position: 'absolute', top: '20px', right: '5px', cursor: 'pointer' }} onClick={() => document.getElementById('profilePicture').click()} />
-                                            {loading ?
-                                                <l-line-spinner
-                                                    size="30"
-                                                    stroke="3"
-                                                    speed="1"
-                                                    color="black"
-                                                    style={{ backgroundColor: 'whitesmoke', padding: '20px', position: 'absolute', top: '42%', left: '42%' }}
-                                                ></l-line-spinner> : null}
+                                    <div className="absolute top-[22vh] left-1/2 transform -translate-x-1/2">
+                                        <div className="relative w-[160px] h-[160px] ">
+                                            <img
+                                                src={groupItem.groupLogo ? groupItem.groupLogo : profilePic}
+                                                alt="profile-picture"
+                                                className="w-full h-full rounded-full border-4 border-white object-cover"
+                                            />
+
+                                            <input
+                                                type="file"
+                                                name="profilePicture"
+                                                id="profilePicture"
+                                                className="hidden"
+                                                onChange={(event) => handleFileChange(event, 'groupPicture')}
+                                            />
+
+                                            <img
+                                                src={editProfilePicture}
+                                                alt="edit-icon"
+                                                className="w-8 h-8 rounded-full border-4 border-white absolute top-2 right-2 cursor-pointer"
+                                                onClick={() => document.getElementById('profilePicture').click()}
+                                            />
+
+                                            {loading && (
+                                                <div className="absolute inset-0 flex items-center justify-center bg-white/70 rounded-full">
+                                                    <l-line-spinner
+                                                        size="30"
+                                                        stroke="3"
+                                                        speed="1"
+                                                        color="black"
+                                                    ></l-line-spinner>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="lower-div" style={{
-                                        backgroundColor: '#efeff0',
-                                        width: '100%',
-                                        minHeight: '15vh',
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        borderRadius: '0px 0px 12px 12px'
-                                    }}>
-                                        <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
-                                            <div style={{ width: '30%' }}></div>
-                                            <div style={{ width: '30%', paddingTop: '20px', paddingLeft: '0px' }}>
+
+                                    <div className="bg-gray-200  rounded-b-lg pt-[80px] md:pt-[50px] pb-[40px] mb-4" >
+                                        <div className="md:flex justify-between items-center grid grid-cols-1 ">
+                                            <div className="px-6 py-8 md:py-0" >
                                                 <p style={{ fontWeight: '600', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter', textAlign: 'left' }}>{groupItem.groupName}</p>
                                                 <p style={{ textAlign: 'left', display: 'flex', alignItems: 'center' }}><BsGlobeAmericas style={{ color: '#7a7a7a' }} />&nbsp;&nbsp;{groupItem.groupType}</p>
                                                 <p style={{ textAlign: 'left', display: 'flex', alignItems: 'center' }}>
                                                     <BsFillTagFill style={{ color: '#7a7a7a' }} />&nbsp;&nbsp;{groupItem.category}
                                                 </p>
                                             </div>
-                                            <div style={{ width: '30%', display: 'flex', justifyContent: 'end', paddingTop: '20px', paddingRight: '50px', gap: '15px' }}>
+                                            <div className="flex md:flex-row   justify-between gap-8 px-6">
                                                 <div>
                                                     <p style={{ fontWeight: '400', fontSize: '14px', fontFamily: 'Inter' }}>Posts</p>
-                                                    <p style={{ fontWeight: '500', fontSize: '18px', fontFamily: 'Inter' }}>0</p>
+                                                    <p style={{ fontWeight: '500', fontSize: '18px', fontFamily: 'Inter' }}>{postCount}</p>
                                                 </div>
                                                 <div>
                                                     <p style={{ fontWeight: '400', fontSize: '14px', fontFamily: 'Inter' }}>Members</p>
@@ -307,14 +334,14 @@ const IndividualGroup = () => {
                                             <JoinGroup />
                                         </div>} />
                                     </Routes>
-                                    <div style={{ width: '35%', paddingTop: '50px',paddingBottom: '100px' }}>
+                                    <div style={{ width: '35%', paddingTop: '50px', paddingBottom: '100px' }}>
                                         <div className="ig-lc-card">
                                             {(profile._id === groupItem.userId || admin) && <div>
                                                 <ul style={{ listStyle: 'none', padding: '16px', borderRadius: '12px', border: '1px solid' }}>
                                                     <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter', cursor: 'pointer' }} onClick={() => setShowModal(true)}>
                                                         <img src={Add} alt="" />
                                                         Add/Remove members to/from group</li>
-                                                    <Link to={`/groups/${_id}/groupInvite`} style={{ color: 'black', textDecoration: 'none' }}>
+                                                    <Link to={`/home/groups/${_id}/groupInvite`} style={{ color: 'black', textDecoration: 'none' }}>
                                                         <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter' }}>
                                                             <img src={LinkIcon} alt="" />
                                                             Generate a Group Invite Link</li>
@@ -378,7 +405,7 @@ const IndividualGroup = () => {
                                                     }
                                                     }>X</button>
                                             </div>
-                                            <div style={{position: 'relative'}}>
+                                            <div style={{ position: 'relative' }}>
                                                 <input
                                                     type="text"
                                                     placeholder="Search people"
@@ -387,7 +414,7 @@ const IndividualGroup = () => {
                                                     className="search-input"
                                                     style={{ backgroundColor: '#efeff0' }}
                                                 />
-                                                <img src={searchIcon} alt="" srcset="" style={{position: 'absolute',top: '10px', right: '10px'}}/>
+                                                <img src={searchIcon} alt="" srcset="" style={{ position: 'absolute', top: '10px', right: '10px' }} />
                                             </div>
                                             <ul className="members-list">
                                                 {filteredMembers.map((member, index) => (
@@ -408,7 +435,7 @@ const IndividualGroup = () => {
                                                             disabled={
                                                                 member._id === groupItem.userId ||
                                                                 member._id === '677e42e03041d82e4b54fdf6'
-                                                              }
+                                                            }
                                                         />
 
                                                     </li>
@@ -417,7 +444,7 @@ const IndividualGroup = () => {
                                             <button className="save-button"
                                                 onClick={handleSaveMembers}
                                             >
-                                                {saving? 'Saving...' : 'Save'}</button>
+                                                {saving ? 'Saving...' : 'Save'}</button>
                                         </div>
                                     </div>
                                 )}
