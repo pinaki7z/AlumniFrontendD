@@ -109,10 +109,57 @@ const MemberForm = ({ edit }) => {
 
   return (
     <div className="my-8 mx-10 bg-white rounded-lg">
+
+
+      <div>
+        <button onClick={() => setModalOpen(true)} className="bg-[#0A3A4C] text-white px-4 py-2 rounded hover:bg-[#0A3A4C]">
+          Bulk Upload
+        </button>
+      </div>
       <h1 className='text-2xl md:text-3xl font-bold mb-4'>{edit ? 'Edit Member' : 'Create a New Member'}</h1>
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          {/* Bulk upload modal... */}
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+          onClick={() => setModalOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="bg-white rounded-lg p-4 mx-auto  w-1/2 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setModalOpen(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+              &times;
+            </button>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Bulk Upload</h2>
+              <p className="mb-4">
+                Please upload a CSV file with the following columns: firstName, lastName, email, gender, userType, department, batch, class.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <label className="block text-sm font-medium mb-2">Upload .csv file</label>
+              <input type="file" name="csv" id="csv" className="block w-full px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md focus:ring-[#0A3A4C] focus:border-[#0A3A4C]" />
+            
+              <a
+                href={`https://generalbuckethai.s3.ap-south-1.amazonaws.com/2025/may/1746171609977-Book-_1_.csv`}
+                download="Book-_1_.csv"
+                className="block mt-2 text-lg text-gray-700 underline hover:text-gray-900"
+              >
+                Download sample .csv file
+              </a>
+            </div>
+            <div className='flex justify-end'>
+            <button
+                onClick={handleCSVupload}
+                className="bg-[#0A3A4C] text-white px-4 py-2 rounded hover:bg-[#0A3A4C]"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

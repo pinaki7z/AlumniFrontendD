@@ -64,7 +64,7 @@ const LeftSidebar = () => {
                     <li><Link to="/home/events" style={{ textDecoration: 'none' }}><MdOutlineEvent className="dashboard-icon" /><p>Events</p></Link></li>
                     <li><Link to="/home/jobs" style={{ textDecoration: 'none' }}><FaBriefcase className="dashboard-icon" /><p>Jobs/Internships</p></Link></li>
                     <li><Link to="/home/photo-gallery" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Photo Gallery</p></Link></li>
-                    <li><Link to="/home/guidance" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Guidance</p></Link></li>
+                    {/* <li><Link to="/home/guidance" style={{ textDecoration: 'none' }}><GrGallery className="dashboard-icon" /><p>Guidance</p></Link></li> */}
                     {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}
                     <li><Link to="/home/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>
                     {/* <li><Link to="/settings" style={{ textDecoration: 'none' }}><MdSettings className="dashboard-icon" /><p>Settings</p></Link></li> */}

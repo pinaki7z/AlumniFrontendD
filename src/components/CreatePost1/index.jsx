@@ -430,23 +430,24 @@ const CreatePost1 = ({
   const handleImageChange = async (e) => {
     const files = e.target.files;
     if (!files.length) return;
-
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append("images", files[i]);
     }
-
     try {
       // Post the images to the server
+      setLoading(true);
+
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/uploadImage/image`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
-
+      })
+      setLoading(false);
       // Update gallery with uploaded image URLs
       setPicturePath(response.data);
     } catch (error) {
+      setLoading(false);
       console.error("Error uploading files", error);
     }
   };
@@ -510,7 +511,7 @@ const CreatePost1 = ({
     }
 
     setLoadingPost(true);
-    console.log('loading t/f', loading);
+    // console.log('loading t/f', loading);
 
     const payload = {
       userId: profile._id,
@@ -703,7 +704,7 @@ const CreatePost1 = ({
   };
 
   return (
-    <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-3/4 xl:min-w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
+    <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
       <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
       <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
         <div className={`card-header bg-white border-b-0 p-0`}>
@@ -731,6 +732,13 @@ const CreatePost1 = ({
             </div>
           </div>
         </div>
+        {
+          loading && (
+            <div className="flex justify-center items-center p-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            </div>
+          )
+        }
         {picturePath.length > 0 && (
           <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 px-4">
             {picturePath.map((path, index) => (

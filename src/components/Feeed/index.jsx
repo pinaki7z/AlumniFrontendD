@@ -36,7 +36,7 @@ function Feed({
   const scrollContainerRef = useRef(null);
   const activePageRef = useRef(1);
   const { _id } = useParams();
-  const LIMIT = 40;
+  const LIMIT = 4000;
 
   // Track which comment sections are expanded
   const [visibleComments, setVisibleComments] = useState({});
@@ -66,7 +66,8 @@ function Feed({
         const existing = new Set(prev.map(p => p._id));
         // filter out any duplicates
         const newOnes = postsData.filter(p => !existing.has(p._id));
-        return [...prev, ...newOnes];
+        // return [...prev, ...newOnes];
+        return data.records;
       });
     } catch (err) {
       console.error('Error fetching posts:', err);
@@ -158,19 +159,8 @@ function Feed({
       )}
 
       {showCreateButton && (
-        <div style={{ width: '100%' }}>
-          <button
-            style={{
-              fontFamily: 'Inter',
-              fontWeight: 500,
-              fontSize: 18,
-              backgroundColor: '#efeff0',
-              padding: 20,
-              borderRadius: 8,
-              border: 'none',
-              marginTop: 20,
-            }}
-          >
+        <div className="w-full">
+          <button className="font-inter font-medium text-lg bg-gray-100 p-5 rounded-lg border-none mt-5 hover:bg-gray-200">
             Create
           </button>
         </div>

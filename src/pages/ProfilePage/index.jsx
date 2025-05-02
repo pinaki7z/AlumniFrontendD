@@ -58,6 +58,8 @@ const ProfilePage = () => {
   const findCurrentWorkingAt = () => workExperiences.find(e => e.endMonth === 'current')?.companyName || 'No current work experience';
 
   const handleFileChange = (e, type) => {
+    setLoading(true);
+
     const file = e.target.files[0];
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formData = new FormData();
@@ -66,6 +68,7 @@ const ProfilePage = () => {
       .then((res) => {
         handleSubmit(res.data?.imageUrl, type);
       }).catch((err) => {
+        setLoading(false);
         toast.dismiss()
         toast.error('Upload failed');
       })
@@ -126,14 +129,18 @@ const ProfilePage = () => {
         <input type="file" id="coverInput" className="hidden" onChange={e => handleFileChange(e, 'coverPicture')} />
         <button onClick={() => navigate('/home/profile/profile-settings')} className="absolute border-2 border-gray-300 shadow-xl top-4 right-[150px] bg-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100">Settings</button>
         <button onClick={() => document.getElementById('coverInput').click()} className="absolute border-2 border-gray-300 shadow-xl top-4 right-4 bg-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100">Edit Cover</button>
-        {loading && <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center">Loading...</div>}
+        {loading && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-[0.89] flex items-center justify-center z-50">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          </div>
+        )}
       </div>
 
       {/* Profile Card */}
       <div className="relative bg-white rounded-lg shadow-lg -mt-24 pt-24 pb-6 px-6">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="relative">
-            <img src={profile.profilePicture || "/images/profilepic.jpg"} alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
+            <img src={profile.profilePicture || "/images/profilepic.jpg"} alt="profile" className="w-40 h-40 rounded-full border-4 bg-white border-white object-cover" />
             <button onClick={() => handleDelete('profile')} className="absolute top-1 left-1 bg-white p-1 rounded-full shadow">
               <MdOutlineDelete className="w-5 h-5 text-gray-700" />
             </button>

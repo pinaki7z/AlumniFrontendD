@@ -1,92 +1,72 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import Link from '@ckeditor/ckeditor5-link/src/link'; // Import the Link plugin
-// import AutoLink from '@ckeditor/ckeditor5-link/src/autolink'; 
-// import FileRepository from '@ckeditor/ckeditor5-upload/src/filerepository';
+import axios from 'axios';
 
+const CKeditor = ({ value, onChange, setNewForum }) => {
+  const [editorData, setEditorData] = useState(value || '');
+  const editorRef = useRef();
 
+  function UploadAdapter(loader) {
+    return {
+      upload: () => loader.file.then(file => {
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('image', file);
 
-const CKeditor=({value,onChange,picture,setNewForum})=>{
-    const [editorData, setEditorData] = useState('');
-    const [uploadedPicture, setUploadedPicture] = useState('');
-    const editorRef = useRef();
-    
+        // Post to your single-image upload endpoint
+        return axios.post(
+          `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`,
+          formData,
+          { headers: { 'Content-Type': 'multipart/form-data' } }
+        )
+        .then(response => {
+          const imageUrl = response.data?.imageUrl;
+          // Update parent state with the uploaded image URL
+          setNewForum(prev => ({ ...prev, picture: imageUrl }));
 
-    function toBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+          // Resolve upload for CKEditor
+          return { default: imageUrl };
+        })
+        .catch(error => {
+          console.error('Upload failed:', error);
+          return Promise.reject(error);
         });
-    }
-
-    function UploadAdapter(loader) {    
-            return {
-                upload: () => {
-                    return new Promise(async (resolve, reject) => {
-                        const file = await loader.file;
-                        const base64 = await toBase64(file);
-                        setUploadedPicture(base64);
-                        // picture(base64);
-                        setNewForum((prevForum) => ({ ...prevForum, picture: base64 }));
-                        const body = new FormData();
-                        loader.file.then((file) => {
-                            body.append('picture', base64);
-                            const formDataObject = {};
-                            for (let pair of body.entries()) {
-                                const key = pair[0];
-                                const value = pair[1];
-    
-    
-                                formDataObject[key] = value;
-                                console.log("FORMDATAOBJECT:", formDataObject)
-                            }
-    
-                        })
-                    })
-                }
-            }
-        }
-
-    function UploadPlugin(editor) {
-        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-            return UploadAdapter(loader);
-        };
-    }
-
-    const handleReady = editor => {
-        console.log('Editor is ready to use!', editor);
-        editorRef.current = editor; 
+      })
     };
+  }
 
-    const handleChange = (event, editor) => {
-        let htmlValue = editor.getData(); // Get the HTML content with styles
-
-        // Log the HTML content with styles
-        // console.log("HTML value", htmlValue);
-        htmlValue = htmlValue.replace(/<a href=/g, '<a style="text-decoration: underline;" href=');
-      
-        setEditorData(htmlValue);
-        onChange(htmlValue);
+  function UploadPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = loader => {
+      return UploadAdapter(loader);
     };
-    return (
-        <div className="App">
-            <CKEditor
-                editor={ClassicEditor}
-                config={{
-                    extraPlugins: [UploadPlugin],
-                    // plugins: [ Link,AutoLink,FileRepository],
-                    // toolbar: [ 'link', /* ... */ ],
-                }}
-                value=""
-                onReady={handleReady}
-                onChange={handleChange}
-            />
-        </div>
-    );
-}
+  }
 
+  const handleReady = editor => {
+    console.log('Editor is ready to use!', editor);
+    editorRef.current = editor;
+  };
 
-export default CKeditor
+  const handleChange = (event, editor) => {
+    let data = editor.getData();
+    // Optionally style links
+    data = data.replace(/<a href=/g, '<a style="text-decoration: underline;" href=');
+
+    setEditorData(data);
+    onChange(data);
+  };
+
+  return (
+    <div className="ck-editor-container">
+      <CKEditor
+        editor={ClassicEditor}
+        config={{ extraPlugins: [UploadPlugin] }}
+        data={editorData}
+        onReady={handleReady}
+        onChange={handleChange}
+      />
+    </div>
+  );
+};
+
+export default CKeditor;

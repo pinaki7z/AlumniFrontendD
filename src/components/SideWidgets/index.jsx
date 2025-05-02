@@ -252,7 +252,7 @@ const SideWidgets = () => {
                     <Link to='/home/profile' style={{ textDecoration: 'none', color: 'black' }}>
                         <p className='text-lg font-semibold mb-2'>{profile.firstName}</p>
                     </Link>
-                    <p className='text-sm cursor-pointer  text-green-700 bg-[#6FBC9499] rounded-lg px-1 py-1'>@{profile.firstName}</p>
+                    {/* <p className='text-sm cursor-pointer  text-green-700 bg-[#6FBC9499] rounded-lg px-1 py-1'>@{profile.firstName}</p> */}
                 </div>
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
@@ -343,11 +343,11 @@ const SideWidgets = () => {
                 )}
             </div>
             <div className='invite'>
-                <div>
+                {/* <div>
                     <p style={{ marginBottom: '0rem' }}>Invite Friends</p>
-                </div>
+                </div> */}
 
-                <div className='sideWidget-email' style={{ position: 'relative', width: '100%' }}>
+                {/* <div className='sideWidget-email' style={{ position: 'relative', width: '100%' }}>
                     <input
                         type="text"
                         placeholder='Enter E-mail address'
@@ -370,7 +370,7 @@ const SideWidgets = () => {
                     >
                         <img src={send} alt='send-icon' style={{ width: '20px', height: '20px' }} />
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
