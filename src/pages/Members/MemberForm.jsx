@@ -301,18 +301,16 @@ const MemberForm = ({ edit }) => {
         {formData.userType === 'Student' && (
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium">Class**</label>
-              <select
+              <label className="block text-sm font-medium">Academic Status*</label>
+              <input
+                type="text"
                 name="class"
                 onChange={handleChange}
-                value={formData.class}
+                value={formData.class || ''}
                 className="mt-1 block w-full border border-gray-300 rounded-md focus:ring-[#0A3A4C] focus:border-[#0A3A4C] p-2 text-sm"
-              >
-                <option value="">Select Class</option>
-                {Array.from({ length: 13 }, (_, i) => (
-                  <option key={i} value={i}>{i}</option>
-                ))}
-              </select>
+                min={1}
+                max={13}
+              />
               {errors.class && <p className="text-red-500 text-sm mt-1">{errors.class}</p>}
             </div>
           </div>

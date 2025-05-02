@@ -13,40 +13,6 @@ export const AddMembers = ({type, members}) => {
   const { _id,id } = useParams();
   console.log("members add",members);
 
-  // useEffect(() => {
-  //   const fetchMembers = async () => {
-  //     try {
-  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/groups/${_id}/members`);
-  //       const data = await response.json();
-  //       if (response.ok) {
-  //         setMembers(data.members);
-  //         setOwner(data.owner)
-  //       } else {
-  //         console.error('Failed to fetch members:', data.message || response.statusText);
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to fetch members:', error);
-  //     }
-  //   };
-  //   const fetchForumMembers = async () => {
-  //     console.log('Fetching forum members')
-  //     try {
-  //       const response = await fetch(`${process.env.REACT_APP_API_URL}/forums/${id}/members`);
-  //       const data = await response.json();
-  //       if (response.ok) {
-  //         setMembers(data.members);
-  //         setOwner(data.owner)
-  //       } else {
-  //         console.error('Failed to fetch members:', data.message || response.statusText);
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to fetch members:', error);
-  //     }
-  //   };
-  //   if (type === 'groups') fetchMembers();
-  //   else if(type === 'forums') fetchForumMembers();
-  //   else console.log('not a group or forum');
-  // }, []);
   return (
     <div style={{display: 'flex', gap: '15px'}}>
       {/* <PageTitle title="Add/Remove members" style={{ marginTop: '0px' }} icon={icon} /> */}

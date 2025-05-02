@@ -23,7 +23,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const activePageRef = useRef(1);
-  const LIMIT = 7;
+  const LIMIT = 700;
   const [memberRole, setMemberRole] = useState('');
   const [graduatingYear, setGraduatingYear] = useState('');
   const [department, setDepartment] = useState('');
@@ -33,6 +33,8 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
     admin = true;
   }
+
+  
 
   const totalMembers = membersred.length;
 
@@ -98,7 +100,9 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         }
       });
       if (response.status === 200) {
-        toast.success("Alumni Deleted");
+        toast.dismiss();
+        toast.success(response.data);
+        // console.log("response.data.message", response.data);
         window.location.reload();
       } else {
         console.error('Failed to delete user');
@@ -303,14 +307,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
           </div>
 
         </div>
-        {/* <div style={{ paddingTop: '20px' }}>
-          <button onClick={() => setViewMode('grid')} className="toggle-button">
-            Grid View
-          </button>
-          <button onClick={() => setViewMode('list')} className="toggle-button">
-            List View
-          </button>
-        </div> */}
+      
       </div>
 
       <Routes>
