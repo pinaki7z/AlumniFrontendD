@@ -7,8 +7,9 @@ import axios from 'axios';
 import { toast } from "react-toastify";
 import baseUrl from '../../../config';
 import { Link } from 'react-router-dom';
+// import profilePic from "";
 
-const PollDisplay = ({ poll }) => {
+const PollDisplay = ({ poll, userId , userData}) => {
     const [hasVoted, setHasVoted] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const [updatedPoll, setUpdatedPoll] = useState(null);
@@ -27,7 +28,7 @@ const PollDisplay = ({ poll }) => {
     }, [poll, profile._id]);
 
     const handleVote = async (optionId) => {
-        if (poll.userId === profile._id) {
+        if (userId === profile._id) {
             toast.error("You cannot vote on your own poll.");
             return;
         }
@@ -76,7 +77,7 @@ const PollDisplay = ({ poll }) => {
     };
 
     const handleOpenModal = () => {
-        if (poll.userId === profile._id) {
+        if (userId === profile._id) {
             setModalOpen(true);
         } else {
             toast.error("You are not authorized to view this information.");
@@ -94,20 +95,23 @@ const PollDisplay = ({ poll }) => {
         <>
             <div className='top'>
                 <Link
-                    to={`/home/members/${poll.userId}`}
-                    style={{ textDecoration: "none", color: "black", display: 'flex', alignItems: 'center' }}
+                    to={`/home/members/${userId}`}
+                    className='flex items-center gap-4 no-underline text-black'
                 >
                     {poll.profilePicture ? (
-                        <img src={poll.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                        // <img src={poll.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                        // <Avatar src={userData?.profilePicture} style={{ width: '50px', height: '50px' }} />
+                                      <img src={userData?.profilePicture || "/images/profilepic.jpg"} alt="profile" className="w-12 h-12 rounded-full object-cover" />
+                        
                     ) : (
                         <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
                     )}
-                    <div className='info'>
-                        <h4>{poll.userName}</h4>
-                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(poll.createdAt)}</span>
+                    <div className='flex flex-col'>
+                        <h4 className='font-semibold'>{userData?.firstName} {userData?.lastName}</h4>
+                        <span className='text-sm text-gray-600'>{formatCreatedAt(poll.createdAt)}</span>
                     </div>
                     </Link>
-                    {profile._id === poll.userId && (
+                    {profile._id === userId && (
                         <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
                             <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#003366" />
@@ -118,7 +122,7 @@ const PollDisplay = ({ poll }) => {
             <h3 style={{ fontWeight: '600', fontSize: '20px', paddingTop: '30px', color: '#3A3A3A', fontFamily: 'Inter' }}>{poll.question}</h3>
 
             <div className="options-container">
-                {poll.userId === profile._id && <div className='see-poll-results' style={{ textAlign: 'right' }} onClick={handleOpenModal}>See Poll Results</div>}
+                {userId === profile._id && <div className='see-poll-results' style={{ textAlign: 'right' }} onClick={handleOpenModal}>See Poll Results</div>}
 
                 <form className="poll-form">
                     {optionsWithPercentages.map(option => (

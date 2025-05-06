@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 
 lineSpinner.register();
 
-const EventDisplay = ({ event }) => {
+const EventDisplay = ({ event, userId, userData }) => {
     const profile = useSelector((state) => state.profile);
     const [newEvent, setNewEvent] = useState(event);
     const [attendanceStatus, setAttendanceStatus] = useState(null);
@@ -175,20 +175,20 @@ const EventDisplay = ({ event }) => {
         <>
             <div className='top'>
                 <Link
-                    to={`/home/members/${event.userId}`}
-                    style={{ textDecoration: "none", color: "black", display: 'flex', alignItems: 'center' }}
+                    to={`/home/members/${userId}`}
+                   className="flex items-center gap-4 no-underline text-black"
                 >
-                    {event.profilePicture ? (
-                        <img src={event.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+                    {userData.profilePicture ? (
+                        <img src={userData.profilePicture} className="w-12 h-12 rounded-full object-cover"/>
                     ) : (
                         <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
                     )}
                     <div className='info'>
-                        <h4>{event.userName ? event.userName : null}</h4>
-                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#0a3a4c' }}>{formatCreatedAt(event.createdAt)}</span>
+                        <h4 className="font-semibold">{event.userName ? event.userName : null}</h4>
+                        <span className="text-sm text-gray-600">{formatCreatedAt(event.createdAt)}</span>
                     </div>
                 </Link>
-                {event.userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
+                {userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
                     <img src={postDelete} onClick={handleDeleteEvent} />
                 </IconButton>}
             </div>
@@ -205,7 +205,7 @@ const EventDisplay = ({ event }) => {
             </div>
 
             <div className="options-container">
-                {event.userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={handleOpen}>See event attendees</div>}
+                {userId === profile._id && <div className='see-event-results' style={{ textAlign: 'right', cursor: 'pointer' }} onClick={handleOpen}>See event attendees</div>}
                 <div>
                     <ul style={{ paddingLeft: '0px', display: 'flex', justifyContent: 'space-evenly' }}>
                         <div className="percentage-bar-container">

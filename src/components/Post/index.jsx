@@ -113,7 +113,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   const handleDeletePost = async (userId) => {
-    if (userId === profile._id) {
+    if (userId === profile._id || profile.profileLevel === 0) {
       try {
         await axios.delete(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
         onDeletePost(postId);
@@ -162,14 +162,14 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
         <>
           <div className='flex items-center justify-between'>
             <Link to={`/home/members/${userId}`} className="flex items-center gap-4 no-underline text-black">
-              <img src={profilePic} alt="profile" className="w-12 h-12 rounded-full object-cover" />
+              <img src={profilePicture || profilePic} alt="profile" className="w-12 h-12 rounded-full object-cover" />
               <div className="flex flex-col">
                 <h4 className="font-semibold">{username}</h4>
                 <span className="text-sm text-gray-600">{formatCreatedAt(timestamp)}</span>
               </div>
 
             </Link>
-            {(admin || userId === profile._id) && (
+            {((profile.profileLevel === 0) || (userId === profile._id)) && (
               <img
                 onClick={() => handleDeletePost(userId)}
                 className="w-6 h-6 cursor-pointer"

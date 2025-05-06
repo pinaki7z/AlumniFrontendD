@@ -109,7 +109,7 @@ export const CreateJob = () => {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
             .then((res) => {
-                callback(res.data);
+                callback(res.data.imageUrl);
                 setPicLoading(false);
             })
             .catch((err) => console.log(err));

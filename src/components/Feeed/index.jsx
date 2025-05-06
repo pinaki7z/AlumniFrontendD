@@ -36,7 +36,7 @@ function Feed({
   const scrollContainerRef = useRef(null);
   const activePageRef = useRef(1);
   const { _id } = useParams();
-  const LIMIT = 4000;
+  const LIMIT = 45500;
 
   // Track which comment sections are expanded
   const [visibleComments, setVisibleComments] = useState({});
@@ -179,12 +179,12 @@ function Feed({
                 className="mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
               >
                 <Post
-                  userId={post.userId}
+                  userId={post.userId._id}
                   postId={post._id}
-                  username={`${post.firstName} ${post.lastName}`}
+                  username={`${post.userId.firstName} ${post.userId.lastName}`}
                   text={post.description}
                   image={post.picturePath}
-                  profilePicture={post.profilePicture}
+                  profilePicture={post.userId.profilePicture}
                   video={post.videoPath}
                   timestamp={post.createdAt}
                   likes={post.likes}
@@ -212,27 +212,27 @@ function Feed({
           }
 
           // Job, Poll, Event, News renderers...
-          if (post.type === 'Job' && post.groupID === _id) {
-            return (
-              <div
-                key={post._id}
-                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
-              >
-                <JobIntDisplay
-                  jobId={post._id}
-                  picture={post.coverImage}
-                  jobTitle={post.jobTitle}
-                  location={post.location}
-                  salaryMin={post.salaryMin}
-                  salaryMax={post.salaryMax}
-                  currency={post.currency}
-                  jobType={post.jobType}
-                  category={post.category}
-                  description={post.description}
-                />
-              </div>
-            );
-          }
+          // if (post.type === 'Job' && post.groupID === _id) {
+          //   return (
+          //     <div
+          //       key={post._id}
+          //       className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+          //     >
+          //       <JobIntDisplay
+          //         jobId={post._id}
+          //         picture={post.coverImage}
+          //         jobTitle={post.jobTitle}
+          //         location={post.location}
+          //         salaryMin={post.salaryMin}
+          //         salaryMax={post.salaryMax}
+          //         currency={post.currency}
+          //         jobType={post.jobType}
+          //         category={post.category}
+          //         description={post.description}
+          //       />
+          //     </div>
+          //   );
+          // }
 
           if (post.type === 'poll') {
             return (
@@ -240,7 +240,7 @@ function Feed({
                 key={post._id}
                 className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
               >
-                <PollDisplay poll={post} />
+                <PollDisplay poll={post} userId={post.userId._id} userData={post.userId}/>
               </div>
             );
           }
@@ -251,7 +251,7 @@ function Feed({
                 key={post._id}
                 className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
               >
-                <EventDisplay event={post} />
+                <EventDisplay event={post} userId={post.userId._id} userData={post.userId}/>
               </div>
             );
           }
