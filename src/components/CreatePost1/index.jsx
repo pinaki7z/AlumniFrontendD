@@ -17,7 +17,10 @@ import { Col, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DatePicker from "react-datepicker";
-
+import youtube from "../../images/youtube.svg"; 
+import TextField from '@mui/material/TextField';
+// import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function MyVerticallyCenteredModal(props) {
   const [isEditing, setIsEditing] = useState(false);
@@ -375,57 +378,82 @@ const CreatePost1 = ({
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [youtubeVideoId, setYoutubeVideoId] = useState(null);
+
+  const extractYoutubeVideoId = (url) => {
+    if (!url) return null;
+    
+    // Regular expression patterns for different YouTube URL formats
+    const patterns = [
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/i, // Standard YouTube URL
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/i,    // Embed URL
+      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^?]+)/i,             // Shortened URL
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([^?]+)/i,        // Old embed URL
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([^?]+)/i    // YouTube Shorts URL
+    ];
+    
+    // Try each pattern until we find a match
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    
+    return null;
+  };
+  
+  // Component to render YouTube embed
+  const YouTubeEmbed = ({ videoId }) => {
+    if (!videoId) return null;
+    
+    return (
+      <div className="youtube-embed-container mt-2 px-4">
+        <iframe
+          width="100%"
+          height="315"
+          src={`https://www.youtube.com/embed/${videoId}`}
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+      </div>
+    );
+  };
+  
 
   const onHideModal = (modalVisibility) => {
     setShowModal(modalVisibility);
   };
 
   const handleInputClick = () => {
-    setExpanded(!isExpanded);
+    // setExpanded(!isExpanded);
   };
 
-  const handleFileInputChange = (e) => {
-    const files = Array.from(e.target.files);
+ // Handle YouTube link detection in the input text
+ const handleInputChange = (e) => {
+  const text = e.target.value;
+  setInput(text);
+  
+  // Check for YouTube links in the input
+  const words = text.split(/\s+/);
+  // for (const word of words) {
+  //   const videoId = extractYoutubeVideoId(word);
+  //   if (videoId) {
+  //     setYoutubeVideoId(videoId);
+  //     return; // Stop after finding the first YouTube URL
+  //   }
+  // }
+  
+  // Clear YouTube video ID if no URL is found
+  // setYoutubeVideoId(null);
+};
 
-    if (files.length === 1) {
-      console.log("ONLY ONE IMAGE");
-      const file = files[0];
-      setSelectedFile(file);
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result;
-        setPicturePath(base64String);
-      };
-      reader.readAsDataURL(file);
-
-      setSelectedFiles([]);
-    } else if (files.length > 1) {
-      if (files.length > 5) {
-        alert('Maximum limit is 5 images');
-        return;
-      }
-      setSelectedFile(null);
-      setSelectedFiles(files);
-      const filePromises = files.map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      });
-      Promise.all(filePromises)
-        .then(base64Strings => {
-          console.log('Base64 strings:', base64Strings);
-          setSelectedFiles(base64Strings);
-          setPicturePath(base64Strings);
-        })
-        .catch(error => console.error('Error converting files to base64:', error));
-    }
-
-    console.log(selectedFiles);
-  };
+// Function to clear YouTube video
+const removeYoutubeVideo = () => {
+  setYoutubeVideoId(null);
+};
 
   const handleImageChange = async (e) => {
     const files = e.target.files;
@@ -511,7 +539,6 @@ const CreatePost1 = ({
     }
 
     setLoadingPost(true);
-    // console.log('loading t/f', loading);
 
     const payload = {
       userId: profile._id,
@@ -524,6 +551,11 @@ const CreatePost1 = ({
     if (_id) payload.groupID = _id;
     if (picturePath) payload.picturePath = picturePath;
     if (videoPath) payload.videoPath = videoPath;
+    
+    // Add YouTube video ID if one was detected
+    if (youtubeVideoId) {
+      payload.youtubeVideoId = youtubeVideoId;
+    }
 
     console.log("payload", payload);
 
@@ -535,14 +567,14 @@ const CreatePost1 = ({
       setVideoPath({});
       setInput("");
       setAuthor("");
-      // getPosts();
+      setYoutubeVideoId(null); // Clear YouTube video ID
       onNewPost()
-      // window.location.reload();
     } catch (err) {
       console.log(err);
       setLoadingPost(false);
     }
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -703,174 +735,221 @@ const CreatePost1 = ({
     }
   };
 
+    // Function to manually add a YouTube video
+    const handleAddYoutubeVideo = () => {
+      const url = prompt("Enter YouTube video URL:");
+      if (url) {
+        const videoId = extractYoutubeVideoId(url);
+        if (videoId) {
+          setYoutubeVideoId(videoId);
+        } else {
+          alert("Invalid YouTube URL. Please enter a valid YouTube video link.");
+        }
+      }
+    };
+
   return (
     <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
-      <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
-      <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
-        <div className={`card-header bg-white border-b-0 p-0`}>
-          <div className="flex items-center gap-4 px-4 py-2">
-            <img
-              src={profile.profilePicture || picture}
-              alt="Profile"
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div className="w-full border-b border-gray-300">
-              <textarea
-                value={input}
-                onClick={handleInputClick}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="What's going on??"
-                className="w-full resize-none border-none outline-none placeholder-gray-500 text-lg p-2"
-                rows={isExpanded ? 3 : 1}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    newHandleSubmit(e);
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-        {
-          loading && (
-            <div className="flex justify-center items-center p-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            </div>
-          )
-        }
-        {picturePath.length > 0 && (
-          <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 px-4">
-            {picturePath.map((path, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={path}
-                  alt="Preview"
-                  className="w-full h-32 object-cover rounded-md"
-                />
-                <button
-                  onClick={() => removeMedia(index)}
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
-                >
-                  X
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {videoPath?.videoPath && (
-          <div className="w-full px-4 mt-2">
-            <video
-              src={videoPath?.videoPath}
-              className="w-full h-40 object-cover rounded-md"
-              controls
-            />
-            <div className="flex justify-end mt-1">
-              <button
-                onClick={() => setVideoPath({})}
-                className="bg-red-500 text-white text-sm px-3 py-1 rounded-full"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        )}
-
-        {uploadProgress > 0 && (
-          <div className="mt-2 w-full px-4">
-            <div className="bg-gray-200 rounded-full h-2.5 w-full">
-              <div
-                className="bg-blue-600 h-2.5 rounded-full"
-                style={{ width: `${uploadProgress}%` }}
-              ></div>
-            </div>
-            <p className="text-sm text-gray-500 mt-1">
-              {uploadProgress}% uploaded
-            </p>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between mt-4 px-4">
-          <div className="flex gap-3">
-            <label className="flex gap-1 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
-              <img src={gallery} alt="Gallery" className="w-5 h-5" />
-              <p className="hidden md:block">Image</p>
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-                multiple
-              />
-            </label>
-            <label
-              className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors"
-              onClick={() => setShowPollModal(true)}
-            >
-              <img src={poll} alt="Poll" className="w-5 h-5" />
-              <p className="hidden md:block">Poll</p>
-            </label>
-            {/* <label className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
-              <img src={video} alt="Video" className="w-5 h-5" />
-              <p className="hidden lg:block">Video</p>
-              <input
-                type="file"
-                accept="video/*"
-                className="hidden"
-                onChange={handleVideoChange}
-              />
-            </label> */}
-            {entityType === 'news' && (
-              <>
-                <label className="font-semibold">Add an author</label>
-                <input
-                  type="text"
-                  className="border border-gray-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-300"
-                  onChange={(e) => setAuthor(e.target.value)}
-                />
-              </>
-            )}
-            {_id && (
-              <label
-                onClick={() => setModalShow(true)}
-                className="flex items-center gap-2 border border-green-400 text-black px-4 py-1 rounded-full cursor-pointer text-sm hover:bg-green-100 transition-colors"
-              >
-                <img src={video} alt="Event" className="w-5 h-5" />
-                Event
-              </label>
-            )}
-          </div>
-          <div>
-            <button
-              onClick={newHandleSubmit}
-              disabled={loadingPost}
-              style={{
-                backgroundColor: loadingPost ? "#ccc" : "#0A3A4C",
-                cursor: loadingPost ? "not-allowed" : "pointer",
-              }}
-              className="px-6 py-2 text-white text-lg font-medium rounded shadow transition-colors"
-            >
-              {loadingPost ? 'Posting...' : 'Post'}
-            </button>
+    <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
+    <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
+      <div className={`card-header bg-white border-b-0 p-0`}>
+        <div className="flex items-center gap-4 px-4 py-2">
+          <img
+            src={profile.profilePicture || picture}
+            alt="Profile"
+            className="w-16 h-16 rounded-full object-cover"
+          />
+          <div className="w-full border-b border-gray-300">
+          <TextField
+        value={input}
+        onChange={handleInputChange}
+        placeholder="What's going on??"
+        multiline
+        minRows={1}
+        maxRows={10}
+        fullWidth
+        variant="outlined"
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              border: 'none',
+            },
+          },
+          '& .MuiInputBase-input': {
+            padding: '8px',
+            fontSize: '1.125rem',
+          },
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e);
+          }
+        }}
+      />
           </div>
         </div>
       </div>
-      <PollModal
-        show={showPollModal}
-        onHide={() => setShowPollModal(false)}
-        onCreatePoll={handleCreatePoll}
-      />
-      <MyVerticallyCenteredModal
-        show={modalShow}
-        isEditing={isEditing}
-        selectedEvent={selectedEvent}
-        onHide={() => {
-          setModalShow(false);
-          setSelectedEventDetails(null);
-        }}
-      />
+      {
+        loading && (
+          <div className="flex justify-center items-center p-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        )
+      }
+      {picturePath.length > 0 && (
+        <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 px-4">
+          {picturePath.map((path, index) => (
+            <div key={index} className="relative">
+              <img
+                src={path}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded-md"
+              />
+              <button
+                onClick={() => removeMedia(index)}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center"
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* YouTube Video Preview */}
+      {youtubeVideoId && (
+        <div className="mt-2 px-4">
+          <YouTubeEmbed videoId={youtubeVideoId} />
+          <div className="flex justify-end mt-1">
+            <button
+              onClick={removeYoutubeVideo}
+              className="bg-red-500 text-white text-sm px-3 py-1 rounded-full"
+            >
+              Remove YouTube Video
+            </button>
+          </div>
+        </div>
+      )}
+
+      {videoPath?.videoPath && (
+        <div className="w-full px-4 mt-2">
+          <video
+            src={videoPath?.videoPath}
+            className="w-full h-40 object-cover rounded-md"
+            controls
+          />
+          <div className="flex justify-end mt-1">
+            <button
+              onClick={() => setVideoPath({})}
+              className="bg-red-500 text-white text-sm px-3 py-1 rounded-full"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      )}
+
+      {uploadProgress > 0 && (
+        <div className="mt-2 w-full px-4">
+          <div className="bg-gray-200 rounded-full h-2.5 w-full">
+            <div
+              className="bg-blue-600 h-2.5 rounded-full"
+              style={{ width: `${uploadProgress}%` }}
+            ></div>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">
+            {uploadProgress}% uploaded
+          </p>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mt-4 px-4">
+        <div className="flex gap-3">
+          <label className="flex gap-1 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
+            <img src={gallery} alt="Gallery" className="w-5 h-5" />
+            <p className="hidden md:block">Image</p>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+              multiple
+            />
+          </label>
+          <label
+            className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors"
+            onClick={() => setShowPollModal(true)}
+          >
+            <img src={poll} alt="Poll" className="w-5 h-5" />
+            <p className="hidden md:block">Poll</p>
+          </label>
+          
+          {/* YouTube button */}
+          <label
+            className="flex gap-2 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors"
+            onClick={handleAddYoutubeVideo}
+          >
+            {youtube ? (
+              <img src={youtube} alt="YouTube" className="w-5 h-5" />
+            ) : (
+              <svg className="w-5 h-5" fill="red" viewBox="0 0 24 24">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+              </svg>
+            )}
+            <p className="hidden md:block">YouTube</p>
+          </label>
+          
+          {entityType === 'news' && (
+            <>
+              <label className="font-semibold">Add an author</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded px-2 py-1 outline-none focus:ring-2 focus:ring-green-300"
+                onChange={(e) => setAuthor(e.target.value)}
+              />
+            </>
+          )}
+          {_id && (
+            <label
+              onClick={() => setModalShow(true)}
+              className="flex items-center gap-2 border border-green-400 text-black px-4 py-1 rounded-full cursor-pointer text-sm hover:bg-green-100 transition-colors"
+            >
+              <img src={video} alt="Event" className="w-5 h-5" />
+              Event
+            </label>
+          )}
+        </div>
+        <div>
+          <button
+            onClick={newHandleSubmit}
+            disabled={loadingPost}
+            style={{
+              backgroundColor: loadingPost ? "#ccc" : "#0A3A4C",
+              cursor: loadingPost ? "not-allowed" : "pointer",
+            }}
+            className="px-6 py-2 text-white text-lg font-medium rounded shadow transition-colors"
+          >
+            {loadingPost ? 'Posting...' : 'Post'}
+          </button>
+        </div>
+      </div>
     </div>
+    <PollModal
+      show={showPollModal}
+      onHide={() => setShowPollModal(false)}
+      onCreatePoll={handleCreatePoll}
+    />
+    <MyVerticallyCenteredModal
+      show={modalShow}
+      isEditing={isEditing}
+      selectedEvent={selectedEvent}
+      onHide={() => {
+        setModalShow(false);
+        setSelectedEventDetails(null);
+      }}
+    />
+  </div>
   );
 };
 export default CreatePost1;

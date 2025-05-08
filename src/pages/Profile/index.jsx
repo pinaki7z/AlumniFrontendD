@@ -117,7 +117,7 @@ const Profile = () => {
       <div className="relative bg-white rounded-lg shadow-lg -mt-24 pt-24 pb-10 mb-10 px-6">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="relative">
-            <img src={member.profilePicture} alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
+            <img src={member.profilePicture || profilePic} alt="profile" className="w-40 h-40 rounded-full border-4 border-white object-cover" />
 
           </div>
         </div>

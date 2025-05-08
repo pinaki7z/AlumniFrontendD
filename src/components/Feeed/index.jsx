@@ -181,6 +181,7 @@ function Feed({
                 <Post
                   userId={post.userId._id}
                   postId={post._id}
+                  post={post}
                   username={`${post.userId.firstName} ${post.userId.lastName}`}
                   text={post.description}
                   image={post.picturePath}

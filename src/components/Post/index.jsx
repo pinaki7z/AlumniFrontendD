@@ -22,7 +22,7 @@ import { IoLogoLinkedin } from "react-icons/io5";
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, LinkedinIcon, TwitterIcon, WhatsappIcon } from "react-share";
 
-function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick }) {
+function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick, post }) {
   const PrevButton = ({ onClick }) => {
     return <button className="slick-arrow slick-prev bg-gray-800 text-white py-1 px-3 rounded" onClick={onClick}>Previous</button>;
   };
@@ -200,7 +200,23 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   <img src={image[0]} alt="Post" className="w-full object-cover" />
                 </div>
               ) : null}
-              {video && (
+            
+              {post.youtubeVideoId && (
+                <div className="relative mt-4">
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${post.youtubeVideoId}`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+              
+            
+              {/* {video && (
                 <div className="relative mt-4">
                   <video
                     ref={videoRef}
@@ -220,7 +236,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                     <PlayCircleOutlineRoundedIcon fontSize='large' className="text-white" />
                   </div>
                 </div>
-              )}
+              )} */}
             </Link>
           </div>
           {entityType === 'posts' && (

@@ -60,6 +60,22 @@ const PollDisplay = ({ poll, userId , userData}) => {
         }
     };
 
+    const deletePoll = async () => {
+        try {
+            const response = await axios.delete(`${process.env.REACT_APP_API_URL}/poll/${poll._id}`);
+            if (response.status === 200) {
+                toast.success('Poll deleted successfully.');
+                window.location.reload();
+            } else {
+                console.error('Unexpected response status:', response.status, response.message);
+                alert('An unexpected error occurred. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error deleting poll:', error);
+            toast.error(error.response.data.message);
+        }
+    };
+
     const formatCreatedAt = (timestamp) => {
         const options = { hour: 'numeric', minute: 'numeric', hour12: true };
         const timeString = new Date(timestamp).toLocaleTimeString(undefined, options);
@@ -112,7 +128,7 @@ const PollDisplay = ({ poll, userId , userData}) => {
                     </div>
                     </Link>
                     {profile._id === userId && (
-                        <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
+                        <IconButton onClick={deletePoll}  className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
                             <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#003366" />
                             </svg>
