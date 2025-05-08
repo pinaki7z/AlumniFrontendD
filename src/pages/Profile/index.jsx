@@ -18,7 +18,8 @@ import { toast } from "react-toastify";
 const Profile = () => {
   const { id } = useParams();
   const members = useSelector((state) => state.member);
-  const member = members.find((member) => member._id === id);
+  // const member = members.find((member) => member._id === id);
+  const [member, setMember ] = useState({});
   const profile = useSelector((state) => state.profile);
   const [isFollowing, setIsFollowing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,25 +27,35 @@ const Profile = () => {
   let [isAdded, setIsAdded] = useState();
  
 
-  useEffect(() => {
-    const checkFollowingStatus = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`
-        );
-        const followingDetails = response.data.followingDetails;
-        const isUserFollowing = followingDetails.some(
-          (detail) => detail.userId === member._id
-        );
-        setIsFollowing(isUserFollowing);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error checking following status:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const checkFollowingStatus = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`
+  //       );
+  //       const followingDetails = response.data.followingDetails;
+  //       const isUserFollowing = followingDetails.some(
+  //         (detail) => detail.userId === member._id
+  //       );
+  //       setIsFollowing(isUserFollowing);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error checking following status:", error);
+  //     }
+  //   };
 
-    checkFollowingStatus();
-  }, [member._id, profile._id]);
+  //   checkFollowingStatus();
+  // }, [member._id, profile._id]);
+
+  const getAlumni =async()=>{
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/alumni/${id}`
+    );
+    setMember(response.data)
+  }
+  useEffect(()=>{
+    getAlumni();
+  },[])
 
 
   const handleFollowToggle = async () => {
@@ -86,7 +97,7 @@ const Profile = () => {
   const isGroupURL = window.location.href.includes("http://localhost:3000/groups/");
   const isForumURL = window.location.href.includes("http://localhost:3000/forums/");
 
-  const currentWork = member.workExperience.find(
+  const currentWork = member?.workExperience?.find(
     (exp) => exp.endMonth.toLowerCase() === "current"
   );
   if (!member) {
@@ -111,11 +122,11 @@ const Profile = () => {
           </div>
         </div>
         <div className="bg-white-100 b-6 ">
-          <div className="text-center space-y-3">
+          <div className="text-center ">
             <h2 className="text-2xl font-bold text-gray-800">
               {member.firstName} {member.lastName}
             </h2>
-            <p className="text-sm uppercase text-gray-600">
+            <p className="text-sm uppercase text-gray-600 mb-6">
               {member.profileLevel === 1
                 ? "ADMIN"
                 : member.profileLevel === 2
@@ -126,12 +137,12 @@ const Profile = () => {
             </p>
             <p className="text-base text-gray-700">
               {member.aboutMe ||
-                "Passionate soul, chasing dreams, inspiring others, embracing life's adventures joyfully."}
+                "No bio provided."}
             </p>
             <div className="flex justify-center space-x-4">
-              <button className="px-4 py-2 underline text-violet-500 font-semibold ">
+              {/* <button className="px-4 py-2 underline text-violet-500 font-semibold ">
                 Message
-              </button>
+              </button> */}
               <button
   onClick={handleFollowToggle}
   className={`px-4 py-2  underline font-semibold ${isFollowing?"text-red-500":"text-blue-500"}`}
@@ -176,7 +187,7 @@ const Profile = () => {
             entityType="posts"
             showCreatePost={false}
             showDeleteButton={true}
-            userId={member._id}
+            userId={id}
           />
         </div>
 
