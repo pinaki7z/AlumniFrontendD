@@ -382,7 +382,7 @@ const IndividualGroup = () => {
                                                             </button>
                                                         </div>
                                                     ))}
-                                                <Link to={`/groups/${_id}/add`} style={{ color: 'black', textDecoration: 'none' }}>
+                                                <Link to={`/home/groups/${_id}/add`} style={{ color: 'black', textDecoration: 'none' }}>
                                                     <div style={{ padding: '10px' }}>View All Group Members</div>
                                                 </Link>
 

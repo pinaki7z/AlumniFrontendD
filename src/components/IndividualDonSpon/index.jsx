@@ -72,7 +72,7 @@ const IndividualDonSpon = () => {
               {/* Image */}
               <div>
                 <img
-                  src={donation.picturePath || picture}
+                  src={donation.picturePath || donation.backgroundImage || picture}
                   alt={
                     location.pathname.includes('/sponsorships')
                       ? 'sponsorship image'
@@ -85,7 +85,7 @@ const IndividualDonSpon = () => {
               {/* Description */}
               <div>
                 <p className="text-lg font-semibold">
-                  {donation.eventDescription ||
+                  {donation.eventDescription || donation.businessDescription ||
                     "Lorem Ipsum is simply dummy text of the printing and typesetting industry..."}
                 </p>
               </div>
@@ -120,7 +120,8 @@ const IndividualDonSpon = () => {
                     <div className="flex gap-2 mt-2">
                       <p className="font-medium text-blue-800">Business Plan:</p>
                       <a
-                        href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
+                        href={`${donation.businessPlan}`}
+                        // href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline"

@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Bconnect from '../../components/Groups/Bconnect';
 import baseUrl from '../../config';
+import CreateDonation from './CreateDonation';
 
 const Donations = () => {
   const navigate = useNavigate();
@@ -153,8 +154,8 @@ const Donations = () => {
           }
         />
         <Route path="/:_id" element={<IndividualDonSpon />} />
-        <Route path="/create" element={<DonSponRequest name="donation" />} />
-        <Route path="/edit/:_id" element={<DonSponRequest name="donation" edit={true} />} />
+        <Route path="/create" element={<CreateDonation name="donation" />} />
+        <Route path="/edit/:_id" element={<CreateDonation name="donation" edit={true} />} />
       </Routes>
 
       <Routes>

@@ -86,7 +86,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
                                     {/* Image */}
                                     <div className="w-full rounded-xl overflow-hidden">
                                         <img
-                                            src={donation.picturePath ? donation.picturePath : picture}
+                                            src={donation.picturePath|| donation.backgroundImage || picture}
                                             alt="Event"
                                             className="h-[180px] w-full object-cover rounded-xl"
                                         />

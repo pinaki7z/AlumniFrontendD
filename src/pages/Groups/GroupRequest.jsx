@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -40,8 +40,25 @@ const GroupRequest = ({ edit }) => {
 
   };
 
+  const fetchGroup = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/${_id}`);
+      setGroupName(response.data.groupName);
+      setGroupType(response.data.groupType);
+      setCategory(response.data.category);
+      setBackground(response.data.groupBackground);
+      setGroupLogo(response.data.groupLogo);
+    } catch (error) {
+      console.error("Error fetching group:", error);
+    }
+  }
   // Construct payload
  
+  useEffect(() => {
+    if (edit) {
+      fetchGroup();
+    }
+  }, [edit]);
 
   const validateForm = () => {
     const newErrors = {};
