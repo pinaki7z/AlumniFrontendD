@@ -209,25 +209,27 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
               className={`rounded-lg py-3 px-3 border border-gray-600 mb-1 hover:bg-gray-100 ${topBar && "overflow-x-hidden"}`}
             >
               <div className={` font-medium text-gray-800 ${topBar?"text-sm":"text-lg"}`}>
-                {notification.commented ? (
-                  <span>
-                    <Link
-                      to={`/members/${notification.userId}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {notification.requestedUserName}
-                    </Link>{" "}
-                    has commented on your{" "}
-                    <a
-                      href={`/home/posts/${notification.postId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      post
-                    </a>.
-                  </span>
-                ) : notification.link ? (
+                {
+                // notification.commented ? (
+                //   <span>
+                //     <Link
+                //       to={`/members/${notification.userId}`}
+                //       className="text-blue-600 hover:underline"
+                //     >
+                //       {notification.requestedUserName}
+                //     </Link>{" "}
+                //     has commented on your{" "}
+                //     <a
+                //       href={`/home/posts/${notification.postId}`}
+                //       target="_blank"
+                //       rel="noopener noreferrer"
+                //       className="text-blue-600 hover:underline"
+                //     >
+                //       post
+                //     </a>.
+                //   </span>
+                // ) :
+                 notification.link ? (
                   <span>
                     <Link
                       to={`/members/${notification.userId}`}

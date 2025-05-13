@@ -68,20 +68,83 @@ function MyVerticallyCenteredModal(props) {
     cEmail: "",
     location: "",
   });
+  const [errors, setErrors] = useState({});
+
 
   const [allEvents, setAllEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent]);
 
+
+  const validate = () => {
+    const errs = {};
+    if (!newEvent.title?.trim()) errs.title = 'Event title is required';
+    if (!newEvent.cName?.trim()) errs.cName = 'Coordinator name is required';
+    if (!newEvent.picture?.trim()) errs.picture = 'Event Image is required';
+    if (!newEvent.start) errs.start = 'Start date is required';
+    if (!newEvent.end) errs.end = 'End date is required';
+    if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) errs.end = 'End date cannot be before start date';
+    if (priceType === 'paid') {
+      if (!amount || amount <= 0) errs.amount = 'Valid amount is required';
+    }
+    if (!newEvent.location?.trim()) errs.location = 'Location is required';
+    // if (!newEvent.cNumber?.trim()) errs.cNumber = 'Coordinator number is required';
+     // Coordinator number (ensure string)
+     const cNum = newEvent.cNumber != null ? String(newEvent.cNumber) : '';
+     if (!cNum.trim()) errs.cNumber = 'Coordinator number is required';
+     else if (!/^\d{10}$/.test(cNum)) errs.cNumber = 'Enter a valid 10-digit number';
+ 
+    else if (!/^\d{10}$/.test(newEvent.cNumber)) errs.cNumber = 'Enter a valid 10-digit number';
+    if (!newEvent.cEmail?.trim()) errs.cEmail = 'Coordinator email is required';
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(newEvent.cEmail)) errs.cEmail = 'Enter a valid email';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+  const fetchEvent = async ()=>{
+  if(props.isEditing===true){
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`);
+      setNewEvent((prev)=>{
+        return {
+          ...prev,
+          title: res.data.title,
+          start: new Date(res.data.start),
+          end: new Date(res.data.end),
+          startTime: res.data.startTime,
+          endTime: res.data.endTime,
+          picture: res.data.picture,
+          cName: res.data.cName,
+          cNumber: res.data.cNumber,
+          cEmail: res.data.cEmail,
+          location: res.data.location,
+        }
+      })
+      console.log(res.data);
+     }catch(err){
+      console.log(err);
+     }
+  }
+  }
+
+  useEffect(()=>{
+    fetchEvent();
+  },[props.isEditing])
   // Handle image file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewEvent({ ...newEvent, picture: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+   
+    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const formDataImage = new FormData();
+    formDataImage.append('image', file);
+
+    axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
+    .then((res)=>{
+      setNewEvent((prev)=>{ 
+        return {
+          ...prev,
+          picture: res.data?.imageUrl
+        }
+       })
+    })
   };
 
   // Handle form input changes
@@ -97,7 +160,9 @@ function MyVerticallyCenteredModal(props) {
 
   // Add new event
   const handleAddEvent = async () => {
-    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
+
+    if(validate()){
+      const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
       newEvent;
 
     // if (!title || !start || !end || !picture) {
@@ -158,58 +223,62 @@ function MyVerticallyCenteredModal(props) {
     } catch (error) {
       console.error("Error creating event:", error);
     }
+    }
+   
   };
 
   // Edit event
   const handleEditEvent = async () => {
+   if(validate()){
     const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
-      newEvent;
-    const eventId = props.selectedEvent._id;
+    newEvent;
+  const eventId = props.selectedEvent._id;
 
-    if (!title || !start || !end) {
-      alert("Please provide title, start date, and end date.");
-      return;
-    }
+  if (!title || !start || !end) {
+    alert("Please provide title, start date, and end date.");
+    return;
+  }
 
-    try {
-      const formattedStart = format(new Date(start), "yyyy-MM-dd");
-      const formattedEnd = format(new Date(end), "yyyy-MM-dd");
+  try {
+    const formattedStart = format(new Date(start), "yyyy-MM-dd");
+    const formattedEnd = format(new Date(end), "yyyy-MM-dd");
 
-      const updatedEvent = {
-        title,
-        start: formattedStart,
-        end: formattedEnd,
-        startTime,
-        endTime,
-        picture,
-        cName,
-        cNumber,
-        cEmail,
-        location,
-        priceType,
-        amount: priceType === "paid" ? amount : "0",
-        currency: priceType === "paid" ? currency : "",
-      };
+    const updatedEvent = {
+      title,
+      start: formattedStart,
+      end: formattedEnd,
+      startTime,
+      endTime,
+      picture,
+      cName,
+      cNumber,
+      cEmail,
+      location,
+      priceType,
+      amount: priceType === "paid" ? amount : "0",
+      currency: priceType === "paid" ? currency : "",
+    };
 
-      await axios.put(`${process.env.REACT_APP_API_URL}/events/${eventId}`, updatedEvent, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    await axios.put(`${process.env.REACT_APP_API_URL}/events/${eventId}`, updatedEvent, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      const updatedEvents = allEvents.map((event) =>
-        event._id === eventId ? updatedEvent : event
-      );
+    const updatedEvents = allEvents.map((event) =>
+      event._id === eventId ? updatedEvent : event
+    );
 
-      setAllEvents(updatedEvents);
-      setSelectedEvent(null);
-      props.onHide();
-      toast.success("Event updated successfully.");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating event:", error);
-      alert("Error updating event. Please try again.");
-    }
+    setAllEvents(updatedEvents);
+    setSelectedEvent(null);
+    props.onHide();
+    toast.success("Event updated successfully.");
+    window.location.reload();
+  } catch (error) {
+    console.error("Error updating event:", error);
+    alert("Error updating event. Please try again.");
+  }
+   }
   };
 
   // If the modal is not visible, don't render anything
@@ -243,214 +312,211 @@ function MyVerticallyCenteredModal(props) {
         {/* Body */}
         <div className="p-6 bg-[#f8fafc] max-h-[60vh] thin-scroller overflow-y-auto rounded-b-xl">
           <form className="space-y-4">
-            {/* Event Title */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Event Title
-              </label>
+          <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Title</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Enter event title"
+            value={newEvent.title}
+            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+            required
+          />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+        </div>
+
+        {/* Start and End Date */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Start Date</label>
+            <DatePicker
+              className="w-full border border-gray-300 rounded p-2"
+              selected={newEvent.start}
+              onChange={(date) => handleDateChange(date, 'start')}
+              placeholderText="Select start date"
+              required
+            />
+            {errors.start && <p className="text-red-500 text-sm mt-1">{errors.start}</p>}
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">End Date</label>
+            <DatePicker
+              className="w-full border border-gray-300 rounded p-2"
+              selected={newEvent.end}
+              onChange={(date) => handleDateChange(date, 'end')}
+              placeholderText="Select end date"
+              required
+            />
+            {errors.end && <p className="text-red-500 text-sm mt-1">{errors.end}</p>}
+          </div>
+        </div>
+
+        {/* Start and End Time */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Start Time</label>
+            <input
+              type="time"
+              className="w-full border border-gray-300 rounded p-2"
+              value={newEvent.startTime}
+              onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">End Time</label>
+            <input
+              type="time"
+              className="w-full border border-gray-300 rounded p-2"
+              value={newEvent.endTime}
+              onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
+            />
+          </div>
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Location</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Event Location"
+            value={newEvent.location}
+            onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+            required
+          />
+          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+        </div>
+
+        {/* Free / Paid Radio Buttons */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Type</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center space-x-2">
               <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Enter event title"
-                value={newEvent.title}
-                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                required
+                type="radio"
+                value="free"
+                checked={priceType === 'free'}
+                onChange={(e) => setPriceType(e.target.value)}
               />
-            </div>
-
-            {/* Start and End Date */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  Start Date
-                </label>
-                <DatePicker
-                  className="w-full border border-gray-300 rounded p-2"
-                  selected={newEvent.start || new Date()}
-                  onChange={(date) => handleDateChange(date, "start")}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  End Date
-                </label>
-                <DatePicker
-                  className="w-full border border-gray-300 rounded p-2"
-                  selected={newEvent.end || new Date()}
-                  onChange={(date) => handleDateChange(date, "end")}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Start and End Time */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  Start Time
-                </label>
-                <input
-                  type="time"
-                  className="w-full border border-gray-300 rounded p-2"
-                  value={newEvent.startTime}
-                  onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">
-                  End Time
-                </label>
-                <input
-                  type="time"
-                  className="w-full border border-gray-300 rounded p-2"
-                  value={newEvent.endTime}
-                  onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
-                />
-              </div>
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Location
-              </label>
+              <span>Free</span>
+            </label>
+            <label className="flex items-center space-x-2">
               <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Event Location"
-                value={newEvent.location}
-                onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                required
+                type="radio"
+                value="paid"
+                checked={priceType === 'paid'}
+                onChange={(e) => setPriceType(e.target.value)}
               />
+              <span>Paid</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Conditionally render the price and currency input */}
+        {priceType === 'paid' && (
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(parseFloat(e.target.value))}
+              className="w-24 border border-gray-300 rounded p-2"
+              required
+            />
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="border border-gray-300 rounded p-2"
+            >
+              <option value="INR">INR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="JYN">JYN</option>
+            </select>
+            {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
+          </div>
+        )}
+
+        {/* Coordinator Name */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Name</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Name"
+            value={newEvent.cName}
+            onChange={(e) => setNewEvent({ ...newEvent, cName: e.target.value })}
+          />
+            {errors.cName && <p className="text-red-500 text-sm mt-1">{errors.cName}</p>}
+
+        </div>
+
+        {/* Coordinator Number */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Number</label>
+          <input
+            type="number"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Number"
+            value={newEvent.cNumber}
+            onChange={(e) => setNewEvent({ ...newEvent, cNumber: e.target.value })}
+            required
+          />
+          {errors.cNumber && <p className="text-red-500 text-sm mt-1">{errors.cNumber}</p>}
+        </div>
+
+        {/* Coordinator Email */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Email</label>
+          <input
+            type="email"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Email"
+            value={newEvent.cEmail}
+            onChange={(e) => setNewEvent({ ...newEvent, cEmail: e.target.value })}
+            required
+          />
+          {errors.cEmail && <p className="text-red-500 text-sm mt-1">{errors.cEmail}</p>}
+        </div>
+
+        {/* File Input */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300"
+          />
+          {errors.picture && <p className="text-red-500 text-sm mt-1">{errors.picture}</p>}
+          {newEvent.picture && (
+            <div className="mt-2">
+              <img src={newEvent.picture} alt="Event" className="max-w-full h-auto" />
+              <button
+                type="button"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
+                onClick={() => setNewEvent({ ...newEvent, picture: null })}
+              >
+                Remove
+              </button>
             </div>
+          )}
+        </div>
 
-            {/* Free / Paid Radio Buttons */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Event Type
-              </label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    value="free"
-                    checked={priceType === "free"}
-                    onChange={(e) => setPriceType(e.target.value)}
-                  />
-                  <span>Free</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    value="paid"
-                    checked={priceType === "paid"}
-                    onChange={(e) => setPriceType(e.target.value)}
-                  />
-                  <span>Paid</span>
-                </label>
-              </div>
-            </div>
-
-            {/* Conditionally render the price and currency input */}
-            {priceType === "paid" && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(parseFloat(e.target.value))}
-                  className="w-24 border border-gray-300 rounded p-2"
-                />
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="border border-gray-300 rounded p-2"
-                >
-                  <option value="INR">INR</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="JYN">JYN</option>
-                </select>
-              </div>
-            )}
-
-            {/* Coordinator Name */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Coordinator Name
-              </label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Name"
-                value={newEvent.cName}
-                onChange={(e) => setNewEvent({ ...newEvent, cName: e.target.value })}
-              />
-            </div>
-
-            {/* Coordinator Number */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Coordinator Number
-              </label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Number"
-                value={newEvent.cNumber}
-                onChange={(e) => setNewEvent({ ...newEvent, cNumber: e.target.value })}
-                required
-              />
-            </div>
-
-            {/* Coordinator Email */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Coordinator Email
-              </label>
-              <input
-                type="email"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Email"
-                value={newEvent.cEmail}
-                onChange={(e) => setNewEvent({ ...newEvent, cEmail: e.target.value })}
-                required
-              />
-            </div>
-
-            {/* File Input */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Event Image
-              </label>
-              <input
-                type="file"
-                onChange={handleImageChange}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-gray-200 file:text-gray-700
-                  hover:file:bg-gray-300"
-              />
-            </div>
-
-            {/* Create Group Checkbox (only if not editing) */}
-            {!props.isEditing && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="create-group"
-                  checked={createGroup}
-                  onChange={(e) => setCreateGroup(e.target.checked)}
-                  className="h-4 w-4 text-indigo-600"
-                />
-                <label htmlFor="create-group" className="text-gray-700">
-                  Create a group with the same event title
-                </label>
-              </div>
-            )}
+        {/* Create Group Checkbox (only if not editing) */}
+        {!props.isEditing && (
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="create-group"
+              checked={createGroup}
+              onChange={(e) => setCreateGroup(e.target.checked)}
+              className="h-4 w-4 text-indigo-600"
+            />
+            <label htmlFor="create-group" className="text-gray-700">
+              Create a group with the same event title
+            </label>
+          </div>
+        )}
           </form>
         </div>
 

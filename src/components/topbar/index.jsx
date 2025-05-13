@@ -31,6 +31,7 @@ lineSpinner.register()
 
 
 const TopBar = ({ handleLogout }) => {
+    const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
     const [showPopover, setShowPopover] = useState(false);
     const [showProfileOptions, setShowProfileOptions] = useState(false);
@@ -158,45 +159,7 @@ const TopBar = ({ handleLogout }) => {
             >
                 <div className="h-full flex items-center  text-white w-[94%] justify-between md:pr-[70px]"
                 >
-                    {/* <div className='top'>
-                        <img src={logo} alt="io" width='150px' height='40px' />
-                        <div>
-                            <a href="/">
-                                <button style={{ cursor: 'pointer', backgroundColor: 'rgb(255 255 255 / 15%)' }}><FaHome />Home</button>
-                            </a>
-                        </div>
-                        <div>
-                            <OverlayTrigger
-                                trigger="click"
-                                key='bottom'
-                                show={showPopover}
-                                placement='bottom'
-                                overlay={
-                                    <Popover id={`popover-positioned-bottom`}>
-                                        <Popover.Body>
-                                            <div className='img-job-vide' style={{ flexDirection: 'column', gap: '10px' }}>
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/groups/create" style={{ textDecoration: 'none', color: 'black' }}><HiUserGroup style={{ color: 'ffcf63' }} /> Create Group</a>
-                                                </label>
-                                                <button style={{ backgroundColor: '#f3f3f3', color: 'black', padding: '5px 10px' }} onClick={() => {
-                                                    setShowModal(true);
-                                                }}><BiSolidBriefcase style={{ color: 'black' }} />Create Job</button>
-                                                {showModal && <JobsInt modalShow={showModal} onHideModal={onHideModal} popover={popover} />}
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/donations/create" style={{ textDecoration: 'none', color: 'black' }}><BsCurrencyRupee style={{ color: 'c8d1da' }} /> Create Donations</a>
-                                                </label>
-                                                <label style={{ backgroundColor: '#f3f3f3', textAlign: 'center', color: 'black', padding: '5px 10px', cursor: 'pointer', borderRadius: '3em' }}>
-                                                    <a href="/sponsorships/create" style={{ textDecoration: 'none', color: 'black' }}><GoSponsorTiers style={{ color: '#d8887d' }} /> Create Sponsorships</a>
-                                                </label>
-                                            </div>
-                                        </Popover.Body>
-                                    </Popover>
-                                }
-                            >
-                                <button onClick={() => setShowPopover(!showPopover)} style={{ backgroundColor: '#174873' }}><FaPlus />Create</button>
-                            </OverlayTrigger>
-                        </div>
-                    </div> */}
+                   
                      {/* Hamburger Menu for Mobile */}
         <div className="md:hidden  " style={{ zIndex: 50 }}>
           <IconButton onClick={toggleDrawer(true)}>
@@ -304,7 +267,7 @@ const TopBar = ({ handleLogout }) => {
                         </div>
                         {showProfileOptions && (
                             <ul className="profile-options" >
-                                <a href="/home/profile" style={{ textDecoration: 'none', color: 'black' }}><li>Profile</li></a>
+                                <li onClick={() => navigate('/home/profile')} style={{ cursor: 'pointer', textDecoration: 'none', color: 'black' }}>Profile</li>
                                 {/* {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
                                     <a href="/settings" style={{ textDecoration: 'none', color: 'black' }}>
                                         <li>Settings</li>

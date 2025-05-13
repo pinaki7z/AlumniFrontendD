@@ -19,7 +19,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
     const [edit, setEdit] = useState(false);
     const navigateTo = useNavigate();
     const [displayCount, setDisplayCount] = useState(2);
-    console.log('sponsorships', donations)
+    // console.log('sponsorships', donations)
 
 
     useEffect(() => {
@@ -55,14 +55,14 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
             toast.success(`Successfully deleted ${name} details`);
             if (name === "donations") {
                 setTimeout(() => {
-                    navigateTo('/donations');
+                    navigateTo('/home/donations');
                     window.location.reload();
                 }, 1000);
             }
 
             if (name === "sponsorships") {
                 setTimeout(() => {
-                    navigateTo('/sponsorships');
+                    navigateTo('/home/sponsorships');
                     window.location.reload();
                 }, 1000);
             }
@@ -74,13 +74,13 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
     const handleLoadMore = () => {
         updateDonations();
     };
-
+    console.log('donations', donations)
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-3  gap-2 px-2 py-3">
+            <div className="grid grid-cols-2 md:grid-cols-3  gap-2 px-2 py-3">
                 {donations !== undefined && donations.length > 0 ? (
                     donations.map((donation) => (
-                        <Link to={`/home/${name}/${donation._id}`} className=''>
+                        <Link to={`/home/${name}/${donation._id}`} className='mb-3'>
                             <div className="px-2">
                                 <div className="p-4 rounded-xl shadow-md hover:shadow-lg transition duration-300 bg-[#EAF5EF] border border-[#0A3A4C]">
                                     {/* Image */}
@@ -94,14 +94,14 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
 
                                     {/* Content */}
                                     <div className="mt-4">
-                                        <h2 className="text-2xl font-bold capitalize text-[#136175]">{donation.businessName || donation.nameOfEvent || "Title"}</h2>
+                                        <h2 className="text-lg font-bold capitalize text-[#136175]">{donation.businessName || donation.nameOfEvent || "Title"}</h2>
 
-                                        <h3 className="text-lg font-semibold capitalize text-[#136175] mt-1">
+                                        <h3 className="text-base font-semibold capitalize text-[#136175] mt-1">
                                             {donation.name || donation.nameOfOrganiser}
                                         </h3>
 
-                                        <p className="text-gray-500 text-sm mt-1">{formatDate(donation.createdAt)}</p>
-                                        <p className="text-gray-700 text-sm mt-2">
+                                        <p className="text-gray-500 text-xs mt-1">{formatDate(donation.createdAt)}</p>
+                                        <p className="text-gray-700 text-xs mt-2">
                                             {donation.eventDescription?.length > 40
                                                 ? `${donation.eventDescription.substring(0, 40)}...`
                                                 : donation.eventDescription}

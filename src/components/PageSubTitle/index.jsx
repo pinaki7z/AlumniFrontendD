@@ -4,8 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 
 const PageSubTitle = ({ buttontext1, buttontext2, buttontext3,buttontext4,buttontext5, buttontext1Link, buttontext2Link, buttontext3Link,buttontext4Link, buttontext5Link, name, create }) => {
   const location = useLocation();
-  console.log('button2',buttontext2Link);
-  console.log('button1',buttontext1Link);
+  // console.log('button2',buttontext2Link);
+  // console.log('button1',buttontext1Link);
 
   const oldDesign =()=>{
     return (

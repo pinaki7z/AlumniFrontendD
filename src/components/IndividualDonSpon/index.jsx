@@ -64,7 +64,7 @@ const IndividualDonSpon = () => {
                   Posted on {formatDate(donation.createdAt)}<br />
                   By{" "}
                   <span className="font-bold text-xl text-[#136175]">
-                    {donation.userName || "Superadmin"}
+                    {donation.userName || donation.nameOfOrganiser || "Superadmin"}
                   </span>
                 </p>
               </div>

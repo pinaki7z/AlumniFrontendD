@@ -31,11 +31,12 @@ const Donations = () => {
   const [loading, setLoading] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
-  const LIMIT = 4;
+  const LIMIT = 40;
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);
 
-  const admin = profile.profileLevel === 2 || profile.profileLevel === 3;
+  const admin = profile.profileLevel === 0 || profile.profileLevel === 1;
+  const alumni = profile.profileLevel === 2;
 
   const getPosts = async () => {
     setLoading(true);
@@ -72,6 +73,7 @@ const Donations = () => {
         `${process.env.REACT_APP_API_URL}/donations/user/${profile._id}`
       );
       setUserDonations(response.data.donations);
+      // console.log("user donations", response.data.donations);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -167,12 +169,12 @@ const Donations = () => {
             />
             <Route path="/businessConnect" element={<Bconnect />} />
           </>
-        ) : (
+        ) :alumni ? (
           <Route
             path="/my-donation-requests"
             element={<BrowseDonations donSpon={userDonations} name="donations" />}
           />
-        )}
+        ) : null}
         {/* browse businesses */}
         <Route
           path="/"

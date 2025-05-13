@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Technology from '../../images/pexels-pixabay-356056.jpg';
 import Retail from '../../images/pexels-pixabay-264636.jpg';
@@ -10,6 +10,7 @@ import Finance from '../../images/pexels-lukas-590041.jpg';
 import axios from 'axios';
 
 const CreateDonation = ({ edit }) => {
+  const {_id} = useParams();
   const profile = useSelector(state => state.profile);
   const navigate = useNavigate();
   const [fullName, setFullName] = useState(`${profile.firstName} ${profile.lastName}`);
@@ -46,6 +47,32 @@ const CreateDonation = ({ edit }) => {
       setPicturePath('');
     }
   };
+
+  const fetchDonation = async () => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/donations/${_id}`);
+    const data = response.data;
+    setFullName(data.name);
+    setEmail(data.email);
+    setPhone(data.phone);
+    setAmount(data.amount);
+    setBusinessName(data.businessName);
+    setIndustry(data.industry);
+    setBusinessDescription(data.businessDescription);
+    setTargetMarket(data.targetMarket);
+    setCompetitiveAdvantage(data.competitiveAdvantage);
+    setCurrentRevenue(data.currentRevenue);
+    setFundingGoal(data.fundingGoal);
+    setTeamExperience(data.teamExperience);
+    setMarketingStrategy(data.marketingStrategy);
+    setBusinessPlan(data.businessPlan);
+    setBackgroundImage(data.backgroundImage);
+  }
+
+  useEffect(()=>{
+    if(edit && _id){
+      fetchDonation();
+    }
+  },[edit, _id])
 
   const handleBusinessPlanChange = (e) => {
     // setBusinessPlan(e.target.files[0]);
@@ -97,14 +124,21 @@ const CreateDonation = ({ edit }) => {
         backgroundImage
       };
 
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/donations/create`, body);
+      let response;
 
-      if (response.status === 201) {
-        toast.success('Donation request created successfully');
+      if (edit && _id) {
+        response = await axios.put(`${process.env.REACT_APP_API_URL}/donations/${_id}`, body);
+      } else {
+        response = await axios.post(`${process.env.REACT_APP_API_URL}/donations/create`, body);
+      }
+
+      if (response.status === 201 || response.status === 200) {
+        toast.success(`Donation request ${edit ? 'updated' : 'created'} successfully`);
         navigate('/home/donations');
+        window.location.reload();
       } else {
         const errorData = response.data;
-        toast.error(errorData.error || 'Failed to create donation request');
+        toast.error(errorData.error || `Failed to ${edit ? 'update' : 'create'} donation request`);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -214,7 +248,7 @@ const CreateDonation = ({ edit }) => {
             type="file"
             accept=".pdf"
             onChange={handleBusinessPlanChange}
-            required
+            
             className="block text-sm text-gray-600"
           />
 
@@ -248,7 +282,7 @@ const CreateDonation = ({ edit }) => {
             type="file"
             accept="image/*"
             onChange={handleBackgroundImageChange}
-            required
+            // required
             className="block text-sm text-gray-600"
           />
 

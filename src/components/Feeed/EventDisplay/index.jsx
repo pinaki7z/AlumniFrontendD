@@ -183,8 +183,8 @@ const EventDisplay = ({ event, userId, userData }) => {
                     ) : (
                         <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
                     )}
-                    <div className='info'>
-                        <h4 className="font-semibold">{event.userName ? event.userName : null}</h4>
+                    <div className=''>
+                        <h4 className="font-semibold">{(userData.firstName + ' ' + userData.lastName) || 'N/A'}</h4>
                         <span className="text-sm text-gray-600">{formatCreatedAt(event.createdAt)}</span>
                     </div>
                 </Link>

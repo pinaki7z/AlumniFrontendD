@@ -12,6 +12,7 @@ import DonSponRequest from '../../components/DonSponRequest';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import baseUrl from '../../config';
+import CreatesSponsorship from './CreateSponsorship';
 
 
 const Sponsorships = () => {
@@ -28,14 +29,14 @@ const Sponsorships = () => {
   const profile = useSelector((state) => state.profile);
 
   const [loading, setLoading] = useState(false);
-  const LIMIT = 4;
+  const LIMIT = 40;
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);
   let admin;
-  if (profile.profileLevel === 3 || profile.profileLevel === 1) {
+  if (profile.profileLevel === 3 || profile.profileLevel === 1 || profile.profileLevel === 0) {
     admin = true;
   }
-  if (profile.profileLevel === 3 || profile.profileLevel === 1) {
+  if (profile.profileLevel === 3 || profile.profileLevel === 1 || profile.profileLevel === 0) {
     buttontext2 = 'My Sponsorship Requests';
   }
 
@@ -94,15 +95,7 @@ const Sponsorships = () => {
         <div style={{ margin: '1rem 0', textAlign: 'right' }}>
           <button
             onClick={() => navigate('/home/sponsorships/create')}
-            style={{
-              padding: '10px 20px',
-              backgroundColor: '#71be95',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '16px'
-            }}
+            className='font-semibold px-3 py-3 bg-[#0f4c5e] text-white rounded-md hover:bg-[#136175]'
           >
             Create Sponsorship Request
           </button>
@@ -112,8 +105,8 @@ const Sponsorships = () => {
         <Route path="/" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin} />} />
         <Route path="/my-sponsorship-requests" element={<PageSubTitle buttontext1={buttontext1} buttontext2={buttontext2} buttontext1Link={buttontext1Link} buttontext2Link={buttontext2Link} name='sponsorships' create={admin} />} />
         <Route path="/:_id" element={<IndividualDonSpon />} />
-        <Route path="/create" element={<DonSponRequest name='sponsorship' />} />
-        <Route path="/edit/:_id" element={<DonSponRequest name='sponsorship' edit={true} />} />
+        <Route path="/create" element={<CreatesSponsorship name='sponsorship' />} />
+        <Route path="/edit/:_id" element={<CreatesSponsorship name='sponsorship' edit={true} />} />
       </Routes>
       <Routes>
         {profile.profileLevel === 0 ? (
