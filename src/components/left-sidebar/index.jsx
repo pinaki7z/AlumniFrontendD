@@ -44,7 +44,7 @@ const LeftSidebar = () => {
     }, []);
 
     return (
-        <div className='side-bar-resp'>
+        <div className='side-bar-resp overflow-y-auto'>
             <div style={{ textAlign: 'center', marginTop: '3em' }}>
                 <a href="/home" style={{ textDecoration: 'none', cursor: 'pointer' }}>
                     <img src={io} alt="" width="230px" height="110px" style={{ borderRadius: '8px' }} />
@@ -68,6 +68,8 @@ const LeftSidebar = () => {
                     {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}
                     <li><Link to="/home/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>
                     {/* <li><Link to="/settings" style={{ textDecoration: 'none' }}><MdSettings className="dashboard-icon" /><p>Settings</p></Link></li> */}
+                    <li>{(profile.profileLevel===0 ) && <Link to="/home/validate-user" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Member C-Panel</p></Link>}</li>
+
                 </ul>
             </div>
         </div>

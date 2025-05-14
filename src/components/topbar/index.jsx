@@ -28,8 +28,6 @@ import LeftSidebar from '../left-sidebar';
 lineSpinner.register()
 
 
-
-
 const TopBar = ({ handleLogout }) => {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);

@@ -44,6 +44,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import "./Dashboard.css"
 import MemberForm from "../Members/MemberForm.jsx";
+import ValidateUser from "../ValidateUser/ValidateUser.jsx";
 const Dashboard = ({ handleLogout }) => {
 
   const location = useLocation();
@@ -182,6 +183,7 @@ const Dashboard = ({ handleLogout }) => {
             />
             <Route path="/news/:id/*" element={<NewsDetails />} />
             <Route path="/news/createNews" element={<CreateNews />} />
+            <Route path="/validate-user" element={<ValidateUser />} />
           </Routes>
           {/* <div className="chatbox-container" style={{ position: 'fixed', right: '0', bottom: '0', width: '300px', backgroundColor: 'white' }}>
             <Chatbox />
