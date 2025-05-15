@@ -59,13 +59,14 @@ export const AppliedJobs = ({searchQuery}) => {
                     <div>Loading...</div>
                 ) : filteredJobs.length === 0 ? (
                     <div>No applied jobs found.</div>
-                ) : (<div style={{width: '100%',display: 'flex', gap: '4vw',flexWrap: 'wrap'}}>
+                ) : (<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
                     {filteredJobs.map((job) => (
-                        <div key={job._id} className="job-post" style={{width: '45%'}}>
+                        <div key={job._id} className="job-post" >
                             <JobPost
                                 userId={job.userId}
                                 id={job._id}
+                                job={job}
                                 jobTitle={job.title}
                                 employmentType={job.employmentType}
                                 description={job.description}

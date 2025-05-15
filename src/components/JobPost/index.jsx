@@ -12,7 +12,7 @@ import { RiHomeSmileLine } from "react-icons/ri";
 import baseUrl from "../../config";
 import { BsPatchCheckFill } from "react-icons/bs";
 
-const JobPost = ({ 
+const JobPost = ({ job,
   userId, id, jobTitle, title, titleS, description, salaryMin, 
   createdAt, picture, salaryMax, duration, jobType, questions, 
   category, currency, attachments, appliedCandidates, searchQuery, 
@@ -116,12 +116,13 @@ const JobPost = ({
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300"
+      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 h-[380px]"
       onClick={handleClick}
     >
-      <div className="h-48 w-full overflow-hidden">
+      <div className="h-48 w-full relative overflow-hidden">
+          {<div className="absolute bottom-2 right-2 bg-primary text-white px-2 py-1 rounded ">{job?.type}</div>}
         <img
-          src={dummy}
+          src={job?.coverImage ||dummy}
           alt="Default"
           className="object-cover w-full h-full"
         />
@@ -168,7 +169,7 @@ const JobPost = ({
               <p>{Object.keys(locationType).find(key => locationType[key])}</p>
             </div>
           )}
-          <div className="flex items-center text-gray-600">
+          {/* <div className="flex items-center text-gray-600">
             <AiFillGold className="mr-2" />
             <p>{category}</p>
           </div>
@@ -177,7 +178,7 @@ const JobPost = ({
             <p>{type}</p> <span className="bg-blue-100 ml-3 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
               {employmentType}
             </span>
-          </div>
+          </div> */}
             
         </div>
         {appliedCandidates && appliedCandidates.map(candidate => {

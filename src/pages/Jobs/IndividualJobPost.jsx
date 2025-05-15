@@ -473,15 +473,37 @@ const IndividualJobPost = () => {
     }
     else starButtonText = 'Star'
 
+    const dummyContent = {
+        responsibility: `Collaborate with cross-functional teams to achieve organizational goals.
+Ensure timely completion of assigned tasks and deliverables.
+Maintain clear and effective communication with internal and external stakeholders.
+Contribute to process improvement initiatives and recommend best practices.
+Maintain accurate records and documentation as required.
+Support team operations through administrative or technical assistance.
+Adhere to company policies, procedures, and standards.
+Assist in problem-solving and offer creative solutions to challenges.
+Participate in meetings, training sessions, and workshops.
+Manage workload efficiently in a fast-paced environment.
+        `,
+        qualification: `Bachelor's degree in Computer Science or related field.
+Proficiency in programming languages such as Java, Python, or C++.
+Experience with data structures and algorithms.
+Strong problem-solving and analytical skills.
+Good communication and interpersonal skills.
+Ability to work independently and as part of a team.
+Experience with version control systems such as Git.
+
+        `
+    }
 
 
     return (
-        <div className="job-post-container">
-            <div className="job-post-header">
+        <div className="mx-5 ">
+            <div className="border border-gray-600 mt-4 shadow-md rounded-lg ">
                 <img
                     src={jobs.coverImage || coverImage}
                     alt="Job Cover"
-                    className="job-post-cover"
+                    className="w-full h-[350px] object-cover"
                 />
             </div>
             <div className="job-post-content">
@@ -490,116 +512,116 @@ const IndividualJobPost = () => {
                     <p className="company-name">{jobs.company || "Company Name"}</p>
                     <div className="job-description">
                         <h2>Job Description</h2>
-                        <p>{jobs.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
+                        <p>{jobs.description }</p>
                     </div>
-                    <div className="job-responsibilities">
-                        <h2>Responsibilities</h2>
+                    <div className="">
+                        <h2 className="text-xl mb-1  font-bold ">Responsibilities</h2>
                         <p>
-                            {jobs.responsibilities || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+                            {(jobs.responsibility || dummyContent.responsibility).split('\n').map((line, index) => (
+                                <span key={index}>
+                                    {line}
+                                    <br />
+                                </span>
+                            ))}
                         </p>
                     </div>
-                    <div className="job-qualifications">
-                        <h2>Qualifications</h2>
-                        <p>{jobs.qualifications || "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}</p>
+                    <div className="">
+                        <h2 className="text-xl mb-1  font-bold ">Qualifications</h2>
+                        <p>
+                        {(jobs.qualification || dummyContent.qualification).split('\n').map((line, index) => (
+                                <span key={index}>
+                                    {line}
+                                    <br />
+                                </span>
+                            ))}
+                            </p>
                     </div>
                 </div>
-                <div className="job-overview">
-                    <div style={{
-                        backgroundColor: "#f4f4f4", borderRadius: "10px",
-                        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                    }}>
+                <div className="  p-4">
+  <div className="bg-gray-100 rounded-xl shadow-md p-6">
+    <h2 className="text-2xl font-semibold text-gray-800 mb-6">Job Overview</h2>
 
-
-                        <h2>Job Overview</h2>
-                        <div style={{ padding: '15px' }}>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <FaCalendarAlt />
-                                    </div>
-                                    <div>
-                                        <span className="key">Date Posted</span>
-                                        <span className="value">{jobs.datePosted || "N/A"}</span>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <div>
-                                        <FaCalendarAlt />
-                                    </div>
-
-                                    <div>
-                                        <span className="key">Apply By</span>
-                                        <span className="value">{jobs.applyBy || "N/A"}</span>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <div>
-                                        <FaMapMarkerAlt />
-                                    </div>
-
-                                    <div>
-                                        <span className="key">Location</span>
-                                        <span className="value">{jobs.location || "N/A"}</span>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <div>
-                                        <FcBriefcase />
-                                    </div>
-
-                                    <div>
-                                        <span className="key">Category</span>
-                                        <span className="value">{jobs.category || "N/A"}</span>
-                                    </div>
-
-                                </li>
-                                <li>
-                                    <div>
-                                        <GiMoneyStack />
-                                    </div>
-                                    <div>
-                                        <span className="key">Salary</span>
-                                        <span className="value">{jobs.salaryMin} - {jobs.salaryMax}</span>
-                                </div>
-
-                            </li>
-                        </ul>
-                        <div className="ijp-candidates-button">
-                            {jobs.userId === profile._id ? (
-                                <>
-                                    {viewCandidatesButton}
-
-                                </>
-                            ) : (
-                                isApplied ? (
-                                    <>
-                                        <button style={{ backgroundColor: '#a3e3ff' }}>Applied</button>
-                                        {/* <span style={{fontSize: '15px', color: 'blueviolet', cursor: 'default'}}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{profile.appliedJobs[0].status? profile.appliedJobs[0].status: null}</span> */}
-                                    </>
-                                ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
-                                    <>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button onClick={() => setModalShow(true)} style={{ backgroundColor: '#174873', padding: '7px 20px' }}>Apply</button>
-                                        <button style={{ backgroundColor: '#ab021b', marginLeft: '10px', padding: '7px 20px' }} onClick={() => handleStarred(jobs._id)}>{starLoading ? 'Loading...' : starButtonText}</button>
-                                        <MyVerticallyCenteredModal
-                                            show={modalShow}
-                                            onHide={() => setModalShow(false)}
-                                        />
-                                    </>
-                                )
-                            )}
-                        </div>
-                        <CandidatesModal />
-                    </div>
-                </div>
-            </div>
+    <ul className="space-y-4">
+      <li className="flex items-start space-x-4">
+        <FaCalendarAlt className="text-blue-500 text-xl mt-1" />
+        <div>
+          <span className="block text-gray-600 font-medium">Date Posted</span>
+          <span className="text-gray-800">{jobs.datePosted || "N/A"}</span>
         </div>
-            {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */ }
+      </li>
+
+      <li className="flex items-start space-x-4">
+        <FaCalendarAlt className="text-green-500 text-xl mt-1" />
+        <div>
+          <span className="block text-gray-600 font-medium">Apply By</span>
+          <span className="text-gray-800">{jobs.applyBy || "N/A"}</span>
+        </div>
+      </li>
+
+      <li className="flex items-start space-x-4">
+        <FaMapMarkerAlt className="text-red-500 text-xl mt-1" />
+        <div>
+          <span className="block text-gray-600 font-medium">Location</span>
+          <span className="text-gray-800">{jobs.location || "N/A"}</span>
+        </div>
+      </li>
+
+      <li className="flex items-start space-x-4">
+        <FcBriefcase className="text-xl mt-1" />
+        <div>
+          <span className="block text-gray-600 font-medium">Category</span>
+          <span className="text-gray-800">{jobs.category || "N/A"}</span>
+        </div>
+      </li>
+
+      <li className="flex items-start space-x-4">
+        <GiMoneyStack className="text-yellow-500 text-xl mt-1" />
+        <div>
+          <span className="block text-gray-600 font-medium">Salary</span>
+          <span className="text-gray-800">{jobs.salaryMin} - {jobs.salaryMax}</span>
+        </div>
+      </li>
+    </ul>
+
+    <div className="mt-6 flex flex-wrap gap-4">
+      {jobs.userId === profile._id ? (
+        <>
+          {viewCandidatesButton}
+        </>
+      ) : isApplied ? (
+        <>
+          <button className="bg-blue-200 text-blue-800 px-5 py-2 rounded font-medium" disabled>
+            Applied
+          </button>
+        </>
+      ) : profile.profileLevel === 0 || profile.profileLevel === 1 ? (
+        <></>
+      ) : (
+        <>
+          <button
+            onClick={() => setModalShow(true)}
+            className="bg-blue-900 hover:bg-blue-800 text-white px-5 py-2 rounded transition duration-200"
+          >
+            Apply
+          </button>
+          <button
+            onClick={() => handleStarred(jobs._id)}
+            className="bg-red-700 hover:bg-red-600 text-white px-5 py-2 rounded transition duration-200"
+          >
+            {starLoading ? 'Loading...' : starButtonText}
+          </button>
+
+          <MyVerticallyCenteredModal show={modalShow} onHide={() => setModalShow(false)} />
+        </>
+      )}
+    </div>
+
+    <CandidatesModal />
+  </div>
+</div>
+
+            </div>
+            {/* <ApplyModal show={modalShow} onHide={() => setModalShow(false)} /> */}
         </div >
     )
 
