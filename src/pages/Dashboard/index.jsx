@@ -45,6 +45,8 @@ import { useState } from "react";
 import "./Dashboard.css"
 import MemberForm from "../Members/MemberForm.jsx";
 import ValidateUser from "../ValidateUser/ValidateUser.jsx";
+import V2PhotoGallery from "../PhotoGallery/V2PhotoGallary.jsx";
+
 const Dashboard = ({ handleLogout }) => {
 
   const location = useLocation();
@@ -116,7 +118,8 @@ const Dashboard = ({ handleLogout }) => {
             )}
             <Route path="/donations/*" element={<Donations />} />
             <Route path="/guidance/*" element={<Guidance />} />
-            <Route path="/photo-gallery/*" element={<PhotoGallery />} />
+            {/* <Route path="/photo-gallery/*" element={<PhotoGallery />} /> */}
+            <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
             <Route path="/sponsorships/*" element={<Sponsorships />} />
             <Route path="/members/*" element={<div style={{ width: '100%', padding: '0% 5%' }}><Members showHeading={true} /></div>} />
             <Route path="/members/create" element={

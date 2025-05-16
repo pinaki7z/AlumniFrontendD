@@ -109,14 +109,15 @@ const MemberForm = ({ edit }) => {
 
   return (
     <div className="my-8 mx-10 bg-white rounded-lg">
-
-
+      
+      <div className='flex justify-between items-center mb-4'>
+      <h1 className='text-2xl md:text-3xl font-bold mb-4'>{edit ? 'Edit Member' : 'Create a New Member'}</h1>
       <div>
         <button onClick={() => setModalOpen(true)} className="bg-[#0A3A4C] text-white px-4 py-2 rounded hover:bg-[#0A3A4C]">
           Bulk Upload
         </button>
       </div>
-      <h1 className='text-2xl md:text-3xl font-bold mb-4'>{edit ? 'Edit Member' : 'Create a New Member'}</h1>
+      </div>
       {modalOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"

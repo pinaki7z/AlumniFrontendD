@@ -42,7 +42,7 @@ const PhotoGallery = () => {
 
       const departments = [...new Set(folderData.map((folder) => folder.department))]; // Get unique departments
       setDepartments(departments);
-
+      // console.log("folderData", folderData);
       const imagesByYear = {};
       for (const folder of folderData) {
         const { link, date, department } = folder;
@@ -110,24 +110,7 @@ const PhotoGallery = () => {
 
   return (
     <div className="photoGallery min-h-[80vh]" style={{ width: "100%", padding: "2% 5%" }}>
-      {/* <div
-        style={{
-          textAlign: "left",
-          padding: "20px",
-          borderRadius: "10px",
-          marginBottom: "10px",
-          backgroundColor: "#71be95",
-        }}
-      >
-        <h2 style={{ margin: "0", color: "white" }}>Photo Gallery</h2>
-        <p style={{ marginTop: "10px", fontSize: "15px", color: "black" }}>
-          Relive memorable moments and explore highlights through our community’s captured moments.
-        </p>
-        <Button variant="success" className="mt-3" onClick={openUploadModal}>
-          <Upload size={16} className="me-2" />
-          Add Google Drive Link
-        </Button>
-      </div> */}
+     
 
       <div className='bg-[#cef3df] p-4 rounded-lg mb-3'>
         <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Photo Gallery</h2>

@@ -26,12 +26,12 @@ const JobPost = ({ job,
   const [deleteModalShow, setDeleteModalShow] = useState(false);
 
   const handleClick = () => {
-    if (type === 'Job') {
+    if (type) {
       navigateTo(`/home/jobs/${id}/Jobs`);
     }
-    if (type === 'Internship') {
-      navigateTo(`/home/internships/${id}/Internships`);
-    }
+    // if (type === 'Internship') {
+    //   navigateTo(`/home/internships/${id}/Internships`);
+    // }
   }
 
   function MyVerticallyCenteredModal(props) {

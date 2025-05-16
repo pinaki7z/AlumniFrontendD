@@ -167,7 +167,9 @@ export const CreateJob = () => {
         question: formData.question,
         description: formData.description,
         coverImage: coverUrl,
-        attachments: attachmentUrls
+        attachments: attachmentUrls,
+        qualification: formData.qualification,
+        responsibility: formData.responsibility
       };
 
       const response = await fetch(

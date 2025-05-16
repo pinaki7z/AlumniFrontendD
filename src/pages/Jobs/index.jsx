@@ -39,7 +39,7 @@ const Jobs = () => {
     );
 
     // now just your own jobs
-const myJobs = filteredJobs.filter(job => job.userId === profile._id);
+    const myJobs = filteredJobs.filter(job => job.userId === profile._id);
 
     return (
         <div className="flex flex-col w-full py-[2%] px-[5%]">
@@ -67,7 +67,7 @@ const myJobs = filteredJobs.filter(job => job.userId === profile._id);
                     All Jobs
                 </NavLink>
 
-            { profile.profileLevel === 2 &&   <NavLink
+                {profile.profileLevel === 2 && <NavLink
                     to="/home/jobs/myJobs"
                     className={({ isActive }) =>
                         isActive
@@ -77,9 +77,9 @@ const myJobs = filteredJobs.filter(job => job.userId === profile._id);
                 >
                     My Jobs
                 </NavLink>
-}
+                }
                 {/* only for students */}
-                {[2,3].includes(profile.profileLevel) && <>
+                {[2, 3].includes(profile.profileLevel) && <>
                     <NavLink
                         to="/home/jobs/starred"
                         className={({ isActive }) =>
@@ -104,31 +104,31 @@ const myJobs = filteredJobs.filter(job => job.userId === profile._id);
                 </>}
             </div>
 
-           <div className='flex justify-between'>
-             {/* Filter dropdown */}
-             <div className="flex items-center mb-6">
-                <label htmlFor="typeFilter" className="mr-4 font-medium text-gray-700">
-                    Filter by Type:
-                </label>
-                <select
-                    id="typeFilter"
-                    value={typeFilter}
-                    onChange={(e) => setTypeFilter(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2"
-                >
-                    <option>All</option>
-                    <option>Job</option>
-                    <option>Internship</option>
-                    <option>Part time</option>
-                    <option>Full time</option>
-                </select>
+            <div className='flex justify-between'>
+                {/* Filter dropdown */}
+                <div className="flex items-center mb-6">
+                    <label htmlFor="typeFilter" className="mr-4 font-medium text-gray-700">
+                        Filter by Type:
+                    </label>
+                    <select
+                        id="typeFilter"
+                        value={typeFilter}
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="border border-gray-300 rounded px-3 py-2"
+                    >
+                        <option>All</option>
+                        <option>Job</option>
+                        <option>Internship</option>
+                        <option>Part time</option>
+                        <option>Full time</option>
+                    </select>
+                </div>
+            {[0,1,2].includes(profile.profileLevel) &&     <div>
+                    <button className='bg-[#136175] text-white py-2 px-4 rounded'>
+                        <Link to="/home/jobs/create">Create Job</Link>
+                    </button>
+                </div>}
             </div>
-            <div>
-                <button className='bg-[#136175] text-white py-2 px-4 rounded'>
-                    <Link to="/home/jobs/create">Create Job</Link>
-                </button>
-            </div>
-           </div>
             {/* Route-based content */}
             <Routes>
                 <Route
@@ -221,45 +221,45 @@ const myJobs = filteredJobs.filter(job => job.userId === profile._id);
                     }
                 />
                 <Route
-  path="/myJobs"
-  element={
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      {loading ? (
-        <div>Loading…</div>
-      ) : myJobs.length ? (
-        myJobs.map(job => (
-          <JobPost
-            key={job._id}
-            userId={job.userId}
-            job={job}
-            id={job._id}
-            jobTitle={job.title}
-            employmentType={job.employmentType}
-            description={job.description}
-            salaryMin={job.salaryMin}
-            salaryMax={job.salaryMax}
-            picture={job.picture}
-            duration={job.duration}
-            jobType={job.jobType || job.internshipType}
-            questions={job.questions}
-            category={job.category}
-            currency={job.currency}
-            createdAt={job.createdAt}
-            attachments={job.attachments}
-            title={title}
-            titleS={titleS}
-            type={job.type}
-            searchQuery={searchQuery}
-            locationType={job.locationType}
-            company={job.company}
-          />
-        ))
-      ) : (
-        <div>No jobs posted</div>
-      )}
-    </div>
-  }
-/>
+                    path="/myJobs"
+                    element={
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            {loading ? (
+                                <div>Loading…</div>
+                            ) : myJobs.length ? (
+                                myJobs.map(job => (
+                                    <JobPost
+                                        key={job._id}
+                                        userId={job.userId}
+                                        job={job}
+                                        id={job._id}
+                                        jobTitle={job.title}
+                                        employmentType={job.employmentType}
+                                        description={job.description}
+                                        salaryMin={job.salaryMin}
+                                        salaryMax={job.salaryMax}
+                                        picture={job.picture}
+                                        duration={job.duration}
+                                        jobType={job.jobType || job.internshipType}
+                                        questions={job.questions}
+                                        category={job.category}
+                                        currency={job.currency}
+                                        createdAt={job.createdAt}
+                                        attachments={job.attachments}
+                                        title={title}
+                                        titleS={titleS}
+                                        type={job.type}
+                                        searchQuery={searchQuery}
+                                        locationType={job.locationType}
+                                        company={job.company}
+                                    />
+                                ))
+                            ) : (
+                                <div>No jobs posted</div>
+                            )}
+                        </div>
+                    }
+                />
                 <Route
                     path="/applied"
                     element={
