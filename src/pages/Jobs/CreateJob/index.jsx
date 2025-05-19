@@ -442,25 +442,7 @@ export const CreateJob = () => {
           </div>
         )}
 
-        {/* Category */}
-        <div className="mb-4">
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleSelectChange}
-            className="mt-1 block w-full rounded-md border border-gray-300 p-2"
-          >
-            <option>Other</option>
-            <option>Admin & Office</option>
-            <option>Art & Design</option>
-            <option>Business Operations</option>
-            <option>Healthcare</option>
-            <option>Management</option>
-            <option>Retail & Sales</option>
-          </select>
-        </div>
+      
 
         {/* Location Type */}
         <fieldset className="mb-4">

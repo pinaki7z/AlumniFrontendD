@@ -121,6 +121,7 @@ const JobPost = ({ job,
     >
       <div className="h-48 w-full relative overflow-hidden">
           {<div className="absolute bottom-2 right-2 bg-primary text-white px-2 py-1 rounded ">{job?.type}</div>}
+          
         <img
           src={job?.coverImage ||dummy}
           alt="Default"
@@ -131,7 +132,7 @@ const JobPost = ({ job,
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold">
             {jobTitle}
-            {verified && <BsPatchCheckFill size={20} className="text-green-500 inline-block ml-1" />}
+            {job?.approved && <BsPatchCheckFill size={25} className="text-green-500 inline-block ml-1" />}
           </h2>
           {((profile.profileLevel === 0 || profile.profileLevel === 1) || userId === profile._id) && (
             <div className="relative">

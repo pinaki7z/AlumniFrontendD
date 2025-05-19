@@ -156,10 +156,13 @@ const SideWidgets = () => {
 
 
     const followingIds = profile.following.map((follow) => follow.userId);
-    const peopleYouMayKnow = members.filter(member => !followingIds.includes(member._id));
+    const peopleYouMayKnow = members.filter(member => !followingIds.includes(member._id) && member._id !== profile._id);
 
-    const displayedMembers = peopleYouMayKnow.slice(0, currentPage * itemsPerPage);
-
+    const displayedMembers = peopleYouMayKnow;
+    console.log('peopleYouMayKnow', peopleYouMayKnow)
+    console.log('followingIds', followingIds)
+      console.log('members', members)
+    console.log('displayedMembers', displayedMembers)
     const handleFollowToggle = async (memberId, firstName, lastName) => {
         setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: true }));
         try {
@@ -268,7 +271,7 @@ const SideWidgets = () => {
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>People You May Know</p>
                     <button style={{ border: 'none', backgroundColor: '#0a3a4c' }}><TbReload style={{ color: '#F8F8FF' }} /></button>
                 </div>
-                <div className='w-full px-2'>
+                <div className='w-full px-2 max-h-[300px] overflow-y-auto'>
                     {displayedMembers.map((member, index) => (
                         <div key={member._id} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', border: '1px solid #e9e9e9', borderRadius: '10px', width: '100%' }}>
                             <div className='w-full'>
@@ -292,9 +295,9 @@ const SideWidgets = () => {
                             ></l-line-spinner> : <>Follow</>}</button>
                         </div>
                     ))}
-                    {peopleYouMayKnow.length > displayedMembers.length && (
+                    {/* {peopleYouMayKnow.length > displayedMembers.length && (
                         <p onClick={() => setCurrentPage(currentPage + 1)} style={{ color: '#0a3a4c', borderRadius: '10px', borderColor: 'white', padding: '10px', marginTop: '10px', cursor: 'pointer', fontWeight: '500' }}>See More</p>
-                    )}
+                    )} */}
                 </div>
 
             </div>
@@ -305,7 +308,8 @@ const SideWidgets = () => {
                     <p style={{ marginBottom: '0rem', marginTop: '0rem' }}>{onlineCount}</p>
                 </div>
             </div>
-            <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center mt-4">
+            {/* Latest Activities */}
+            {/* <div className="w-full bg-[#6FBC9426] border border-[#e0e0e0] shadow-md rounded-lg flex flex-col items-center justify-center mt-4">
                 <div className="sideWidget2-post-header">
                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Latest Activities</p>
                     <button style={{ border: 'none', backgroundColor: '#0a3a4c' }}><TbReload onClick={fetchNotifications} style={{
@@ -341,7 +345,7 @@ const SideWidgets = () => {
                         </div>
                     ))
                 )}
-            </div>
+            </div> */}
             <div className='invite'>
                 {/* <div>
                     <p style={{ marginBottom: '0rem' }}>Invite Friends</p>

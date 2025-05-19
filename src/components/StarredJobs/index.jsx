@@ -56,12 +56,12 @@ export const StarredJobs = ({searchQuery}) => {
 
     return (
         <div className="job-poztt" style={{width: '100%'}}>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="">
                 {loading ? (
                     <div>Loading...</div>
                 ) : filteredJobs.length === 0 ? (
                     <div>No starred jobs found.</div>
-                ) : (<div style={{width: '100%',display: 'flex', gap: '4vw', flexWrap: 'wrap'}}>
+                ) : (<div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
 
                     {filteredJobs.map((job) => (
                         <div key={job._id} className="job-post">
