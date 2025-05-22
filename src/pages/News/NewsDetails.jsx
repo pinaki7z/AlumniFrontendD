@@ -1,8 +1,12 @@
+import moment from 'moment';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
-
+import axios from 'axios';
 const NewsDetails = () => {
+  const profile = useSelector((state) => state.profile);
+  const navigate = useNavigate()
     const location = useLocation();
     const { userId, postId, description, title, createdAt, picturePath, videoPath, department, onDeletePost,author,picture } = location.state || {};
 
@@ -44,14 +48,35 @@ const NewsDetails = () => {
         return `${day}${daySuffix(day)} ${month} ${year}`;
     };
 
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+        if (confirmDelete) {
+            try {
+                const res = await axios.delete(`${process.env.REACT_APP_API_URL}/news/${postId}`);
+                navigate('/home/news')
+            } catch (error) {
+                console.error('Error deleting post:', error);
+            }
+        }
+    };
+
     const dummyImage = "https://via.placeholder.com/800x400.png?text=No+Image+Available";
     const dummyDescription = "No description provided. This is a placeholder description for the news content.";
 
     return (
         <div className=" mx-3 md:mx-8 bg-white shadow-md  rounded-lg overflow-hidden my-4 py-3 md:my-8  md:p-6">
+          <div className='flex justify-end mb-4 gap-4'>
+            {
+             ( userId === profile._id || profile.profileLevel === 0)&&
+              <>
+          <button onClick={()=>navigate(`/home/news/${postId}/edit`)} className=" bg-[#0A3A4C] hover:bg-blue-900 font-semibold text-lg text-white py-2 px-4 rounded">Edit</button>
+          <button onClick={()=>handleDelete()} className=" bg-red-700 hover:bg-red-900 font-semibold text-lg text-white py-2 px-4 rounded">Delete</button>
+              </>
+}
+          </div>
             <div className="border-b pb-4 mb-4 px-3">
-                <h1 className="text-2xl md:text-4xl font-bold text-gray-800">{title || 'News Headline'}</h1>
-                <p className="text-gray-600 text-sm md:text-base">Posted on {createdAt}</p>
+                <h1 className="text-2xl mb-4 md:text-4xl font-bold text-gray-800">{title || 'News Headline'}</h1>
+                <p className="text-gray-600 text-sm md:text-base">Posted on {moment(createdAt).format('MMMM D, YYYY')}</p>
                 <p className="text-gray-600 text-sm md:text-lg font-semibold">By {author}</p>
             </div>
 
@@ -84,13 +109,10 @@ const NewsDetails = () => {
             </div>
 
            {/* Rich Content */}
-      <div className="prose prose-lg max-w-full px-3">
-        {/*
-          - Use Tailwind Typography plugin for `.prose` styles.
-          - Ensures images (`<img>`), headings, lists, etc., render as in CKEditor.
-        */}
-        <div dangerouslySetInnerHTML={{ __html: description }} />
-      </div>
+      <div className="news-content mx-3 md:mx-8 bg-white …">
+  {/* … */}
+  <div className="px-3 news-content" dangerouslySetInnerHTML={{ __html: description }} />
+</div>
             {/* {picture && (
                   <img
                     src={picture}

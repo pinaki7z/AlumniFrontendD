@@ -11,6 +11,7 @@ import baseUrl from "../../config";
 import newsImage from "../../images/d-group.jpg";
 import { FaArrowCircleRight } from 'react-icons/fa';
 import Slider from 'react-slick';
+import moment from 'moment';
 
 export const DisplayNews = ({ userId, postId, title, description, createdAt, picturePath, videoPath, department, onDeletePost ,author,picture}) => {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -41,6 +42,8 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
     };
 
     const handleDeletePost = async () => {
+        console.log("userID", userId);
+        console.log("profileID", profile._id);
         if (userId === profile._id) {
             try {
                 await axios.delete(`${process.env.REACT_APP_API_URL}/news/${postId}`);
@@ -98,7 +101,7 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
                     <div className="p-4 flex-1">
                         <h3 className="text-lg md:text-xl font-bold text-[#0A3A4C]">{title || "News Headline"}</h3>
                         <div className="text-gray-600 text-sm font-semibold mt-1">
-                            Posted on {createdAt}
+                            Posted on {moment(createdAt).format('MMMM D, YYYY')}
                         </div>
                         <div className="text-gray-600 font-semibold text-sm">By {author}</div>
 

@@ -10,7 +10,7 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
   const [groups, setGroups] = useState([]);
   const [totalGroups, setTotalGroups] = useState(0);
   const [loading, setLoading] = useState(false)
-  const LIMIT = 4;
+  const LIMIT = 40;
   const profile = useSelector((state) => state.profile);
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);

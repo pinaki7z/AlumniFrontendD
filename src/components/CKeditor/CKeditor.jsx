@@ -58,12 +58,43 @@ const CKeditor = ({ value, onChange, setNewForum }) => {
 
   return (
     <div className="ck-editor-container">
-      <CKEditor
+       <CKEditor
         editor={ClassicEditor}
-        config={{ extraPlugins: [UploadPlugin] }}
-        data={editorData}
-        onReady={handleReady}
-        onChange={handleChange}
+        config={{
+          extraPlugins: [UploadPlugin],
+           toolbar: [
+      'heading',      // ← add this
+      'bold', 'italic',
+      'link', 'bulletedList', 'numberedList',
+      'blockQuote', 'undo', 'redo'
+    ],
+    heading: {
+      options: [
+        { model: 'paragraph',   view: 'p',   title: 'Paragraph',       class: 'ck-heading_paragraph' },
+        { model: 'heading1',    view: 'h1',  title: 'Heading 1',       class: 'ck-heading_heading1 text-3xl'  },
+        { model: 'heading2',    view: 'h2',  title: 'Heading 2',       class: 'ck-heading_heading2'  },
+        { model: 'heading3',    view: 'h3',  title: 'Heading 3',       class: 'ck-heading_heading3'  }
+        // …add more if you like
+      ]
+    },
+          link: {
+            decorators: {
+              makeLinksBlue: {
+                mode: 'automatic',
+                callback: () => true,
+                attributes: {
+                  style: 'color: #0066cc; text-decoration: underline;'
+                }
+              }
+            }
+          }
+        }}
+        data={value}                // only used to initialize
+        onReady={editor => { editorRef.current = editor; }}
+        onBlur={(event, editor) => {
+          const data = editor.getData();
+          onChange(data);            // sync back once, on blur
+        }}
       />
     </div>
   );

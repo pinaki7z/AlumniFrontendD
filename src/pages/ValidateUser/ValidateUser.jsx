@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { ChevronDown, Check, X, Clock } from 'lucide-react';
 import axios from 'axios';
 import { Avatar } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const ValidateUser = () => {
   // Filter state
+  const navigate = useNavigate();
   const [userTypeFilter, setUserTypeFilter] = useState('all');
   const [validationFilter, setValidationFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,17 +36,17 @@ const ValidateUser = () => {
   const filteredUsers = users.filter(user => {
     const matchesType = userTypeFilter === 'all' || user.type === userTypeFilter;
     const matchesValidation = validationFilter === 'all' || user.status === validationFilter;
-  
+
     const q = searchQuery.trim().toLowerCase();
-    const matchesSearch = !q || 
+    const matchesSearch = !q ||
       user.firstName.toLowerCase().includes(q) ||
       user.lastName.toLowerCase().includes(q) ||
       (user.email || '').toLowerCase().includes(q);
-  
+
     return matchesType && matchesValidation && matchesSearch;
   });
 
-  const validateUser = async(id)=>{
+  const validateUser = async (id) => {
     let api = `${process.env.REACT_APP_API_URL}/alumni/alumni/${id}/validateAlumni`;
     try {
       const response = await axios.put(api);
@@ -54,7 +56,7 @@ const ValidateUser = () => {
     }
   }
 
-  const toggleDelete = async(id)=>{
+  const toggleDelete = async (id) => {
     let api = `${process.env.REACT_APP_API_URL}/alumni/alumni/${id}/deleteAccount`;
     try {
       const response = await axios.put(api);
@@ -74,31 +76,35 @@ const ValidateUser = () => {
     return null;
   };
 
+  const handleUserClick = (user) => {
+    navigate(`/home/members/${user._id}`);
+  };
+
   return (
     <div className='container mx-auto p-6'>
       {/* <h1 className='text-2xl md:text-4xl font-bold mb-6'>Member Control Panel</h1> */}
       <div class="bg-[#cef3df] p-4 rounded-lg mb-3"><h2 class="text-[#136175] mb-2 text-3xl md:text-4xl font-bold">Member Control Panel</h2>
-      <p class="text-base md:text-lg text-[#136175]">Manage your members and their access to the Alumni Portal.</p>
+        <p class="text-base md:text-lg text-[#136175]">Manage your members and their access to the Alumni Portal.</p>
       </div>
 
 
 
       {/* Filters */}
       <div className='flex flex-col md:flex-row items-center justify-center gap-4 mb-6'>
-      {/* Search box */}
-      <div className='w-full md:w-64'>
-  <label htmlFor='search' className='block text-sm text-center md:text-base font-medium text-gray-700 mb-1'>
-    Search
-  </label>
-  <input
-    id='search'
-    type='text'
-    placeholder='Name or email…'
-    value={searchQuery}
-    onChange={e => setSearchQuery(e.target.value)}
-    className='block w-full px-4 py-2 border border-gray-300 rounded-md text-center shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
-  />
-</div>
+        {/* Search box */}
+        <div className='w-full md:w-64'>
+          <label htmlFor='search' className='block text-sm text-center md:text-base font-medium text-gray-700 mb-1'>
+            Search
+          </label>
+          <input
+            id='search'
+            type='text'
+            placeholder='Name or email…'
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className='block w-full px-4 py-2 border border-gray-300 rounded-md text-center shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
+          />
+        </div>
         {/* User Type Filter */}
         <div className='w-full md:w-48'>
           <label htmlFor='userType' className='block text-sm text-center md:text-base font-medium text-gray-700 mb-1'>User Type</label>
@@ -139,6 +145,7 @@ const ValidateUser = () => {
             <tr>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>S.No</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Username</th>
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>ID Proof</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>User Type</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Status</th>
               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Action</th>
@@ -148,7 +155,7 @@ const ValidateUser = () => {
             {filteredUsers.map((user, index) => (
               <tr key={user._id} className='hover:bg-gray-50'>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>{index + 1}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                <td onClick={() => handleUserClick(user)} className='px-6 py-4 whitespace-nowrap cursor-pointer text-sm font-medium text-gray-900'>
                   <div className='flex items-center gap-3'>
                     <Avatar
                       src={user.profilePicture || ''}
@@ -158,6 +165,8 @@ const ValidateUser = () => {
                     {`${user.firstName} ${user.lastName}`}
                   </div>
                 </td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize underline'><a href={user.ID} target="_blank" rel="noopener noreferrer">{user?.ID?"View Link":""}</a></td>
+                
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize'>{user.type}</td>
                 <td className='px-6 py-4 whitespace-nowrap'>
                   <div className='flex items-center'>
@@ -166,47 +175,47 @@ const ValidateUser = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
-  {/* VALIDATE / INVALIDATE */}
-  {(user.status === 'expired' || user.status === 'not-validated') && (
-    <button
-      onClick={() => validateUser(user._id)}
-      className="mr-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-    >
-      Validate
-    </button>
-  )}
+                  {/* VALIDATE / INVALIDATE */}
+                  {(user.status === 'expired' || user.status === 'not-validated') && (
+                    <button
+                      onClick={() => validateUser(user._id)}
+                      className="mr-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      Validate
+                    </button>
+                  )}
 
-  {user.status === 'validated' && (
-    <button
-      onClick={() => validateUser(user._id)}
-      className="mr-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-    >
-      Invalidate
-    </button>
-  )}
+                  {user.status === 'validated' && (
+                    <button
+                      onClick={() => validateUser(user._id)}
+                      className="mr-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                    >
+                      Invalidate
+                    </button>
+                  )}
 
-  {/* DELETE BUTTON */}
-  {(user.status === 'validated' ||
-    user.status === 'expired' ||
-    user.status === 'not-validated') && (
-    <button
-      onClick={() => toggleDelete(user._id)}
-      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-    >
-      Delete
-    </button>
-  )}
+                  {/* DELETE BUTTON */}
+                  {(user.status === 'validated' ||
+                    user.status === 'expired' ||
+                    user.status === 'not-validated') && (
+                      <button
+                        onClick={() => toggleDelete(user._id)}
+                        className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      >
+                        Delete
+                      </button>
+                    )}
 
-  {/* RECOVER BUTTON */}
-  {user.status === 'account-deleted' && (
-    <button
-      onClick={() => toggleDelete(user._id)}
-      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-    >
-      Recover
-    </button>
-  )}
-</td>
+                  {/* RECOVER BUTTON */}
+                  {user.status === 'account-deleted' && (
+                    <button
+                      onClick={() => toggleDelete(user._id)}
+                      className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-800 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      Recover
+                    </button>
+                  )}
+                </td>
 
 
               </tr>

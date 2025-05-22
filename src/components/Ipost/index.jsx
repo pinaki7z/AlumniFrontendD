@@ -107,6 +107,7 @@ export const Ipost = () => {
     <div className=' mb-4 rounded-xl w-full md:w-full xl:w-[850px] my-5 '>
     { postData && <Post
                   userId={postData?.userId?._id}
+                  post={postData}
                   postId={_id}
                   username={`${postData?.userId?.firstName} ${postData?.userId?.lastName}` || 'Old user'}
                   text={postData.description}

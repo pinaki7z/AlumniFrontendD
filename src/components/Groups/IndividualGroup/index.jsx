@@ -173,16 +173,20 @@ const IndividualGroup = () => {
     };
 
     const handleFileChange = (event, fileType) => {
-        console.log('file type in handleFileChange', fileType, event)
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedFile(reader.result);
-                handleSubmit(reader.result, fileType);
-            };
-            reader.readAsDataURL(file);
-        }
+        const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+
+        const formData = new FormData();
+        formData.append('image', file);
+        axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+            .then((res) => {
+                handleSubmit(res.data?.imageUrl, fileType);
+            }).catch((err) => {
+                setLoading(false);
+                toast.dismiss()
+                toast.error('Upload failed');
+            })
+
     };
 
     const handleSubmit = async (fileData, fileType) => {
@@ -219,11 +223,11 @@ const IndividualGroup = () => {
         }
     };
 
-    const countPost = ()=>{
-        const api  = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
-        axios.get(api).then((res)=>{
+    const countPost = () => {
+        const api = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
+        axios.get(api).then((res) => {
             setPostCount(res.data.total)
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -277,7 +281,7 @@ const IndividualGroup = () => {
                                                 name="profilePicture"
                                                 id="profilePicture"
                                                 className="hidden"
-                                                onChange={(event) => handleFileChange(event, 'groupPicture')}
+                                                onChange={(event) => handleFileChange(event, 'groupLogo')}
                                             />
 
                                             <img
@@ -337,14 +341,14 @@ const IndividualGroup = () => {
                                     <div style={{ width: '35%', paddingTop: '50px', paddingBottom: '100px' }}>
                                         <div className="ig-lc-card">
                                             {(profile._id === groupItem.userId || admin) && <div>
-                                                <ul style={{ listStyle: 'none', padding: '16px', borderRadius: '12px', border: '1px solid' }}>
-                                                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter', cursor: 'pointer' }} onClick={() => setShowModal(true)}>
+                                                <ul className="flex flex-col gap-4 bg-[#F5F5F5] p-4 rounded-lg ">
+                                                    {/* <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter', cursor: 'pointer' }} onClick={() => setShowModal(true)}>
                                                         <img src={Add} alt="" />
-                                                        Add/Remove members to/from group</li>
-                                                    <Link to={`/home/groups/${_id}/groupInvite`} style={{ color: 'black', textDecoration: 'none' }}>
-                                                        <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter' }}>
+                                                        Add/Remove members to/from group</li> */}
+                                                    <Link to={`/home/groups/${_id}/groupInvite`} className="text-blue-500 underline font-semibold">
+                                                        <li className="flex items-center gap-2 py-2 text-lg" >
                                                             <img src={LinkIcon} alt="" />
-                                                            Generate a Group Invite Link</li>
+                                                            Generate a Group Link</li>
                                                     </Link>
                                                 </ul>
                                             </div>}

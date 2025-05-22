@@ -147,7 +147,11 @@ function Feed({
 
   return (
     <div className="feed">
+<<<<<<< Updated upstream
       {showCreatePost && (
+=======
+      {([0,1].includes(profile.profileLevel) && entityType!="news") && (
+>>>>>>> Stashed changes
         <CreatePost1
           photoUrl={photoUrl}
           username={username}

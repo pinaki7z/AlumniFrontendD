@@ -330,7 +330,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
         </div>
         
       ) : filteredGroups.length > 0 ? 
-       <div className='grid grid-cols-1 md:grid-cols-3 gap-2 px-2 py-3 '>
+       <div className='grid grid-cols-1 md:grid-cols-3  px-2 py-3 gap-6'>
         { filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)}
        </div>
        : (

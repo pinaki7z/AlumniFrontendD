@@ -185,6 +185,7 @@ const Dashboard = ({ handleLogout }) => {
 
             />
             <Route path="/news/:id/*" element={<NewsDetails />} />
+            <Route path="/news/:id/edit" element={<CreateNews />} />
             <Route path="/news/createNews" element={<CreateNews />} />
             <Route path="/validate-user" element={<ValidateUser />} />
           </Routes>
