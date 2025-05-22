@@ -925,10 +925,10 @@ const removeYoutubeVideo = () => {
     };
 
   return (
-    <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
-    <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
-    <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
-      <div className={`card-header bg-white border-b-0 p-0`}>
+    <div className={` mb-3  rounded-xl border border-gray-300  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
+    <div className={`overlay  ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
+    <div className={` pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
+      <div className={`rounded-xl bg-white `}>
         <div className="flex items-center gap-4 px-4 py-2">
           <img
             src={profile.profilePicture || picture}

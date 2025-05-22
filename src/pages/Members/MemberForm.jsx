@@ -135,7 +135,7 @@ const MemberForm = ({ edit }) => {
               &times;
             </button>
             <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">Bulk Upload</h2>
+              <h2 className="text-2xl font-bold mb-4 capitalize">{`Bulk Upload (for students)`}</h2>
               <p className="mb-4">
                 Please upload a CSV file with the following columns: firstName, lastName, email, gender, userType, department, batch, class.
               </p>

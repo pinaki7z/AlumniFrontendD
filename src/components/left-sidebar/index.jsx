@@ -18,6 +18,7 @@ import io from "../../images/IO _123.png";
 import gallery from "../../images/gallery.svg";
 import { GrGallery } from "react-icons/gr";
 import { useSelector } from "react-redux";
+import { GrUserAdmin } from "react-icons/gr";
 
 
 const LeftSidebar = () => {
@@ -68,7 +69,8 @@ const LeftSidebar = () => {
                     {/* <li><Link to="/internships" style={{ textDecoration: 'none' }}><HiOutlineBriefcase style={{ color: '#407093' }} /><p>Internships</p></Link></li> */}
                     <li><Link to="/home/notifications" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Notifications</p></Link></li>
                     {/* <li><Link to="/settings" style={{ textDecoration: 'none' }}><MdSettings className="dashboard-icon" /><p>Settings</p></Link></li> */}
-                    <li>{(profile.profileLevel===0 ) && <Link to="/home/validate-user" style={{ textDecoration: 'none' }}><IoIosNotifications className="dashboard-icon" /><p>Member C-Panel</p></Link>}</li>
+                    <li>{(profile.profileLevel===0 ) && <Link to="/home/validate-user" style={{ textDecoration: 'none' }}> <GrUserAdmin  className="dashboard-icon" />
+<p>Member C-Panel</p></Link>}</li>
 
                 </ul>
             </div>

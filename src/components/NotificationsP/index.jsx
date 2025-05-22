@@ -210,25 +210,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
             >
               <div className={` font-medium text-gray-800 ${topBar?"text-sm":"text-lg"}`}>
                 {
-                // notification.commented ? (
-                //   <span>
-                //     <Link
-                //       to={`/members/${notification.userId}`}
-                //       className="text-blue-600 hover:underline"
-                //     >
-                //       {notification.requestedUserName}
-                //     </Link>{" "}
-                //     has commented on your{" "}
-                //     <a
-                //       href={`/home/posts/${notification.postId}`}
-                //       target="_blank"
-                //       rel="noopener noreferrer"
-                //       className="text-blue-600 hover:underline"
-                //     >
-                //       post
-                //     </a>.
-                //   </span>
-                // ) :
+              
                  notification.link ? (
                   <span>
                     <Link
