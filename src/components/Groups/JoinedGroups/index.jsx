@@ -22,9 +22,10 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
       return;
     }
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
-      );
+      // const api =   `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
+      const api =   `${process.env.REACT_APP_API_URL}/groupMember/joined/${id}?page=${page}&size=${LIMIT}`
+      
+      const response = await axios.get(api);
       const postsData = response.data.records;
       setGroups((prevItems) => [...prevItems, ...postsData]);
       setTotalGroups(response.data.total);

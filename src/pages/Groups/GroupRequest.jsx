@@ -64,7 +64,7 @@ const GroupRequest = ({ edit }) => {
     const newErrors = {};
     if (!groupName.trim()) newErrors.groupName = 'Group Name is required';
     else if (groupName.trim().length < 3) newErrors.groupName = 'Group Name must be at least 3 characters';
-    // if (!groupType) newErrors.groupType = 'Group Type is required';
+    if (!groupType) newErrors.groupType = 'Group Type is required';
     if (!category) newErrors.category = 'Category is required';
     if (!background) newErrors.background = 'Background image is required';
     if (!groupLogo) newErrors.groupLogo = 'Group Logo is required';
@@ -129,7 +129,7 @@ const GroupRequest = ({ edit }) => {
         </div>
         
 
-        {/* <div className="flex flex-col">
+        <div className="flex flex-col">
           <label className="mb-1 text-gray-700 font-medium">Group Type*</label>
           <select
             value={groupType}
@@ -142,7 +142,7 @@ const GroupRequest = ({ edit }) => {
             <option value="Private">Private</option>
           </select>
           {errors.groupType && <p className="text-red-500 text-sm mt-1">{errors.groupType}</p>}
-        </div> */}
+        </div>
 
         <div className="flex flex-col">
           <label className="mb-1 text-gray-700 font-medium">Category*</label>
