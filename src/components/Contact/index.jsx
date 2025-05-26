@@ -1,5 +1,5 @@
 import { useState } from "react";
-import contact from "../../images/contact-us-customer-support-hotline-people-connect-email-address-live-chat-telephone-customer-service-contact-customer-phone-support-online.jpg";
+// import contact from "../../images/contact-us-customer-support-hotline-people-connect-email-address-live-chat-telephone-customer-service-contact-customer-phone-support-online.jpg";
 
 export default function Contact() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -15,12 +15,16 @@ export default function Contact() {
           <div className="row g-4 align-items-center">
             <div className="col-md-6">
               <div className="position-relative" style={{ height: "400px" }}>
-                <img
-                  src={contact}
-                  alt="Contact Us"
-                  className="img-fluid rounded"
-                  style={{ objectFit: "cover", height: "100%", width: "100%" }}
-                />
+            {    
+            
+            // <img
+            //       src={contact}
+            //       alt="Contact Us"
+            //       className="img-fluid rounded"
+            //       style={{ objectFit: "cover", height: "100%", width: "100%" }}
+            //     />
+                
+                }
               </div>
             </div>
             <div className="col-md-6 text-center text-md-start">

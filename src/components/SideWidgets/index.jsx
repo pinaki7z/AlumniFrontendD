@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import profilepic from "../../images/profilepic.jpg";
 import './sideWidgets.css';
-import picture from '../../images/pexels-damon-hall-2274725.jpg';
+// import picture from '../../images/pexels-damon-hall-2274725.jpg';
 import { HiUsers } from 'react-icons/hi';
 import { TbReload } from 'react-icons/tb';
 import { BsEnvelopePaperHeartFill, BsFillArrowRightSquareFill } from 'react-icons/bs';

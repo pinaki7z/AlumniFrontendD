@@ -1,5 +1,5 @@
 // import Image from 'next/image'
-import education from "../../images/city-committed-education-collage-concept.jpg"
+// import education from "../../images/city-committed-education-collage-concept.jpg"
 
 export default function Features() {
   const features = [
@@ -30,12 +30,12 @@ export default function Features() {
         <div className="row g-4 align-items-center">
           <div className="col-md-6">
             <div className="position-relative" style={{ height: '400px' }}>
-              <img
+              {/* <img
                 src={education}
                 alt="Education Technology"
                 className="img-fluid rounded"
                 style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-              />
+              /> */}
             </div>
           </div>
           <div className="col-md-6">
