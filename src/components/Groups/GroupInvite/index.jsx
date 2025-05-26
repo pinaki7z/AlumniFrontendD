@@ -5,7 +5,7 @@ export const GroupInvite = () => {
   const { _id } = useParams();
   const groupId = _id;
 
-  const groupInviteLink = `${window.location.origin}/groups/${groupId}/invite`;
+  const groupInviteLink = `${window.location.origin}/home/groups/${groupId}`;
   console.log('group invite link', groupInviteLink);
 
   const [buttonText, setButtonText] = useState('Copy');

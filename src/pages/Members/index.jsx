@@ -34,19 +34,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     admin = true;
   }
 
-  
-
   const totalMembers = membersred.length;
-
-  // Generate last 100 years for graduatingYear and batch ranges
-  // const generateYears = () => {
-  //   const currentYear = new Date().getFullYear();
-  //   const years = [];
-  //   for (let i = currentYear; i >= currentYear - 100; i--) {
-  //     years.push(i);
-  //   }
-  //   return years;
-  // };
 
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -277,16 +265,16 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               <option value="">All Members</option>
               <option value="1">Admin</option>
               <option value="2">Alumni</option>
-              <option value="">Student</option>
+              <option value="3">Student</option>
             </select>
 
 
-            <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={graduatingYear} onChange={handleGraduatingYearChange}>
+            {/* <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={graduatingYear} onChange={handleGraduatingYearChange}>
               <option value="">All Graduating Years</option>
               {generateYears().map(year => (
                 <option key={year} value={year}>{year}</option>
               ))}
-            </select>
+            </select> */}
 
             <select className='w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg shadow-sm bg-[#0A3A4C] font-semibold text-lg text-white cursor-pointer transition-all duration-300 ease-in-out hover:border-[#136175] focus:outline-none focus:ring-2 focus:ring-[#136175] focus:border-[#136175] appearance-none' style={{ marginLeft: '10px' }} value={department} onChange={handleDepartmentChange}>
               <option value="">All Departments</option>

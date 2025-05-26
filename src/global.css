@@ -77,3 +77,28 @@ body {
   --br-12xs: 1px;
   --br-xs: 12px;
 }
+
+
+.ck-content h1 {
+  font-size: 2em;      /* or whatever size you prefer */
+  margin: 0.67em 0;    /* optional, matches browser defaults */
+}
+
+.ck-content h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+}
+
+
+/* global CSS or App.css */
+.news-content h1 {
+  font-size: 2.25rem;  /* adjust to taste */
+  font-weight: 700;
+  margin: 1em 0;
+}
+
+.news-content h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0.75em 0;
+}

@@ -15,7 +15,7 @@ const GroupRequest = ({ edit }) => {
   const navigate = useNavigate();
   const { _id } = useParams();
   const [groupName, setGroupName] = useState('');
-  const [groupType, setGroupType] = useState('');
+  const [groupType, setGroupType] = useState('public');
   const [category, setCategory] = useState('');
   const [background, setBackground] = useState('');
   const [groupLogo, setGroupLogo] = useState('');

@@ -36,7 +36,7 @@ const IndividualGroup = () => {
     const [isLoading, setIsLoading] = useState({});
     const dispatch = useDispatch();
     const [showModal, setShowModal] = useState(false);
-    const allMembers = useSelector((state) => state.member);
+    // const allPendingReq = useSelector((state) => state.member);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [sendMembers, setSendMembers] = useState([]);
@@ -46,6 +46,8 @@ const IndividualGroup = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [saving, setSaving] = useState(false);
     const [postCount, setPostCount] = useState(0);
+    const [allPendingReq, setAllPendingReq] = useState([]);
+    const [allMembers, setAllMembers] = useState([]);
     const token = cookie.token;
     let admin;
     if (profile.profileLevel === 0) {
@@ -107,9 +109,9 @@ const IndividualGroup = () => {
         return profile.following.some(follower => follower.userId === memberId);
     }
 
-    const filteredMembers = allMembers.filter(member =>
-        member.firstName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // const filteredMembers = allPendingReq.filter(member =>
+    //     member.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
 
     const handleMemberSelect = (memberId, profilePicture, firstName, lastName, profileLevel) => {
         console.log('member id', memberId);
@@ -173,16 +175,20 @@ const IndividualGroup = () => {
     };
 
     const handleFileChange = (event, fileType) => {
-        console.log('file type in handleFileChange', fileType, event)
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedFile(reader.result);
-                handleSubmit(reader.result, fileType);
-            };
-            reader.readAsDataURL(file);
-        }
+        const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+
+        const formData = new FormData();
+        formData.append('image', file);
+        axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+            .then((res) => {
+                handleSubmit(res.data?.imageUrl, fileType);
+            }).catch((err) => {
+                setLoading(false);
+                toast.dismiss()
+                toast.error('Upload failed');
+            })
+
     };
 
     const handleSubmit = async (fileData, fileType) => {
@@ -219,21 +225,63 @@ const IndividualGroup = () => {
         }
     };
 
-    const countPost = ()=>{
-        const api  = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
-        axios.get(api).then((res)=>{
+    const countPost = () => {
+        const api = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
+        axios.get(api).then((res) => {
             setPostCount(res.data.total)
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
+    }
+    const getAllPendingReq = () => {
+        if (_id) {
+            const api = `${process.env.REACT_APP_API_URL}/groupMember/pending/${_id}`
+            axios.get(api).then((res) => {
+                setAllPendingReq(res.data)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
     }
 
     useEffect(() => {
         getGroup();
         countPost();
+        getAllPendingReq()
+        getAllMemberOfGroup()
     }, []);
 
+    const handleDecline = (userId) => {
+        const api = `${process.env.REACT_APP_API_URL}/groupMember/decline/${_id}/${userId}`
+        axios.put(api).then((res) => {
+            getAllPendingReq()
+            getGroup()
+        })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
+    const handleAccept = (userId) => {
+        const api = `${process.env.REACT_APP_API_URL}/groupMember/accept/${_id}/${userId}`
+        axios.put(api).then((res) => {
+            getAllPendingReq()
+            getGroup()
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
+    const getAllMemberOfGroup = () => {
+        if (_id) {
+            const api = `${process.env.REACT_APP_API_URL}/groupMember/all/${_id}`
+            axios.get(api).then((res) => {
+                setAllMembers(res.data)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+    }
     return (
         <div style={{ width: '100%' }}>
             <Routes>
@@ -277,7 +325,7 @@ const IndividualGroup = () => {
                                                 name="profilePicture"
                                                 id="profilePicture"
                                                 className="hidden"
-                                                onChange={(event) => handleFileChange(event, 'groupPicture')}
+                                                onChange={(event) => handleFileChange(event, 'groupLogo')}
                                             />
 
                                             <img
@@ -316,7 +364,7 @@ const IndividualGroup = () => {
                                                 </div>
                                                 <div>
                                                     <p style={{ fontWeight: '400', fontSize: '14px', fontFamily: 'Inter' }}>Members</p>
-                                                    <p style={{ fontWeight: '500', fontSize: '18px', fontFamily: 'Inter' }}>{groupItem.members.length}</p>
+                                                    <p style={{ fontWeight: '500', fontSize: '18px', fontFamily: 'Inter' }}>{allMembers?.length}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -335,62 +383,95 @@ const IndividualGroup = () => {
                                         </div>} />
                                     </Routes>
                                     <div style={{ width: '35%', paddingTop: '50px', paddingBottom: '100px' }}>
-                                        <div className="ig-lc-card">
-                                            {(profile._id === groupItem.userId || admin) && <div>
-                                                <ul style={{ listStyle: 'none', padding: '16px', borderRadius: '12px', border: '1px solid' }}>
-                                                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter', cursor: 'pointer' }} onClick={() => setShowModal(true)}>
-                                                        <img src={Add} alt="" />
-                                                        Add/Remove members to/from group</li>
-                                                    <Link to={`/home/groups/${_id}/groupInvite`} style={{ color: 'black', textDecoration: 'none' }}>
-                                                        <li style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingBottom: '10px', fontWeight: '600', fontSize: '20px', fontFamily: 'Inter' }}>
-                                                            <img src={LinkIcon} alt="" />
-                                                            Generate a Group Invite Link</li>
-                                                    </Link>
-                                                </ul>
-                                            </div>}
-                                        </div>
-                                        <div className='sideWidget2-post-card'>
-                                            <div className="sideWidget2-post-header">
-                                                <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Active Group Members</p>
-                                            </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                {groupItem.members
-                                                    .filter(member => member.userId !== profile._id)
-                                                    .map((member) => (
-                                                        <div key={member._id} style={{ display: 'flex', gap: '10px', alignItems: 'center', padding: '10px', border: '1px solid #e9e9e9', borderRadius: '10px', width: '100%' }}>
-                                                            {member.profilePicture ? <img src={member.profilePicture} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} /> : <img src={profilePic} alt="Profile" width="60px" height="60px" style={{ borderRadius: '50%' }} />}
-                                                            <p style={{ marginBottom: '0rem', fontWeight: '500' }}>{member.userName}</p>
-                                                            <button
-                                                                style={{
-                                                                    backgroundColor: isFollowing(member.userId) ? '#71be95' : '#FFFFFF',
-                                                                    color: isFollowing(member.userId) ? '#FFFFFF' : '#71be95',
-                                                                    borderRadius: '32px',
-                                                                    border: isFollowing(member.userId) ? 'none' : '2px solid #71be95',
-                                                                    marginLeft: 'auto',
-                                                                    padding: '8px 32px',
-                                                                    cursor: 'pointer'
-                                                                }}
-                                                                onClick={() => handleFollowToggle(member.userId, member.userName)}
-                                                                disabled={isLoading[member.userId]}
-                                                            >
-                                                                {isLoading[member.userId] ? <l-line-spinner
-                                                                    size="20"
-                                                                    stroke="3"
-                                                                    speed="1"
-                                                                    color="rgb(19, 97, 117)"
-                                                                ></l-line-spinner> : isFollowing(member.userId) ? 'Following' : 'Follow'}
-                                                            </button>
-                                                        </div>
-                                                    ))}
-                                                <Link to={`/home/groups/${_id}/add`} style={{ color: 'black', textDecoration: 'none' }}>
-                                                    <div style={{ padding: '10px' }}>View All Group Members</div>
-                                                </Link>
+
+                                        {
+                                            ((profile._id === groupItem.userId || admin) && groupItem.groupType === 'Private') &&
+                                            <div className="mb-8">
+                                                <div className="sideWidget2-post-header">
+                                                    <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Join Request</p>
+                                                </div>
+                                                <div className="flex flex-col gap-2 bg-[#F5F5F5] p-4 rounded-lg  max-h-[500px] overflow-y-auto">
+                                                    {
+                                                        allPendingReq?.length > 0 ?
+                                                            allPendingReq?.map((member, index) => (
+                                                                <div className="flex flex-col  gap-2 py-2 text-lg bg-white px-4 rounded-lg " key={index}>
+
+                                                                    <div className="flex gap-2 items-center">
+                                                                        <img src={member?.userId?.profilePicture} alt="" className="w-10 h-10 rounded-full border-4 border-white" />
+                                                                        <p className="font-semibold text-base">{member?.userId?.firstName + ' ' + member?.userId?.lastName}</p>
+
+                                                                    </div>
+
+                                                                    <div className="flex gap-2 justify-start">
+                                                                        <button className="bg-[#0A3A4C] text-xs hover:bg-blue-900 text-white font-semibold py-1 px-4 rounded" onClick={() => handleAccept(member.userId?._id)}>
+                                                                            Accept
+                                                                        </button>
+                                                                        <button className="bg-red-900 text-xs hover:bg-red-950 text-white font-semibold py-1 px-4 rounded" onClick={() => handleDecline(member.userId?._id)}>
+                                                                            Decline
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                            :
+                                                            <p className="text-gray-500 text-sm">No group join requests</p>
+                                                    }
+
+                                                </div>
 
                                             </div>
+                                        }
+
+                                        {
+
+                                        }
+                                        <div className="ig-lc-card">
+                                            {
+                                                (profile._id === groupItem.userId || admin) &&
+                                                <div>
+                                                    <ul className="flex flex-col gap-4 bg-[#F5F5F5] p-4 rounded-lg ">
+                                                       
+
+                                                        <Link to={`/home/groups/${_id}/groupInvite`} className="text-blue-500 underline font-semibold">
+                                                            <li className="flex items-center gap-2 py-2 text-lg" >
+                                                                <img src={LinkIcon} alt="" />
+                                                                Generate a Group Link</li>
+                                                        </Link>
+                                                    </ul>
+                                                </div>
+                                            }
                                         </div>
+
+
+
+                           <div className="mb-8 mt-8">
+                                                <div className="sideWidget2-post-header">
+                                                    <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Members</p>
+                                                </div>
+                                                <div className="flex flex-col gap-2 bg-[#F5F5F5] p-4 rounded-lg  max-h-[500px] overflow-y-auto">
+                                                    {
+                                                        allMembers?.length > 0 ?
+                                                            allMembers?.map((member, index) => (
+                                                                <div className="flex flex-col  gap-2 py-2 text-lg bg-white px-4 rounded-lg " key={index}>
+
+                                                                    <div className="flex gap-2 items-center">
+                                                                        <img src={member?.userId?.profilePicture} alt="" className="w-10 h-10 rounded-full border-4 border-white" />
+                                                                        <p className="font-semibold text-base">{member?.userId?.firstName + ' ' + member?.userId?.lastName}</p>
+
+                                                                    </div>
+
+                                                                   
+                                                                </div>
+                                                            ))
+                                                            :
+                                                            <p className="text-gray-500 text-sm">No group members </p>
+                                                    }
+
+                                                </div>
+
+                                            </div>
                                     </div>
                                 </div>
-                                {showModal && (
+                                {/* {showModal && (
                                     <div className="modal-overlay-forum">
                                         <div className="modal-forum">
                                             <div className="modal-header-forum">
@@ -447,7 +528,7 @@ const IndividualGroup = () => {
                                                 {saving ? 'Saving...' : 'Save'}</button>
                                         </div>
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         ))}
                 </>} />

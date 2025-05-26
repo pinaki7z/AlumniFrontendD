@@ -46,6 +46,9 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
 
   const GroupItem = ({ group }) => {
     const [requestStatus, setRequestStatus] = useState('Request to Join');
+    const [confirmModal, setConfirmModal] = useState(false);
+    const [isMember, setIsMember] = useState(false);
+    const [approved, setApproved] = useState(false);
     console.log('request ', requestStatus);
 
     function MyVerticallyCenteredModal(props) {
@@ -72,6 +75,24 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
         </Modal>
       );
     }
+
+    const fetchJoin = () => {
+      axios.get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${group._id}/${profile._id}`)
+        .then((res) => {
+          setIsMember(res.data.isMember);
+          setApproved(res.data.approved);
+        }).catch((err) => {
+          console.log(err);
+        })
+    }
+    useEffect(() => {
+      if (profile.profileLevel === 0 || group.userId === profile._id) {
+        return;
+      }
+      else {
+        fetchJoin();
+      }
+    }, [group._id, profile._id]);
 
 
     useEffect(() => {
@@ -212,18 +233,61 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
 
       return `${day}${suffix(day)} ${month} ${year}`;
     }
-    const isMember =
-      profile.profileLevel === 0 ||
-      (group.groupType === "Public" &&
-        group.members.some((member) => member.userId === profile._id)) ||
-      (group.groupType === "Private" &&
-        group.members.some((member) => member.userId === profile._id)) ||
-      group.businessConnect === true;
+    const handleJoinGroup = () => {
+      const data = {
+        groupId: group._id,
+        userId: profile._id,
+        approved: group.groupType == "public" ? true : false
+      }
+      axios.post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
+        .then((res) => {
+          // console.log(res.data);
+         if(group.groupType == "public") navigateTo(`/home/groups/${group._id}`)
+          else{
+            toast.success('Request sent successfully!');
+            fetchJoin()
+          }
+          setConfirmModal(false);
+
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+
+    const ConfirmModalShow = () => {
+      return (
+        <>
+          <Modal
+            show={confirmModal}
+            onHide={() => setConfirmModal(false)}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title className="text-lg font-bold">Join Group</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="flex justify-center align-center py-5">
+              <p className="text-xl font-semibold">Are you sure you want to join <span className='font-semibold text-blue-500 underline text-2xl capitalize'>{group.groupName}</span>?</p>
+            </Modal.Body>
+            <Modal.Footer className="flex justify-center">
+              <Button className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1 px-4 rounded" onClick={() => setConfirmModal(false)}>
+                Cancel
+              </Button>
+              <Button className='bg-blue-950 hover:bg-blue-900 text-white font-semibold py-1 px-4 rounded' onClick={() => handleJoinGroup(group._id)}>
+                Join
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      )
+    }
+
+    const directEntry = (isMember && approved) || profile.profileLevel === 0
 
     return (
       <div key={group._id} className='w-full'>
-        <div className="w-full h-80 border border-gray-300 bg-[#EAF5EF] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-          {isMember ? (
+        <div className="w-full min-h-80 border border-gray-300 bg-[#EAF5EF] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+          {(directEntry)? (
             <Link to={`/home/groups/${group._id}`} className="text-black">
               <div className="relative w-full h-48 rounded-t-lg overflow-hidden">
                 <div
@@ -236,7 +300,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                   {group.groupType}
                 </p>
               </div>
-              <div className="p-4">
+              <div className="px-4 py-2">
                 <h3 className="text-xl font-semibold text-[#136175]">
                   {group.groupName}
                 </h3>
@@ -245,6 +309,10 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                   <p className="text-gray-600 text-sm">{group.members.length}</p>
                 </div>
                 <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
+                <div className='mt-3 flex justify-end'>
+                  <button onClick={() => navigateTo(`/home/groups/${group._id}`)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>View Group</button>
+
+                </div>
               </div>
             </Link>
           ) : (
@@ -260,7 +328,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                   {group.groupType}
                 </p>
               </div>
-              <div className="p-4">
+              <div className="px-4 py-2">
                 <h3 className="text-xl font-semibold text-[#136175]">
                   {group.groupName}
                 </h3>
@@ -269,36 +337,29 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                   <p className="text-gray-600 text-sm">{group.members.length}</p>
                 </div>
                 <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
+                <div className='mt-3 flex justify-end'>
+                  {
+                    (isMember && approved==false) ? (
+                      <>
+                        <button  className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>Requested</button>
+
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={() => setConfirmModal(true)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>{group?.groupType === 'public' ? 'Join' : 'Request'}</button>
+
+                      </>
+                    )
+                  }
+                </div>
               </div>
+
             </div>
           )}
         </div>
 
         {/* {console.log('groupType', group.groupType, group.members)} */}
-        {(group.groupType === 'Public' || group.groupType === 'Private') &&
-          !group.members.some(member => member.userId === profile._id) && (
-            <div className='display-post-edit'>
-              {group.groupType === 'Public' ? (
-                <button onClick={() => handleAddMember(group._id)} style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#0a3a4c', color: '#F8F8FF' }}>{isLoading ? 'Loading...' : 'Join'}</button>
-              ) : (profile.department === group.department || group.category === "Business Connect" || group.department === 'All') && (
-                <button style={{ padding: '8px 32px', fontWeight: '500', fontSize: '20px', backgroundColor: '#0a3a4c', color: '#F8F8FF' }} onClick={() => {
-                  if (group.category === "Business Connect") {
-                    if (requestStatus === 'Requested') {
-                      handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);
-                    } else {
-                      setModalShow(true);
-                      setSelectedGroupId(group._id);
-                      setSelectedGroupName(group.groupName);
-                      setSelectedGroupUserId(group.userId);
-                    }
-                  } else {
-                    handleRequest(group.userId, group._id, profile._id, group.groupName, profile.firstName, profile.lastName);
-                  }
-                }}>{requestStatus}</button>
-              )}
-            </div>
-          )}
-
+        <ConfirmModalShow show={confirmModal} onHide={() => setConfirmModal(false)} />
         <MyVerticallyCenteredModal
           show={modalShow}
           onHide={() => setModalShow(false)}
@@ -328,14 +389,14 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
             color="black"
           ></l-line-spinner>
         </div>
-        
-      ) : filteredGroups.length > 0 ? 
-       <div className='grid grid-cols-1 md:grid-cols-3 gap-2 px-2 py-3 '>
-        { filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)}
-       </div>
-       : (
-        <div className='display-post-noGroups'>No groups</div>
-      )}
+
+      ) : filteredGroups.length > 0 ?
+        <div className='grid grid-cols-1 md:grid-cols-3  px-2 py-3 gap-6'>
+          {filteredGroups.map((group) => <GroupItem key={group._id} group={group} />)}
+        </div>
+        : (
+          <div className='display-post-noGroups'>No groups</div>
+        )}
 
 
     </div>

@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CKeditor from '../../../components/CKeditor/CKeditor.jsx';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 export const CreateNews = () => {
+  const profile = useSelector((state) => state.profile);
+  const {id} = useParams(); 
   const [newsData, setNewsData] = useState({
+    userId: profile._id,
     title: '',
     description: '',
     author: '',
@@ -15,7 +18,6 @@ export const CreateNews = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const profile = useSelector((state) => state.profile);
   const navigateTo = useNavigate();
 
   const handleEditorChange = (value) => {
@@ -66,9 +68,57 @@ export const CreateNews = () => {
     }
   };
 
+  const handleUpdate = async () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const body = {
+        userId: profile._id,
+        title: newsData.title,
+        author: newsData.author,
+        picture: newsData.picture,
+        description: newsData.description,
+        department: profile.department,
+      };
+
+      await axios.put(`${process.env.REACT_APP_API_URL}/news/${id}`, body);
+      toast.success('News Updated successfully!');
+      navigateTo('/home/news');
+    } catch (error) {
+      console.error('Error updating news:', error);
+      toast.error('Failed to update news. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (id) {
+      handleUpdate();
+    } else {
+      handleCreate();
+    }
+  };
+
+  const getNewData = async()=>{
+    const res =  await axios.get(`${process.env.REACT_APP_API_URL}/news/news/${id}` );
+    setNewsData(res.data);
+  }
+
+  useEffect(() => {
+    if(id){
+      getNewData();
+    }
+  },[id])
+
   return (
     <div className="  mx-4 p-6  rounded-lg ">
-      <h1 className="text-2xl font-semibold mb-6">Create News</h1>
+      <h1 className="text-2xl font-semibold mb-6">{id ? 'Edit News' : 'Create News'}</h1>
       <div className="space-y-4">
         <div>
           <label className="block text-gray-700 mb-1">Title</label>
@@ -98,6 +148,7 @@ export const CreateNews = () => {
           <label className="block text-gray-700 mb-1">Description</label>
           <div className="border border-gray-300 rounded focus-within:ring-2 focus-within:ring-blue-500">
             <CKeditor
+             key={newsData.description} 
               value={newsData.description}
               onChange={handleEditorChange}
               setNewForum={setNewsData}
@@ -117,7 +168,7 @@ export const CreateNews = () => {
 
           <button
             type="button"
-            onClick={handleCreate}
+            onClick={handleSubmit}
             disabled={loading}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
           >

@@ -169,6 +169,40 @@ const EventDisplay = ({ event, userId, userData }) => {
         XLSX.writeFile(workbook, `${event.title}_Attendees.xlsx`);
     };
 
+      const handleDownloadCSV = () => {
+    // Flatten all attendees into one array with a status field
+    const allAttendees = [
+      ...attendees.willAttend.map(u => ({ status: 'Will Attend', ...u })),
+      ...attendees.mightAttend.map(u => ({ status: 'Might Attend', ...u })),
+      ...attendees.willNotAttend.map(u => ({ status: 'Will Not Attend', ...u })),
+    ]
+
+    // Build CSV rows: header + data rows
+    const header = ['User ID', 'User Name', 'Profile Picture', 'Status']
+    const rows = allAttendees.map(u => [
+      u.userId,
+      u.userName,
+      u.profilePicture,
+      u.status
+    ])
+
+    // Join into a single CSV string
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [header, ...rows]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n')
+
+    // Create a temporary link to trigger download
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', 'event_attendees.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
 
 
     return (
@@ -259,151 +293,64 @@ const EventDisplay = ({ event, userId, userData }) => {
                     </ul>
                 </div>
 
-
-
-
-
-
-
-
-                {/* <div>
-                    {selectedEventDetails.priceType === 'paid' ? (
-                        <p>This is a paid event</p>
-                    ) : selectedEventDetails.priceType === 'free' ? (
-                        <p>This is a free event</p>
-                    ) : null}
-
-                    <ul style={{ paddingLeft: '0px', display: 'flex', justifyContent: 'space-evenly' }}>
-                        <div className="percentage-bar-container">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={attendanceStatus === 0}
-                                    onChange={() => {
-                                        if (selectedEventDetails.priceType === 'free') {
-                                            handleAttendance(0, selectedEventDetails._id);
-                                        } else if (selectedEventDetails.priceType === 'paid') {
-                                            window.open(
-                                                "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
-                                                "_blank"
-                                            );
-                                        }
-                                    }}
-                                />
-                                I will attend
-                            </label>
-                        </div>
-
-                        <div className="percentage-bar-container">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={attendanceStatus === 1}
-                                    onChange={() => handleAttendance(1, selectedEventDetails._id)}
-                                />
-                                I might attend
-                            </label>
-                        </div>
-
-                        <div className="percentage-bar-container">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={attendanceStatus === 2}
-                                    onChange={() => handleAttendance(2, selectedEventDetails._id)}
-                                />
-                                I will not attend
-                            </label>
-                        </div>
-
-                        {attendanceLoading && (
-                            <div>
-                                <l-line-spinner size="20" stroke="3" speed="1" color="black"></l-line-spinner>
-                            </div>
-                        )}
-                    </ul>
-                </div>
-
- */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
+         <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+      className="flex items-center justify-center"
+    >
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-4 p-6 relative">
+        {/* Close button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          aria-label="Close modal"
+        >
+          ✕
+        </button>
+
+        <h2 id="modal-title" className="text-2xl font-semibold mb-4">
+          Event Attendees
+        </h2>
+{(profile.profileLevel === 0 || profile._id === event.userId) &&
+        <button
+          onClick={handleDownloadCSV}
+          className="mb-6 inline-flex items-center bg-green-500 hover:bg-green-600 text-white font-medium px-4 py-2 rounded-md transition"
+        >
+          Export as Excel
+        </button>}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { label: 'Will Attend', list: attendees?.willAttend },
+            { label: 'Might Attend', list: attendees?.mightAttend },
+            { label: 'Will Not Attend', list: attendees?.willNotAttend },
+          ].map(({ label, list }) => (
+            <div
+              key={label}
+              className="bg-gray-50 rounded-lg p-4 shadow-inner flex flex-col"
             >
-                <Box className='poll-modal-box'>
-                    <h2 id="modal-title">Event Attendees</h2>
-                    <button className='excel-export-button' onClick={exportAttendeesToExcel} style={{ backgroundColor: '#71be95', padding: '10px', borderRadius: '6px', border: 'none', color: 'white' }}>
-                        Export as an Excel Sheet
-                    </button>
-                    <div className='voters-container'>
-                        <div>
-                            <h3>Will Attend</h3>
-                            <h5>Total:- {attendees?.willAttend.length}</h5>
-                            {attendees?.willAttend.map(user => (
-                                <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <Avatar src={user.profilePicture || pic} />
-                                    <span>{user.userName}</span>
-                                </div>
-                            ))}
-                        </div>
-                        <div>
-                            <h3>Might Attend</h3>
-                            <h5>Total:- {attendees?.mightAttend.length}</h5>
-                            {attendees?.mightAttend.map(user => (
-                                <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <Avatar src={user.profilePicture || pic} />
-                                    <span>{user.userName}</span>
-                                </div>
-                            ))}
-                        </div>
-                        <div>
-                            <h3>Will Not Attend</h3>
-                            <h5>Total:- {attendees?.willNotAttend.length}</h5>
-                            {attendees?.willNotAttend.map(user => (
-                                <div key={user.userId} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <Avatar src={user.profilePicture || pic} />
-                                    <span>{user.userName}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+              <h3 className="text-lg font-semibold mb-1">{label}</h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Total: {list?.length ?? 0}
+              </p>
+              <div className="space-y-3 overflow-y-auto max-h-60">
+               
 
-                    {/* Add Export Button Inside Modal */}
-
-                </Box>
-            </Modal>
+                {!list || list.length === 0 ? (
+                  <p className="text-sm text-gray-500 italic">
+                    No responses yet.
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Modal>
         </>
     );
 }

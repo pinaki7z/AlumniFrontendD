@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../CreatePost/socialWall.css';
 import picture from '../../images/profilepic.jpg'
 import axios from 'axios';
@@ -22,330 +22,6 @@ import TextField from '@mui/material/TextField';
 // import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-function MyVerticallyCenteredModal(props) {
-  const [isEditing, setIsEditing] = useState(false);
-  const profile = useSelector((state) => state.profile);
-  const [createGroup, setCreateGroup] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { _id } = useParams();
-
-  // New states for price type, amount, and currency
-  const [priceType, setPriceType] = useState("free");
-  const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("INR");
-
-  const [newEvent, setNewEvent] = useState({
-    title: "", start: "", end: "", startTime: "00:00",
-    endTime: "00:00", picture: "", cName: "",
-    cNumber: "", cEmail: "", location: ""
-  });
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewEvent({ ...newEvent, picture: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleAddEvent = () => {
-    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
-
-    if (!title || !start || !end || !picture) {
-      alert("Please provide title, start date, end date and image");
-      return;
-    }
-
-    const formattedStart = format(new Date(start), "yyyy-MM-dd");
-    const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-    setLoading(true);
-
-    const eventData = {
-      userId: profile._id,
-      title,
-      start: formattedStart,
-      end: formattedEnd,
-      startTime,
-      userName: `${profile.firstName} ${profile.lastName}`,
-      profilePicture: profile.profilePicture,
-      endTime,
-      picture,
-      cName,
-      cNumber,
-      cEmail,
-      location,
-      department: profile.department,
-      createGroup,
-      groupEvent: _id ? true : false,
-      groupId: _id ? _id : null,
-      // Include price type and amount based on selection
-      priceType,
-      amount: priceType === "paid" ? amount : null, // Only include amount if it's paid
-      currency: priceType === "paid" ? currency : ""
-    };
-    console.log('eventData', eventData);
-
-    fetch(`${process.env.REACT_APP_API_URL}/events/createEvent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(eventData),
-    })
-      .then((response) => response.json())
-      .then((createdEvent) => {
-        //setAllEvents([...allEvents, createdEvent]);
-        setLoading(false);
-        //window.location.reload();
-
-        setNewEvent({ title: "", start: "", end: "", startTime: "", endTime: "", picture: null, cEmail: "", cName: "", cNumber: "", location: "" });
-      })
-      .catch((error) => console.error("Error creating event:", error));
-  };
-
-  const handleEditEvent = () => {
-    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } = newEvent;
-    const eventId = props.selectedEvent._id;
-
-    if (!title || !start || !end) {
-      alert("Please provide title, start date, and end date.");
-      return;
-    }
-
-    try {
-      const formattedStart = format(new Date(start), "yyyy-MM-dd");
-      const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-
-      const updatedEvent = {
-        title: title,
-        start: formattedStart,
-        end: formattedEnd,
-        startTime,
-        endTime,
-        picture,
-        cName,
-        cNumber,
-        cEmail,
-        location,
-        priceType,
-        amount: priceType === "paid" ? amount : "0", // Only include amount if it's paid
-        currency: priceType === "paid" ? currency : ""
-      };
-
-      const jsonEventData = JSON.stringify(updatedEvent);
-
-      fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: jsonEventData,
-      })
-        .then(() => {
-          const updatedEvents = allEvents.map((event) =>
-            event._id === eventId ? updatedEvent : event
-          );
-
-          setAllEvents(updatedEvents);
-          setSelectedEvent(null);
-          props.onHide();
-          toast.success("Event updated successfully.");
-          //window.location.reload();
-        })
-        .catch((error) => console.error("Error updating event:", error));
-    } catch (jsonError) {
-      console.error("JSON serialization error:", jsonError);
-      alert("Error updating event: JSON serialization error");
-    }
-  };
-
-  const handleDateChange = (date, field) => {
-    if (props.isEditing) {
-      const updatedEvent = { ...newEvent };
-      updatedEvent[field] = date;
-      setNewEvent(updatedEvent);
-      setIsEditing(true);
-    } else {
-      setNewEvent({ ...newEvent, [field]: date });
-    }
-  };
-
-  const handleTimeChange = (time, field) => {
-    const updatedEvent = { ...newEvent };
-    updatedEvent[field] = time;
-    setNewEvent(updatedEvent);
-  };
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header style={{ backgroundColor: '#f5dad2' }} closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          {props.isEditing ? "Edit Event" : "Add Event"}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body style={{ display: 'flex', gap: '2em', backgroundColor: '#eaf6ff' }}>
-        <Col>
-          <Row style={{ padding: '0px 5px' }}>
-            <input
-              type="text"
-              placeholder="Add/Edit Title"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-              value={newEvent.title}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, title: e.target.value })
-              }
-            />
-            <br />
-            <br />
-            <label htmlFor={newEvent.picture}>Insert a Picture:-</label>
-            <br />
-            <input type="file" name={newEvent.picture}
-              style={{ width: '60%' }}
-              onChange={handleImageChange} />
-
-            <input
-              type="text"
-              placeholder="Enter Coordinator Name"
-              style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-              value={newEvent.cName}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, cName: e.target.value })
-              }
-            />
-          </Row>
-        </Col>
-
-        <Col>
-          <DatePicker
-            placeholderText="Start Date"
-            style={{ marginRight: "10px", padding: "0.5em" }}
-            selected={newEvent.start}
-            onChange={(date) => handleDateChange(date, "start")}
-          />
-          <br /><br />
-          <input type="time" id="appt" name="startTime" value={newEvent.startTime} onChange={(e) =>
-            setNewEvent({ ...newEvent, startTime: e.target.value })
-          } />
-          <br /><br />
-          <input
-            type="number"
-            placeholder="Enter Coordinator Contact Number"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-            value={newEvent.cNumber}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, cNumber: e.target.value })
-            }
-          />
-          <input
-            type="text"
-            placeholder="Enter event location"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-            value={newEvent.location}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, location: e.target.value })
-            }
-          />
-        </Col>
-
-        <Col>
-          <DatePicker
-            placeholderText="End Date"
-            style={{ padding: "0.5em" }}
-            selected={newEvent.end}
-            onChange={(date) => handleDateChange(date, "end")}
-          />
-          <br /><br />
-          <input type="time" id="appt" name="endTime" value={newEvent.endTime} onChange={(e) =>
-            setNewEvent({ ...newEvent, endTime: e.target.value })
-          } />
-          <input
-            type="email"
-            placeholder="Enter Coordinator Email"
-            style={{ width: "100%", padding: "0.5em", borderRadius: "10px" }}
-            value={newEvent.cEmail}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, cEmail: e.target.value })
-            }
-          />
-        </Col>
-      </Modal.Body>
-
-      <Modal.Footer style={{ backgroundColor: '#f5dad2' }}>
-        <div style={{ marginRight: 'auto', display: 'flex', alignItems: 'center' }}>
-          <input
-            type="checkbox"
-            id="create-group"
-            checked={createGroup}
-            onChange={(e) => setCreateGroup(e.target.checked)}
-          />
-          <label htmlFor="create-group" style={{ marginLeft: '0.5em' }}>Create a group with the same event title name</label>
-        </div>
-
-        {/* Free/Paid Radio Buttons */}
-        <div>
-          <label>
-            <input
-              type="radio"
-              value="free"
-              checked={priceType === "free"}
-              onChange={(e) => setPriceType(e.target.value)}
-            /> Free
-          </label>
-          <label style={{ marginLeft: '1em' }}>
-            <input
-              type="radio"
-              value="paid"
-              checked={priceType === "paid"}
-              onChange={(e) => setPriceType(e.target.value)}
-            /> Paid
-          </label>
-        </div>
-
-        {/* Conditionally render the price and currency input */}
-        {priceType === "paid" && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5em' }}>
-            <input
-              type="number"
-              placeholder="Amount"
-              value={amount}
-              onChange={(e) => setAmount(parseFloat(e.target.value))}
-              style={{ width: '100px', padding: '0.5em', borderRadius: '5px' }}
-            />
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              style={{ padding: '0.5em', borderRadius: '5px' }}
-            >
-              <option value="INR">INR</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-              <option value="JYN">JYN</option>
-            </select>
-          </div>
-        )}
-
-        <Button onClick={props.isEditing ? handleEditEvent : handleAddEvent}>
-          {loading
-            ? 'Adding Event...'
-            : props.isEditing
-              ? 'Edit Event'
-              : 'Add Event'}
-        </Button>
-        <Button onClick={props.onHide}>Close</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
 
 
 
@@ -403,6 +79,506 @@ const CreatePost1 = ({
     return null;
   };
   
+  function MyVerticallyCenteredModal(props) {
+  const [isEditing, setIsEditing] = useState(false);
+  const profile = useSelector((state) => state.profile);
+  const [createGroup, setCreateGroup] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // New states for price type, amount, and currency
+  const [priceType, setPriceType] = useState("free");
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("INR");
+
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    startTime: "00:00",
+    endTime: "00:00",
+    picture: "",
+    cName: "",
+    cNumber: "",
+    cEmail: "",
+    location: "",
+    groupId: _id ? _id : "",
+  });
+  const [errors, setErrors] = useState({});
+
+
+  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent]);
+
+
+  const validate = () => {
+    const errs = {};
+    if (!newEvent.title?.trim()) errs.title = 'Event title is required';
+    if (!newEvent.cName?.trim()) errs.cName = 'Coordinator name is required';
+    if (!newEvent.picture?.trim()) errs.picture = 'Event Image is required';
+    if (!newEvent.start) errs.start = 'Start date is required';
+    if (!newEvent.end) errs.end = 'End date is required';
+    if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) errs.end = 'End date cannot be before start date';
+    if (priceType === 'paid') {
+      if (!amount || amount <= 0) errs.amount = 'Valid amount is required';
+    }
+    if (!newEvent.location?.trim()) errs.location = 'Location is required';
+    // if (!newEvent.cNumber?.trim()) errs.cNumber = 'Coordinator number is required';
+     // Coordinator number (ensure string)
+     const cNum = newEvent.cNumber != null ? String(newEvent.cNumber) : '';
+     if (!cNum.trim()) errs.cNumber = 'Coordinator number is required';
+     else if (!/^\d{10}$/.test(cNum)) errs.cNumber = 'Enter a valid 10-digit number';
+ 
+    else if (!/^\d{10}$/.test(newEvent.cNumber)) errs.cNumber = 'Enter a valid 10-digit number';
+    if (!newEvent.cEmail?.trim()) errs.cEmail = 'Coordinator email is required';
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(newEvent.cEmail)) errs.cEmail = 'Enter a valid email';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+  const fetchEvent = async ()=>{
+  if(props.isEditing===true){
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`);
+      setNewEvent((prev)=>{
+        return {
+          ...prev,
+          title: res.data.title,
+          start: new Date(res.data.start),
+          end: new Date(res.data.end),
+          startTime: res.data.startTime,
+          endTime: res.data.endTime,
+          picture: res.data.picture,
+          cName: res.data.cName,
+          cNumber: res.data.cNumber,
+          cEmail: res.data.cEmail,
+          location: res.data.location,
+        }
+      })
+      console.log(res.data);
+     }catch(err){
+      console.log(err);
+     }
+  }
+  }
+
+  useEffect(()=>{
+    fetchEvent();
+  },[props.isEditing])
+  // Handle image file selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+   
+    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const formDataImage = new FormData();
+    formDataImage.append('image', file);
+
+    axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
+    .then((res)=>{
+      setNewEvent((prev)=>{ 
+        return {
+          ...prev,
+          picture: res.data?.imageUrl
+        }
+       })
+    })
+  };
+
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent({ ...newEvent, [name]: value });
+  };
+
+  // Handle date changes (DatePicker)
+  const handleDateChange = (date, field) => {
+    setNewEvent({ ...newEvent, [field]: date });
+  };
+
+  // Add new event
+  const handleAddEvent = async () => {
+
+    if(validate()){
+      const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
+      newEvent;
+
+    // if (!title || !start || !end || !picture) {
+    //   alert("Please provide title, start date, end date and image");
+    //   return;
+    // }
+
+    const formattedStart = format(new Date(start), "yyyy-MM-dd");
+    const formattedEnd = format(new Date(end), "yyyy-MM-dd");
+    setLoading(true);
+
+    const eventData = {
+      userId: profile._id,
+      title,
+      start: formattedStart,
+      end: formattedEnd,
+      startTime,
+      userName: `${profile.firstName} ${profile.lastName}`,
+      profilePicture: profile.profilePicture,
+      endTime,
+      picture,
+      cName,
+      cNumber,
+      cEmail,
+      location,
+      department: profile.department,
+      createGroup,
+      groupId:_id||"",
+      // Include price type and amount based on selection
+      priceType,
+      amount: priceType === "paid" ? amount : null, // Only include amount if it's paid
+      currency: priceType === "paid" ? currency : "",
+    };
+    console.log("eventData", eventData);
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/events/createEvent`, eventData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      setAllEvents([...allEvents, response.data]);
+      setLoading(false);
+      window.location.reload();
+
+      setNewEvent({
+        title: "",
+        start: "",
+        end: "",
+        startTime: "",
+        endTime: "",
+        picture: null,
+        cEmail: "",
+        cName: "",
+        cNumber: "",
+        location: "",
+      });
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+    }
+   
+  };
+
+  // Edit event
+  const handleEditEvent = async () => {
+   if(validate()){
+    const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
+    newEvent;
+  const eventId = props.selectedEvent._id;
+
+  if (!title || !start || !end) {
+    alert("Please provide title, start date, and end date.");
+    return;
+  }
+
+  try {
+    const formattedStart = format(new Date(start), "yyyy-MM-dd");
+    const formattedEnd = format(new Date(end), "yyyy-MM-dd");
+
+    const updatedEvent = {
+      title,
+      start: formattedStart,
+      end: formattedEnd,
+      startTime,
+      endTime,
+      picture,
+      cName,
+      cNumber,
+      cEmail,
+      location,
+      priceType,
+      amount: priceType === "paid" ? amount : "0",
+      currency: priceType === "paid" ? currency : "",
+    };
+
+    await axios.put(`${process.env.REACT_APP_API_URL}/events/${eventId}`, updatedEvent, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const updatedEvents = allEvents.map((event) =>
+      event._id === eventId ? updatedEvent : event
+    );
+
+    setAllEvents(updatedEvents);
+    setSelectedEvent(null);
+    props.onHide();
+    toast.success("Event updated successfully.");
+    window.location.reload();
+  } catch (error) {
+    console.error("Error updating event:", error);
+    alert("Error updating event. Please try again.");
+  }
+   }
+  };
+
+  // If the modal is not visible, don't render anything
+  if (!props.show) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/50"
+        onClick={props.onHide}
+      ></div>
+
+      {/* Modal Container */}
+      <div className="relative bg-white rounded-md shadow-2xl rounded-t-xl max-w-xl w-full mx-4">
+        {/* Header */}
+        <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl ">
+          <h2 className="text-white text-lg font-semibold">
+            {props.isEditing ? "Edit Event" : "Add Event"}
+          </h2>
+          <button
+            onClick={props.onHide}
+            className="text-white text-2xl leading-none hover:text-gray-300"
+          >
+            &times;
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-6 bg-[#f8fafc] max-h-[60vh] thin-scroller overflow-y-auto rounded-b-xl">
+          <form className="space-y-4">
+          <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Title</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Enter event title"
+            value={newEvent.title}
+            onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+            required
+          />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+        </div>
+
+        {/* Start and End Date */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Start Date</label>
+            <DatePicker
+              className="w-full border border-gray-300 rounded p-2"
+              selected={newEvent.start}
+              onChange={(date) => handleDateChange(date, 'start')}
+              placeholderText="Select start date"
+              required
+            />
+            {errors.start && <p className="text-red-500 text-sm mt-1">{errors.start}</p>}
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">End Date</label>
+            <DatePicker
+              className="w-full border border-gray-300 rounded p-2"
+              selected={newEvent.end}
+              onChange={(date) => handleDateChange(date, 'end')}
+              placeholderText="Select end date"
+              required
+            />
+            {errors.end && <p className="text-red-500 text-sm mt-1">{errors.end}</p>}
+          </div>
+        </div>
+
+        {/* Start and End Time */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">Start Time</label>
+            <input
+              type="time"
+              className="w-full border border-gray-300 rounded p-2"
+              value={newEvent.startTime}
+              onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">End Time</label>
+            <input
+              type="time"
+              className="w-full border border-gray-300 rounded p-2"
+              value={newEvent.endTime}
+              onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
+            />
+          </div>
+        </div>
+
+        {/* Location */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Location</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Event Location"
+            value={newEvent.location}
+            onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+            required
+          />
+          {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+        </div>
+
+        {/* Free / Paid Radio Buttons */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Type</label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                value="free"
+                checked={priceType === 'free'}
+                onChange={(e) => setPriceType(e.target.value)}
+              />
+              <span>Free</span>
+            </label>
+            <label className="flex items-center space-x-2">
+              <input
+                type="radio"
+                value="paid"
+                checked={priceType === 'paid'}
+                onChange={(e) => setPriceType(e.target.value)}
+              />
+              <span>Paid</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Conditionally render the price and currency input */}
+        {priceType === 'paid' && (
+          <div className="flex items-center space-x-2">
+            <input
+              type="number"
+              placeholder="Amount"
+              value={amount}
+              onChange={(e) => setAmount(parseFloat(e.target.value))}
+              className="w-24 border border-gray-300 rounded p-2"
+              required
+            />
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="border border-gray-300 rounded p-2"
+            >
+              <option value="INR">INR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="JYN">JYN</option>
+            </select>
+            {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
+          </div>
+        )}
+
+        {/* Coordinator Name */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Name</label>
+          <input
+            type="text"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Name"
+            value={newEvent.cName}
+            onChange={(e) => setNewEvent({ ...newEvent, cName: e.target.value })}
+          />
+            {errors.cName && <p className="text-red-500 text-sm mt-1">{errors.cName}</p>}
+
+        </div>
+
+        {/* Coordinator Number */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Number</label>
+          <input
+            type="number"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Number"
+            value={newEvent.cNumber}
+            onChange={(e) => setNewEvent({ ...newEvent, cNumber: e.target.value })}
+            required
+          />
+          {errors.cNumber && <p className="text-red-500 text-sm mt-1">{errors.cNumber}</p>}
+        </div>
+
+        {/* Coordinator Email */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Coordinator Email</label>
+          <input
+            type="email"
+            className="w-full border border-gray-300 rounded p-2"
+            placeholder="Coordinator Email"
+            value={newEvent.cEmail}
+            onChange={(e) => setNewEvent({ ...newEvent, cEmail: e.target.value })}
+            required
+          />
+          {errors.cEmail && <p className="text-red-500 text-sm mt-1">{errors.cEmail}</p>}
+        </div>
+
+        {/* File Input */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">Event Image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300"
+          />
+          {errors.picture && <p className="text-red-500 text-sm mt-1">{errors.picture}</p>}
+          {newEvent.picture && (
+            <div className="mt-2">
+              <img src={newEvent.picture} alt="Event" className="max-w-full h-auto" />
+              <button
+                type="button"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
+                onClick={() => setNewEvent({ ...newEvent, picture: null })}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Create Group Checkbox (only if not editing) */}
+        {/* {(!props.isEditing )&& (
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="create-group"
+              checked={createGroup}
+              onChange={(e) => setCreateGroup(e.target.checked)}
+              className="h-4 w-4 text-indigo-600"
+            />
+            <label htmlFor="create-group" className="text-gray-700">
+              Create a group with the same event title
+            </label>
+          </div>
+        )} */}
+          </form>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gray-100 px-4 py-3 flex justify-end items-center space-x-2 rounded-b-xl">
+          {/* Cancel Button */}
+          <button
+            onClick={props.onHide}
+            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md "
+          >
+            Cancel
+          </button>
+
+          {/* Submit Button */}
+          <button
+            onClick={props.isEditing ? handleEditEvent : handleAddEvent}
+            className="bg-[#172d41] hover:bg-[rgb(36,67,95)] text-white px-4 py-2 rounded-md"
+          >
+            {props.isEditing ? "Edit Event" : "Add Event"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
   // Component to render YouTube embed
   const YouTubeEmbed = ({ videoId }) => {
     if (!videoId) return null;
@@ -749,10 +925,10 @@ const removeYoutubeVideo = () => {
     };
 
   return (
-    <div className={` mb-3 rounded-xl border border-gray-200  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
-    <div className={`overlay ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
-    <div className={`card pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
-      <div className={`card-header bg-white border-b-0 p-0`}>
+    <div className={` mb-3  rounded-xl border border-gray-300  w-full md:w-full xl:w-[650px] bg-white shadow-sm transition-all duration-300 ${isExpanded ? 'ring-2 ring-green-300' : ''}`}>
+    <div className={`overlay  ${isExpanded ? 'opacity-75' : 'opacity-0'}`} onClick={handleInputClick}></div>
+    <div className={` pt-1 ${isExpanded ? 'pb-4' : 'pb-2'}`}>
+      <div className={`rounded-xl bg-white `}>
         <div className="flex items-center gap-4 px-4 py-2">
           <img
             src={profile.profilePicture || picture}

@@ -10,7 +10,7 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
   const [groups, setGroups] = useState([]);
   const [totalGroups, setTotalGroups] = useState(0);
   const [loading, setLoading] = useState(false)
-  const LIMIT = 4;
+  const LIMIT = 40;
   const profile = useSelector((state) => state.profile);
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);
@@ -22,9 +22,10 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
       return;
     }
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
-      );
+      // const api =   `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
+      const api =   `${process.env.REACT_APP_API_URL}/groupMember/joined/${id}?page=${page}&size=${LIMIT}`
+      
+      const response = await axios.get(api);
       const postsData = response.data.records;
       setGroups((prevItems) => [...prevItems, ...postsData]);
       setTotalGroups(response.data.total);

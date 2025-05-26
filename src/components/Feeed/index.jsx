@@ -147,7 +147,7 @@ function Feed({
 
   return (
     <div className="feed">
-      {[0,1].includes(profile.profileLevel) && (
+      {([0,1].includes(profile.profileLevel) && entityType!="news") && (
         <CreatePost1
           photoUrl={photoUrl}
           username={username}
