@@ -6,7 +6,7 @@ import Technology from '../../images/pexels-pixabay-356056.jpg';
 import Retail from '../../images/pexels-pixabay-264636.jpg';
 import Manufacturing from '../../images/pexels-pixabay-257700.jpg';
 import Healthcare from '../../images/pexels-chokniti-khongchum-2280568.jpg';
-import Finance from '../../images/pexels-lukas-590041.jpg';
+// import Finance from '../../images/pexels-lukas-590041.jpg';
 import axios from 'axios';
 
 const CreateDonation = ({ edit }) => {
@@ -32,7 +32,7 @@ const CreateDonation = ({ edit }) => {
     const [backgroundImage, setBackgroundImage] = useState('');
   const handleIndustryChange = (event) => {
     setIndustry(event.target.value);
-    const industryImages = { Technology, Finance, Manufacturing, Retail, Healthcare };
+    const industryImages = { Technology,  Manufacturing, Retail, Healthcare };
     const imagePath = industryImages[event.target.value];
     if (imagePath) {
       fetch(imagePath)

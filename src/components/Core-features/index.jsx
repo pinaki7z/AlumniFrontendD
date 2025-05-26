@@ -1,18 +1,18 @@
 // import Image from 'next/image'
-import events from "../../images/appointment-agenda-reminder-personal-organizer-calendar-concept.jpg";
-import directory from "../../images/young-group-friend-education-using-technology-laptop-computer-network-connection.jpg";
-import interactive from "../../images/tablet-with-applications.jpg";
-import business from "../../images/creative-concept-about-success-career-ladder-business-woman-with-laptop.jpg";
-import sponsorship from "../../images/support-diverse-diversity-ethnic-ethnicity-variation-unity-concept.jpg";
-import photo from "../../images/casual-man-working-desk-with-computer-digitizer-against-profile-pictures.jpg";
-import communication from "../../images/hand-button-man-multimedia-mail.jpg";
-import dashboard from "../../images/communication-connection-message-networking.jpg";
+// import events from "../../images/appointment-agenda-reminder-personal-organizer-calendar-concept.jpg";
+// import directory from "../../images/young-group-friend-education-using-technology-laptop-computer-network-connection.jpg";
+// import interactive from "../../images/tablet-with-applications.jpg";
+// import business from "../../images/creative-concept-about-success-career-ladder-business-woman-with-laptop.jpg";
+// import sponsorship from "../../images/support-diverse-diversity-ethnic-ethnicity-variation-unity-concept.jpg";
+// import photo from "../../images/casual-man-working-desk-with-computer-digitizer-against-profile-pictures.jpg";
+// import communication from "../../images/hand-button-man-multimedia-mail.jpg";
+// import dashboard from "../../images/communication-connection-message-networking.jpg";
 
 export default function CoreFeatures() {
   const features = [
     {
       title: "Dynamic Dashboard",
-      image: dashboard,
+      // image: dashboard,
       items: [
         "Stay informed and engaged with our intuitive dashboard",
         "Browse feeds and trending posts",
@@ -21,7 +21,7 @@ export default function CoreFeatures() {
     },
     {
       title: "Alumni Directory",
-      image: directory,
+      // image: directory,
       items: [
         "Advanced search options to filter by batch, year, profession, or role",
         "Build a robust network of alumni and current students"
@@ -29,7 +29,7 @@ export default function CoreFeatures() {
     },
     {
       title: "Interactive Engagement Tools",
-      image: interactive,
+      // image: interactive,
       items: [
         "Keep your alumni engaged and involved",
         "Organize virtual alumni groups and host discussions",
@@ -38,7 +38,7 @@ export default function CoreFeatures() {
     },
     {
       title: "Events Management",
-      image: events,
+      // image: events,
       items: [
         "Simplify event planning and participation",
         "Plan and manage reunions, webinars, and more",
@@ -47,7 +47,7 @@ export default function CoreFeatures() {
     },
     {
       title: "Business & Career Opportunities",
-      image: business,
+      // image: business,
       items: [
         "Bridge the gap between alumni and students",
         "Share job opportunities and entrepreneurial ventures",
@@ -56,7 +56,7 @@ export default function CoreFeatures() {
     },
     {
       title: "Sponsorship & Support",
-      image: sponsorship,
+      // image: sponsorship,
       items: [
         "Leverage alumni contributions effectively",
         "Alumni can sponsor events",
@@ -78,8 +78,8 @@ export default function CoreFeatures() {
                 <div className="d-flex">
                   <div className="flex-shrink-0 me-3" style={{ width: '160px', height: '160px' }}>
                     <img
-                      src={feature.image}
-                      alt={feature.title}
+                      src={feature?.image}
+                      alt={feature?.title}
                       className="img-fluid rounded"
                       style={{ objectFit: 'cover', height: '100%', width: '100%' }}
                     />
