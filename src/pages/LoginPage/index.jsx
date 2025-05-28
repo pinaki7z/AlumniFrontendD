@@ -1,18 +1,13 @@
-import "./loginPage.css";
-import "../../components/FrameComponent/FrameComponent.css";
-// import io from "../../images/io.png";
 import io from "../../images/logo-io.png";
 import { useState, useEffect } from 'react';
-import './loginPage.css';
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from '../../store/userSlice';
 import { updateProfile, setAdmin } from "../../store/profileSlice";
-import baseUrl from "../../config";
 import ReCAPTCHA from "react-google-recaptcha";
 import CryptoJS from "crypto-js";
+
 const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,21 +16,13 @@ const LoginPage = ({ handleLogin }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState(null);
-  const profile = useSelector((state) => state.profile);
-  const backgroundImageUrl = `${process.env.REACT_APP_URL}/images/background.jpg`;
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(false);
 
   const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
 
-  const encrypt = (text) => {
-    return CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
-  };
-
-  const decrypt = (cipherText) => {
-    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
-    return bytes.toString(CryptoJS.enc.Utf8);
-  };
+  const encrypt = (text) => CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
+  const decrypt = (cipherText) => CryptoJS.AES.decrypt(cipherText, SECRET_KEY).toString(CryptoJS.enc.Utf8);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("savedEmail");
@@ -122,120 +109,114 @@ const LoginPage = ({ handleLogin }) => {
     }
   };
 
-  const handleReCaptcha = (token) => {
-    setCaptchaToken(token);
-  };
-
   return (
-    <div className="landing-page-1">
-      <div className="main-container">
-        <div className="content-area">
-          <img src={io} alt="" srcset="" width='250px' height='100px' />
-        </div>
-      </div>
-      <main className="login-panel">
-        <div className="login-panel-child" />
-        <div className="welcome-message">
-          <div className="welcome-message-child" />
-          <h1 className="rediscover-reconnect-reignite">
-            REDISCOVER RECONNECT REIGNITE
-          </h1>
-          <h1 className="your-alumni-journey">
-            Your Alumni Journey Starts Here!
-          </h1>
-        </div>
-        <div className="login-fields">
-          <form className="credentials-input" onSubmit={handleSubmit}>
-            <h1 className="welcome-back" style={{ color: '#0a3a4c' }}>Welcome To</h1>
-            <div className="university-affiliation">
-              <div className="bhu-alumni-association-container">
-                <b className="bhu">
-                  <span className="bhu1" style={{ color: '#0a3a4c' }}>ALUMNIFY</span>
-                </b>
-              </div>
+    <>
+      <div className="relative min-h-screen">
+
+        <img
+          src="/v2/loginBg.webp"
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover brightness-[1.5] filter opacity-50 blur-xl"
+        />
+        <div className=" relative  flex flex-col items-center justify-center  p-4">
+          {/* Logo */}
+          <img src={io} alt="InsideOut Logo" className="w-[200px] mb-8 " />
+
+          {/* Panels Container */}
+          <div className="flex w-full max-w-4xl bg-white rounded-3xl shadow-lg overflow-hidden">
+            {/* Left Panel */}
+            <div className="hidden md:flex w-1/2 bg-[#0a3a4c] text-white flex-col justify-center p-10 space-y-4">
+              <h2 className="text-4xl font-bold">REDISCOVER</h2>
+              <h2 className="text-4xl font-bold">RECONNECT</h2>
+              <h2 className="text-4xl font-bold">REIGNITE</h2>
+              <p className="text-lg">Your Alumni Journey Starts Here!</p>
             </div>
-            <div className="account-details-parent">
-              <div className="account-details" style={{ width: '100%' }}>
-                <div className="email" style={{ color: '#36454F' }}>Email</div>
-                <div className="email1" style={{ width: '100%' }}>
-                  <div className="field">
 
-                    <input
-                      className="email-address"
-                      placeholder="Email address"
-                      type="text"
-                      style={{ width: '100%' }}
-                      value={email} onChange={(e) => setEmail(e.target.value)}
-                    />
-
-                  </div>
-                </div>
+            {/* Right Panel */}
+            <div className="w-full md:w-1/2 bg-gray-50 p-8 flex flex-col justify-center">
+              <h1 className="text-2xl font-normal text-gray-800 mb-2">Welcome To</h1>
+              <div className="mb-6">
+                <span className="text-5xl font-bold text-[#0a3a4c]">ALUMNIFY</span>
               </div>
-              <div className="password" style={{ color: '#36454F' }}>Password</div>
-              <div className="input-area">
-                <div className="input">
-                  <div className="input1">
-                    <div className="field1" style={{ width: '100%' }}>
-                      <input
-                        className="email-address1"
-                        placeholder="Password"
-                        type={passwordVisible ? "text" : "password"}
-                        style={{ width: '80%' }}
-                        value={password} onChange={(e) => setPassword(e.target.value)}
-                      />
 
-                    </div>
-                  </div>
-                  <img
-                    className="password-visible-icon"
-                    alt="Toggle Password Visibility"
-                    src="/password-visible.svg"
-                    onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility on click
-                    style={{ cursor: 'pointer' }} // Change cursor to pointer
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email address"
+                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
                   />
                 </div>
-                <div className="remember-this-device-forgot">
-                  <div className="remember-this-device">
-                    <div className="controls">
-                    <div className="checkmark">
-                          <input
-                            type="checkbox"
-                            checked={rememberDevice}
-                            onChange={() => setRememberDevice(!rememberDevice)}
-                          />
-                        </div>
-                    </div>
-                    <div className="remember-this-device1" style={{ color: '#008080' }}>Remember this device</div>
-                  </div>
-                  <div className="forgot-password" onClick={() => navigateTo('/forgot-password')} style={{cursor: 'pointer'}}>Forgot Password?</div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <ReCAPTCHA
-                sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM"
-                onChange={handleReCaptcha}
-              />
-            </div>
-            <div className="action-buttons">
-              <button className="button" type='submit' style={{
-                color: '#F8F8FF',
-                background: '#71be95'
-              }}>
-                <div className="button1" style={{ color: '#F8F8FF' }}>{loading ? 'Logging in...' : 'Login'}</div>
-              </button>
-              <div className="signup-link-wrapper">
-                <div className="signup-link">
-                  <div className="dont-have-an" style={{ color: '#008080' }}>Don’t have an account?</div>
-                  <a href='/register' style={{ textDecoration: 'none', color: '#36454F', fontSize: 'var(--font-size-sm)' }}>Register</a>
 
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Password</label>
+                  <div className="relative">
+                    <input
+                      type={passwordVisible ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Password"
+                      className="w-full border border-gray-300 rounded-lg p-2 pr-10 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    >
+                      👁️
+                    </button>
+                  </div>
                 </div>
-              </div>
+
+                {/* Remember & Forgot */}
+                <div className="flex items-center justify-between text-sm">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={rememberDevice}
+                      onChange={() => setRememberDevice(!rememberDevice)}
+                      className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                    />
+                    <span className="text-teal-600">Remember this device</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('/forgot-password')}
+                    className="text-gray-800 hover:underline"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+
+                {/* reCAPTCHA */}
+                <ReCAPTCHA sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM" onChange={token => setCaptchaToken(token)} />
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-green-400 hover:bg-green-500 text-white py-3 rounded-lg text-lg font-medium"
+                  disabled={loading}
+                >
+                  {loading ? 'Logging in...' : 'Login'}
+                </button>
+
+                {/* Register Link */}
+                <div className="text-center text-sm">
+                  <span className="text-gray-600">Don’t have an account?</span>
+                  <a href="/register" className="ml-1 text-blue-600 hover:underline">Register</a>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+    </>
   );
 };
 

@@ -26,7 +26,7 @@ const token = cookies.token;
   }, []);
   return (
     <nav className="bg-white fixed top-0 w-full shadow-md">
-    <div className="container mx-auto flex items-center justify-between py-4 px-6">
+    <div className="container mx-auto flex items-center justify-between py-1 px-6">
       {/* Logo on the left */}
       <Link to="#home" className="flex items-center">
         <img src={io} alt="InsideOut Logo" width="120" height="62" />

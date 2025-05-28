@@ -1,290 +1,300 @@
-import FrameComponent1 from "../../components/FrameComponent/FrameComponent1.jsx";
-import "./registerpage.css";
 import React, { useState } from 'react';
+import FrameComponent1 from "../../components/FrameComponent/FrameComponent1.jsx";
 import axios from 'axios';
-import "./registerpage.css";
-import "../LoginPage/loginPage.css"
-import backgroundPic from "../../images/imgb.jpg";
-import pic from "../../images/bhuUni.jpg";
-import logo from "../../images/bhu.png";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import baseUrl from "../../config.js";
 import ReCAPTCHA from "react-google-recaptcha";
+import io from "../../images/logo-io.png";
+
 
 const RegisterPage = () => {
   const navigateTo = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    gender: '',
-    accept: false,
-    captchaToken: null
+    firstName: '', lastName: '', email: '', password: '', confirmPassword: '',
+    gender: '', department: '', graduatingYear: '', batch: '', accept: false, captchaToken: null, userType: 'alumni'
   });
 
-  const handleReCaptcha = (token) => {
-    setFormData({ ...formData, captchaToken: token });
-  };
-
+  const handleReCaptcha = (token) => setFormData({ ...formData, captchaToken: token });
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const val = type === 'checkbox' ? checked : value;
-    setFormData({ ...formData, [name]: val });
+    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    console.log('handling reg submission')
     if (!formData.captchaToken) {
       toast.error("Please complete the CAPTCHA.");
       setLoading(false);
       return;
     }
-
     if (!formData.accept) {
       toast.error("You must accept the terms and conditions to register.");
       setLoading(false);
       return;
     }
-
-    console.log('handling reg submission 2')
     try {
-      console.log('formData', formData);
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, formData);
-
-      console.log('Registration successful!', response.data);
+      const response = await axios.post(`http://localhost:5000/alumni/register`, formData);
+      // const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, formData);
       toast.success("User Registered successfully!");
       navigateTo('/login');
-      setLoading(false);
-
     } catch (error) {
-      console.error('Registration failed!', error.response.data);
-      toast.error(error.response.data);
+      toast.error(error.response?.data || "Registration failed.");
+    } finally {
       setLoading(false);
-
     }
   };
+
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let i = currentYear - 1; i >= currentYear - 100; i--) {
-      years.push(`${i}-${i + 1}`);
-    }
-    return years;
+    return Array.from({ length: 101 }, (_, i) => `${currentYear - 1 - i}-${currentYear - i}`);
   };
-
   const generateGraduatingYears = () => {
     const currentYear = new Date().getFullYear();
-    const years = ['Graduated'];
-    for (let i = currentYear; i >= currentYear - 100; i--) {
-      years.push(i);
-    }
-    return years;
+    return ['Graduated', ...Array.from({ length: 101 }, (_, i) => currentYear - i)];
   };
 
   return (
-    <div className="register">
-      <main className="rectangle-parent">
-        <div className="frame-child" />
-        <div className="rectangle-group">
-          <div className="frame-item" />
-          <div className="bhu-alumni-association-container1">
-            <span>Welcome to</span>
-            <span className="alumni-association">
-              <b>{` `}</b>
-              <span className="alumni-association1" style={{ fontSize: '65px' }}>Alumnify</span>
-            </span>
-          </div>
-        </div>
-        <div className="first-name-field-wrapper">
-          <form className="first-name-field" onSubmit={handleSubmit} >
-            <h1 className="create-an-account">Create an account</h1>
-            <span style={{ fontSize: "15px" }}>(All fields are mandatory)</span>
-            <div className="last-name-field-parent">
-              <div className="last-name-field">First Name</div>
-              <div className="input">
-                <div className="input1">
-                  <div className="field">
-                    <input
-                      className="register-email-address"
-                      placeholder="Enter First Name"
-                      type="text"
-                      style={{ width: '100%' }}
-                      name='firstName' id='firstName' onChange={handleChange} required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="last-name-field">Last Name</div>
-              <div className="input">
-                <div className="input1">
-                  <div className="field">
-                    <input
-                      className="register-email-address"
-                      placeholder="Enter Last Name"
-                      type="text"
-                      style={{ width: '100%' }}
-                      name='lastName' id='lastName' onChange={handleChange} required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="last-name-field">E-mail</div>
-              <div className="input">
-                <div className="input1">
-                  <div className="field">
-                    <input
-                      className="register-email-address"
-                      placeholder="Enter Email Address"
-                      type="text"
-                      style={{ width: '100%' }}
-                      name='email' id='email' onChange={handleChange} required
-                    />
-                  </div>
+    <>
+
+      <div className="relative min-h-screen">
+        <img
+          src="/v2/loginBg.webp"
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover brightness-[1.5] filter opacity-50 blur-xl"
+        />
+
+        <div className="min-h-screen relative flex flex-col items-center justify-center  p-4 ">
+                      <img src={io} alt="InsideOut Logo" className="w-[200px] mb-8 " />
+
+          {/* Panels Container */}
+          <div className="relative flex w-full max-w-5xl bg-white rounded-3xl shadow-lg overflow-hidden">
+            
+            {/* Left Panel */}
+            <div className="hidden md:flex w-1/2 bg-[#0a3a4c] text-white flex-col justify-center items-center p-8 space-y-4">
+              <h2 className="text-3xl md:text-4xl font-semibold">Welcome to</h2>
+              <h2 className="text-5xl md:text-6xl font-bold uppercase">Alumnify</h2>
+            </div>
+
+            {/* Right Panel */}
+            <div className="w-full md:w-1/2 bg-gray-50 px-4 py-4 overflow-y-auto">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <h1 className="text-2xl font-semibold text-gray-800">Create an account</h1>
+                  <p className="text-sm text-gray-500">(All fields are mandatory)</p>
                 </div>
 
-              </div>
-              <div className="last-name-field1">
-                <div className="password">Password</div>
-                <div className="input2">
-                  <div className="input3">
-                    <div className="field1">
-                      <input
-                        className="email-address1"
-                        placeholder="Enter Password"
-                        type="password"
-                        style={{ width: '100%' }}
-                        name='password' id='password' onChange={handleChange} required
-                      />
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-              <div className="last-name-field2">
-                <div className="password">Confirm Password</div>
-                <div className="input2">
-                  <div className="input3">
-                    <div className="field1">
-                      <input
-                        className="email-address1"
-                        placeholder="Confirm Password"
-                        type="password"
-                        style={{ width: '100%' }}
-                        name='confirmPassword' id='confirmPassword' onChange={handleChange} required
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="last-name-field3">
-                <div className="gender">Gender</div>
-                <div className="gender1">
-                  <select name='gender' id='gender' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected >Select Gender</option>
-                    <option value='Male'>Male</option>
-                    <option value='Female'>Female</option>
-                    <option value='Other'>Other</option>
-                  </select>
-
-                </div>
-              </div>
-              <div className="last-name-field4">
-                <div className="department">Department</div>
-                <div className="dept">
-                  <select name='department' id='department' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected >Select Department</option>
-                    <option value='Agricultural Engineering'>Agricultural Engineering</option>
-                    <option value='Gastroenterology'>Gastroenterology</option>
-                    <option value='Indian languages'>Indian languages</option>
-                    <option value='Neurosurgery'>Neurosurgery</option>
-                    <option value='Vocal Music'>Vocal Music</option>
-                  </select>
-                </div>
-              </div>
-              <div className="last-name-field5">
-                <div className="last-name-field">Graduating Year</div>
-                <div className="batch1">
-                  <select name='graduatingYear' id='graduatingYear' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected>Select Graduating Year</option>
-                    {generateGraduatingYears().map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="batch">Batch</div>
-                <div className="batch1">
-                  <select name='batch' id='batch' style={{ fontSize: 'var(--input-text-title-size)', width: '100%', height: '100%', borderRadius: 'var(--br-9xs)', border: '1px solid var(--outline-box)', boxSizing: 'border-box', backgroundColor: 'var(--background-light)' }} onChange={handleChange} required>
-                    <option value='' disabled selected>Select Batch</option>
-                    {generateYears().map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <ReCAPTCHA
-                  sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM"
-                  onChange={handleReCaptcha}
-                />
-              </div>
-              <div className="privacy-policy-link">
-                <div className="controls">
-                  <div className="union-wrapper">
+                {/* Name Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">First Name</label>
                     <input
-                      type="checkbox"
-                      name="accept"
-                      id="accept"
-                      checked={formData.accept}
+                      name="firstName"
                       onChange={handleChange}
                       required
+                      placeholder="Enter First Name"
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Last Name</label>
+                    <input
+                      name="lastName"
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter Last Name"
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
                     />
                   </div>
                 </div>
-                <div className="by-creating-your" htmlFor="accept">
-                  By creating your account, you agree to our
-                </div>
-                <div className="privacy-policy" onClick={() => setShowPrivacyPolicy(true)}>Privacy Policy</div>
-              </div>
-            </div>
-            <button className="register-button" type='submit' id='btn' name='btn'>
-              <div className="register-button1">{loading ? 'Registering...' : "Register"}</div>
-            </button>
-            {showPrivacyPolicy && (
-              <div className="privacy-policy-modal">
-                <div className="privacy-policy-content">
-                  <h2>Privacy Policy</h2>
-                  <p style={{ fontSize: '16px' }}>
-                    At <strong>Alumnify</strong>, we collect personal information such as your name, email address, gender, graduation details, and department to create your alumni profile and provide personalized services. This data helps us connect you with fellow alumni, notify you about events, and enhance networking opportunities. We do not sell or share your personal data with third parties for marketing purposes. All data is securely stored, and we take strong measures to prevent unauthorized access.
-                  </p>
-                  <p style={{ fontSize: '16px' }}>
-                    If you are a resident of the <strong>European Economic Area (EEA)</strong>, your data is protected under the <strong>General Data Protection Regulation (GDPR)</strong>. You have the right to access, modify, or delete your personal data at any time. Additionally, you can request a copy of your stored data or withdraw consent for data processing by contacting us. We ensure that your data is processed lawfully, transparently, and for legitimate purposes.
-                  </p>
-                  <p style={{ fontSize: '16px' }}>
-                    To improve user experience, <strong>Alumnify</strong> may use third-party services for authentication, analytics, and security. These services comply with strict data protection policies and do not misuse your personal information. However, we encourage you to review their privacy policies when interacting with external services through our platform. Any third-party integration will be disclosed, and users will have the option to opt-out if desired.
-                  </p>
-                  <p style={{ fontSize: '16px' }}>
-                    We may update this <strong>Privacy Policy</strong> periodically to reflect changes in our services or legal requirements. Users will be notified of any significant modifications. Your continued use of <strong>Alumnify</strong> after these updates implies acceptance of the revised policy.
-                  </p>
-                  <button onClick={() => setShowPrivacyPolicy(false)} style={{ width: '90px', height: '35px', fontSize: '25px' }}>Close</button>
-                </div>
-              </div>
-            )}
 
-          </form>
+                {/* Email */}
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium text-gray-700">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter Email Address"
+                    className="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
+                  />
+                </div>
+
+                {/* Password Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Password</label>
+                    <input
+                      name="password"
+                      type="password"
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter Password"
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+                    <input
+                      name="confirmPassword"
+                      type="password"
+                      onChange={handleChange}
+                      required
+                      placeholder="Confirm Password"
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Select Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Gender</label>
+                    <select
+                      name="gender"
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-white focus:outline-none"
+                    >
+                      <option value="" disabled selected>Select Gender</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Department</label>
+                    <select
+                      name="department"
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-white focus:outline-none"
+                    >
+                      <option value="" disabled selected>Select Department</option>
+                      <option>Agricultural Engineering</option>
+                      <option>Gastroenterology</option>
+                      <option>Indian languages</option>
+                      <option>Neurosurgery</option>
+                      <option>Vocal Music</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Year & Batch */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Graduating Year</label>
+                    <select
+                      name="graduatingYear"
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-white focus:outline-none"
+                    >
+                      <option value="" disabled selected>Select Graduating Year</option>
+                      {generateGraduatingYears().map((yr) => (
+                        <option key={yr} value={yr}>{yr}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="text-sm font-medium text-gray-700">Batch</label>
+                    <select
+                      name="batch"
+                      onChange={handleChange}
+                      required
+                      className="mt-1 w-full border border-gray-300 rounded-lg p-2 bg-white focus:outline-none"
+                    >
+                      <option value="" disabled selected>Select Batch</option>
+                      {generateYears().map((yr) => (
+                        <option key={yr} value={yr}>{yr}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* reCAPTCHA */}
+                <ReCAPTCHA sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM" onChange={handleReCaptcha} />
+
+                {/* Terms & Privacy */}
+                <div className="flex items-center space-x-2 text-sm">
+                  <input
+                    type="checkbox"
+                    name="accept"
+                    checked={formData.accept}
+                    onChange={handleChange}
+                    className="h-4 w-4 text-teal-600 border-gray-300 rounded"
+                    required
+                  />
+                  <label htmlFor="accept" className="text-gray-700">By creating your account, you agree to our</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPrivacyPolicy(true)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    Privacy Policy
+                  </button>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-green-400 hover:bg-green-500 text-white py-3 rounded-lg text-lg font-medium"
+                >
+                  {loading ? 'Registering...' : 'Register'}
+                </button>
+
+                <div className="text-center text-sm mt-2">
+                  <span className="text-gray-600">Already have an account?</span>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('/login')}
+                    className="ml-1 text-blue-600 hover:underline"
+                  >
+                    Login
+                  </button>
+                </div>
+              </form>
+
+              {/* Privacy Policy Modal */}
+              {showPrivacyPolicy && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="bg-white rounded-lg p-6 w-11/12 md:w-1/2 max-h-[80vh] overflow-y-auto">
+                    <h2 className="text-xl font-semibold mb-4">Privacy Policy</h2>
+                    <div className="space-y-4 text-sm">
+                      <p>
+                        At <strong>Alumnify</strong>, we collect personal information such as your name, email address, gender, graduation details, and department to create your alumni profile and provide personalized services. This data helps us connect you with fellow alumni, notify you about events, and enhance networking opportunities. We do not sell or share your personal data with third parties for marketing purposes. All data is securely stored, and we take strong measures to prevent unauthorized access.
+                      </p>
+                      <p>
+                        If you are a resident of the <strong>European Economic Area (EEA)</strong>, your data is protected under the <strong>General Data Protection Regulation (GDPR)</strong>. You have the right to access, modify, or delete your personal data at any time. Additionally, you can request a copy of your stored data or withdraw consent for data processing by contacting us. We ensure that your data is processed lawfully, transparently, and for legitimate purposes.
+                      </p>
+                      <p>
+                        To improve user experience, <strong>Alumnify</strong> may use third-party services for authentication, analytics, and security. These services comply with strict data protection policies and do not misuse your personal information. However, we encourage you to review their privacy policies when interacting with external services through our platform. Any third-party integration will be disclosed, and users will have the option to opt-out if desired.
+                      </p>
+                      <p>
+                        We may update this <strong>Privacy Policy</strong> periodically to reflect changes in our services or legal requirements. Users will be notified of any significant modifications. Your continued use of <strong>Alumnify</strong> after these updates implies acceptance of the revised policy.
+                      </p>
+                    </div>
+                    <div className="mt-6 text-right">
+                      <button
+                        onClick={() => setShowPrivacyPolicy(false)}
+                        className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg"
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 
