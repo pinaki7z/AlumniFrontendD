@@ -77,7 +77,7 @@ const DisplayDonSpon = ({ donations, name, updateDonations, totalDonations, page
     console.log('donations', donations)
     return (
         <>
-            <div className="grid grid-cols-2 md:grid-cols-3  gap-2 px-2 py-3">
+            <div className="grid grid-cols-1 md:grid-cols-3  gap-2 px-2 py-3">
                 {donations !== undefined && donations.length > 0 ? (
                     donations.map((donation) => (
                         <Link to={`/home/${name}/${donation._id}`} className='mb-3'>

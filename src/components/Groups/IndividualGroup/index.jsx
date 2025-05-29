@@ -370,22 +370,28 @@ const IndividualGroup = () => {
                                         </div>
                                     </div>
                                 </div >
-                                <div className="ig-lower-container">
-                                    <Routes>
-                                        <Route exact path="/" element={<div style={{ width: '65%' }}>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                   <div className="md:col-span-2">
+                                     <Routes >
+                                        <Route exact path="/" element={<div >
                                             <SocialMediaPost style={{ marginLeft: '0px' }} showCreatePost={true} groupID={_id} />
                                         </div>} />
                                         <Route exact path="/groupInvite" element={<div style={{ width: '65%', paddingTop: '50px' }}>
                                             <GroupInvite />
                                         </div>} />
-                                        <Route exact path="/invite" element={<div style={{ width: '65%' }}>
+                                        <Route exact path="/invite" element={<div >
                                             <JoinGroup />
                                         </div>} />
                                     </Routes>
-                                    <div style={{ width: '35%', paddingTop: '50px', paddingBottom: '100px' }}>
+                                   </div>
+
+
+
+                                    {/* right side content */}
+                                    <div className="md:col-span-1">
 
                                         {
-                                            ((profile._id === groupItem.userId || admin) && groupItem.groupType === 'Private') &&
+                                            // ((profile._id === groupItem.userId || admin) && groupItem.groupType === 'Private') &&
                                             <div className="mb-8">
                                                 <div className="sideWidget2-post-header">
                                                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Join Request</p>
@@ -471,76 +477,14 @@ const IndividualGroup = () => {
                                             </div>
                                     </div>
                                 </div>
-                                {/* {showModal && (
-                                    <div className="modal-overlay-forum">
-                                        <div className="modal-forum">
-                                            <div className="modal-header-forum">
-                                                <div>
-                                                    <h2>Manage Members</h2>
-                                                    <p>Add/Remove Members</p>
-                                                </div>
-                                                <button className="close-button"
-                                                    style={{ fontSize: 'larger', fontFamily: 'Inter', color: '#0a3a4c' }}
-                                                    onClick={() => {
-                                                        setShowModal(false);
-                                                    }
-                                                    }>X</button>
-                                            </div>
-                                            <div style={{ position: 'relative' }}>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search people"
-                                                    value={searchTerm}
-                                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                                    className="search-input"
-                                                    style={{ backgroundColor: '#efeff0' }}
-                                                />
-                                                <img src={searchIcon} alt="" srcset="" style={{ position: 'absolute', top: '10px', right: '10px' }} />
-                                            </div>
-                                            <ul className="members-list">
-                                                {filteredMembers.map((member, index) => (
-                                                    <li key={index} className="member-item">
-                                                        <div className="member-info">
-                                                            <img src={member.profilePicture ? member.profilePicture : profilePic} alt="avatar" className="member-avatar" />
-                                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                                <span>{member.firstName}</span>
-                                                                <span className="member-role">{member.profileLevel === 0 ? 'Super Admin' : member.profileLevel === 1 ? 'Admin' : member.profileLevel === 2 ? 'Alumni' : 'Student'}</span>
-                                                            </div>
-                                                        </div>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={
-                                                                selectedMembers.some((selectedMember) => selectedMember.userId === member._id)
-                                                            }
-                                                            onChange={() => handleMemberSelect(member._id, member.profilePicture, member.firstName, member.lastName, member.profileLevel)}
-                                                            disabled={
-                                                                member._id === groupItem.userId ||
-                                                                member._id === '677e42e03041d82e4b54fdf6'
-                                                            }
-                                                        />
-
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <button className="save-button"
-                                                onClick={handleSaveMembers}
-                                            >
-                                                {saving ? 'Saving...' : 'Save'}</button>
-                                        </div>
-                                    </div>
-                                )} */}
+                               
                             </div>
                         ))}
                 </>} />
                 <Route path="/add" element={<>
                     <GroupMembers members={groupMembers} />
                 </>} />
-                {/* <Route path="/groupInvite" element={<div style={{ width: '65%' }}>
-                    <GroupInvite />
-                </div>} />
-                <Route path="/invite" element={<div style={{ width: '65%' }}>
-                    <JoinGroup />
-                </div>} /> */}
+            
             </Routes>
         </div>
     );

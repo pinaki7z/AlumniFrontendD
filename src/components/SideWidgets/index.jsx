@@ -155,7 +155,7 @@ const SideWidgets = () => {
 
 
 
-    const followingIds = profile.following.map((follow) => follow.userId);
+    const followingIds = profile?.following?.map((follow) => follow.userId);
     const peopleYouMayKnow = members.filter(member => !followingIds.includes(member._id) && member._id !== profile._id);
 
     const displayedMembers = peopleYouMayKnow;

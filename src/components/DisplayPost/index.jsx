@@ -237,12 +237,12 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
       const data = {
         groupId: group._id,
         userId: profile._id,
-        approved: group.groupType == "public" ? true : false
+        approved: group.groupType == "Public" ? true : false
       }
       axios.post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
         .then((res) => {
           // console.log(res.data);
-         if(group.groupType == "public") navigateTo(`/home/groups/${group._id}`)
+         if(group.groupType == "Public") navigateTo(`/home/groups/${group._id}`)
           else{
             toast.success('Request sent successfully!');
             fetchJoin()
@@ -346,7 +346,7 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
                       </>
                     ) : (
                       <>
-                        <button onClick={() => setConfirmModal(true)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>{group?.groupType === 'public' ? 'Join' : 'Request'}</button>
+                        <button onClick={() => setConfirmModal(true)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>{group?.groupType === 'Public' ? 'Join' : 'Request'}</button>
 
                       </>
                     )

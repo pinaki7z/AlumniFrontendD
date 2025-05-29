@@ -943,24 +943,7 @@ function Events() {
           />
         </div>
 
-        {/* <FullCalendar
-  plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-  initialView="dayGridMonth"
-  headerToolbar={{
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-  }}
-  events={allEvents.map(event => ({
-    title: event.title,
-    start: event.start,
-    end: event.end,
-    extendedProps: { ...event }  // optional: pass extra props for your event
-  }))}
-  selectable={true}
-  eventClick={(info) => handleEventClick(info.event.extendedProps)}
-  // Add any additional FullCalendar configurations as needed
-/> */}
+
 
         {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
           <Button

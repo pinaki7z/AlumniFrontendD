@@ -35,20 +35,7 @@ export const fetchProfileData = async () => {
     const cookieString = document.cookie;
     
 
-    // const encodedJsonString = cookieString.split('=')[1];
-    // const jsonString = decodeURIComponent(encodedJsonString);
-    // console.log('json string', jsonString)
-    // const startIndex = jsonString.indexOf('{');
 
-    // Extract the substring from the first '{' to the end of the input
-    //const jsonString1= jsonString.substring(startIndex);
-    //const jsonString1 = jsonString.split(':')[1];
-    // console.log('jsonString1', jsonString1)
-    // const cookieObject = JSON.parse(jsonString1);
-
-    // Extract the 'id' property from the object
-    // const userId = cookieObject.id;
-    // const token = cookieObject.token
 
     const tokenStartIndex = cookieString.indexOf('=');
 
@@ -66,14 +53,7 @@ const decodedToken = JSON.parse(decodedPayload);
 // Extract the userId
 const userId = decodedToken ? decodedToken.userId : null;
 const accessToken = jwtToken;
-    // const cookies = cookieString.split("; ").reduce((acc, cookie) => {
-    //   const [name, value] = cookie.split("=");
-    //   acc[name] = value;
-    //   return acc;
-    // }, {});
-
-    // const accessToken = JSON.parse(decodeURIComponent(cookies["token"])); 
-    // console.log('accessToken',accessToken)
+  
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };

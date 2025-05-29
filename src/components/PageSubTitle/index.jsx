@@ -25,13 +25,13 @@ const PageSubTitle = ({ buttontext1, buttontext2, buttontext3,buttontext4,button
   }
 
   return (
-    <div className="mt-3">
-      <ul className="flex w-full text-sm md:text-lg font-semibold items-center justify-between px-4">
+    <div className="mt-5   mb-3">
+      <ul className="flex flex-wrap w-full text-sm md:text-lg font-semibold items-center sm:gap-2 md:gap-3  md:px-4">
         {[{ text: buttontext1, link: buttontext1Link }, { text: buttontext2, link: buttontext2Link }, { text: buttontext3, link: buttontext3Link }].map((tab, index) => (
-          <li key={index} className="w-1/3 text-center">
+          <li key={index} className=" text-center">
             <Link
               to={tab.link}
-              className={`block py-3 px-4 rounded-lg transition-all duration-300 ${
+              className={`block py-2 px-3 md:py-3 md:px-4 rounded-lg transition-all duration-300 ${
                 location.pathname === tab.link 
                   ? 'bg-[#0A3A4C] text-white shadow-md'  // Active tab styling
                   : 'text-gray-700 hover:text-[#0A3A4C] hover:bg-gray-200'

@@ -1043,7 +1043,7 @@ const removeYoutubeVideo = () => {
       <div className="flex items-center justify-between mt-4 px-4">
         <div className="flex gap-3">
           <label className="flex gap-1 items-center font-semibold px-3 py-2 rounded-full border border-green-300 cursor-pointer hover:bg-green-100 transition-colors">
-            <img src={gallery} alt="Gallery" className="w-5 h-5" />
+           <img src={gallery} alt="Gallery" className="w-6 h-6 md:w-5 md:h-5" />
             <p className="hidden md:block">Image</p>
             <input
               type="file"
@@ -1089,7 +1089,7 @@ const removeYoutubeVideo = () => {
           {_id && (
             <label
               onClick={() => setModalShow(true)}
-              className="flex items-center gap-2 border border-green-400 text-black px-4 py-1 rounded-full cursor-pointer text-sm hover:bg-green-100 transition-colors"
+              className="md:flex hidden  items-center gap-2 border border-green-400 text-black px-4 py-1 rounded-full cursor-pointer text-sm hover:bg-green-100 transition-colors"
             >
               <img src={video} alt="Event" className="w-5 h-5" />
               Event
