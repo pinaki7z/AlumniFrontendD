@@ -115,7 +115,7 @@ export default function ShowImages() {
           <span className="underline text-[#136175]">{dept.name || 'Loading...'}</span>
         </nav>
 
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+        <h1 className="text-xl md:text-3xl font-semibold text-center text-gray-800 mb-6">
           Photos of <span className='capitalize mx-2 font-bold text-teal-600'>{`"${dept.name}"`}</span>({year.year})
         </h1>
 
@@ -143,7 +143,7 @@ export default function ShowImages() {
             No photos uploaded yet.
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {photos.map(p => (
               <div
                 key={p._id}

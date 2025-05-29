@@ -943,11 +943,30 @@ function Events() {
           />
         </div>
 
+          {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+          <Button
+            className="add-event-button-mobile md:hidden"
+            variant="primary"
+            onClick={() => {
+              setModalShow(true);
+              setIsEditing(false);
+            }}
+            style={{
+              borderRadius: '50%',
+              width: '49px',
+              height: '49px',
+              position: 'absolute',
+              backgroundColor: '#301c5B'
+            }}
+          >
+            <FaCalendarPlus />
+          </Button>)}
+
 
 
         {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
           <Button
-            className="add-event-button"
+            className="add-event-button hidden md:block"
             variant="primary"
             onClick={() => {
               setModalShow(true);
@@ -967,7 +986,7 @@ function Events() {
 
         {selectedEventDetails && (
           // Outer modal wrapper (Center + Backdrop)
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center ">
             {/* Backdrop */}
             <div
               className="absolute inset-0 bg-black/50"
@@ -975,7 +994,7 @@ function Events() {
             ></div>
 
             {/* Modal Container */}
-            <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4">
+            <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 ">
               {/* Header */}
               <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl">
                 <h2 className="text-white text-xl font-semibold">
@@ -990,7 +1009,7 @@ function Events() {
               </div>
 
               {/* Body */}
-              <div className="p-6  rounded-b-xl">
+              <div className="p-6  rounded-b-xl max-h-[400px] md:max-h-[600px] overflow-y-auto">
                 {/* Top section: event info + image */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Left side: event info */}
@@ -1149,7 +1168,7 @@ function Events() {
                           onClick={() => setModalShow(true)}
                           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
                         >
-                          Edit Event
+                          Edit
                         </button>
                         <button
                           onClick={() => {
@@ -1158,7 +1177,7 @@ function Events() {
                           }}
                           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
                         >
-                          Delete Event
+                          Delete
                         </button>
                       </div>
                     )}

@@ -24,6 +24,13 @@
     padding: 10px 20px; /* Add padding for better visibility */
   }
 
+  .add-event-button-mobile {
+  position: fixed;
+    bottom: 10px; /* Adjust this value to control the vertical position */
+    right: 10px; /* Adjust this value to control the horizontal position */
+    padding: 15px 16px;
+  }
+
 .event-edit-delete{
     display: flex;
     gap: 20px;
