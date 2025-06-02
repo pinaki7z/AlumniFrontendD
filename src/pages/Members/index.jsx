@@ -304,7 +304,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
                 {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-                  <Link to={`/home/members/create`} style={{ textDecoration: 'none', color: 'black' }}>
+                  <Link to={`/home/members/create`} className='min-h-[250px]'>
                     <div
                       style={{
                         border: '2px dotted #71be95',
