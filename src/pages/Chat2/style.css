@@ -1,0 +1,20 @@
+.thin-scroller {
+    overflow-y: auto;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #888 transparent; /* Thumb color, Track color */
+
+    /* For Webkit browsers */
+    &::-webkit-scrollbar {
+        width: 3px; /* Width of the entire scrollbar */
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #888; /* Color of the scroll thumb */
+        border-radius: 10px; /* Roundness of the scroll thumb */
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent; /* Color of the scroll track */
+    }
+}
+

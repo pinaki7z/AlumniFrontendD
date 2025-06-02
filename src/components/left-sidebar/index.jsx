@@ -19,12 +19,14 @@ import gallery from "../../images/gallery.svg";
 import { GrGallery } from "react-icons/gr";
 import { useSelector } from "react-redux";
 import { GrUserAdmin } from "react-icons/gr";
+import { useLocation } from 'react-router-dom';
 
 
 const LeftSidebar = () => {
     console.log('env ', process.env.REACT_APP_URL)
     const profile = useSelector((state) => state.profile);
     const dispatch = useDispatch();
+     const location = useLocation();
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -43,6 +45,7 @@ const LeftSidebar = () => {
 
         // fetchMembers();
     }, []);
+     const isActive = (path) => location.pathname === path;
 
     return (
         <div className='side-bar-resp overflow-y-auto'>
@@ -52,7 +55,7 @@ const LeftSidebar = () => {
                 </a>
             </div>
             <div className='sideBar'>
-                <ul className='p-0 w-full text-[20px]'>
+                <ul className='mb-8 w-full text-base'>
                     <li><Link to="/home" style={{ textDecoration: 'none' }}><RxDashboard className="dashboard-icon" /><p>Dashboard</p></Link></li>
                     {/* <li><Link to="/socialWall" style={{ textDecoration: 'none' }}><FaHeart style={{ color: '#fd546b' }} /><p>Social Wall</p></Link></li> */}
                     <li><Link to="/home/members" style={{ textDecoration: 'none' }}><BsGlobe className="dashboard-icon" /><p>Members</p></Link></li>

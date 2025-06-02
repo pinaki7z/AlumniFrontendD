@@ -96,10 +96,11 @@ const SideWidgets = () => {
         socketRef.current.on("connect", () => {
             console.log("Connected to socket:", socketRef.current.id);
         });
+        socket.on("online-users", list => setOnlineCount(list?.length));
 
-        socketRef.current.on('onlineUsers', (count) => {
-            setOnlineCount(count);
-        });
+        // socketRef.current.on('onlineUsers', (count) => {
+        //     setOnlineCount(count);
+        // });
 
 
         // socketRef.current.on("message", (data) => {

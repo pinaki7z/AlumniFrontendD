@@ -52,7 +52,7 @@ const IndividualDonSpon = () => {
         <p>Loading...</p>
       ) : (
         donations.map((donation) => (
-          <div key={donation._id} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div key={donation._id} className="grid grid-cols-1  gap-8">
             {/* LEFT COLUMN */}
             <div className="space-y-6">
               {/* Title and Date */}
@@ -82,127 +82,131 @@ const IndividualDonSpon = () => {
                 />
               </div>
 
-              {/* Description */}
-              <div>
-                <p className="text-lg font-semibold">
-                  {donation.eventDescription || donation.businessDescription ||
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry..."}
-                </p>
-              </div>
-            </div>
-
-            {/* RIGHT COLUMN - Sticky Card */}
-            <div className="md:sticky md:top-0 self-start">
-              <div className="bg-white border w-full rounded-2xl p-6 border-gray-200 max-w-md mx-auto md:text-lg">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-3">
-                  Donation Details
-                </h2>
-                <div className="space-y-2 text-gray-700">
-                  <p className="font-medium">
-                    <span className="text-blue-800">Total Amount (₹):</span>{" "}
-                    {donation.amount || donation.sponsorshipAmount}
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+                {/* Description */}
+                <div className='md:col-span-2'>
+                  <p className="text-lg font-semibold">
+                    {donation.eventDescription || donation.businessDescription ||
+                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry..."}
                   </p>
-                  <p className="font-medium">
-                    <span className="text-blue-800">Name:</span>{" "}
-                    {donation.name || donation.nameOfOrganiser}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-blue-800">Contact:</span>{" "}
-                    {donation.phone || donation.number}
-                  </p>
-                  <p className="font-medium">
-                    <span className="text-blue-800">Email:</span>{" "}
-                    {donation.email || donation.emailOfOrganiser}
-                  </p>
-
-                  {/* Business Plan */}
-                  {donation.businessPlan && (
-                    <div className="flex gap-2 mt-2">
-                      <p className="font-medium text-blue-800">Business Plan:</p>
-                      <a
-                        href={`${donation.businessPlan}`}
-                        // href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        View Plan
-                      </a>
-                    </div>
-                  )}
-
-                  {/* Additional Fields */}
-                  {donation.currentRevenue && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Current Revenue (₹):</span>{" "}
-                      {donation.currentRevenue}
-                    </p>
-                  )}
-                  {donation.targetMarket && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Target Market:</span>{" "}
-                      {donation.targetMarket}
-                    </p>
-                  )}
-                  {donation.industry && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Industry:</span>{" "}
-                      {donation.industry}
-                    </p>
-                  )}
-                  {donation.teamExperience && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Team Experience:</span>{" "}
-                      {donation.teamExperience}
-                    </p>
-                  )}
-                  {donation.competitiveAdvantage && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Competitive Advantage:</span>{" "}
-                      {donation.competitiveAdvantage}
-                    </p>
-                  )}
-                  {donation.eventDescription && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Event Description:</span>{" "}
-                      {donation.eventDescription}
-                    </p>
-                  )}
-                  {donation.location && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Event Location:</span>{" "}
-                      {donation.location}
-                    </p>
-                  )}
-                  {donation.expectedAttendees && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Expected Attendees:</span>{" "}
-                      {donation.expectedAttendees}
-                    </p>
-                  )}
-                  {donation.sponsorshipBenefits && (
-                    <p className="font-medium">
-                      <span className="text-blue-800">Sponsorship Benefits:</span>{" "}
-                      {donation.sponsorshipBenefits}
-                    </p>
-                  )}
                 </div>
 
-                {profile._id !== donation.userId && (
-                  <button
-                    className="w-full mt-4 py-2 text-white bg-[#0A3A4C] hover:bg-[#136175] rounded-lg transition"
-                    onClick={() =>
-                      window.open(
-                        "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
-                        "_blank"
-                      )
-                    }
-                  >
-                    Donate
-                  </button>
-                )}
+                {/* RIGHT COLUMN - Sticky Card */}
+                <div className=" ">
+                  <div className="bg-white border w-full rounded-2xl p-6 border-gray-200 max-w-md mx-auto md:text-lg">
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-3">
+                      Donation Details
+                    </h2>
+                    <div className="space-y-2 text-gray-700">
+                      <p className="font-medium">
+                        <span className="text-blue-800">Total Amount (₹):</span>{" "}
+                        {donation.amount || donation.sponsorshipAmount}
+                      </p>
+                      <p className="font-medium">
+                        <span className="text-blue-800">Name:</span>{" "}
+                        {donation.name || donation.nameOfOrganiser}
+                      </p>
+                      <p className="font-medium">
+                        <span className="text-blue-800">Contact:</span>{" "}
+                        {donation.phone || donation.number}
+                      </p>
+                      <p className="font-medium">
+                        <span className="text-blue-800">Email:</span>{" "}
+                        {donation.email || donation.emailOfOrganiser}
+                      </p>
+
+                      {/* Business Plan */}
+                      {donation.businessPlan && (
+                        <div className="flex gap-2 mt-2">
+                          <p className="font-medium text-blue-800">Business Plan:</p>
+                          <a
+                            href={`${donation.businessPlan}`}
+                            // href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline"
+                          >
+                            View Plan
+                          </a>
+                        </div>
+                      )}
+
+                      {/* Additional Fields */}
+                      {donation.currentRevenue && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Current Revenue (₹):</span>{" "}
+                          {donation.currentRevenue}
+                        </p>
+                      )}
+                      {donation.targetMarket && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Target Market:</span>{" "}
+                          {donation.targetMarket}
+                        </p>
+                      )}
+                      {donation.industry && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Industry:</span>{" "}
+                          {donation.industry}
+                        </p>
+                      )}
+                      {donation.teamExperience && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Team Experience:</span>{" "}
+                          {donation.teamExperience}
+                        </p>
+                      )}
+                      {donation.competitiveAdvantage && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Competitive Advantage:</span>{" "}
+                          {donation.competitiveAdvantage}
+                        </p>
+                      )}
+                      {donation.eventDescription && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Event Description:</span>{" "}
+                          {donation.eventDescription}
+                        </p>
+                      )}
+                      {donation.location && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Event Location:</span>{" "}
+                          {donation.location}
+                        </p>
+                      )}
+                      {donation.expectedAttendees && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Expected Attendees:</span>{" "}
+                          {donation.expectedAttendees}
+                        </p>
+                      )}
+                      {donation.sponsorshipBenefits && (
+                        <p className="font-medium">
+                          <span className="text-blue-800">Sponsorship Benefits:</span>{" "}
+                          {donation.sponsorshipBenefits}
+                        </p>
+                      )}
+                    </div>
+
+                    {profile._id !== donation.userId && (
+                      <button
+                        className="w-full mt-4 py-2 text-white bg-[#0A3A4C] hover:bg-[#136175] rounded-lg transition"
+                        onClick={() =>
+                          window.open(
+                            "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
+                            "_blank"
+                          )
+                        }
+                      >
+                        Donate
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
+
+
           </div>
         ))
       )}
