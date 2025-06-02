@@ -54,14 +54,14 @@ const Jobs = () => {
             </div>
 
             {/* Tabs for navigation */}
-            <div className="flex space-x-6 justify-center border-b font-semibold text-xl mt-6 pb-4 mb-6">
+            <div className="flex space-x-3 md:space-x-6 justify-center border-b font-semibold text-xl mt-6 pb-4 mb-6">
                 <NavLink
                     to="/home/jobs"
                     end
                     className={({ isActive }) =>
                         isActive
-                            ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                            : 'text-gray-600 pb-1'
+                            ? 'text-blue-600 border-b-2 border-blue-600 pb-1 text-base md:text-lg'
+                            : 'text-gray-600 pb-1 text-base md:text-lg'
                     }
                 >
                     All Jobs
@@ -71,8 +71,8 @@ const Jobs = () => {
                     to="/home/jobs/myJobs"
                     className={({ isActive }) =>
                         isActive
-                            ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                            : 'text-gray-600 pb-1'
+                            ? 'text-blue-600 border-b-2 border-blue-600 pb-1 text-base md:text-lg'
+                            : 'text-gray-600 pb-1 text-base md:text-lg'
                     }
                 >
                     My Jobs
@@ -84,8 +84,8 @@ const Jobs = () => {
                         to="/home/jobs/starred"
                         className={({ isActive }) =>
                             isActive
-                                ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                                : 'text-gray-600 pb-1'
+                                ? 'text-blue-600 border-b-2 border-blue-600 pb-1 text-base md:text-lg'
+                                : 'text-gray-600 pb-1 text-base md:text-lg'
                         }
                     >
                         Starred
@@ -95,8 +95,8 @@ const Jobs = () => {
                         to="/home/jobs/applied"
                         className={({ isActive }) =>
                             isActive
-                                ? 'text-blue-600 border-b-2 border-blue-600 pb-1'
-                                : 'text-gray-600 pb-1'
+                                ? 'text-blue-600 border-b-2 border-blue-600 pb-1 text-base md:text-lg'
+                                : 'text-gray-600 pb-1 text-base md:text-lg'
                         }
                     >
                         Applied
@@ -107,14 +107,14 @@ const Jobs = () => {
             <div className='flex justify-between'>
                 {/* Filter dropdown */}
                 <div className="flex items-center mb-6">
-                    <label htmlFor="typeFilter" className="mr-4 font-medium text-gray-700">
+                    <label htmlFor="typeFilter" className="mr-4 font-medium text-gray-700 text-sm md:text-base">
                         Filter by Type:
                     </label>
                     <select
                         id="typeFilter"
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value)}
-                        className="border border-gray-300 rounded px-3 py-2"
+                        className="border border-gray-300 rounded px-3 py-2 text-sm md:text-base"
                     >
                         <option>All</option>
                         <option>Job</option>
@@ -124,8 +124,8 @@ const Jobs = () => {
                     </select>
                 </div>
             {[0,1,2].includes(profile.profileLevel) &&     <div>
-                    <button className='bg-[#136175] text-white py-2 px-4 rounded'>
-                        <Link to="/home/jobs/create">Create Job</Link>
+                    <button className='bg-[#136175] text-white py-2 px-4 rounded text-sm md:text-base font-semibold'> 
+                        <Link to="/home/jobs/create ">Create Job</Link>
                     </button>
                 </div>}
             </div>

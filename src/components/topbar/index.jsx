@@ -47,19 +47,19 @@ const TopBar = ({ handleLogout }) => {
 
     const updateNotificationCount = (count) => {
         setNotificationCount(count); // Update the count from the child component
-      };
-  const [drawerOpen, setDrawerOpen] = useState(false);
+    };
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
 
-      const toggleDrawer = (open) => (event) => {
+    const toggleDrawer = (open) => (event) => {
         if (
-          event.type === "keydown" &&
-          (event.key === "Tab" || event.key === "Shift")
+            event.type === "keydown" &&
+            (event.key === "Tab" || event.key === "Shift")
         ) {
-          return;
+            return;
         }
         setDrawerOpen(open);
-      };
+    };
 
 
 
@@ -157,36 +157,36 @@ const TopBar = ({ handleLogout }) => {
             >
                 <div className="h-full flex items-center  text-white w-[94%] justify-between md:pr-[70px]"
                 >
-                   
-                     {/* Hamburger Menu for Mobile */}
-        <div className="md:hidden  " style={{ zIndex: 50 }}>
-          <IconButton onClick={toggleDrawer(true)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36"
-              height="36"
-              fill="currentColor"
-              class="bi bi-list"
-              viewBox="0 0 16 16"
-              className="text-[#004C8A]"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-              />
-            </svg>
-          </IconButton>
 
-          <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
-          <div
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-          >
-            <LeftSidebar />
-          </div>
-        </Drawer>
-        </div>
+                    {/* Hamburger Menu for Mobile */}
+                    <div className="md:hidden  " style={{ zIndex: 50 }}>
+                        <IconButton onClick={toggleDrawer(true)}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="36"
+                                height="36"
+                                fill="currentColor"
+                                class="bi bi-list"
+                                viewBox="0 0 16 16"
+                                className="text-[#004C8A]"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
+                                />
+                            </svg>
+                        </IconButton>
+
+                        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
+                            <div
+                                role="presentation"
+                                onClick={toggleDrawer(false)}
+                                onKeyDown={toggleDrawer(false)}
+                            >
+                                <LeftSidebar />
+                            </div>
+                        </Drawer>
+                    </div>
 
                     <div className="search" style={{ display: 'flex', width: '67%' }}>
                         <form onSubmit={handleSearch} className="flex items-center w-full">
@@ -226,35 +226,35 @@ const TopBar = ({ handleLogout }) => {
                                 No New Messages
                             </div>
                         )}
-                       <div className="relative" ref={notificationsOptionsRef}>
-  <button
-    onClick={() => {
-      setShowProfileOptions(false);
-      setShowMessages(false);
-      setShowNotifications(!showNotifications);
-    }}
-    className="relative p-2 text-[#0a3a4c] hover:text-yellow-600 transition-colors"
-    title="Notifications"
-  >
-    <FaBell className="w-6 h-6" />
-    {notificationCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
-        {notificationCount}
-      </span>
-    )}
-  </button>
+                        <div className="relative" ref={notificationsOptionsRef}>
+                            <button
+                                onClick={() => {
+                                    setShowProfileOptions(false);
+                                    setShowMessages(false);
+                                    setShowNotifications(!showNotifications);
+                                }}
+                                className="relative p-2 text-[#0a3a4c] hover:text-yellow-600 transition-colors"
+                                title="Notifications"
+                            >
+                                <FaBell className="w-6 h-6" />
+                                {notificationCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
+                                        {notificationCount}
+                                    </span>
+                                )}
+                            </button>
 
-  {showNotifications && (
-    <div className="absolute right-0 mt-2 w-[60vw] max-w-[600px] thin-scroller bg-white border border-gray-200 rounded-md shadow-xl z-[99999] overflow-hidden ">
-      <div className="h-[500px] overflow-y-auto thin-scroller scrollbar-track-gray-100 z-[99999] ">
-        <NotificationsP sendNotificationCount={updateNotificationCount} topBar={true} />
-      </div>
-    </div>
-  )}
-</div>
+                            {showNotifications && (
+                                <div className="absolute right-0 mt-2 w-[60vw] max-w-[600px] thin-scroller bg-white border border-gray-200 rounded-md shadow-xl z-[99999] overflow-hidden ">
+                                    <div className="h-[500px] overflow-y-auto thin-scroller scrollbar-track-gray-100 z-[99999] ">
+                                        <NotificationsP sendNotificationCount={updateNotificationCount} topBar={true} />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1vw', cursor: 'pointer' }} ref={profileOptionsRef}
                             onClick={() => {
-                                console.log('clicked image')    
+                                console.log('clicked image')
                                 setShowMessages(false);
                                 setShowNotifications(false);
                                 setShowProfileOptions(!showProfileOptions);
@@ -264,14 +264,26 @@ const TopBar = ({ handleLogout }) => {
                             <p className='hidden md:block' style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
                         </div>
                         {showProfileOptions && (
-                            <ul className="profile-options" >
-                                <li onClick={() => navigate('/home/profile')} style={{ cursor: 'pointer', textDecoration: 'none', color: 'black' }}>Profile</li>
-                                {/* {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-                                    <a href="/settings" style={{ textDecoration: 'none', color: 'black' }}>
-                                        <li>Settings</li>
-                                    </a>
-                                )} */}
-                                <li onClick={logout} style={{ cursor: 'pointer' }}><p>Log out</p></li>
+                           <ul className="absolute top-12 right-2 bg-white list-none p-0 border border-gray-300 shadow-md z-10 w-44 sm:w-48 md:w-[13vw] text-black rounded-md">
+
+                                <li
+                                    onClick={() => navigate('/home/profile')}
+                                    className="px-4 py-2 cursor-pointer hover:bg-[#174873] hover:text-white"
+                                >
+                                    Profile
+                                </li>
+                                {/* Uncomment and adapt when needed
+    {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
+      <a href="/settings" className="no-underline text-black">
+        <li className="px-4 py-2 hover:bg-[#174873] hover:text-white">Settings</li>
+      </a>
+    )} */}
+                                <li
+                                    onClick={logout}
+                                    className="px-4 py-2 cursor-pointer hover:bg-[#174873] hover:text-white"
+                                >
+                                    <p>Log out</p>
+                                </li>
                             </ul>
                         )}
                     </div>

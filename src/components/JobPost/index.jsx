@@ -116,7 +116,7 @@ const JobPost = ({ job,
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 h-[380px]"
+      className=" rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 h-[380px] hover:bg-gray-100"
       onClick={handleClick}
     >
       <div className="h-48 w-full relative overflow-hidden">
@@ -128,13 +128,13 @@ const JobPost = ({ job,
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="p-4 space-y-4">
+      <div className="p-4 space-y-4 ">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-lg md:text-xl font-bold capitalize">
             {jobTitle}
-            {job?.approved && <BsPatchCheckFill size={25} className="text-green-500 inline-block ml-1" />}
+            {job?.approved && <BsPatchCheckFill size={20} className="text-green-500 inline-block ml-1" />}
           </h2>
-          {((profile.profileLevel === 0 || profile.profileLevel === 1) || userId === profile._id) && (
+          {((profile.profileLevel === 0 ) || userId === profile._id) && (
             <div className="relative">
               <button 
                 onClick={(e) => { e.stopPropagation(); setMenuVisible(!menuVisible); }} 
@@ -155,7 +155,7 @@ const JobPost = ({ job,
             </div>
           )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 text-sm md:text-base">
           <div className="flex items-center text-gray-600">
             <RiHomeSmileLine className="mr-2" />
             <p>{company}</p>
