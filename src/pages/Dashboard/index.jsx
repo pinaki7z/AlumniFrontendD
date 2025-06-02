@@ -153,22 +153,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/profile/:id/followers" element={<Followers />} />
             <Route path="/profile/workExperience" element={<WorkExperience />} />
             <Route path="/profile/profile-settings" element={<ProfileSettings />} />
-            {/* <Route path="/socialWall/*" element={
-              <div
-                style={{
-                  display: "flex",
-                  gap: "2vw",
-                  marginLeft: "40px",
-                  paddingTop: "20px",
-                  width: "55%",
-                }}
-              >
-                <div style={{ width: "65%" }}>
-                  <SocialMediaPost showCreatePost={true}/>
-                </div>
-              </div>
-            }
-          /> */}
+           
             <Route path="/news/*" element={
               <div
                 style={{
@@ -191,9 +176,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/news/createNews" element={<CreateNews />} />
             <Route path="/validate-user" element={<ValidateUser />} />
           </Routes>
-          {/* <div className="chatbox-container" style={{ position: 'fixed', right: '0', bottom: '0', width: '300px', backgroundColor: 'white' }}>
-            <Chatbox />
-          </div> */}
+         
         </div>
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
           <div
