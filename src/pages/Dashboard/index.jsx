@@ -121,11 +121,17 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/guidance/*" element={<Guidance />} />
             {/* <Route path="/photo-gallery/*" element={<PhotoGallery />} /> */}
             <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
-            <Route path="/chatv2/*" element={<MessagingPage />} />
+            {/* <Route path="/chatv2/*" element={<MessagingPage />} /> */}
+            <Route path="/chatv2">
+              <Route index element={<MessagingPage />} />
+              <Route path=":userId" element={<MessagingPage />} />
+            </Route>
+
+
             <Route path="/sponsorships/*" element={<Sponsorships />} />
             <Route path="/members/*" element={<div style={{ width: '100%', padding: '0% 5%' }}><Members showHeading={true} /></div>} />
             <Route path="/members/create" element={
-              <div style={{ width: '100%'}}>
+              <div style={{ width: '100%' }}>
                 <MemberForm name='member' />
               </div>
             } />
@@ -153,7 +159,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/profile/:id/followers" element={<Followers />} />
             <Route path="/profile/workExperience" element={<WorkExperience />} />
             <Route path="/profile/profile-settings" element={<ProfileSettings />} />
-           
+
             <Route path="/news/*" element={
               <div
                 style={{
@@ -176,7 +182,7 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/news/createNews" element={<CreateNews />} />
             <Route path="/validate-user" element={<ValidateUser />} />
           </Routes>
-         
+
         </div>
         <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
           <div
@@ -188,7 +194,7 @@ const Dashboard = ({ handleLogout }) => {
           </div>
         </Drawer>
 
-       
+
       </div>
     </>
   );

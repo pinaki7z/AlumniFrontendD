@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import picture from '../../../images/placement-banner-1.jpg';
@@ -29,6 +29,7 @@ import searchIcon from "../../../images/search.svg"
 lineSpinner.register()
 
 const IndividualGroup = () => {
+    const navigate = useNavigate()
     const { _id } = useParams();
     const [group, setGroup] = useState([]);
     const [groupMembers, setGroupMembers] = useState(null);
@@ -48,6 +49,8 @@ const IndividualGroup = () => {
     const [postCount, setPostCount] = useState(0);
     const [allPendingReq, setAllPendingReq] = useState([]);
     const [allMembers, setAllMembers] = useState([]);
+    const [isMember, setIsMember] = useState(false);
+    const [isApproved, setIsApproved] = useState(false);
     const token = cookie.token;
     let admin;
     if (profile.profileLevel === 0) {
@@ -72,107 +75,20 @@ const IndividualGroup = () => {
         }
     }
 
-    useEffect(() => {
-        getGroup();
-    }, []);
-
-    const handleFollow = async (memberId) => {
-        setIsLoading(prev => ({ ...prev, [memberId]: true }));
-        setTimeout(() => {
-            setIsLoading(prev => ({ ...prev, [memberId]: false }));
-        }, 2000);
-    };
-
-    const handleFollowToggle = async (memberId, userName) => {
-        setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: true }));
-        console.log('firstname lastname', userName)
-        try {
-            const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${memberId}/follow`, {
-                userId: profile._id,
-                requestedUserName: `${profile.firstName} ${profile.lastName}`,
-                followedUserName: userName
-            });
-
-            if (response.status === 200) {
-                const responseData = await response.data;
-                const { alumni } = responseData;
-                dispatch(updateProfile(alumni));
-            }
-            setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: false }));
-        } catch (error) {
-            console.error("Error toggling follow status:", error);
-            setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: false }));
-        }
-    };
-
-    const isFollowing = (memberId) => {
-        return profile.following.some(follower => follower.userId === memberId);
+    const checkIsMember = () => {
+        axios.get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${_id}/${profile._id}`).then((res) => {
+            // if (res.data.isMember === true && res.data.approved === true) {
+            setIsMember(res.data.isMember)
+            setIsApproved(res.data.approved)
+            // }
+        })
     }
 
-    // const filteredMembers = allPendingReq.filter(member =>
-    //     member.firstName.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+    useEffect(() => {
+        getGroup();
+        checkIsMember();
+    }, []);
 
-    const handleMemberSelect = (memberId, profilePicture, firstName, lastName, profileLevel) => {
-        console.log('member id', memberId);
-        setSelectedMembers((prevSelected) => {
-            const memberIndex = prevSelected.findIndex((member) => member.userId === memberId);
-
-            if (memberIndex !== -1) {
-                return prevSelected.filter((member) => member.userId !== memberId);
-            } else {
-                return [
-                    ...prevSelected,
-                    {
-                        userId: memberId,
-                        profilePicture: profilePicture,
-                        userName: `${firstName} ${lastName}`,
-                        profileLevel: profileLevel
-                    }
-                ];
-            }
-        });
-        setSendMembers((prevSelected) => {
-            const memberIndex = prevSelected.findIndex((member) => member.userId === memberId);
-
-            if (memberIndex !== -1) {
-                return prevSelected.filter((member) => member.userId !== memberId);
-            } else {
-                return [
-                    ...prevSelected,
-                    {
-                        userId: memberId,
-                        profilePicture: profilePicture,
-                        userName: `${firstName} ${lastName}`,
-                        profileLevel: profileLevel
-                    }
-                ];
-            }
-        });
-    };
-
-
-    const handleSaveMembers = async () => {
-        console.log('selectedMembers', sendMembers, group[0]._id)
-        try {
-            setSaving(true);
-            const response = await axios.put(
-                `${process.env.REACT_APP_API_URL}/groups/members/${group[0]._id}`,
-                {
-                    members: sendMembers,
-                }
-            );
-            setShowModal(false);
-            setSendMembers([]);
-            getGroup();
-            toast.success('Group updated successfully!');
-            setSaving(false);
-        } catch (error) {
-            console.error('Error updating members:', error);
-            toast.error('Failed to update members.');
-            setSaving(false);
-        }
-    };
 
     const handleFileChange = (event, fileType) => {
         const file = event.target.files[0];
@@ -282,6 +198,38 @@ const IndividualGroup = () => {
             })
         }
     }
+
+    const handleJoinGroup = () => {
+        // console.log("group", group);
+        const data = {
+            groupId: _id,
+            userId: profile._id,
+            approved: group[0].groupType == "Public" ? true : false
+        }
+        axios.post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
+            .then((res) => {
+                // console.log(res.data);
+                if (group[0].groupType == "Public") navigate(`/home/groups`)
+                else {
+                    toast.success('Request sent successfully!');
+                    // fetchJoin()
+                }
+                navigate(`/home/groups/suggested-groups`)
+
+                //   setConfirmModal(false);
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
+    const handleCancelModal = () => {
+        navigate(`/home/groups/suggested-groups`)
+    }
+
+
+    const hideBlurGroup = (admin || isMember || profile._id === group.userId);
     return (
         <div style={{ width: '100%' }}>
             <Routes>
@@ -347,9 +295,8 @@ const IndividualGroup = () => {
                                             )}
                                         </div>
                                     </div>
-
                                     <div className="bg-gray-200  rounded-b-lg pt-[80px] md:pt-[50px] pb-[40px] mb-4" >
-                                        <div className="md:flex justify-between items-center grid grid-cols-1 ">
+                                        <div className="md:flex relative justify-between items-center grid grid-cols-1 ">
                                             <div className="px-6 py-8 md:py-0" >
                                                 <p style={{ fontWeight: '600', color: '#3A3A3A', fontSize: '24px', fontFamily: 'Inter', textAlign: 'left' }}>{groupItem.groupName}</p>
                                                 <p style={{ textAlign: 'left', display: 'flex', alignItems: 'center' }}><BsGlobeAmericas style={{ color: '#7a7a7a' }} />&nbsp;&nbsp;{groupItem.groupType}</p>
@@ -357,6 +304,9 @@ const IndividualGroup = () => {
                                                     <BsFillTagFill style={{ color: '#7a7a7a' }} />&nbsp;&nbsp;{groupItem.category}
                                                 </p>
                                             </div>
+
+                                            {(isMember && !isApproved) && <div className="absolute top-1/2 right-[44.5%] px-2 py-1 bg-green-600 text-white rounded-lg text-lg md:text-2xl font-semibold">Request Sent</div>}
+
                                             <div className="flex md:flex-row   justify-between gap-8 px-6">
                                                 <div>
                                                     <p style={{ fontWeight: '400', fontSize: '14px', fontFamily: 'Inter' }}>Posts</p>
@@ -370,20 +320,47 @@ const IndividualGroup = () => {
                                         </div>
                                     </div>
                                 </div >
+
+                                {/* show join group modal */}
+                                {!hideBlurGroup && (
+                                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                                        <div className="bg-white p-6 rounded-lg shadow-lg md:w-1/3">
+                                            <h2 className="text-xl font-semibold mb-4">Join Group</h2>
+                                            <p className="mb-6">Would you like to join this group?</p>
+                                            <div className="flex justify-end gap-4">
+                                                <button
+                                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                                    onClick={handleJoinGroup}
+                                                >
+                                                    Join Group
+                                                </button>
+                                                <button
+                                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                                    onClick={handleCancelModal}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                                   <div className="md:col-span-2">
-                                     <Routes >
-                                        <Route exact path="/" element={<div >
-                                            <SocialMediaPost style={{ marginLeft: '0px' }} showCreatePost={true} groupID={_id} />
-                                        </div>} />
-                                        <Route exact path="/groupInvite" element={<div style={{ width: '65%', paddingTop: '50px' }}>
-                                            <GroupInvite />
-                                        </div>} />
-                                        <Route exact path="/invite" element={<div >
-                                            <JoinGroup />
-                                        </div>} />
-                                    </Routes>
-                                   </div>
+                                    {/* <div className="md:col-span-2"> */}
+                                    <div className={`md:col-span-2   ${((isMember && isApproved) || profile._id === groupItem.userId || admin) ? "" : "blur-lg pointer-events-none select-none h-[500px]"}`} >
+
+                                        <Routes >
+                                            <Route exact path="/" element={<div >
+                                                <SocialMediaPost style={{ marginLeft: '0px' }} showCreatePost={true} groupID={_id} />
+                                            </div>} />
+                                            <Route exact path="/groupInvite" element={<div style={{ width: '65%', paddingTop: '50px' }}>
+                                                <GroupInvite />
+                                            </div>} />
+                                            <Route exact path="/invite" element={<div >
+                                                <JoinGroup />
+                                            </div>} />
+                                        </Routes>
+                                    </div>
 
 
 
@@ -391,7 +368,7 @@ const IndividualGroup = () => {
                                     <div className="md:col-span-1">
 
                                         {
-                                            // ((profile._id === groupItem.userId || admin) && groupItem.groupType === 'Private') &&
+                                            ((profile._id === groupItem.userId || admin) && groupItem.groupType === 'Private') &&
                                             <div className="mb-8">
                                                 <div className="sideWidget2-post-header">
                                                     <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Join Request</p>
@@ -435,7 +412,7 @@ const IndividualGroup = () => {
                                                 (profile._id === groupItem.userId || admin) &&
                                                 <div>
                                                     <ul className="flex flex-col gap-4 bg-[#F5F5F5] p-4 rounded-lg ">
-                                                       
+
 
                                                         <Link to={`/home/groups/${_id}/groupInvite`} className="text-blue-500 underline font-semibold">
                                                             <li className="flex items-center gap-2 py-2 text-lg" >
@@ -449,42 +426,42 @@ const IndividualGroup = () => {
 
 
 
-                           <div className="mb-8 mt-8">
-                                                <div className="sideWidget2-post-header">
-                                                    <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Members</p>
-                                                </div>
-                                                <div className="flex flex-col gap-2 bg-[#F5F5F5] p-4 rounded-lg  max-h-[500px] overflow-y-auto">
-                                                    {
-                                                        allMembers?.length > 0 ?
-                                                            allMembers?.map((member, index) => (
-                                                                <div className="flex flex-col  gap-2 py-2 text-lg bg-white px-4 rounded-lg " key={index}>
+                                        <div className="mb-8 mt-8">
+                                            <div className="sideWidget2-post-header">
+                                                <p style={{ marginBottom: '0rem', fontWeight: '500', fontSize: '20px' }}>Group Members</p>
+                                            </div>
+                                            <div className="flex flex-col gap-2 bg-[#F5F5F5] p-4 rounded-lg  max-h-[500px] overflow-y-auto">
+                                                {
+                                                    allMembers?.length > 0 ?
+                                                        allMembers?.map((member, index) => (
+                                                            <div className="flex flex-col  gap-2 py-2 text-lg bg-white px-4 rounded-lg " key={index}>
 
-                                                                    <div className="flex gap-2 items-center">
-                                                                        <img src={member?.userId?.profilePicture} alt="" className="w-10 h-10 rounded-full border-4 border-white" />
-                                                                        <p className="font-semibold text-base">{member?.userId?.firstName + ' ' + member?.userId?.lastName}</p>
+                                                                <div className="flex gap-2 items-center">
+                                                                    <img src={member?.userId?.profilePicture} alt="" className="w-10 h-10 rounded-full border-4 border-white" />
+                                                                    <p className="font-semibold text-base">{member?.userId?.firstName + ' ' + member?.userId?.lastName}</p>
 
-                                                                    </div>
-
-                                                                   
                                                                 </div>
-                                                            ))
-                                                            :
-                                                            <p className="text-gray-500 text-sm">No group members </p>
-                                                    }
 
-                                                </div>
+
+                                                            </div>
+                                                        ))
+                                                        :
+                                                        <p className="text-gray-500 text-sm">No group members </p>
+                                                }
 
                                             </div>
+
+                                        </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         ))}
                 </>} />
                 <Route path="/add" element={<>
                     <GroupMembers members={groupMembers} />
                 </>} />
-            
+
             </Routes>
         </div>
     );

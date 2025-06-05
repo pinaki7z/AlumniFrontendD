@@ -3,8 +3,10 @@ import axios from "axios";
 import socket from "../../socket";
 import { useSelector } from "react-redux";
 import { Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function UserList({ currentUserId, selectedUserId, onSelectUser, setCurrentSelectedUserData }) {
+  const navigate = useNavigate();
   const profile = useSelector((s) => s.profile);
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -127,6 +129,7 @@ export default function UserList({ currentUserId, selectedUserId, onSelectUser, 
               onClick={async () => {
                 onSelectUser(u._id);
                 setCurrentSelectedUserData(u);
+                navigate(`/home/chatv2/${u._id}`);
                 try {
                   await axios.patch(
                     `${API}/messages/${currentUserId}/${u._id}/read`,

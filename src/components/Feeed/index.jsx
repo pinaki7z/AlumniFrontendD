@@ -168,7 +168,7 @@ function Feed({
 
       <div
         ref={scrollContainerRef}
-        className="infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[80%]"
+        className="infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[100vh]"
       >
         {posts.map(post => {
           // only render Post items belonging to this group

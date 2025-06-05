@@ -5,13 +5,17 @@ import axios from "axios";
 // import baseUrlsssss from  "../../config";
 import socket from "../../socket";    // singleton import
 import { Avatar } from "@mui/material";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-export default function Chat2({ currentUserId, otherUserId, currentSelectedUserData }) {
+export default function Chat2() {
   const [messages, setMessages]   = useState([]);
   const [text, setText]           = useState("");
   const [onlineUsers, setOnline]  = useState([]);
+  const[currentSelectedUserData, setCurrentSelectedUserData] = useState(null);
   const scrollRef = useRef();
-
+  const currentUserId = useSelector((state) => state.profile._id);
+  const otherUserId = useParams().userId;
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/messages/${currentUserId}/${otherUserId}`, { withCredentials: true })
@@ -24,13 +28,21 @@ export default function Chat2({ currentUserId, otherUserId, currentSelectedUserD
       }
     });
     socket.on("online-users", list => setOnline(list));
+    fetchUserData();
 
     return () => {
       socket.off("receive-message");
       socket.off("online-users");
     };
+
   }, [otherUserId]);
 
+  const fetchUserData = ()=>{
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/alumni/${otherUserId}`, { withCredentials: true })
+      .then(res => setCurrentSelectedUserData(res.data))
+      .catch(console.error);
+  }
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -48,7 +60,7 @@ export default function Chat2({ currentUserId, otherUserId, currentSelectedUserD
   };
 
   return (
-    <div className="flex flex-col h-full bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="flex flex-col h-[85vh] md:h-full bg-white shadow-lg rounded-lg overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-gray-50 border-b">
         <div className="flex items-center">
@@ -75,7 +87,7 @@ export default function Chat2({ currentUserId, otherUserId, currentSelectedUserD
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto thin-scroller space-y-4 bg-gray-100">
+      <div className="flex-1 h p-4 overflow-y-auto thin-scroller space-y-4 bg-gray-100">
         {messages.map((m, i) => {
           const isMe = m.sender === currentUserId;
           return (
