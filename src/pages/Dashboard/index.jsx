@@ -47,6 +47,8 @@ import MemberForm from "../Members/MemberForm.jsx";
 import ValidateUser from "../ValidateUser/ValidateUser.jsx";
 import V2PhotoGallery from "../PhotoGallery/V2PhotoGallary.jsx";
 import MessagingPage from "../Chat2/MessagingPage.jsx";
+import TopicPage from "../Forum/TopicPage.jsx";
+import DiscussionPage from "../Forum/DiscussionPage.jsx";
 
 const Dashboard = ({ handleLogout }) => {
 
@@ -151,14 +153,24 @@ const Dashboard = ({ handleLogout }) => {
             <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
             <Route path="/posts/:_id/" element={<Ipost />} />
             <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
-            <Route path="/forums/*" element={<Forum />} />
+            {/* <Route path="/forums/*" element={<Forum />} />
             <Route path="/forums/create" element={<CreateForum />} />
             <Route path="/forums/edit/:id" element={<CreateForum />} />
-            <Route path="/forums/:id/*" element={<IForum />} />
+            <Route path="/forums/:id/*" element={<IForum />} /> */}
+
+
+
+            <Route path="/forums/*" element={<Forum />} />
+            <Route path="/forums/category/:categoryId" element={<TopicPage />} />
+            <Route path="/forums/category/:categoryId/topic/:topicId" element={<DiscussionPage />} />
+
+
+
             <Route path="/profile/:id/following" element={<Following />} />
             <Route path="/profile/:id/followers" element={<Followers />} />
             <Route path="/profile/workExperience" element={<WorkExperience />} />
             <Route path="/profile/profile-settings" element={<ProfileSettings />} />
+
 
             <Route path="/news/*" element={
               <div
