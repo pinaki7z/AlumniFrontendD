@@ -187,10 +187,56 @@ const TopicPage = () => {
     const navigate = useNavigate();
     // console.log("params", params);
 
-      const [selectedCategory, setSelectedCategory] = useState(forumData.categories[0])
-      const [selectedTopic, setSelectedTopic] = useState(null)
-      const [newReply, setNewReply] = useState("")
-    
+      const [selectedCategory, setSelectedCategory] = useState(  {
+      id: 1,
+      name: "Career",
+      description: "Talk about anything and everything",
+      topicCount: 45,
+      postCount: 234,
+      lastPost: {
+        title: "Welcome to the forum!",
+        author: "admin",
+        time: "2 hours ago",
+      },
+    },)
+   
+      const [topics, setTopics] = useState( [
+      {
+        id: 1,
+        title: "Jobs and internships",
+        author: "admin",
+        replies: 12,
+        views: 234,
+        lastReply: {
+          author: "user123",
+          time: "2 hours ago",
+        },
+        isPinned: true,
+      },
+      {
+        id: 2,
+        title: "Forum rules and guidelines",
+        author: "admin",
+        replies: 5,
+        views: 156,
+        lastReply: {
+          author: "moderator",
+          time: "1 day ago",
+        },
+        isPinned: true,
+      },
+      {
+        id: 3,
+        title: "Introduce yourself here",
+        author: "admin",
+        replies: 89,
+        views: 567,
+        lastReply: {
+          author: "newbie2024",
+          time: "30 minutes ago",
+        },
+      },
+    ])
    
     
       const navigateToTopic = (topic) => {
@@ -204,7 +250,6 @@ const TopicPage = () => {
       }
     
 
-    const topics = forumData.topics[1]
 
     return (
       <div className="min-h-screen bg-gray-50">
@@ -212,7 +257,7 @@ const TopicPage = () => {
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="p-6 border-b">
               <button onClick={navigateBack} className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2">
-                ← Back to Categories
+                ← Back 
               </button>
               <h1 className="text-3xl font-bold text-gray-900">{selectedCategory.name}</h1>
               <p className="text-gray-600 mt-2">{selectedCategory.description}</p>

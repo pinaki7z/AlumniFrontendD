@@ -49,7 +49,7 @@ import V2PhotoGallery from "../PhotoGallery/V2PhotoGallary.jsx";
 import MessagingPage from "../Chat2/MessagingPage.jsx";
 import TopicPage from "../Forum/TopicPage.jsx";
 import DiscussionPage from "../Forum/DiscussionPage.jsx";
-
+import ForumPost from "../Forum/ForumPost.jsx";
 const Dashboard = ({ handleLogout }) => {
 
   const location = useLocation();
@@ -162,7 +162,8 @@ const Dashboard = ({ handleLogout }) => {
 
             <Route path="/forums/*" element={<Forum />} />
             <Route path="/forums/category/:categoryId" element={<TopicPage />} />
-            <Route path="/forums/category/:categoryId/topic/:topicId" element={<DiscussionPage />} />
+            <Route path="/forums/category/:categoryId/topic/:topicId" element={<ForumPost />} />
+            <Route path="/forums/category/:categoryId/topic/:topicId/post/:postId" element={<DiscussionPage />} />
 
 
 

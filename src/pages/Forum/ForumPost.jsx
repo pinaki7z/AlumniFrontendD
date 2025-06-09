@@ -1,8 +1,5 @@
-
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
-
-// Mock data for the forum
+import { useNavigate, useParams } from "react-router-dom"
 const forumData = {
   categories: [
     {
@@ -183,125 +180,111 @@ const forumData = {
     ],
   },
 }
-
-export default function Forum() {
-  const navigate = useNavigate()
-  const [currentView, setCurrentView] = useState("categories")
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedTopic, setSelectedTopic] = useState(null)
-  const [newReply, setNewReply] = useState("")
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      name: "Career",
-      description: "Talk about anything and everything",
-      topicCount: 45,
-      postCount: 234,
-      lastPost: {
-        title: "Welcome to the forum!",
-        author: "admin",
-        time: "2 hours ago",
-      },
-    },
-    {
-      id: 2,
-      name: "Technology",
-      description: "Discuss the latest in tech and programming",
-      topicCount: 28,
-      postCount: 156,
-      lastPost: {
-        title: "React vs Vue in 2024",
-        author: "techguru",
-        time: "1 day ago",
-      },
-    },
-    {
-      id: 3,
-      name: "Gaming",
-      description: "Share your gaming experiences and reviews",
-      topicCount: 67,
-      postCount: 389,
-      lastPost: {
-        title: "Best RPGs of 2024",
-        author: "gamer123",
-        time: "3 hours ago",
-      },
-    },
-    {
-      id: 4,
-      name: "Help & Support",
-      description: "Get help with technical issues",
-      topicCount: 23,
-      postCount: 98,
-      lastPost: {
-        title: "Login issues",
-        author: "newuser",
-        time: "5 hours ago",
-      },
-    },
-  ])
-
-  const navigateToCategory = (category) => {
-    navigate(`/home/forums/category/${category.id}`)
-    // setSelectedCategory(category)
-    setCurrentView("topics")
-  }
-
-  const navigateToTopic = (topic) => {
-    setSelectedTopic(topic)
-    setCurrentView("posts")
-  }
-
-  const navigateBack = () => {
-    if (currentView === "posts") {
-      setCurrentView("topics")
-      setSelectedTopic(null)
-    } else if (currentView === "topics") {
-      setCurrentView("categories")
-      setSelectedCategory(null)
-    }
-  }
-
-  const handleReplySubmit = (e) => {
-    e.preventDefault()
-    if (newReply.trim()) {
-      // In a real app, this would send to backend
-      console.log("New reply:", newReply)
-      setNewReply("")
-    }
-  }
-
-  // Categories View
-    return (
-      <div className="min-h-screen bg-gray-50">
+const ForumPost = () => {
+       const {categoryId, topicId} = useParams()
+        // const params = useParams()
+        const navigate = useNavigate();
+        // console.log("params", params);
+    
+          const [selectedCategory, setSelectedCategory] = useState(  {
+          id: 1,
+          name: "Jobs and internships",
+          description: "Talk about anything and everything",
+          topicCount: 45,
+          postCount: 234,
+          lastPost: {
+            title: "Welcome to the forum!",
+            author: "admin",
+            time: "2 hours ago",
+          },
+        },)
+       
+          const [posts, setPosts] = useState( [
+          {
+            id: 1,
+            title: "Jobs at InsideOUt",
+            author: "admin",
+            replies: 12,
+            views: 234,
+            lastReply: {
+              author: "user123",
+              time: "2 hours ago",
+            },
+            isPinned: true,
+          },
+          {
+            id: 2,
+            title: "Forum rules and guidelines",
+            author: "admin",
+            replies: 5,
+            views: 156,
+            lastReply: {
+              author: "moderator",
+              time: "1 day ago",
+            },
+            isPinned: true,
+          },
+          {
+            id: 3,
+            title: "Introduce yourself here",
+            author: "admin",
+            replies: 89,
+            views: 567,
+            lastReply: {
+              author: "newbie2024",
+              time: "30 minutes ago",
+            },
+          },
+        ])
+       
+        
+          const navigateToTopic = (post) => {
+            // setSelectedTopic(topic)
+            // setCurrentView("posts")
+            navigate(`/home/forums/category/${categoryId}/topic/${topicId}/post/${post.id}`)
+          }
+        
+          const navigateBack = () => {
+           navigate(`/home/forums/category/${categoryId}`)
+          }
+        
+    
+  return (
+         <div className="min-h-screen bg-gray-50">
         <div className="max-w-6xl mx-auto p-6">
           <div className="bg-white rounded-lg shadow-sm border">
             <div className="p-6 border-b">
-              <h1 className="text-3xl font-bold text-gray-900">Community Forum</h1>
-              <p className="text-gray-600 mt-2">Welcome to our discussion community</p>
+              <button onClick={navigateBack} className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2">
+                ← Back
+              </button>
+              <h1 className="text-3xl font-bold text-gray-900">{selectedCategory.name}</h1>
+              <p className="text-gray-600 mt-2">{selectedCategory.description}</p>
             </div>
 
             <div className="divide-y">
-              {categories.map((category) => (
+              {posts.map((topic) => (
                 <div
-                  key={category.id}
+                  key={topic.id}
                   className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => navigateToCategory(category)}
+                  onClick={() => navigateToTopic(topic)}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-blue-600 hover:text-blue-800">{category.name}</h3>
-                      <p className="text-gray-600 mt-1">{category.description}</p>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                        <span>{category.topicCount} topics</span>
-                        <span>{category.postCount} posts</span>
+                      <div className="flex items-center gap-2">
+                        {topic.isPinned && (
+                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Pinned</span>
+                        )}
+                        <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800">{topic.title}</h3>
+                      </div>
+                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                        <span>by {topic.author}</span>
+                        <span>{topic.replies} replies</span>
+                        <span>{topic.views} views</span>
                       </div>
                     </div>
                     <div className="text-right text-sm">
-                      <div className="font-medium text-gray-900">{category.lastPost.title}</div>
-                      <div className="text-gray-500">
-                        by {category.lastPost.author} • {category.lastPost.time}
-                      </div>
+                      <div className="text-gray-500">Last reply by {topic.lastReply.author}</div>
+                      <div className="text-gray-400">{topic.lastReply.time}</div>
                     </div>
                   </div>
                 </div>
@@ -310,8 +293,7 @@ export default function Forum() {
           </div>
         </div>
       </div>
-    )
-
-
-
+  )
 }
+
+export default ForumPost
