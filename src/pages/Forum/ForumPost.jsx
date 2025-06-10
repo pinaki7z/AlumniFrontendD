@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const ForumPost = () => {
   const { categoryId, topicId } = useParams();
   const navigate = useNavigate();
-   const profile = useSelector(state => state.profile)
+  const profile = useSelector(state => state.profile)
 
   const [selectedTopic, setSelectedTopic] = useState({});
   const [posts, setPosts] = useState([]);
@@ -96,7 +96,7 @@ const ForumPost = () => {
     setCreatingPost(true);
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/posts`, {
-        userId:profile._id,
+        userId: profile._id,
         topicId,
         title: postTitle, // if you don’t need a separate title, you can leave empty
         content: {
@@ -118,7 +118,7 @@ const ForumPost = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow-sm border">
+        <div className="bg-white rounded-lg  ">
           <div className="p-6 border-b flex items-start justify-between">
             <div>
               <button
@@ -164,31 +164,31 @@ const ForumPost = () => {
                   <label className="block font-medium">Content</label>
                   <div>
                     <CKEditor
-                    editor={ClassicEditor}
-                    data={editorHtml}
-                    config={{
-                      extraPlugins: [CustomUploadAdapterPlugin],
-                      toolbar: [
-                        "heading",
-                        "|",
-                        "bold",
-                        "italic",
-                        "underline",
-                        "link",
-                        "bulletedList",
-                        "numberedList",
-                        "|",
-                        "blockQuote",
-                        "insertTable",
-                        "undo",
-                        "redo",
-                        "imageUpload",
-                      ],
-                    }}
-                    onChange={(_, editor) => {
-                      setEditorHtml(editor.getData());
-                    }}
-                  />
+                      editor={ClassicEditor}
+                      data={editorHtml}
+                      config={{
+                        extraPlugins: [CustomUploadAdapterPlugin],
+                        toolbar: [
+                          "heading",
+                          "|",
+                          "bold",
+                          "italic",
+                          "underline",
+                          "link",
+                          "bulletedList",
+                          "numberedList",
+                          "|",
+                          "blockQuote",
+                          "insertTable",
+                          "undo",
+                          "redo",
+                          "imageUpload",
+                        ],
+                      }}
+                      onChange={(_, editor) => {
+                        setEditorHtml(editor.getData());
+                      }}
+                    />
                   </div>
                   {uploading && (
                     <p className="text-sm text-gray-500">Uploading…</p>
@@ -218,20 +218,45 @@ const ForumPost = () => {
           {loadingPosts ? (
             <div className="p-6 text-center text-gray-500">Loading posts…</div>
           ) : (
-            <div className="divide-y">
-              {posts.map((post) => (
-                <div
-                  key={post._id}
-                  className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() =>
-                    navigate(
-                      `/home/forums/category/${categoryId}/topic/${topicId}/post/${post._id}`
-                    )
-                  }
-                >
-                  <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: post.content.html }} />
-                </div>
-              ))}
+            <div className="flex flex-col gap-3">
+              {posts.map(post => {
+                const { html, images } = post.content;
+                const firstImage = images[0];
+
+                return (
+                  <div
+                    key={post._id}
+                    className="flex h-[150px] shadow-md rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                    onClick={() =>
+                      navigate(
+                        `/home/forums/category/${categoryId}/topic/${topicId}/post/${post._id}`
+                      )
+                    }
+                  >
+                    {/* Left: Text content */}
+                    <div className="flex-1 p-4 overflow-hidden">
+                      <div
+                        className="prose max-w-none"
+                        // optionally remove inline <img> tags from HTML to avoid duplicates
+                        dangerouslySetInnerHTML={{ __html: html.replace(/<img[^>]*>/g, "") }}
+                      />
+                    </div>
+
+                    {/* Right: Single image */}
+                    <div className="w-[150px] flex-shrink-0 flex items-center justify-center bg-gray-100">
+                      {firstImage ? (
+                        <img
+                          src={firstImage}
+                          alt="Post attachment"
+                          className="h-full object-cover rounded"
+                        />
+                      ) : (
+                        <div className="text-gray-400">No image</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
