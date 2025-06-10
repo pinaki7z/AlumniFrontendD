@@ -1,7 +1,10 @@
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-
+import axios from "axios"
+import moment from "moment"
+import { toast } from "react-toastify"
+import { useSelector } from "react-redux"
 // Mock data for the forum
 const forumData = {
   categories: [
@@ -184,103 +187,128 @@ const forumData = {
   },
 }
 
+
+
 export default function Forum() {
+
   const navigate = useNavigate()
-  const [currentView, setCurrentView] = useState("categories")
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedTopic, setSelectedTopic] = useState(null)
-  const [newReply, setNewReply] = useState("")
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      name: "Career",
-      description: "Talk about anything and everything",
-      topicCount: 45,
-      postCount: 234,
-      lastPost: {
-        title: "Welcome to the forum!",
-        author: "admin",
-        time: "2 hours ago",
-      },
-    },
-    {
-      id: 2,
-      name: "Technology",
-      description: "Discuss the latest in tech and programming",
-      topicCount: 28,
-      postCount: 156,
-      lastPost: {
-        title: "React vs Vue in 2024",
-        author: "techguru",
-        time: "1 day ago",
-      },
-    },
-    {
-      id: 3,
-      name: "Gaming",
-      description: "Share your gaming experiences and reviews",
-      topicCount: 67,
-      postCount: 389,
-      lastPost: {
-        title: "Best RPGs of 2024",
-        author: "gamer123",
-        time: "3 hours ago",
-      },
-    },
-    {
-      id: 4,
-      name: "Help & Support",
-      description: "Get help with technical issues",
-      topicCount: 23,
-      postCount: 98,
-      lastPost: {
-        title: "Login issues",
-        author: "newuser",
-        time: "5 hours ago",
-      },
-    },
-  ])
+  const profile = useSelector(state => state.profile)
+  const [categories, setCategories] = useState()
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false);
+  const [newCategory, setNewCategory] = useState({
+    userId:profile._id,
+    name: '',
+    description: ''
+  });
+  const [creating, setCreating] = useState(false);
+
+  const fetchCategories = () => {
+    axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories`).then((res) => {
+      setCategories(res.data)
+      setLoading(false)
+    }).catch((err) => {
+      console.log(err)
+      setLoading(false)
+    })
+  }
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   const navigateToCategory = (category) => {
-    navigate(`/home/forums/category/${category.id}`)
-    // setSelectedCategory(category)
-    setCurrentView("topics")
+    navigate(`/home/forums/category/${category._id}`)
   }
 
-  const navigateToTopic = (topic) => {
-    setSelectedTopic(topic)
-    setCurrentView("posts")
-  }
-
-  const navigateBack = () => {
-    if (currentView === "posts") {
-      setCurrentView("topics")
-      setSelectedTopic(null)
-    } else if (currentView === "topics") {
-      setCurrentView("categories")
-      setSelectedCategory(null)
+  const handleCreateCategory = async () => {
+    setCreating(true);
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/categories`, newCategory);
+      fetchCategories();
+      setShowModal(false);
+      setNewCategory({ name: '', description: '' });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create category");
     }
+    setCreating(false);
   }
 
-  const handleReplySubmit = (e) => {
-    e.preventDefault()
-    if (newReply.trim()) {
-      // In a real app, this would send to backend
-      console.log("New reply:", newReply)
-      setNewReply("")
-    }
-  }
 
-  // Categories View
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-6xl mx-auto p-6">
-          <div className="bg-white rounded-lg shadow-sm border">
-            <div className="p-6 border-b">
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="p-6 border-b flex items-center justify-between">
+            <div>
               <h1 className="text-3xl font-bold text-gray-900">Community Forum</h1>
               <p className="text-gray-600 mt-2">Welcome to our discussion community</p>
             </div>
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              + Create Category
+            </button>
+            {showModal && (
+              <div
+                className="fixed inset-0 z-50 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center"
+                onClick={() => setShowModal(false)} // click on backdrop closes modal
+              >
+                <div
+                  className="bg-white rounded-lg shadow-lg max-w-md w-full p-6"
+                  onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+                >
+                  <h2 className="text-xl font-bold mb-4">Create New Category</h2>
 
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Category Name"
+                      value={newCategory.name}
+                      onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                      className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <textarea
+                      placeholder="Description"
+                      value={newCategory.description}
+                      onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                      className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-3 mt-6">
+                    <button
+                      onClick={() => setShowModal(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleCreateCategory}
+                      disabled={creating}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {creating ? "Creating..." : "Create"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {loading && (
+            <div className="p-6">
+              <div className="animate-pulse flex items-center justify-center">
+                <div className="spinner-border text-blue-600 inline-block w-8 h-8 border-b-2 border-blue-600 rounded-full" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {!loading && (
             <div className="divide-y">
               {categories.map((category) => (
                 <div
@@ -292,25 +320,27 @@ export default function Forum() {
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-blue-600 hover:text-blue-800">{category.name}</h3>
                       <p className="text-gray-600 mt-1">{category.description}</p>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                        <span>{category.topicCount} topics</span>
-                        <span>{category.postCount} posts</span>
-                      </div>
+                      {/* <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                        <span>{category.totalTopics} topics</span>
+                        <span>{category.totalPosts} posts</span>
+                      </div> */}
                     </div>
-                    <div className="text-right text-sm">
-                      <div className="font-medium text-gray-900">{category.lastPost.title}</div>
-                      <div className="text-gray-500">
-                        by {category.lastPost.author} • {category.lastPost.time}
-                      </div>
-                    </div>
+                    {/* <div className="text-right text-sm">
+                      <div className="font-medium text-gray-900">{category.lastTopic?.title || "No topics yet"}</div>
+                   {category.lastTopic &&   <div className="text-gray-500">
+                        by {category?.lastTopic?.author || " Anonymous"} 
+                        • {moment(category.lastTopic?.createdAt).fromNow() || " just now"}
+                      </div>}
+                    </div> */}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
       </div>
-    )
+    </div>
+  )
 
 
 

@@ -1,6 +1,10 @@
 
+import axios from "axios"
+import { useEffect } from "react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
+import { useSelector } from "react-redux"
+
 const forumData = {
   categories: [
     {
@@ -182,120 +186,194 @@ const forumData = {
   },
 }
 const TopicPage = () => {
-    const {categoryId} = useParams()
-    // const params = useParams()
-    const navigate = useNavigate();
-    // console.log("params", params);
+  const { categoryId } = useParams()
+  // const params = useParams()
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true)
 
-      const [selectedCategory, setSelectedCategory] = useState(  {
-      id: 1,
-      name: "Career",
-      description: "Talk about anything and everything",
-      topicCount: 45,
-      postCount: 234,
-      lastPost: {
-        title: "Welcome to the forum!",
-        author: "admin",
-        time: "2 hours ago",
-      },
-    },)
-   
-      const [topics, setTopics] = useState( [
-      {
-        id: 1,
-        title: "Jobs and internships",
-        author: "admin",
-        replies: 12,
-        views: 234,
-        lastReply: {
-          author: "user123",
-          time: "2 hours ago",
-        },
-        isPinned: true,
-      },
-      {
-        id: 2,
-        title: "Forum rules and guidelines",
-        author: "admin",
-        replies: 5,
-        views: 156,
-        lastReply: {
-          author: "moderator",
-          time: "1 day ago",
-        },
-        isPinned: true,
-      },
-      {
-        id: 3,
-        title: "Introduce yourself here",
-        author: "admin",
-        replies: 89,
-        views: 567,
-        lastReply: {
-          author: "newbie2024",
-          time: "30 minutes ago",
-        },
-      },
-    ])
-   
-    
-      const navigateToTopic = (topic) => {
-        // setSelectedTopic(topic)
-        // setCurrentView("posts")
-        navigate(`/home/forums/category/${categoryId}/topic/${topic.id}`)
-      }
-    
-      const navigateBack = () => {
-       navigate(`/home/forums/`)
-      }
-    
+  // console.log("params", params);
+
+  const [selectedCategory, setSelectedCategory] = useState({
+    // id: 1,
+    // name: "Career",
+    // description: "Talk about anything and everything",
+    // topicCount: 45,
+    // postCount: 234,
+    // lastPost: {
+    //   title: "Welcome to the forum!",
+    //   author: "admin",
+    //   time: "2 hours ago",
+    // },
+  },)
+  const profile = useSelector(state => state.profile)
+
+  const [topics, setTopics] = useState([])
+  const [showTopicModal, setShowTopicModal] = useState(false);
+  const [newTopic, setNewTopic] = useState({
+    userId:profile._id,
+     title: '',
+     isPinned: false
+    });
+  const [creatingTopic, setCreatingTopic] = useState(false);
+
+  const navigateToTopic = (topic) => {
+    // setSelectedTopic(topic)
+    // setCurrentView("posts")
+    navigate(`/home/forums/category/${categoryId}/topic/${topic._id}`)
+  }
+
+  const navigateBack = () => {
+    navigate(`/home/forums/`)
+  }
+
+  const fetchTopics = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/topics/category/${categoryId}/`);
+      setTopics(response.data);
+      setLoading(false)
+
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+      setLoading(false)
+
+    }
+  }
+
+  const fetchCategory = async()=>{
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories/${categoryId}/`);
+      setSelectedCategory(response.data);
+    } catch (error) {
+      console.error('Error fetching category:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchTopics();
+    fetchCategory();
+  }, [categoryId]);
 
 
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-6xl mx-auto p-6">
-          <div className="bg-white rounded-lg shadow-sm border">
-            <div className="p-6 border-b">
+  const handleCreateTopic = async () => {
+    setCreatingTopic(true);
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/topics`, {
+        ...newTopic,
+        categoryId,
+      });
+      fetchTopics(); // refresh list
+      setShowTopicModal(false);
+      setNewTopic({ title: '', isPinned: false });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create topic");
+    }
+    setCreatingTopic(false);
+  }
+
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="bg-white rounded-lg shadow-sm border">
+          <div className="p-6 border-b flex items-start justify-between">
+            <div>
               <button onClick={navigateBack} className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2">
-                ← Back 
+                ← Back
               </button>
-              <h1 className="text-3xl font-bold text-gray-900">{selectedCategory.name}</h1>
-              <p className="text-gray-600 mt-2">{selectedCategory.description}</p>
+              <h1 className="text-3xl font-bold text-gray-900">{selectedCategory?.name}</h1>
+              <p className="text-gray-600">{selectedCategory?.description}</p>
             </div>
-
-            <div className="divide-y">
-              {topics.map((topic) => (
+            <button
+              onClick={() => setShowTopicModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 font-semibold rounded-lg hover:bg-blue-700 transition"
+            >
+              + Create Topic
+            </button>
+            {showTopicModal && (
+              <div
+                className="fixed inset-0 z-50 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center"
+                onClick={() => setShowTopicModal(false)}
+              >
                 <div
-                  key={topic.id}
-                  className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => navigateToTopic(topic)}
+                  className="bg-white rounded-lg shadow-lg max-w-md w-full p-6"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        {topic.isPinned && (
-                          <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Pinned</span>
-                        )}
-                        <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800">{topic.title}</h3>
-                      </div>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                        <span>by {topic.author}</span>
-                        <span>{topic.replies} replies</span>
-                        <span>{topic.views} views</span>
-                      </div>
-                    </div>
-                    <div className="text-right text-sm">
-                      <div className="text-gray-500">Last reply by {topic.lastReply.author}</div>
-                      <div className="text-gray-400">{topic.lastReply.time}</div>
-                    </div>
+                  <h2 className="text-xl font-bold mb-4">Create New Topic</h2>
+                  <div className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Topic Title"
+                      value={newTopic.title}
+                      onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
+                      className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <label className="flex items-center space-x-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={newTopic.isPinned}
+                        onChange={(e) => setNewTopic({ ...newTopic, isPinned: e.target.checked })}
+                      />
+                      <span>Pin this topic</span>
+                    </label>
+                  </div>
+                  <div className="flex justify-end gap-3 mt-6">
+                    <button
+                      onClick={() => setShowTopicModal(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleCreateTopic}
+                      disabled={creatingTopic}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {creatingTopic ? "Creating..." : "Create"}
+                    </button>
                   </div>
                 </div>
-              ))}
+              </div>
+            )}
+
+          </div>
+
+          {loading && (
+            <div className="p-6">
+              <div className="animate-pulse flex items-center justify-center">
+                <div className="spinner-border text-blue-600 inline-block w-8 h-8 border-b-2 border-blue-600 rounded-full" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+              </div>
             </div>
+          )}
+
+          <div className="divide-y">
+          {[...topics]
+  .sort((a, b) => (b.isPinned === a.isPinned ? 0 : a.isPinned ? -1 : 1))
+  .map((topic) => (
+    <div
+      key={topic._id}
+      className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
+      onClick={() => navigateToTopic(topic)}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            {topic.isPinned && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Pinned</span>
+            )}
+            <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800">{topic.title}</h3>
           </div>
         </div>
       </div>
-    )
+    </div>
+))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default TopicPage
