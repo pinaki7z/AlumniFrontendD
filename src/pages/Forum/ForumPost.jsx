@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const ForumPost = () => {
   const { categoryId, topicId } = useParams();
   const navigate = useNavigate();
-  const profile = useSelector(state => state.profile)
+  const profile = useSelector(state => state.profile);
 
   const [selectedTopic, setSelectedTopic] = useState({});
   const [posts, setPosts] = useState([]);
@@ -17,39 +17,11 @@ const ForumPost = () => {
   // --- Modal & CKEditor state ---
   const [showPostModal, setShowPostModal] = useState(false);
   const [editorHtml, setEditorHtml] = useState("");
-  const [uploading, setUploading] = useState(false);
-  const [creatingPost, setCreatingPost] = useState(false);
   const [postTitle, setPostTitle] = useState("");
 
-  // --- CKEditor UploadAdapter ---
-  class UploadAdapter {
-    constructor(loader) {
-      this.loader = loader;
-    }
-    upload() {
-      return this.loader.file.then((file) => {
-        const formData = new FormData();
-        formData.append("images", file);
-
-        setUploading(true);
-        return axios
-          .post(`${process.env.REACT_APP_API_URL}/uploadImage/image`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          })
-          .then((res) => {
-            setUploading(false);
-            const url = res.data[0];
-            return { default: url };
-          });
-      });
-    }
-    abort() { }
-  }
-
-  function CustomUploadAdapterPlugin(editor) {
-    editor.plugins.get("FileRepository").createUploadAdapter = (loader) =>
-      new UploadAdapter(loader);
-  }
+  // --- Image Upload state ---
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
 
   const fetchTopic = async () => {
     try {
@@ -85,40 +57,58 @@ const ForumPost = () => {
     navigate(`/home/forums/category/${categoryId}`);
   };
 
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingImages(true);
+    const formData = new FormData();
+    files.forEach(file => formData.append("images", file));
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URL}/uploadImage/image`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      // server returns array of URLs
+      setUploadedImages(prev => [...prev, ...res.data]);
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed");
+    } finally {
+      setUploadingImages(false);
+    }
+  };
+
   const handleCreatePost = async (e) => {
     e.preventDefault();
     if (!editorHtml.trim()) return;
 
-    // pull out all <img> src URLs
-    const doc = new DOMParser().parseFromString(editorHtml, "text/html");
-    const images = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
-
-    setCreatingPost(true);
+    setShowPostModal(false);
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/posts`, {
         userId: profile._id,
         topicId,
-        title: postTitle, // if you don’t need a separate title, you can leave empty
+        title: postTitle,
         content: {
           html: editorHtml,
-          images,
+          images: uploadedImages,
         },
       });
-      setShowPostModal(false);
+      // reset state
       setEditorHtml("");
+      setPostTitle("");
+      setUploadedImages([]);
       fetchPosts();
     } catch (err) {
       console.error(err);
       alert("Failed to create post");
-    } finally {
-      setCreatingPost(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
-        <div className="bg-white rounded-lg  ">
+        <div className="bg-white rounded-lg">
           <div className="p-6 border-b flex items-start justify-between">
             <div>
               <button
@@ -153,7 +143,7 @@ const ForumPost = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="text-xl font-bold mb-4">New Post</h2>
-                <form onSubmit={handleCreatePost} className="space-y-4 max-h-[400px] overflow-y-scroll">
+                <form onSubmit={handleCreatePost} className="space-y-4 max-h-[600px] overflow-y-auto">
                   <input
                     type="text"
                     placeholder="Post Title"
@@ -161,38 +151,38 @@ const ForumPost = () => {
                     onChange={e => setPostTitle(e.target.value)}
                     className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+
                   <label className="block font-medium">Content</label>
                   <div>
                     <CKEditor
                       editor={ClassicEditor}
                       data={editorHtml}
-                      config={{
-                        extraPlugins: [CustomUploadAdapterPlugin],
-                        toolbar: [
-                          "heading",
-                          "|",
-                          "bold",
-                          "italic",
-                          "underline",
-                          "link",
-                          "bulletedList",
-                          "numberedList",
-                          "|",
-                          "blockQuote",
-                          "insertTable",
-                          "undo",
-                          "redo",
-                          "imageUpload",
-                        ],
-                      }}
-                      onChange={(_, editor) => {
-                        setEditorHtml(editor.getData());
-                      }}
+                      config={{ toolbar: [
+                        "heading", "|", "bold", "italic", "underline", "link",
+                        "bulletedList", "numberedList", "|", "blockQuote", "insertTable",
+                        "undo", "redo"
+                      ] }}
+                      onChange={(_, editor) => setEditorHtml(editor.getData())}
                     />
                   </div>
-                  {uploading && (
-                    <p className="text-sm text-gray-500">Uploading…</p>
+
+                  <label className="block font-medium">Upload Images</label>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="w-full"
+                  />
+                  {uploadingImages && <p className="text-sm text-gray-500">Uploading images…</p>}
+                  {uploadedImages.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto mt-2">
+                      {uploadedImages.map((url, idx) => (
+                        <img key={idx} src={url} alt={`Upload ${idx+1}`} className="h-24 object-cover rounded" />
+                      ))}
+                    </div>
                   )}
+
                   <div className="flex justify-end gap-3 mt-6">
                     <button
                       type="button"
@@ -203,10 +193,10 @@ const ForumPost = () => {
                     </button>
                     <button
                       type="submit"
-                      disabled={creatingPost || !editorHtml.trim()}
+                      disabled={!editorHtml.trim()}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
                     >
-                      {creatingPost ? "Posting..." : "Post"}
+                      Post
                     </button>
                   </div>
                 </form>
@@ -233,16 +223,13 @@ const ForumPost = () => {
                       )
                     }
                   >
-                    {/* Left: Text content */}
                     <div className="flex-1 p-4 overflow-hidden">
                       <div
                         className="prose max-w-none"
-                        // optionally remove inline <img> tags from HTML to avoid duplicates
                         dangerouslySetInnerHTML={{ __html: html.replace(/<img[^>]*>/g, "") }}
                       />
                     </div>
 
-                    {/* Right: Single image */}
                     <div className="w-[150px] flex-shrink-0 flex items-center justify-center bg-gray-100">
                       {firstImage ? (
                         <img

@@ -11,21 +11,8 @@ const Replies = () => {
       id: 2,
       author: "react_veteran",
       content: {
-        html: `<p>Congrats on your first app! 🎉</p>
-
-<p>Your learning journey sounds very familiar. A few suggestions for your next project:</p>
-
-<h2>Performance Tips</h2>
-<ul>
-  <li>Consider using <code>React.memo</code> for components that don't need frequent updates</li>
-  <li>Look into code splitting with <code>React.lazy</code></li>
-</ul>
-
-<h2>Architecture</h2>
-<p>Have you considered using a state management library like <strong>Zustand</strong> or <strong>Redux Toolkit</strong>? For larger apps, they can be lifesavers.</p>
-
-<p>Keep up the great work!</p>`,
-        images: ["https://generalbuckethai.s3.ap-south-1.amazonaws.com/2025/may/1746686774959-Celebrate%20Ocean.png"],
+        html: `Congrats on your first app! 🎉`,
+        // images: ["https://generalbuckethai.s3.ap-south-1.amazonaws.com/2025/may/1746686774959-Celebrate%20Ocean.png"],
       },
       timestamp: "6 hours ago",
       avatar: "RV",
@@ -36,9 +23,7 @@ const Replies = () => {
           id: 3,
           author: "codingjourney2024",
           content: {
-            html: `<p>Thanks for the suggestions! I've heard great things about Zustand. Will definitely check it out for my next project.</p>
-
-<p><strong>Quick question</strong> - when would you recommend switching from Context API to a dedicated state management library?</p>`,
+            html: `Thanks for the suggestions! I've heard great things about Zustand. Will definitely check it out for my next project.`,
             images: [],
           },
           timestamp: "5 hours ago",
@@ -52,13 +37,7 @@ const Replies = () => {
       id: 4,
       author: "frontend_ninja",
       content: {
-        html: `<p>This looks awesome! The UI is really clean.</p>
-
-<h2>Design Question</h2>
-<p>What did you use for styling? The color scheme and typography look really <em>professional</em>.</p>
-
-<p>Also, here's a similar project I built last month:</p>`,
-        images: ["/placeholder.svg?height=250&width=400"],
+        html: `<p>This looks awesome! The UI is really clean.</p>`,
       },
       timestamp: "4 hours ago",
       avatar: "FN",
@@ -207,9 +186,9 @@ const Replies = () => {
             <div key={reply.id} className="bg-white rounded-lg shadow-sm border">
               <div className="flex">
                 {/* Vote Section */}
-                <div className="bg-gray-50 p-4 hidden md:flex flex-col items-center border-r w-16">
+                {/* <div className="bg-gray-50 p-4 hidden md:flex flex-col items-center border-r w-16">
                   <VoteButtons postId={reply.id.toString()} initialUpvotes={reply.upvotes} />
-                </div>
+                </div> */}
 
                 {/* Content Section */}
                 <div className="flex-1 p-4">
