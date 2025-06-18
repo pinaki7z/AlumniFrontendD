@@ -106,14 +106,14 @@ const ForumPost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       <div className="max-w-6xl mx-auto p-6">
         <div className="bg-white rounded-lg">
           <div className="p-6 border-b flex items-start justify-between">
             <div>
               <button
                 onClick={navigateBack}
-                className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2"
+                className="text-[#0A3A4C] hover:text-blue-800 mb-4 flex items-center gap-2"
               >
                 ← Back
               </button>
@@ -126,7 +126,7 @@ const ForumPost = () => {
             </div>
             <button
               onClick={() => setShowPostModal(true)}
-              className="bg-blue-600 text-white px-4 py-2 font-semibold rounded-lg hover:bg-blue-700 transition"
+              className="bg-[#0A3A4C] text-white px-4 py-2 font-semibold rounded-lg hover:bg-blue-700 transition"
             >
               + Create Post
             </button>
@@ -208,7 +208,7 @@ const ForumPost = () => {
           {loadingPosts ? (
             <div className="p-6 text-center text-gray-500">Loading posts…</div>
           ) : (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {posts.map(post => {
                 const { html, images } = post.content;
                 const firstImage = images[0];
@@ -216,7 +216,7 @@ const ForumPost = () => {
                 return (
                   <div
                     key={post._id}
-                    className="flex h-[150px] shadow-md rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                    className="flex h-[250px] shadow-md rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer py-2"
                     onClick={() =>
                       navigate(
                         `/home/forums/category/${categoryId}/topic/${topicId}/post/${post._id}`
@@ -230,7 +230,7 @@ const ForumPost = () => {
                       />
                     </div>
 
-                    <div className="w-[150px] flex-shrink-0 flex items-center justify-center bg-gray-100">
+                    <div className="w-[250px] flex-shrink-0 flex items-center justify-center bg-gray-100">
                       {firstImage ? (
                         <img
                           src={firstImage}
