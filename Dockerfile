@@ -1,19 +1,10 @@
-# Use Node 20 slim base image
-FROM node:20-slim
+# === Build Stage ===
+FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
-
-# Copy package files first for better layer caching
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code
 COPY . .
+RUN npm run build
 
-
-
-# Start the app
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
