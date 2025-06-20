@@ -2,7 +2,7 @@ version: '1'
 services:
   alumniportal:
     build:
-      context: ../ALUMNIPORTALFRONTENDD
+      context: ../AlumniFrontendD
     image: alumniportal:test
     ports:
       - "3000:3000"
