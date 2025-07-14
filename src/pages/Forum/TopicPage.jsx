@@ -1,11 +1,10 @@
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import moment from "moment"
-import { toast } from "react-toastify"
+import { useEffect } from "react"
+import { useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import { useSelector } from "react-redux"
-// Mock data for the forum
+
 const forumData = {
   categories: [
     {
@@ -186,52 +185,90 @@ const forumData = {
     ],
   },
 }
-
-
-
-export default function Forum() {
-
-  const navigate = useNavigate()
-  const profile = useSelector(state => state.profile)
-  const [categories, setCategories] = useState()
+const TopicPage = () => {
+  const { categoryId } = useParams()
+  // const params = useParams()
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false);
-  const [newCategory, setNewCategory] = useState({
+
+  // console.log("params", params);
+
+  const [selectedCategory, setSelectedCategory] = useState({
+    // id: 1,
+    // name: "Career",
+    // description: "Talk about anything and everything",
+    // topicCount: 45,
+    // postCount: 234,
+    // lastPost: {
+    //   title: "Welcome to the forum!",
+    //   author: "admin",
+    //   time: "2 hours ago",
+    // },
+  },)
+  const profile = useSelector(state => state.profile)
+
+  const [topics, setTopics] = useState([])
+  const [showTopicModal, setShowTopicModal] = useState(false);
+  const [newTopic, setNewTopic] = useState({
     userId:profile._id,
-    name: '',
-    description: ''
-  });
-  const [creating, setCreating] = useState(false);
+     title: '',
+     isPinned: false
+    });
+  const [creatingTopic, setCreatingTopic] = useState(false);
 
-  const fetchCategories = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories`).then((res) => {
-      setCategories(res.data)
-      setLoading(false)
-    }).catch((err) => {
-      console.log(err)
-      setLoading(false)
-    })
-  }
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
-  const navigateToCategory = (category) => {
-    navigate(`/home/forums/category/${category._id}`)
+  const navigateToTopic = (topic) => {
+    // setSelectedTopic(topic)
+    // setCurrentView("posts")
+    navigate(`/home/forums/category/${categoryId}/topic/${topic._id}`)
   }
 
-  const handleCreateCategory = async () => {
-    setCreating(true);
+  const navigateBack = () => {
+    navigate(`/home/forums/`)
+  }
+
+  const fetchTopics = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/categories`, newCategory);
-      fetchCategories();
-      setShowModal(false);
-      setNewCategory({ name: '', description: '' });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/topics/category/${categoryId}/`);
+      setTopics(response.data);
+      setLoading(false)
+
+    } catch (error) {
+      console.error('Error fetching topics:', error);
+      setLoading(false)
+
+    }
+  }
+
+  const fetchCategory = async()=>{
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories/${categoryId}/`);
+      setSelectedCategory(response.data);
+    } catch (error) {
+      console.error('Error fetching category:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchTopics();
+    fetchCategory();
+  }, [categoryId]);
+
+
+  const handleCreateTopic = async () => {
+    setCreatingTopic(true);
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/topics`, {
+        ...newTopic,
+        categoryId,
+      });
+      fetchTopics(); // refresh list
+      setShowTopicModal(false);
+      setNewTopic({ title: '', isPinned: false });
     } catch (err) {
       console.error(err);
-      toast.error("Failed to create category");
+      alert("Failed to create topic");
     }
-    setCreating(false);
+    setCreatingTopic(false);
   }
 
 
@@ -239,57 +276,60 @@ export default function Forum() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow-sm border">
-          <div className="p-6 border-b flex items-center justify-between">
+          <div className="p-6 border-b flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Community Forum</h1>
-              <p className="text-gray-600 mt-2">Welcome to our discussion community</p>
+              <button onClick={navigateBack} className="text-blue-600 hover:text-blue-800 mb-4 flex items-center gap-2">
+                ← Back
+              </button>
+              <h1 className="text-3xl font-bold text-gray-900">{selectedCategory?.name}</h1>
+              <p className="text-gray-600">{selectedCategory?.description}</p>
             </div>
             <button
-              onClick={() => setShowModal(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              onClick={() => setShowTopicModal(true)}
+              className="bg-blue-600 text-white px-4 py-2 font-semibold rounded-lg hover:bg-blue-700 transition"
             >
-              + Create Category
+              + Create Topic
             </button>
-            {showModal && (
+            {showTopicModal && (
               <div
                 className="fixed inset-0 z-50 bg-black bg-opacity-10 backdrop-blur-sm flex items-center justify-center"
-                onClick={() => setShowModal(false)} // click on backdrop closes modal
+                onClick={() => setShowTopicModal(false)}
               >
                 <div
                   className="bg-white rounded-lg shadow-lg max-w-md w-full p-6"
-                  onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside modal
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <h2 className="text-xl font-bold mb-4">Create New Category</h2>
-
+                  <h2 className="text-xl font-bold mb-4">Create New Topic</h2>
                   <div className="space-y-4">
                     <input
                       type="text"
-                      placeholder="Category Name"
-                      value={newCategory.name}
-                      onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                      placeholder="Topic Title"
+                      value={newTopic.title}
+                      onChange={(e) => setNewTopic({ ...newTopic, title: e.target.value })}
                       className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    <textarea
-                      placeholder="Description"
-                      value={newCategory.description}
-                      onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
-                      className="w-full border px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <label className="flex items-center space-x-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={newTopic.isPinned}
+                        onChange={(e) => setNewTopic({ ...newTopic, isPinned: e.target.checked })}
+                      />
+                      <span>Pin this topic</span>
+                    </label>
                   </div>
-
                   <div className="flex justify-end gap-3 mt-6">
                     <button
-                      onClick={() => setShowModal(false)}
+                      onClick={() => setShowTopicModal(false)}
                       className="text-gray-500 hover:text-gray-700"
                     >
                       Cancel
                     </button>
                     <button
-                      onClick={handleCreateCategory}
-                      disabled={creating}
+                      onClick={handleCreateTopic}
+                      disabled={creatingTopic}
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
                     >
-                      {creating ? "Creating..." : "Create"}
+                      {creatingTopic ? "Creating..." : "Create"}
                     </button>
                   </div>
                 </div>
@@ -308,40 +348,32 @@ export default function Forum() {
             </div>
           )}
 
-          {!loading && (
-            <div className="divide-y">
-              {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => navigateToCategory(category)}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-blue-600 hover:text-blue-800">{category.name}</h3>
-                      <p className="text-gray-600 mt-1">{category.description}</p>
-                      {/* <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                        <span>{category.totalTopics} topics</span>
-                        <span>{category.totalPosts} posts</span>
-                      </div> */}
-                    </div>
-                    {/* <div className="text-right text-sm">
-                      <div className="font-medium text-gray-900">{category.lastTopic?.title || "No topics yet"}</div>
-                   {category.lastTopic &&   <div className="text-gray-500">
-                        by {category?.lastTopic?.author || " Anonymous"} 
-                        • {moment(category.lastTopic?.createdAt).fromNow() || " just now"}
-                      </div>}
-                    </div> */}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="divide-y">
+          {[...topics]
+  .sort((a, b) => (b.isPinned === a.isPinned ? 0 : a.isPinned ? -1 : 1))
+  .map((topic) => (
+    <div
+      key={topic._id}
+      className="p-6 hover:bg-gray-50 cursor-pointer transition-colors"
+      onClick={() => navigateToTopic(topic)}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            {topic.isPinned && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Pinned</span>
+            )}
+            <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800">{topic.title}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+))}
+          </div>
         </div>
       </div>
     </div>
   )
-
-
-
 }
+
+export default TopicPage
