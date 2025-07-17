@@ -211,21 +211,21 @@ const EventDisplay = ({ event, userId, userData }) => {
             <div className='top'>
                 <Link
                     to={`/home/members/${userId}`}
-                    className="flex items-center gap-4 no-underline text-black"
+                    className="flex items-center gap-2 no-underline text-black"
                 >
                     {userData.profilePicture ? (
-                        <img src={userData.profilePicture} className="w-12 h-12 rounded-full object-cover" />
+                        <img src={userData.profilePicture} className="w-10 h-10 rounded-full object-cover" />
                     ) : (
                         <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
                     )}
-                    <div className=''>
-                        <h4 className="font-semibold">{(userData.firstName + ' ' + userData.lastName) || 'N/A'}</h4>
-                        <span className="text-sm text-gray-600">{formatCreatedAt(event.createdAt)}</span>
+                    <div className='flex flex-col'>
+                        <h4 className="font-semibold text-sm">{(userData.firstName + ' ' + userData.lastName) || 'N/A'}</h4>
+                        <span className=" text-gray-600 text-[12px]">{formatCreatedAt(event.createdAt)}</span>
                     </div>
                 </Link>
-                {userId === profile._id && <IconButton className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
-                    <img src={postDelete} onClick={handleDeleteEvent} />
-                </IconButton>}
+                {userId === profile._id && <div className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
+                    <img className="h-[16px]" src={postDelete} onClick={handleDeleteEvent} />
+                </div>}
             </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
                 {/* Event Details Section */}

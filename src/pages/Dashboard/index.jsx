@@ -107,7 +107,7 @@ const Dashboard = ({ handleLogout }) => {
               <Route
                 path="/*"
                 element={
-                  <div className="flex gap-2 p-2 bg-gray-100">
+                  <div className="row g-4 p-2 bg-gray-100 min-h-[100vh]">
                     <div className="col-md-8 feed-resp">
                       <SocialMediaPost showCreatePost={true} />
                     </div>

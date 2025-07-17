@@ -231,19 +231,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   ></iframe>
                 </div>
               )}
-              
-            
              
             </div>
           </div>
           {entityType === 'posts' && (
             <div className="flex justify-between items-center mt-4 px-2 md:py-2 border-t border-gray-200">
-              <div onClick={onCommentIconClick} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
-                {/* <img src={commentIcon} alt="comment-icon" className="w-5" /> */}
-                <MessageCircle size={15} /> 
-                <h4 className="font-semibold text-sm md:base ">Comment</h4>
-              </div>
-              <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleLike}>
+               <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleLike}>
                 {isliked ? (
                   <>
                     <ThumbsUp size={15} fill="#0A3A4C" /> <span className='text-sm md:text-base'>Like</span>
@@ -254,6 +247,12 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                   </>
                 )}
               </div>
+              <div onClick={onCommentIconClick} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
+                {/* <img src={commentIcon} alt="comment-icon" className="w-5" /> */}
+                <MessageCircle size={15} /> 
+                <h4 className="font-semibold text-sm md:base ">Comment</h4>
+              </div>
+             
               <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleShareClick}>
                 {/* <img src={share} alt="share-icon" className="w-5" /> */}
                 <Share2 size={15} />
