@@ -34,80 +34,103 @@ const LoginPage = ({ handleLogin }) => {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    if (!captchaToken) {
-      toast.error("Please complete the CAPTCHA.");
-      setLoading(false);
-      return;
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  
+  // if (!captchaToken) {
+  //   toast.error("Please complete the CAPTCHA.");
+  //   setLoading(false);
+  //   return;
+  // }
+
+  try {
+    if (rememberDevice) {
+      localStorage.setItem("savedEmail", email);
+      localStorage.setItem("savedPassword", encrypt(password));
+    } else {
+      localStorage.removeItem("savedEmail");
+      localStorage.removeItem("savedPassword");
     }
 
-    try {
-      if (rememberDevice) {
-        localStorage.setItem("savedEmail", email);
-        localStorage.setItem("savedPassword", encrypt(password));
-      } else {
-        localStorage.removeItem("savedEmail");
-        localStorage.removeItem("savedPassword");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const currentDate = new Date();
+
+    const loginUrl = `${process.env.REACT_APP_API_URL}/alumni/login`;
+    // alert(`Trying to log in at: ${loginUrl}`);
+
+    const response = await fetch(loginUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // credentials: 'include', // remove if you're not using cookies
+      body: JSON.stringify({ email, password, captchaToken }),
+    });
+
+    // alert(`Fetch call complete. Status: ${response.status}, OK: ${response.ok}`);
+
+    if (response.ok) {
+      const responseData = await response.json();
+      handleLogin();
+
+      const { token, alumni } = responseData;
+      dispatch(updateProfile(alumni));
+      setCookie("token", token, { path: "/" });
+
+      if (alumni.profileLevel === 0) {
+        dispatch(setAdmin(true));
       }
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const currentDate = new Date();
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password, captchaToken }),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-
-        handleLogin();
-
-        const { token, alumni } = responseData;
-        dispatch(updateProfile(alumni))
-        setCookie("token", token, { path: "/" });
-        if (alumni.profileLevel === 0) {
-          console.log("level zero")
-          dispatch(setAdmin(true));
-        }
-
-        if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
-          toast.error("Your account has expired. Contact admin to recover account");
-          setLoading(false);
-          return;
-        }
-
-        toast.success("Logged in successfully!");
+      if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
+        toast.error("Your account has expired. Contact admin.");
         setLoading(false);
-        const currentUrl = window.location.href;
+        return;
+      }
 
-        const loginPath = '/login';
-        const baseUrl = currentUrl.endsWith(loginPath)
-          ? currentUrl.slice(0, -loginPath.length)
-          : currentUrl;
+      // toast.success("Logged in successfully!");
+      setLoading(false);
 
-        if (currentUrl.endsWith(loginPath)) {
-          window.location.href = baseUrl + "/home";
-        } else {
-          window.location.href = window.location.href;
-        }
+      const currentUrl = window.location.href;
+      const loginPath = '/login';
+      const baseUrl = currentUrl.endsWith(loginPath)
+        ? currentUrl.slice(0, -loginPath.length)
+        : currentUrl;
+
+      if (currentUrl.endsWith(loginPath)) {
+        window.location.href = baseUrl + "/home";
       } else {
+        window.location.href = window.location.href;
+      }
+    } else {
+      // Try to parse error JSON (if any)
+      let errorText = "";
+      try {
         const errorData = await response.json();
-        console.error('Login failed', errorData);
-        toast.error(errorData);
-        setLoading(false);
+        errorText = JSON.stringify(errorData);
+      } catch (parseErr) {
+        errorText = "Unable to parse error response";
       }
-    } catch (error) {
-      console.error('Error during login:', error);
+      alert(`Login failed.\nStatus: ${response.status}\nError: ${errorText}`);
+      console.error("Fetch failed response:", errorText);
+      
       setLoading(false);
-
     }
-  };
+  } catch (error) {
+    // Better error object inspection
+    let details = '';
+    if (error instanceof TypeError) {
+      details = "TypeError (maybe network or CORS issue)";
+    } else {
+      details = error.toString();
+    }
+
+    // alert(`Catch block error:\n${details}\n\nMessage: ${error.message}`);
+    console.error("Catch block error:", error);
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
@@ -194,7 +217,7 @@ const LoginPage = ({ handleLogin }) => {
                 </div>
 
                 {/* reCAPTCHA */}
-                <ReCAPTCHA sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM" onChange={token => setCaptchaToken(token)} />
+                {/* <ReCAPTCHA sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM" onChange={token => setCaptchaToken(token)} /> */}
 
                 {/* Submit Button */}
                 <button

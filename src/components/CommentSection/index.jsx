@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { PiArrowBendDownLeftBold } from "react-icons/pi";
 import { MdOutlineDelete } from "react-icons/md";
 import baseUrl from "../../config";
 import pic from "../../images/odA9sNLrE86.jpg";

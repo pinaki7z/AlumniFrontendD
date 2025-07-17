@@ -40,7 +40,6 @@ import { InterestedJobCandidates } from "../Jobs/InterestedJobCandidates/index.j
 import { CreateNews } from "../News/CreateNews/index.jsx";
 import NewsDetails from "../News/NewsDetails.jsx";
 import { Drawer, IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
 import "./Dashboard.css"
 import MemberForm from "../Members/MemberForm.jsx";
@@ -86,7 +85,7 @@ const Dashboard = ({ handleLogout }) => {
           flexDirection: "row",
         }}
       >
-        <div className="d-none d-lg-block border-end border-secondary">
+        <div className="d-none d-sm-block border-end border-secondary">
           <LeftSidebar />
         </div>
 
@@ -108,7 +107,7 @@ const Dashboard = ({ handleLogout }) => {
               <Route
                 path="/*"
                 element={
-                  <div className="row g-4 p-2">
+                  <div className="flex gap-2 p-2 bg-gray-100">
                     <div className="col-md-8 feed-resp">
                       <SocialMediaPost showCreatePost={true} />
                     </div>

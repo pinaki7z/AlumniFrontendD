@@ -316,7 +316,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                         alignItems: 'center',
                       }}
                     >
-                      <img src={createMember} alt="" />
+                      <img src={`/v2/member/create.svg`} alt="" />
                     </div>
                   </Link>
                 )}

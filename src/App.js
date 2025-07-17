@@ -32,7 +32,7 @@ import Events from "./pages/Events";
 import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 import { Helmet } from "react-helmet";
-
+import BackButtonHandler from "./components/BackButtonHandler";
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +55,7 @@ function App() {
 
   const handleLogout = () => {
     if (cookies.token) {
-      document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      // document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/login";
     }
     setIsLoggedIn(false);
   };
@@ -66,38 +66,13 @@ function App() {
 
   return (
     <>
-        {/* <Helmet>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Alumnify by InsideOut</title>
-          <meta name="description" content="This is an awesome web app!" />
-
-          <meta property="og:title" content="Alumnify by InsideOut" />
-          <meta
-            property="og:description"
-            content="This is an awesome web app!"
-          />
-          <meta property="og:image" content="https://alumnify.in/image.jpg" />
-          <meta property="og:url" content={window.location.href} />
-          <meta property="og:type" content="website" />
-
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Alumnify by InsideOut" />
-          <meta
-            name="twitter:description"
-            content="This is an awesome web app!"
-          />
-          <meta name="twitter:image" content="https://alumnify.in/image.jpg" />
-        </Helmet> */}
+       
       <div className="App">
         <ToastContainer />
         <Router>
+            <BackButtonHandler />
           <Routes>
-            {/* Route for the base URL */}
-            <Route
-              path="/*"
-              element={<LandingPage handleLogin={handleLogin} />}
-            />
+           
 
             {/* Login and Register Routes */}
             <Route
@@ -114,6 +89,11 @@ function App() {
               path="/reset-password/:userId/:token"
               element={<PasswordReset />}
             />
+             {/* Route for the base URL */}
+            {/* <Route
+              path="/*"
+              element={<LandingPage handleLogin={handleLogin} />}
+            /> */}
 
             {isLoggedIn && (
               <>
@@ -163,7 +143,7 @@ function App() {
 
             {/* Catch-all route to redirect to LandingPage */}
             <Route
-              path="*"
+              path="/"
               element={<LandingPage handleLogin={handleLogin} />}
             />
           </Routes>

@@ -168,7 +168,7 @@ function Feed({
 
       <div
         ref={scrollContainerRef}
-        className="infiniteScroll flex flex-col items-center w-full overflow-y-auto h-[100vh]"
+        className="infiniteScroll flex flex-col items-center w-full md:overflow-y-auto md:h-[100vh]"
       >
         {posts.map(post => {
           // only render Post items belonging to this group
@@ -239,7 +239,7 @@ function Feed({
             return (
               <div
                 key={post._id}
-                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+                className="border border-gray-200 p-3 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
               >
                 <PollDisplay poll={post} userId={post.userId._id} userData={post.userId}/>
               </div>
@@ -250,7 +250,7 @@ function Feed({
             return (
               <div
                 key={post._id}
-                className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
+                className="border border-gray-200 p-3 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
               >
                 <EventDisplay event={post} userId={post.userId._id} userData={post.userId}/>
               </div>

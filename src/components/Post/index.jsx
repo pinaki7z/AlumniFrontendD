@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded } from '@mui/icons-material';
-import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
 import { Avatar, TextField, IconButton, Typography, Menu, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -9,7 +7,7 @@ import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import deleteButton from "../../images/delete.svg";
 import commentIcon from "../../images/comment.svg";
 import share from "../../images/share.svg";
@@ -19,10 +17,12 @@ import postDelete from "../../images/post-delete.svg";
 import baseUrl from "../../config";
 import profilePic from "../../images/profilepic.jpg";
 import { IoLogoLinkedin } from "react-icons/io5";
+import {MessageCircle, Share2, ThumbsUp} from "lucide-react"
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, LinkedinIcon, TwitterIcon, WhatsappIcon } from "react-share";
 
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, likes, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick, post }) {
+  const navigate = useNavigate()
   const PrevButton = ({ onClick }) => {
     return <button className="slick-arrow slick-prev bg-gray-800 text-white py-1 px-3 rounded" onClick={onClick}>Previous</button>;
   };
@@ -51,6 +51,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showFullText, setShowFullText] = useState(false);
   const videoRef = useRef(null);
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
@@ -155,34 +156,49 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-400 p-4">
+    <div className="bg-white rounded-xl shadow-md border border-gray-400 pt-3 px-3">
       {loading ? (
         <div className="text-center">Loading...</div>
       ) : (
         <>
           <div className='flex items-center justify-between'>
-            <Link to={`/home/members/${userId}`} className="flex items-center gap-4 no-underline text-black">
-              <img src={profilePicture || profilePic} alt="profile" className="w-12 h-12 rounded-full object-cover" />
+            <Link to={`/home/members/${userId}`} className="flex items-center gap-2 no-underline text-black">
+              <img src={profilePicture || profilePic} alt="profile" className="w-10 h-10 rounded-full object-cover" />
               <div className="flex flex-col">
-                <h4 className="font-semibold">{username}</h4>
-                <span className="text-sm text-gray-600">{formatCreatedAt(timestamp)}</span>
+                <h4 className="font-semibold text-sm">{username}</h4>
+                <span className="text-[12px] text-gray-600">{formatCreatedAt(timestamp)}</span>
               </div>
 
             </Link>
             {((profile.profileLevel === 0) || (userId === profile._id)) && (
               <img
                 onClick={() => handleDeletePost(userId)}
-                className="w-6 h-6 cursor-pointer"
+                className="w-4 h-4 cursor-pointer"
                 src={postDelete}
                 alt="delete"
               />
             )}
           </div>
           <div className="mt-4">
-            <Link to={`/home/posts/${postId}`} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} className="no-underline">
+            <div onClick={()=>{
+              navigate(`/home/posts/${postId}`)
+            }} state={{ postId, userId, username, profilePicture, text, timestamp, image, video, likes }} className="no-underline">
               {text && (
                 <div className="mb-4">
-                  <p className="text-gray-800 whitespace-pre-wrap">{text}</p>
+                  <p className={`text-gray-800 text-sm whitespace-pre-wrap ${showFullText ? '' : 'line-clamp-3'}`}>
+                    {text}
+                  </p>
+                  {text.split('\n').length > 3 && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowFullText(!showFullText);
+                      }}
+                      className="text-blue-500 text-sm mt-1"
+                    >
+                      {showFullText ? 'Read less' : 'Read more'}
+                    </button>
+                  )}
                 </div>
               )}
               {image && image.length > 1 ? (
@@ -205,7 +221,8 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 <div className="relative mt-4">
                   <iframe
                     width="100%"
-                    height="315"
+                    // height="315"
+                    className='h-[250px] md:h-[315px]'
                     src={`https://www.youtube.com/embed/${post.youtubeVideoId}`}
                     title="YouTube video player"
                     frameBorder="0"
@@ -216,46 +233,31 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               )}
               
             
-              {/* {video && (
-                <div className="relative mt-4">
-                  <video
-                    ref={videoRef}
-                    autoPlay={isPlaying}
-                    preload="auto"
-                    controls={false}
-                    onClick={handlePlay}
-                    className="w-full rounded-lg"
-                  >
-                    <source src={video.videoPath} type='video/mp4' />
-                    Your browser does not support the video tag.
-                  </video>
-                  <div
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer"
-                    onClick={handlePlay}
-                  >
-                    <PlayCircleOutlineRoundedIcon fontSize='large' className="text-white" />
-                  </div>
-                </div>
-              )} */}
-            </Link>
+             
+            </div>
           </div>
           {entityType === 'posts' && (
-            <div className="flex justify-between items-center mt-4 px-2 py-3 border-t border-gray-200">
+            <div className="flex justify-between items-center mt-4 px-2 md:py-2 border-t border-gray-200">
               <div onClick={onCommentIconClick} className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded"  >
-                <img src={commentIcon} alt="comment-icon" className="w-5" />
-                <h4 className="hidden md:block font-semibold text-green-700">Comments</h4>
+                {/* <img src={commentIcon} alt="comment-icon" className="w-5" /> */}
+                <MessageCircle size={15} /> 
+                <h4 className="font-semibold text-sm md:base ">Comment</h4>
               </div>
               <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleLike}>
                 {isliked ? (
-                  <img src={liked} alt="liked" className="w-5" />
+                  <>
+                    <ThumbsUp size={15} fill="#0A3A4C" /> <span className='text-sm md:text-base'>Like</span>
+                  </>
                 ) : (
-                  <img src={unliked} alt="unliked" className="w-5" />
+                  <>
+                    <ThumbsUp size={15}  /> <span className='text-sm md:text-base'>Like</span>
+                  </>
                 )}
-                <h4 className="hidden md:block">{isliked ? 'Liked' : 'Like'}</h4>
               </div>
               <div className="flex items-center gap-2 cursor-pointer hover:bg-green-100 p-2 rounded font-semibold" onClick={handleShareClick}>
-                <img src={share} alt="share-icon" className="w-5" />
-                <h4 className="hidden md:block">Share</h4>
+                {/* <img src={share} alt="share-icon" className="w-5" /> */}
+                <Share2 size={15} />
+                <h4 className="text-sm md:text-base">Share</h4>
               </div>
             </div>
           )}

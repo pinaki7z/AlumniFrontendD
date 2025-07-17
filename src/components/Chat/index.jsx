@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import { AiOutlinePaperClip } from "react-icons/ai";
-import { uniqBy } from "lodash";
+// import { uniqBy } from "lodash";
 import { MdBlock } from "react-icons/md";
 import { toast } from "react-toastify";
 import { IoIosExpand } from "react-icons/io";
@@ -424,7 +424,7 @@ const Chat = () => {
   delete onlinePeopleExclOurUser[profile._id];
 
 
-  const messagesWithoutDupes = uniqBy(messages, '_id')
+  const messagesWithoutDupes = `uniqBy(messages, '_id')`
 
   const formatCreatedAt = (createdAt) => {
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };

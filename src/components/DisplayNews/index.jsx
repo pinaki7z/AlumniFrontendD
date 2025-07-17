@@ -2,10 +2,7 @@ import React from 'react';
 import '../Post/Post.scss';
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
-import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded';
-import { Avatar, TextField, IconButton, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { ThumbUpRounded, ChatBubbleOutlineRounded, NearMeRounded, DeleteRounded } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import baseUrl from "../../config";
 import newsImage from "../../images/d-group.jpg";
@@ -125,7 +122,7 @@ export const DisplayNews = ({ userId, postId, title, description, createdAt, pic
                                 onClick={handleDeletePost}
                                 className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition"
                             >
-                                <DeleteRounded className="w-5 h-5" />
+                                Delete
                             </button>
                         )}
                     </div>

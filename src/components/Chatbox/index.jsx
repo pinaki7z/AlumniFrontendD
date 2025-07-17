@@ -3,7 +3,6 @@ import Chathead from '../Chathead';
 import './chatbox.css';
 import Chat from '../Chat';
 import { HiUserGroup } from "react-icons/hi2";
-import { PiUserListFill } from "react-icons/pi";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import arrowUp from '../../images/arrowDoubleUp.svg';
 import arrowDown from '../../images/arrowDoubleDown.svg';

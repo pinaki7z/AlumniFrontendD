@@ -109,73 +109,92 @@ const PollDisplay = ({ poll, userId , userData}) => {
 
     return (
         <>
-            <div className='top'>
+            <div className='flex items-center justify-between'>
                 <Link
                     to={`/home/members/${userId}`}
-                    className='flex items-center gap-4 no-underline text-black'
+                    className='flex items-center gap-2 no-underline text-black'
                 >
                     {poll.profilePicture ? (
                         // <img src={poll.profilePicture} style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
                         // <Avatar src={userData?.profilePicture} style={{ width: '50px', height: '50px' }} />
-                                      <img src={userData?.profilePicture || "/images/profilepic.jpg"} alt="profile" className="w-12 h-12 rounded-full object-cover" />
+                                      <img src={userData?.profilePicture || "/images/profilepic.jpg"} alt="profile" className="w-10 h-10 rounded-full object-cover" />
                         
                     ) : (
                         <Avatar src={pic} style={{ width: '50px', height: '50px' }} />
                     )}
                     <div className='flex flex-col'>
-                        <h4 className='font-semibold'>{userData?.firstName} {userData?.lastName}</h4>
-                        <span className='text-sm text-gray-600'>{formatCreatedAt(poll.createdAt)}</span>
+                        <h4 className='font-semibold text-sm'>{userData?.firstName} {userData?.lastName}</h4>
+                        <span className='text-sm text-gray-600 text-[12px]'>{formatCreatedAt(poll.createdAt)}</span>
                     </div>
                     </Link>
                     {profile._id === userId && (
-                        <IconButton onClick={deletePoll}  className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
-                            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div onClick={deletePoll}  className='delete-button' style={{ marginRight: '10px', marginLeft: 'auto' }}>
+                            <svg width="15" height="15" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#003366" />
                             </svg>
-                        </IconButton>
+                        </div>
                     )}
             </div>
-            <h3 style={{ fontWeight: '600', fontSize: '20px', paddingTop: '30px', color: '#3A3A3A', fontFamily: 'Inter' }}>{poll.question}</h3>
+            <h3 className="font-semibold text-sm mt-4 text-gray-800  leading-relaxed">{poll.question}</h3>
 
-            <div className="options-container">
-                {userId === profile._id && <div className='see-poll-results' style={{ textAlign: 'right' }} onClick={handleOpenModal}>See Poll Results</div>}
+              <div className="space-y-4">
+        {userId === profile._id && (
+          <div className="flex justify-end mb-1">
+            <button
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm underline underline-offset-2 transition-colors duration-200"
+              onClick={handleOpenModal}
+            >
+              See Poll Results
+            </button>
+          </div>
+        )}
 
-                <form className="poll-form">
-                    {optionsWithPercentages.map(option => (
-                        <div key={option._id} className="poll-option">
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <input
-                                    type="radio"
-                                    name="poll-option"
-                                    value={option._id}
-                                    disabled={hasVoted}
-                                    checked={selectedOption === option._id}
-                                    onChange={() => setSelectedOption(option._id)}
-                                />
-                                <p style={{ marginBottom: '2px' }}>{option.option}</p>
-                            </label>
+        <form className="space-y-2">
+          {optionsWithPercentages.map((option) => (
+            <div key={option._id} className="group">
+              <label className="flex items-center justify-between p-2 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="radio"
+                    name="poll-option"
+                    value={option._id}
+                    disabled={hasVoted}
+                    checked={selectedOption === option._id}
+                    onChange={() => setSelectedOption(option._id)}
+                    className="w-4 h-4 text-blue-600 border-gray-300   disabled:opacity-50"
+                  />
+                  <span className="text-gray-700 font-medium text-sm select-none">{option.option}</span>
+                </div>
 
-                            {/* Display percentage after voting */}
-                            {hasVoted && (
-                                <span className="poll-percentage">
-                                    {option.percentage.toFixed(2)}%
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                </form>
-
-                {!hasVoted && selectedOption && (
-                    <div style={{ textAlign: 'center', paddingTop: '20px' }}>
-                        <button
-                            className="submit-vote-button"
-                            onClick={() => handleVote(selectedOption)}
-                        >
-                            Submit Vote
-                        </button>
+                {hasVoted && (
+                  <div className="flex items-center gap-3">
+                    <div className="bg-gray-200 rounded-full h-2 w-24 overflow-hidden">
+                      <div
+                        className="bg-blue-500 h-full transition-all duration-500 ease-out"
+                        style={{ width: `${option.percentage}%` }}
+                      />
                     </div>
+                    <span className="text-sm font-semibold text-gray-600 min-w-[3rem] text-right">
+                      {option.percentage.toFixed(1)}%
+                    </span>
+                  </div>
                 )}
+              </label>
             </div>
+          ))}
+        </form>
+
+        {!hasVoted && selectedOption && (
+          <div className=" flex justify-center">
+            <button
+              className="bg-[#0A3A4C] text-sm hover:bg-teal-900 text-white font-medium px-6 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm"
+              onClick={() => handleVote(selectedOption)}
+            >
+              Submit Vote
+            </button>
+          </div>
+        )}
+      </div>
 
             <Modal open={modalOpen} onClose={handleCloseModal}>
                 <Box className='poll-modal-box'>

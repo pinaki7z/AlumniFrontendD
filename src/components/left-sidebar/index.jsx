@@ -89,8 +89,10 @@ const isActive = (path) => {
     return (
         <div className='side-bar-resp overflow-y-auto'>
             <div style={{ textAlign: 'center', marginTop: '3em' }}>
-                <a href="/home" style={{ textDecoration: 'none', cursor: 'pointer' }}>
-                    <img src={io} alt="InsideOut Logo" width="230px" height="110px" style={{ borderRadius: '8px' }} />
+                <a href="/home" className="flex justify-center" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+                    {/* <img src={io} alt="InsideOut Logo" width="230px" height="110px" style={{ borderRadius: '8px' }} /> */}
+                    <img src="/v2/logo2.png" alt="InsideOut Logo" width="230px" height="110px" style={{ borderRadius: '8px' }} />
+
                 </a>
             </div>
             <div className='sideBar'>

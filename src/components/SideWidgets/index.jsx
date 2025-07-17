@@ -157,7 +157,7 @@ const SideWidgets = () => {
 
 
     const followingIds = profile?.following?.map((follow) => follow.userId);
-    const peopleYouMayKnow = members.filter(member => !followingIds.includes(member._id) && member._id !== profile._id);
+    const peopleYouMayKnow = members?.filter(member => !followingIds?.includes(member._id) && member._id !== profile._id);
 
     const displayedMembers = peopleYouMayKnow;
     console.log('peopleYouMayKnow', peopleYouMayKnow)
@@ -261,8 +261,8 @@ const SideWidgets = () => {
                 <div style={{ height: '20%' }}>
                     <ul style={{ paddingLeft: '0px', marginBottom: '0px', display: 'flex', gap: '10px' }}>
                         <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Posts</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>5</span></a></li>
-                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.following.length}</span></a></li>
-                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.followers.length}</span></a></li>
+                        <li style={{ display: 'inline-block', borderRight: '1px solid #e9e9e9', textAlign: 'center', paddingRight: '7px' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Following</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.following?.length}</span></a></li>
+                        <li style={{ display: 'inline-block', textAlign: 'center' }}><a href="/home/profile" style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', color: 'black' }}><span>Followers</span><span style={{ fontWeight: '500', color: '#0a3a4c' }}>{profile.followers?.length}</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -296,7 +296,7 @@ const SideWidgets = () => {
                             ></l-line-spinner> : <>Follow</>}</button>
                         </div>
                     ))}
-                    {/* {peopleYouMayKnow.length > displayedMembers.length && (
+                    {/* {peopleYouMayKnow?.length > displayedMembers?.length && (
                         <p onClick={() => setCurrentPage(currentPage + 1)} style={{ color: '#0a3a4c', borderRadius: '10px', borderColor: 'white', padding: '10px', marginTop: '10px', cursor: 'pointer', fontWeight: '500' }}>See More</p>
                     )} */}
                 </div>
@@ -324,7 +324,7 @@ const SideWidgets = () => {
                         speed="1"
                         color="rgb(19, 97, 117)"
                     ></l-line-spinner></p>
-                ) : notifications.length === 0 ? (
+                ) : notifications?.length === 0 ? (
                     <p style={{ textAlign: 'center', margin: '1rem 0' }}>No Latest Activities</p>
                 ) : (
                     notifications.map(notification => (

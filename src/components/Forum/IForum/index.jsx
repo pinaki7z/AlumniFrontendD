@@ -5,7 +5,6 @@ import CommentSection from '../../CommentSection';
 import axios from 'axios';
 import './IForum.css';
 import { useParams } from 'react-router-dom';
-import { DeleteRounded } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { toast } from "react-toastify";
 import { useNavigate, Link, Route, Routes } from "react-router-dom";
