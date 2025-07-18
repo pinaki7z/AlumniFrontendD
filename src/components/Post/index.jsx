@@ -213,7 +213,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 </Slider>
               ) : image && image.length === 1 && image[0] ? (
                 <div className="overflow-hidden rounded-lg">
-                  <img src={image[0]} alt="Post" className="w-full object-cover" />
+                  <img src={image[0]} alt="Post" className="w-full h-[300px] md:h-[500px] object-contain" />
                 </div>
               ) : null}
             

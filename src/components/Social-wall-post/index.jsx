@@ -13,7 +13,7 @@ function SocialMediaPost({showCreatePost,groupID}) {
   return (
     <>
       {/* <Header photoUrl={photo} username={user} /> */}
-      <div className='socialWallBody' style={{height: '100%'}}>
+      <div className='' style={{height: '100%'}}>
         {/* <SideBar photoUrl={photo} username={user} /> */}
         <Feeed entityType='posts' showCreatePost={showCreatePost} showDeleteButton={true} groupID={groupID}/>
         {/* <Widget /> */}

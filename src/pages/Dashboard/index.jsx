@@ -107,11 +107,11 @@ const Dashboard = ({ handleLogout }) => {
               <Route
                 path="/*"
                 element={
-                  <div className="row g-4 p-2 bg-gray-100 min-h-[100vh]">
-                    <div className="col-md-8 feed-resp">
+                  <div className="grid grid-cols-12 gap-2 bg-gray-100 min-h-[100vh]">
+                    <div className="md:mt-7 col-span-12 md:col-span-8 feed-resp">
                       <SocialMediaPost showCreatePost={true} />
                     </div>
-                    <div className="col-md-4 d-none d-lg-block">
+                    <div className="md:mt-7 md:col-span-4 d-none d-lg-block">
                       <SideWidgets />
                     </div>
                   </div>
@@ -130,7 +130,7 @@ const Dashboard = ({ handleLogout }) => {
 
 
             <Route path="/sponsorships/*" element={<Sponsorships />} />
-            <Route path="/members/*" element={<div style={{ width: '100%', padding: '0% 5%' }}><Members showHeading={true} /></div>} />
+            <Route path="/members/*" element={<div style={{ width: '100%', padding: '0%' }}><Members showHeading={true} /></div>} />
             <Route path="/members/create" element={
               <div style={{ width: '100%' }}>
                 <MemberForm name='member' />
@@ -178,7 +178,7 @@ const Dashboard = ({ handleLogout }) => {
                   display: 'flex',
                   flexDirection: 'column',
                   width: '100%',
-                  padding: '2% 5%',
+                  padding: ' 0',
                 }}
               >
                 <div>

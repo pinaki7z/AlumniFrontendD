@@ -14,6 +14,7 @@ import React from 'react';
 import baseUrl from '../../config';
 import groupMembers from "../../images/Groups-c.svg";
 import groupPic from "../../images/d-group.jpg";
+import { Users, Calendar, Lock, Globe, FileText, Loader2 } from "lucide-react"
 
 
 
@@ -44,330 +45,403 @@ const DisplayPost = ({ title, groups = [], loading, joined }) => {
     getRequest();
   }, []);
 
-  const GroupItem = ({ group }) => {
-    const [requestStatus, setRequestStatus] = useState('Request to Join');
-    const [confirmModal, setConfirmModal] = useState(false);
-    const [isMember, setIsMember] = useState(false);
-    const [approved, setApproved] = useState(false);
-    console.log('request ', requestStatus);
+const GroupItem = ({ group }) => {
+  const [requestStatus, setRequestStatus] = useState("Request to Join")
+  const [confirmModal, setConfirmModal] = useState(false)
+  const [isMember, setIsMember] = useState(false)
+  const [approved, setApproved] = useState(false)
+  const [modalShow, setModalShow] = useState(false)
+  const [isLoading, setIsLoading] = useState(false) // Declare setIsLoading here
 
-    function MyVerticallyCenteredModal(props) {
-      return (
-        <Modal
-          {...props}
-          size="lg"
-          aria-labelledby="contained-modal-title-vcenter"
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title-vcenter">
-              Verify your Business
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <h4>Upload a document:-</h4>
-            <input type="file" name="businessVerification" id="businessVerification" />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={handleRequest}>Submit</Button>
-            <Button onClick={props.onHide}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      );
-    }
+  console.log("request ", requestStatus)
 
-    const fetchJoin = () => {
-      axios.get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${group._id}/${profile._id}`)
-        .then((res) => {
-          setIsMember(res.data.isMember);
-          setApproved(res.data.approved);
-        }).catch((err) => {
-          console.log(err);
-        })
-    }
-    useEffect(() => {
-      if (profile.profileLevel === 0 || group.userId === profile._id) {
-        return;
-      }
-      else {
-        fetchJoin();
-      }
-    }, [group._id, profile._id]);
-
-
-    useEffect(() => {
-      const matchingNotification = notificationList.find(
-        (notification) => notification.groupId === group._id && notification.userId === profile._id
-      );
-      if (matchingNotification) {
-        setRequestStatus('Requested');
-      } else {
-        setRequestStatus('Request to Join');
-      }
-    }, [group._id, notificationList, profile._id]);
-
-    const handleRequest = async (ownerId, groupId, userId, groupName, firstName, lastName) => {
-      if (document.getElementById('businessVerification')) {
-        setRequestStatus('Loading...');
-        const formData = new FormData();
-        const requestedUserName = `${profile.firstName} ${profile.lastName}`;
-        const userId = profile._id;
-        const body = {
-          ownerId: selectedGroupUserId,
-          groupId: selectedGroupId,
-          userId,
-          groupName: selectedGroupName,
-          requestedUserName
-        };
-        const pdfFile = document.getElementById('businessVerification').files[0];
-
-        formData.append('businessVerification', pdfFile);
-
-        for (const key in body) {
-          formData.append(key, body[key]);
-        }
-
-        try {
-          const config = {
-            headers: {
-              'Content-Type': 'multipart/form-data'
+  function MyVerticallyCenteredModal(props) {
+    return (
+      <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered className="custom-modal">
+        <Modal.Header closeButton className="border-b border-gray-200 bg-gray-50">
+          <Modal.Title id="contained-modal-title-vcenter" className="text-xl font-bold text-gray-900">
+            Verify your Business
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText className="text-blue-600" size={20} />
+              <h4 className="text-lg font-semibold text-gray-900">Upload a document:</h4>
+            </div>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+              <input
+                type="file"
+                name="businessVerification"
+                id="businessVerification"
+                className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-t border-gray-200 bg-gray-50">
+          <Button
+            onClick={() =>
+              handleRequest(
+                selectedGroupUserId,
+                selectedGroupId,
+                profile._id,
+                selectedGroupName,
+                profile.firstName,
+                profile.lastName,
+              )
             }
-          };
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, formData, config);
-          setModalShow(false);
-          getRequest();
-          toast.success('requested');
-          if (response.data.requested === true) {
-
-            setRequestStatus('Requested');
-            console.log('requested if');
-          }
-          else setRequestStatus('Request to Join');
-        } catch (error) {
-          console.error("Error creating request:", error);
-        }
-      }
-
-      setRequestStatus('Loading...');
-      try {
-        const requestedUserName = `${firstName} ${lastName}`;
-        const body = {
-          ownerId,
-          groupId,
-          userId,
-          groupName,
-          requestedUserName
-        };
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, body);
-        console.log('body', response.data);
-        if (response.data.requested === true) setRequestStatus('Requested');
-        else setRequestStatus('Request');
-      } catch (error) {
-        console.error("Error creating request:", error);
-      }
-    };
-
-
-    const handleAddMember = async (groupId) => {
-      console.log('adding member', groupId);
-      try {
-        setIsLoading(true);
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/members/${groupId}`, {
-          members: {
-            userId: profile._id,
-            profilePicture: profile.profilePicture,
-            userName: `${profile.firstName} ${profile.lastName}`,
-            profileLevel: profile.profileLevel
-          }
-        });
-
-        if (response.status === 200) {
-          const { isUserAdded } = response.data;
-          if (isUserAdded === true) {
-            toast.success('added')
-            navigateTo(`/home/groups/${groupId}`)
-            setIsLoading(false);
-          }
-          if (isUserAdded === false) {
-            toast.success('removed')
-            setIsLoading(false);
-            navigateTo(`/home/groups/${groupId}`)
-          }
-          setIsLoading(false);
-          console.log('User added/removed to/from the group:', isUserAdded);
-          navigateTo(`/home/groups/${groupId}`)
-        } else {
-
-          console.error('Failed to add/remove user to/from the group');
-          setIsLoading(false);
-        }
-      } catch (error) {
-
-        console.error('Error adding/removing user to/from the group:', error);
-        setIsLoading(false);
-      }
-    };
-
-    function formatDate(isoDate) {
-      const date = new Date(isoDate);
-
-      // Extract day, month, and year
-      const day = date.getDate();
-      const month = date.toLocaleString('default', { month: 'long' }); // Full month name
-      const year = date.getFullYear();
-
-      // Determine the day suffix
-      const suffix = (d) => {
-        if (d > 3 && d < 21) return "th"; // Special case for 11th to 19th
-        switch (d % 10) {
-          case 1:
-            return "st";
-          case 2:
-            return "nd";
-          case 3:
-            return "rd";
-          default:
-            return "th";
-        }
-      };
-
-      return `${day}${suffix(day)} ${month} ${year}`;
-    }
-    const handleJoinGroup = () => {
-      const data = {
-        groupId: group._id,
-        userId: profile._id,
-        approved: group.groupType == "Public" ? true : false
-      }
-      axios.post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
-        .then((res) => {
-          // console.log(res.data);
-         if(group.groupType == "Public") navigateTo(`/home/groups/${group._id}`)
-          else{
-            toast.success('Request sent successfully!');
-            fetchJoin()
-          }
-          setConfirmModal(false);
-
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-    }
-
-    const ConfirmModalShow = () => {
-      return (
-        <>
-          <Modal
-            show={confirmModal}
-            onHide={() => setConfirmModal(false)}
-            centered
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg border-0 transition-colors"
           >
-            <Modal.Header closeButton>
-              <Modal.Title className="text-lg font-bold">Join Group</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="flex justify-center align-center py-5">
-              <p className="text-xl font-semibold">Are you sure you want to join <span className='font-semibold text-blue-500 underline text-2xl capitalize'>{group.groupName}</span>?</p>
-            </Modal.Body>
-            <Modal.Footer className="flex justify-center">
-              <Button className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-1 px-4 rounded" onClick={() => setConfirmModal(false)}>
-                Cancel
-              </Button>
-              <Button className='bg-blue-950 hover:bg-blue-900 text-white font-semibold py-1 px-4 rounded' onClick={() => handleJoinGroup(group._id)}>
-                Join
-              </Button>
-            </Modal.Footer>
-          </Modal>
-        </>
+            Submit
+          </Button>
+          <Button
+            onClick={props.onHide}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg border-0 transition-colors"
+          >
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
+  const fetchJoin = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${group._id}/${profile._id}`)
+      .then((res) => {
+        setIsMember(res.data.isMember)
+        setApproved(res.data.approved)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    if (profile.profileLevel === 0 || group.userId === profile._id) {
+      return
+    } else {
+      fetchJoin()
+    }
+  }, [group._id, profile._id])
+
+  useEffect(() => {
+    const matchingNotification = notificationList.find(
+      (notification) => notification.groupId === group._id && notification.userId === profile._id,
+    )
+    if (matchingNotification) {
+      setRequestStatus("Requested")
+    } else {
+      setRequestStatus("Request to Join")
+    }
+  }, [group._id, notificationList, profile._id])
+
+  const handleRequest = async (ownerId, groupId, userId, groupName, firstName, lastName) => {
+    if (document.getElementById("businessVerification")) {
+      setRequestStatus("Loading...")
+      const formData = new FormData()
+      const requestedUserName = `${firstName} ${lastName}`
+      const body = {
+        ownerId,
+        groupId,
+        userId,
+        groupName,
+        requestedUserName,
+      }
+      const pdfFile = document.getElementById("businessVerification").files[0]
+      formData.append("businessVerification", pdfFile)
+      for (const key in body) {
+        formData.append(key, body[key])
+      }
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, formData, config)
+        setModalShow(false)
+        getRequest()
+        toast.success("requested")
+        if (response.data.requested === true) {
+          setRequestStatus("Requested")
+          console.log("requested if")
+        } else setRequestStatus("Request to Join")
+      } catch (error) {
+        console.error("Error creating request:", error)
+      }
+    }
+    setRequestStatus("Loading...")
+    try {
+      const requestedUserName = `${firstName} ${lastName}`
+      const body = {
+        ownerId,
+        groupId,
+        userId,
+        groupName,
+        requestedUserName,
+      }
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, body)
+      console.log("body", response.data)
+      if (response.data.requested === true) setRequestStatus("Requested")
+      else setRequestStatus("Request")
+    } catch (error) {
+      console.error("Error creating request:", error)
+    }
+  }
+
+  const handleAddMember = async (groupId) => {
+    console.log("adding member", groupId)
+    try {
+      setIsLoading(true)
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/members/${groupId}`, {
+        members: {
+          userId: profile._id,
+          profilePicture: profile.profilePicture,
+          userName: `${profile.firstName} ${profile.lastName}`,
+          profileLevel: profile.profileLevel,
+        },
+      })
+      if (response.status === 200) {
+        const { isUserAdded } = response.data
+        if (isUserAdded === true) {
+          toast.success("added")
+          navigateTo(`/home/groups/${groupId}`)
+          setIsLoading(false)
+        }
+        if (isUserAdded === false) {
+          toast.success("removed")
+          setIsLoading(false)
+          navigateTo(`/home/groups/${groupId}`)
+        }
+        setIsLoading(false)
+        console.log("User added/removed to/from the group:", isUserAdded)
+        navigateTo(`/home/groups/${groupId}`)
+      } else {
+        console.error("Failed to add/remove user to/from the group")
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error("Error adding/removing user to/from the group:", error)
+      setIsLoading(false)
+    }
+  }
+
+  function formatDate(isoDate) {
+    const date = new Date(isoDate)
+    const day = date.getDate()
+    const month = date.toLocaleString("default", { month: "long" })
+    const year = date.getFullYear()
+    const suffix = (d) => {
+      if (d > 3 && d < 21) return "th"
+      switch (d % 10) {
+        case 1:
+          return "st"
+        case 2:
+          return "nd"
+        case 3:
+          return "rd"
+        default:
+          return "th"
+      }
+    }
+    return `${day}${suffix(day)} ${month} ${year}`
+  }
+
+  const handleJoinGroup = () => {
+    const data = {
+      groupId: group._id,
+      userId: profile._id,
+      approved: group.groupType == "Public" ? true : false,
+    }
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
+      .then((res) => {
+        if (group.groupType == "Public") navigateTo(`/home/groups/${group._id}`)
+        else {
+          toast.success("Request sent successfully!")
+          fetchJoin()
+        }
+        setConfirmModal(false)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const ConfirmModalShow = () => {
+    return (
+      <Modal show={confirmModal} onHide={() => setConfirmModal(false)} centered className="custom-modal">
+        <Modal.Header closeButton className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <Modal.Title className="text-xl font-bold text-gray-900">Join Group</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-6">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+              <Users className="text-blue-600" size={32} />
+            </div>
+            <p className="text-lg text-gray-700">
+              Are you sure you want to join{" "}
+              <span className="font-bold text-blue-600 text-xl capitalize">{group.groupName}</span>?
+            </p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-t border-gray-200 bg-gray-50 flex justify-center gap-3">
+          <Button
+            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg border-0 transition-colors"
+            onClick={() => setConfirmModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg border-0 transition-colors"
+            onClick={() => handleJoinGroup(group._id)}
+          >
+            Join
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+
+  const directEntry = (isMember && approved) || profile.profileLevel === 0
+
+  const getGroupTypeIcon = () => {
+    return group.groupType === "Public" ? (
+      <Globe size={14} className="text-green-600" />
+    ) : (
+      <Lock size={14} className="text-orange-600" />
+    )
+  }
+
+  const getGroupTypeBadge = () => {
+    const isPublic = group.groupType === "Public"
+    return (
+      <div
+        className={`absolute top-4 right-4 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 backdrop-blur-sm ${
+          isPublic
+            ? "bg-green-100/90 text-green-800 border border-green-200"
+            : "bg-orange-100/90 text-orange-800 border border-orange-200"
+        }`}
+      >
+        {getGroupTypeIcon()}
+        {group.groupType}
+      </div>
+    )
+  }
+
+  const getActionButton = () => {
+    if (isMember && approved === false) {
+      return (
+        <button className="w-full bg-yellow-100 text-yellow-800 border border-yellow-200 font-semibold rounded-lg text-sm px-4 py-2.5 flex items-center justify-center gap-2 cursor-not-allowed">
+          <Loader2 size={16} className="animate-spin" />
+          Requested
+        </button>
+      )
+    } else {
+      const isPublic = group?.groupType === "Public"
+      return (
+        <button
+          onClick={() => setConfirmModal(true)}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-sm px-4 py-2.5 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+        >
+          <Users size={16} />
+          {isPublic ? "Join Group" : "Request to Join"}
+        </button>
       )
     }
+  }
 
-    const directEntry = (isMember && approved) || profile.profileLevel === 0
-
-    return (
-      <div key={group._id} className='w-full'>
-        <div className="w-full min-h-80 border border-gray-300 bg-[#EAF5EF] rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-          {(directEntry)? (
-            <Link to={`/home/groups/${group._id}`} className="text-black">
-              <div className="relative w-full h-48 rounded-t-lg overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${group.groupPicture || group.groupLogo || groupPic})`,
-                  }}
-                ></div>
-                <p className="absolute top-3 right-5 bg-white text-black px-5 py-1 border border-gray-400 text-xs font-medium rounded-lg">
-                  {group.groupType}
-                </p>
+  return (
+    <div key={group._id} className="w-full">
+      <div className="w-full bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+        {directEntry ? (
+          <Link to={`/home/groups/${group._id}`} className="block">
+            {/* Group Image */}
+            <div className="relative w-full h-48 overflow-hidden">
+              <div
+                className="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  backgroundImage: `url(${group.groupPicture || group.groupLogo || groupPic})`,
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              <div className="px-4 py-2">
-                <h3 className="text-xl font-semibold text-[#136175]">
-                  {group.groupName}
-                </h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <img src={groupMembers} alt="Members" className="w-5 h-5" />
-                  <p className="text-gray-600 text-sm">{group.members.length}</p>
-                </div>
-                <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
-                <div className='mt-3 flex justify-end'>
-                  <button onClick={() => navigateTo(`/home/groups/${group._id}`)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>View Group</button>
-
-                </div>
-              </div>
-            </Link>
-          ) : (
-            <div>
-              <div className="relative w-full h-48 rounded-t-lg overflow-hidden">
-                <div
-                  className="w-full h-full bg-cover bg-center"
-                  style={{
-                    backgroundImage: `url(${group.groupPicture || group.groupLogo || groupPic})`,
-                  }}
-                ></div>
-                <p className="absolute top-3 right-5 bg-white text-black px-5 py-1 border border-gray-400 text-xs font-medium rounded-lg">
-                  {group.groupType}
-                </p>
-              </div>
-              <div className="px-4 py-2">
-                <h3 className="text-xl font-semibold text-[#136175]">
-                  {group.groupName}
-                </h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <img src={groupMembers} alt="Members" className="w-5 h-5" />
-                  <p className="text-gray-600 text-sm">{group.members.length}</p>
-                </div>
-                <p className="text-gray-500 text-xs mt-2">{formatDate(group.createdAt)}</p>
-                <div className='mt-3 flex justify-end'>
-                  {
-                    (isMember && approved==false) ? (
-                      <>
-                        <button  className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>Requested</button>
-
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => setConfirmModal(true)} className='text-white cursor-pointer bg-[#136175] hover:bg-[#136175] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center'>{group?.groupType === 'Public' ? 'Join' : 'Request'}</button>
-
-                      </>
-                    )
-                  }
-                </div>
-              </div>
-
+              {getGroupTypeBadge()}
             </div>
-          )}
-        </div>
 
-        {/* {console.log('groupType', group.groupType, group.members)} */}
-        <ConfirmModalShow show={confirmModal} onHide={() => setConfirmModal(false)} />
-        <MyVerticallyCenteredModal
-          show={modalShow}
-          onHide={() => setModalShow(false)}
-        />
+            {/* Group Info */}
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-teal-700 mb-3 group-hover:text-teal-600 transition-colors">
+                {group.groupName}
+              </h3>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Users size={16} className="text-blue-500" />
+                  <span className="text-sm font-medium">{group.members.length} members</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Calendar size={16} />
+                  <span className="text-sm">Created {formatDate(group.createdAt)}</span>
+                </div>
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo(`/home/groups/${group._id}`)
+                }}
+                className="w-full bg-[#136175] hover:bg-[#136175]/90 text-white font-semibold rounded-lg text-sm px-4 py-2.5 transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                View Group
+              </button>
+            </div>
+          </Link>
+        ) : (
+          <div>
+            {/* Group Image */}
+            <div className="relative w-full h-48 overflow-hidden">
+              <div
+                className="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                style={{
+                  backgroundImage: `url(${group.groupPicture || group.groupLogo || groupPic})`,
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              {getGroupTypeBadge()}
+            </div>
+
+            {/* Group Info */}
+            <div className="p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{group.groupName}</h3>
+
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Users size={16} className="text-blue-500" />
+                  <span className="text-sm font-medium">{group.members.length} members</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Calendar size={16} />
+                  <span className="text-sm">Created {formatDate(group.createdAt)}</span>
+                </div>
+              </div>
+
+              {getActionButton()}
+            </div>
+          </div>
+        )}
       </div>
-    );
-  };
 
+      <ConfirmModalShow show={confirmModal} onHide={() => setConfirmModal(false)} />
+      <MyVerticallyCenteredModal show={modalShow} onHide={() => setModalShow(false)} />
+    </div>
+  )
+}
 
   let filteredGroups;
   if (profile.department === 'All') {

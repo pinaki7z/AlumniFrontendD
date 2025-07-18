@@ -17,6 +17,7 @@ import baseUrl from '../../config';
 dotPulse.register();
 
 function Feed({
+  profilePage=false,
   photoUrl,
   username,
   showCreatePost,
@@ -147,7 +148,7 @@ function Feed({
 
   return (
     <div className="feed">
-      {([0,1].includes(profile.profileLevel) && entityType!="news") && (
+      {([0,1].includes(profile.profileLevel) && entityType!="news" && profilePage==false) && (
         <CreatePost1
           photoUrl={photoUrl}
           username={username}
