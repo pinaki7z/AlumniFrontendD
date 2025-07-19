@@ -141,7 +141,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="md:max-w-7xl mx-auto p-4 space-y-6">
+      <div className="md:max-w-6xl mx-auto p-4 space-y-6">
         {/* Profile Header Section */}
         <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden border border-white/20">
           {/* Cover Image with Overlay */}

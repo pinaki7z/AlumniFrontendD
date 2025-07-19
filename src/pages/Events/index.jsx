@@ -3,60 +3,72 @@ import getDay from "date-fns/getDay";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Calendar, dateFnsLocalizer, momentLocalizer, Views } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-// import '@fullcalendar/daygrid/main.css';
-// import '@fullcalendar/timegrid/main.css';
-// import "react-big-calendar/lib/css/react-big-calendar.css";
-
-// 2. With these imports for FullCalendar:
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-// import '@fullcalendar/daygrid/main.css';
-// import '@fullcalendar/timegrid/main.css';
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import enIN from 'date-fns/locale/en-US';
 import './Events.css';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import TimePicker from 'react-time-picker';
-import { Col, Row } from 'react-bootstrap';
-import { FaCalendarPlus } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { toast } from "react-toastify";
 import axios from 'axios';
-import pic from "../../images/profilepic.jpg";
-import { Avatar, IconButton, Modal as MModal, Box, Modal as MMModal, Container } from '@mui/material';
 import { useParams } from "react-router-dom";
 import { lineSpinner } from 'ldrs';
 import EventDisplay from "../../components/Feeed/EventDisplay";
 import baseUrl from "../../config";
-import { borderTop } from "@mui/system";
-import picture from "../../images/d-group.jpg"
+import picture from "../../images/d-group.jpg";
+import { 
+  Calendar as CalendarIcon, 
+  Plus, 
+  MapPin, 
+  Clock, 
+  User, 
+  Mail, 
+  Phone, 
+  DollarSign, 
+  X, 
+  Edit, 
+  Trash2, 
+  Users, 
+  Download, 
+  ExternalLink, 
+  Eye, 
+  EyeOff,
+  Image,
+  Upload,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  Filter,
+  Search,
+  Grid,
+  List,
+  ChevronLeft,
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
+  Share2,
+  Bookmark,
+  Heart,
+  MessageCircle,
+  MoreHorizontal
+} from 'lucide-react';
 
-lineSpinner.register()
+lineSpinner.register();
 
-
-
-
-
-
-function MyVerticallyCenteredModal(props) {
-  const [isEditing, setIsEditing] = useState(false);
+// Enhanced Modal Component
+function EventModal(props) {
   const profile = useSelector((state) => state.profile);
-  const [createGroup, setCreateGroup] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // New states for price type, amount, and currency
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [priceType, setPriceType] = useState("free");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("INR");
+  const [createGroup, setCreateGroup] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [errors, setErrors] = useState({});
 
-  const [newEvent, setNewEvent] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     start: new Date(),
     end: new Date(),
@@ -68,638 +80,917 @@ function MyVerticallyCenteredModal(props) {
     cEmail: "",
     location: "",
   });
-  const [errors, setErrors] = useState({});
 
+  const steps = [
+    { id: 1, title: 'Event Details', icon: <CalendarIcon size={20} />, description: 'Basic event information' },
+    { id: 2, title: 'Schedule', icon: <Clock size={20} />, description: 'Date and time settings' },
+    { id: 3, title: 'Contact & Media', icon: <User size={20} />, description: 'Coordinator details and image' }
+  ];
 
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState([props.selectedEvent]);
+  useEffect(() => {
+    if (props.isEditing && props.selectedEvent) {
+      fetchEvent();
+    }
+  }, [props.isEditing, props.selectedEvent]);
 
+  const fetchEvent = async () => {
+    if (!props.selectedEvent?._id) return;
+    
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`);
+      const data = response.data;
+      
+      setFormData({
+        title: data.title || "",
+        start: data.start ? new Date(data.start) : new Date(),
+        end: data.end ? new Date(data.end) : new Date(),
+        startTime: data.startTime || "00:00",
+        endTime: data.endTime || "00:00",
+        picture: data.picture || "",
+        cName: data.cName || "",
+        cNumber: data.cNumber || "",
+        cEmail: data.cEmail || "",
+        location: data.location || "",
+      });
+      
+      setPriceType(data.priceType || "free");
+      setAmount(data.amount || "");
+      setCurrency(data.currency || "INR");
+    } catch (error) {
+      console.error('Error fetching event:', error);
+      toast.error('Failed to load event data');
+    }
+  };
 
   const validate = () => {
     const errs = {};
-    if (!newEvent.title?.trim()) errs.title = 'Event title is required';
-    if (!newEvent.cName?.trim()) errs.cName = 'Coordinator name is required';
-    if (!newEvent.picture?.trim()) errs.picture = 'Event Image is required';
-    if (!newEvent.start) errs.start = 'Start date is required';
-    if (!newEvent.end) errs.end = 'End date is required';
-    if (newEvent.start && newEvent.end && newEvent.end < newEvent.start) errs.end = 'End date cannot be before start date';
-    if (priceType === 'paid') {
-      if (!amount || amount <= 0) errs.amount = 'Valid amount is required';
+    
+    // Step 1 validation
+    if (!formData.title?.trim()) errs.title = 'Event title is required';
+    if (!formData.location?.trim()) errs.location = 'Location is required';
+    if (priceType === 'paid' && (!amount || amount <= 0)) errs.amount = 'Valid amount is required';
+    
+    // Step 2 validation
+    if (!formData.start) errs.start = 'Start date is required';
+    if (!formData.end) errs.end = 'End date is required';
+    if (formData.start && formData.end && formData.end < formData.start) {
+      errs.end = 'End date cannot be before start date';
     }
-    if (!newEvent.location?.trim()) errs.location = 'Location is required';
-    // if (!newEvent.cNumber?.trim()) errs.cNumber = 'Coordinator number is required';
-    // Coordinator number (ensure string)
-    const cNum = newEvent.cNumber != null ? String(newEvent.cNumber) : '';
+    
+    // Step 3 validation
+    if (!formData.cName?.trim()) errs.cName = 'Coordinator name is required';
+    const cNum = formData.cNumber ? String(formData.cNumber) : '';
     if (!cNum.trim()) errs.cNumber = 'Coordinator number is required';
     else if (!/^\d{10}$/.test(cNum)) errs.cNumber = 'Enter a valid 10-digit number';
-
-    else if (!/^\d{10}$/.test(newEvent.cNumber)) errs.cNumber = 'Enter a valid 10-digit number';
-    if (!newEvent.cEmail?.trim()) errs.cEmail = 'Coordinator email is required';
-    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(newEvent.cEmail)) errs.cEmail = 'Enter a valid email';
+    if (!formData.cEmail?.trim()) errs.cEmail = 'Coordinator email is required';
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.cEmail)) {
+      errs.cEmail = 'Enter a valid email';
+    }
+    if (!formData.picture?.trim()) errs.picture = 'Event image is required';
+    
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
-  const fetchEvent = async () => {
-    if (props.isEditing === true) {
-      try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`);
-        setNewEvent((prev) => {
-          return {
-            ...prev,
-            title: res.data.title,
-            start: new Date(res.data.start),
-            end: new Date(res.data.end),
-            startTime: res.data.startTime,
-            endTime: res.data.endTime,
-            picture: res.data.picture,
-            cName: res.data.cName,
-            cNumber: res.data.cNumber,
-            cEmail: res.data.cEmail,
-            location: res.data.location,
-          }
-        })
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchEvent();
-  }, [props.isEditing])
-  // Handle image file selection
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
 
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
-    const formDataImage = new FormData();
-    formDataImage.append('image', file);
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
 
-    axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
-      .then((res) => {
-        setNewEvent((prev) => {
-          return {
-            ...prev,
-            picture: res.data?.imageUrl
-          }
-        })
-      })
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const formDataImage = new FormData();
+      formDataImage.append('image', file);
+      
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`,
+        formDataImage,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      
+      handleInputChange('picture', response.data?.imageUrl);
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
-  // Handle form input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewEvent({ ...newEvent, [name]: value });
-  };
+  const handleSubmit = async () => {
+    if (!validate()) return;
 
-  // Handle date changes (DatePicker)
-  const handleDateChange = (date, field) => {
-    setNewEvent({ ...newEvent, [field]: date });
-  };
-
-  // Add new event
-  const handleAddEvent = async () => {
-
-    if (validate()) {
-      const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
-        newEvent;
-
-      // if (!title || !start || !end || !picture) {
-      //   alert("Please provide title, start date, end date and image");
-      //   return;
-      // }
-
-      const formattedStart = format(new Date(start), "yyyy-MM-dd");
-      const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-      setLoading(true);
-
+    setLoading(true);
+    try {
       const eventData = {
         userId: profile._id,
-        title,
-        start: formattedStart,
-        end: formattedEnd,
-        startTime,
+        title: formData.title,
+        start: format(formData.start, "yyyy-MM-dd"),
+        end: format(formData.end, "yyyy-MM-dd"),
+        startTime: formData.startTime,
+        endTime: formData.endTime,
         userName: `${profile.firstName} ${profile.lastName}`,
         profilePicture: profile.profilePicture,
-        endTime,
-        picture,
-        cName,
-        cNumber,
-        cEmail,
-        location,
+        picture: formData.picture,
+        cName: formData.cName,
+        cNumber: formData.cNumber,
+        cEmail: formData.cEmail,
+        location: formData.location,
         department: profile.department,
         createGroup,
-        // Include price type and amount based on selection
         priceType,
-        amount: priceType === "paid" ? amount : null, // Only include amount if it's paid
+        amount: priceType === "paid" ? amount : null,
         currency: priceType === "paid" ? currency : "",
       };
-      console.log("eventData", eventData);
 
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/events/createEvent`, eventData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        setAllEvents([...allEvents, response.data]);
-        setLoading(false);
-        window.location.reload();
-
-        setNewEvent({
-          title: "",
-          start: "",
-          end: "",
-          startTime: "",
-          endTime: "",
-          picture: null,
-          cEmail: "",
-          cName: "",
-          cNumber: "",
-          location: "",
-        });
-      } catch (error) {
-        console.error("Error creating event:", error);
-      }
-    }
-
-  };
-
-  // Edit event
-  const handleEditEvent = async () => {
-    if (validate()) {
-      const { title, start, end, startTime, endTime, picture, cName, cNumber, cEmail, location } =
-        newEvent;
-      const eventId = props.selectedEvent._id;
-
-      if (!title || !start || !end) {
-        alert("Please provide title, start date, and end date.");
-        return;
+      if (props.isEditing && props.selectedEvent?._id) {
+        await axios.put(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`, eventData);
+        toast.success('Event updated successfully!');
+      } else {
+        await axios.post(`${process.env.REACT_APP_API_URL}/events/createEvent`, eventData);
+        toast.success('Event created successfully!');
       }
 
-      try {
-        const formattedStart = format(new Date(start), "yyyy-MM-dd");
-        const formattedEnd = format(new Date(end), "yyyy-MM-dd");
-
-        const updatedEvent = {
-          title,
-          start: formattedStart,
-          end: formattedEnd,
-          startTime,
-          endTime,
-          picture,
-          cName,
-          cNumber,
-          cEmail,
-          location,
-          priceType,
-          amount: priceType === "paid" ? amount : "0",
-          currency: priceType === "paid" ? currency : "",
-        };
-
-        await axios.put(`${process.env.REACT_APP_API_URL}/events/${eventId}`, updatedEvent, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const updatedEvents = allEvents.map((event) =>
-          event._id === eventId ? updatedEvent : event
-        );
-
-        setAllEvents(updatedEvents);
-        setSelectedEvent(null);
-        props.onHide();
-        toast.success("Event updated successfully.");
-        window.location.reload();
-      } catch (error) {
-        console.error("Error updating event:", error);
-        alert("Error updating event. Please try again.");
-      }
+      props.onHide();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error saving event:', error);
+      toast.error(error.response?.data?.message || 'Failed to save event');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // If the modal is not visible, don't render anything
-  if (!props.show) {
-    return null;
-  }
-
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={props.onHide}
-      ></div>
-
-      {/* Modal Container */}
-      <div className="relative bg-white rounded-md shadow-2xl rounded-t-xl max-w-xl w-full mx-4">
-        {/* Header */}
-        <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl ">
-          <h2 className="text-white text-lg font-semibold">
-            {props.isEditing ? "Edit Event" : "Add Event"}
-          </h2>
-          <button
-            onClick={props.onHide}
-            className="text-white text-2xl leading-none hover:text-gray-300"
-          >
-            &times;
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="p-6 bg-[#f8fafc] max-h-[60vh] thin-scroller overflow-y-auto rounded-b-xl">
-          <form className="space-y-4">
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-4">
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Event Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Event Title*
+              </label>
               <input
                 type="text"
-                className="w-full border border-gray-300 rounded p-2"
+                value={formData.title}
+                onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="Enter event title"
-                value={newEvent.title}
-                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
               />
-              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+              {errors.title && (
+                <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                  <AlertCircle size={14} />
+                  {errors.title}
+                </p>
+              )}
             </div>
 
-            {/* Start and End Date */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">Start Date</label>
-                <DatePicker
-                  className="w-full border border-gray-300 rounded p-2"
-                  selected={newEvent.start}
-                  onChange={(date) => handleDateChange(date, 'start')}
-                  placeholderText="Select start date"
-                  required
-                />
-                {errors.start && <p className="text-red-500 text-sm mt-1">{errors.start}</p>}
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">End Date</label>
-                <DatePicker
-                  className="w-full border border-gray-300 rounded p-2"
-                  selected={newEvent.end}
-                  onChange={(date) => handleDateChange(date, 'end')}
-                  placeholderText="Select end date"
-                  required
-                />
-                {errors.end && <p className="text-red-500 text-sm mt-1">{errors.end}</p>}
-              </div>
-            </div>
-
-            {/* Start and End Time */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">Start Time</label>
-                <input
-                  type="time"
-                  className="w-full border border-gray-300 rounded p-2"
-                  value={newEvent.startTime}
-                  onChange={(e) => setNewEvent({ ...newEvent, startTime: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 font-medium mb-1">End Time</label>
-                <input
-                  type="time"
-                  className="w-full border border-gray-300 rounded p-2"
-                  value={newEvent.endTime}
-                  onChange={(e) => setNewEvent({ ...newEvent, endTime: e.target.value })}
-                />
-              </div>
-            </div>
-
-            {/* Location */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Location</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Event Location"
-                value={newEvent.location}
-                onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                required
-              />
-              {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Location*
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MapPin size={16} className="text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  placeholder="Event location"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                />
+              </div>
+              {errors.location && (
+                <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                  <AlertCircle size={14} />
+                  {errors.location}
+                </p>
+              )}
             </div>
 
-            {/* Free / Paid Radio Buttons */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Event Type</label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    value="free"
-                    checked={priceType === 'free'}
-                    onChange={(e) => setPriceType(e.target.value)}
-                  />
-                  <span>Free</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    value="paid"
-                    checked={priceType === 'paid'}
-                    onChange={(e) => setPriceType(e.target.value)}
-                  />
-                  <span>Paid</span>
-                </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Event Type*
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {['free', 'paid'].map((type) => (
+                  <label key={type} className="cursor-pointer">
+                    <input
+                      type="radio"
+                      name="priceType"
+                      value={type}
+                      checked={priceType === type}
+                      onChange={(e) => setPriceType(e.target.value)}
+                      className="sr-only"
+                    />
+                    <div className={`flex items-center justify-center gap-2 p-3 border-2 rounded-lg transition-all duration-200 ${
+                      priceType === type
+                        ? 'border-[#0A3A4C] bg-[#0A3A4C]/5'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}>
+                      {type === 'free' ? (
+                        <CheckCircle size={16} className="text-green-600" />
+                      ) : (
+                        <DollarSign size={16} className="text-blue-600" />
+                      )}
+                      <span className="font-medium capitalize">{type}</span>
+                    </div>
+                  </label>
+                ))}
               </div>
             </div>
 
-            {/* Conditionally render the price and currency input */}
             {priceType === 'paid' && (
-              <div className="flex items-center space-x-2">
-                <input
-                  type="number"
-                  placeholder="Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(parseFloat(e.target.value))}
-                  className="w-24 border border-gray-300 rounded p-2"
-                  required
-                />
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="border border-gray-300 rounded p-2"
-                >
-                  <option value="INR">INR</option>
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="JYN">JYN</option>
-                </select>
-                {errors.amount && <p className="text-red-500 text-sm mt-1">{errors.amount}</p>}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Amount*
+                  </label>
+                  <input
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="0"
+                    min="0"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  />
+                  {errors.amount && (
+                    <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                      <AlertCircle size={14} />
+                      {errors.amount}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Currency
+                  </label>
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  >
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="JPY">JPY</option>
+                  </select>
+                </div>
               </div>
             )}
+          </div>
+        );
 
-            {/* Coordinator Name */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Coordinator Name</label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Name"
-                value={newEvent.cName}
-                onChange={(e) => setNewEvent({ ...newEvent, cName: e.target.value })}
-              />
-              {errors.cName && <p className="text-red-500 text-sm mt-1">{errors.cName}</p>}
+      case 2:
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date*
+                </label>
+                <DatePicker
+                  selected={formData.start}
+                  onChange={(date) => handleInputChange('start', date)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  placeholderText="Select start date"
+                  dateFormat="dd/MM/yyyy"
+                />
+                {errors.start && (
+                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                    <AlertCircle size={14} />
+                    {errors.start}
+                  </p>
+                )}
+              </div>
 
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Date*
+                </label>
+                <DatePicker
+                  selected={formData.end}
+                  onChange={(date) => handleInputChange('end', date)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  placeholderText="Select end date"
+                  dateFormat="dd/MM/yyyy"
+                  minDate={formData.start}
+                />
+                {errors.end && (
+                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                    <AlertCircle size={14} />
+                    {errors.end}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Coordinator Number */}
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Coordinator Number</label>
-              <input
-                type="number"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Number"
-                value={newEvent.cNumber}
-                onChange={(e) => setNewEvent({ ...newEvent, cNumber: e.target.value })}
-                required
-              />
-              {errors.cNumber && <p className="text-red-500 text-sm mt-1">{errors.cNumber}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Time
+                </label>
+                <input
+                  type="time"
+                  value={formData.startTime}
+                  onChange={(e) => handleInputChange('startTime', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  End Time
+                </label>
+                <input
+                  type="time"
+                  value={formData.endTime}
+                  onChange={(e) => handleInputChange('endTime', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Coordinator Name*
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User size={16} className="text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.cName}
+                    onChange={(e) => handleInputChange('cName', e.target.value)}
+                    placeholder="Coordinator name"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  />
+                </div>
+                {errors.cName && (
+                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                    <AlertCircle size={14} />
+                    {errors.cName}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number*
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone size={16} className="text-gray-400" />
+                  </div>
+                  <input
+                    type="tel"
+                    value={formData.cNumber}
+                    onChange={(e) => handleInputChange('cNumber', e.target.value)}
+                    placeholder="10-digit phone number"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                  />
+                </div>
+                {errors.cNumber && (
+                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                    <AlertCircle size={14} />
+                    {errors.cNumber}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Coordinator Email */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Coordinator Email</label>
-              <input
-                type="email"
-                className="w-full border border-gray-300 rounded p-2"
-                placeholder="Coordinator Email"
-                value={newEvent.cEmail}
-                onChange={(e) => setNewEvent({ ...newEvent, cEmail: e.target.value })}
-                required
-              />
-              {errors.cEmail && <p className="text-red-500 text-sm mt-1">{errors.cEmail}</p>}
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address*
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail size={16} className="text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  value={formData.cEmail}
+                  onChange={(e) => handleInputChange('cEmail', e.target.value)}
+                  placeholder="coordinator@example.com"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+                />
+              </div>
+              {errors.cEmail && (
+                <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                  <AlertCircle size={14} />
+                  {errors.cEmail}
+                </p>
+              )}
             </div>
 
-            {/* File Input */}
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Event Image</label>
-              <input
-                type="file"
-                onChange={handleImageChange}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300"
-              />
-              {errors.picture && <p className="text-red-500 text-sm mt-1">{errors.picture}</p>}
-              {newEvent.picture && (
-                <div className="mt-2">
-                  <img src={newEvent.picture} alt="Event" className="max-w-full h-auto" />
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Event Image*
+              </label>
+              <div
+                onClick={() => document.getElementById('eventImage').click()}
+                className="group border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+              >
+                {uploadingImage ? (
+                  <div className="flex items-center justify-center">
+                    <Loader2 size={24} className="animate-spin text-[#0A3A4C] mr-2" />
+                    <span className="text-sm text-gray-600">Uploading...</span>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
+                      <Upload size={24} className="text-[#0A3A4C]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Upload event image</p>
+                      <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                    </div>
+                  </div>
+                )}
+                <input
+                  id="eventImage"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="sr-only"
+                />
+              </div>
+              {errors.picture && (
+                <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                  <AlertCircle size={14} />
+                  {errors.picture}
+                </p>
+              )}
+              {formData.picture && (
+                <div className="mt-3 relative inline-block">
+                  <img
+                    src={formData.picture}
+                    alt="Event"
+                    className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200"
+                  />
                   <button
                     type="button"
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
-                    onClick={() => setNewEvent({ ...newEvent, picture: null })}
+                    onClick={() => handleInputChange('picture', '')}
+                    className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
                   >
-                    Remove
+                    <X size={12} />
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Create Group Checkbox (only if not editing) */}
             {!props.isEditing && (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                 <input
                   type="checkbox"
-                  id="create-group"
+                  id="createGroup"
                   checked={createGroup}
                   onChange={(e) => setCreateGroup(e.target.checked)}
-                  className="h-4 w-4 text-indigo-600"
+                  className="w-4 h-4 text-[#0A3A4C] border-gray-300 rounded focus:ring-[#0A3A4C]"
                 />
-                <label htmlFor="create-group" className="text-gray-700">
+                <label htmlFor="createGroup" className="text-sm text-gray-700">
                   Create a group with the same event title
                 </label>
               </div>
             )}
-          </form>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  if (!props.show) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50" onClick={props.onHide} />
+      
+      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#0A3A4C] p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                {props.isEditing ? <Edit size={20} className="text-white" /> : <Plus size={20} className="text-white" />}
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">
+                  {props.isEditing ? 'Edit Event' : 'Create New Event'}
+                </h2>
+                <p className="text-white/80 text-sm">
+                  {props.isEditing ? 'Update event details' : 'Add a new event to the calendar'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={props.onHide}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors duration-200"
+            >
+              <X size={20} className="text-white" />
+            </button>
+          </div>
+
+          {/* Step Progress */}
+          <div className="flex items-center justify-between">
+            {steps.map((step, index) => (
+              <div key={step.id} className="flex items-center">
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-200 ${
+                  currentStep >= step.id ? 'bg-white text-[#0A3A4C]' : 'bg-white/20 text-white'
+                }`}>
+                  {currentStep > step.id ? <CheckCircle size={16} /> : step.id}
+                </div>
+                <div className="ml-2 hidden sm:block">
+                  <p className={`text-sm font-medium ${currentStep >= step.id ? 'text-white' : 'text-white/60'}`}>
+                    {step.title}
+                  </p>
+                </div>
+                {index < steps.length - 1 && (
+                  <div className={`w-8 sm:w-16 h-px mx-2 sm:mx-4 ${
+                    currentStep > step.id ? 'bg-white' : 'bg-white/30'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="p-4 sm:p-6 max-h-[50vh] overflow-y-auto">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {steps[currentStep - 1]?.title}
+            </h3>
+            <p className="text-sm text-gray-600">
+              {steps[currentStep - 1]?.description}
+            </p>
+          </div>
+
+          {renderStepContent()}
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-100 px-4 py-3 flex justify-end items-center space-x-2 rounded-b-xl">
-          {/* Cancel Button */}
+        <div className="bg-gray-50 p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-3">
           <button
-            onClick={props.onHide}
-            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-md "
+            onClick={() => setCurrentStep(prev => Math.max(prev - 1, 1))}
+            disabled={currentStep === 1}
+            className="flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Cancel
+            <ArrowLeft size={16} />
+            <span>Previous</span>
           </button>
 
-          {/* Submit Button */}
-          <button
-            onClick={props.isEditing ? handleEditEvent : handleAddEvent}
-            className="bg-[#172d41] hover:bg-[rgb(36,67,95)] text-white px-4 py-2 rounded-md"
-          >
-            {props.isEditing ? "Edit Event" : "Add Event"}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={props.onHide}
+              className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            >
+              Cancel
+            </button>
+
+            {currentStep < steps.length ? (
+              <button
+                onClick={() => setCurrentStep(prev => Math.min(prev + 1, steps.length))}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200"
+              >
+                <span>Next</span>
+                <ArrowRight size={16} />
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200 disabled:opacity-50"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    <span>{props.isEditing ? 'Updating...' : 'Creating...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle size={16} />
+                    <span>{props.isEditing ? 'Update Event' : 'Create Event'}</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
+// Enhanced Event Details Modal
+function EventDetailsModal({ event, onClose, onEdit, onDelete, profile, attendees, attendanceStatus, onAttendanceChange, attendanceLoading }) {
+  const [showAttendees, setShowAttendees] = useState(false);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
+    return date.toLocaleDateString('en-US', options);
+  };
 
-const locales = {
-  "en-IN": enIN,
-};
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
+  const handleDownloadCSV = () => {
+    if (!attendees) return;
+
+    const allAttendees = [
+      ...attendees.willAttend.map(u => ({ status: 'Will Attend', ...u })),
+      ...attendees.mightAttend.map(u => ({ status: 'Might Attend', ...u })),
+      ...attendees.willNotAttend.map(u => ({ status: 'Will Not Attend', ...u })),
+    ];
+
+    const header = ['User ID', 'User Name', 'Status'];
+    const rows = allAttendees.map(u => [u.userId, u.userName, u.status]);
+    
+    const csvContent = 'data:text/csv;charset=utf-8,' +
+      [header, ...rows]
+        .map(row => row.map(field => `"${field}"`).join(','))
+        .join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `${event.title}_attendees.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      
+      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#0A3A4C] p-4 sm:p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <CalendarIcon size={20} className="text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-white">Event Details</h2>
+                <p className="text-white/80 text-sm">{event.title}</p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors duration-200"
+            >
+              <X size={20} className="text-white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="p-4 sm:p-6 max-h-[70vh] overflow-y-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Event Info */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Information</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <CalendarIcon size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Start Date</p>
+                      <p className="font-medium">{formatDate(event.start)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CalendarIcon size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">End Date</p>
+                      <p className="font-medium">{formatDate(event.end)}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Time</p>
+                      <p className="font-medium">{event.startTime} - {event.endTime}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Location</p>
+                      <p className="font-medium">{event.location}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Coordinator Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <User size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Name</p>
+                      <p className="font-medium">{event.cName}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Phone</p>
+                      <p className="font-medium">{event.cNumber}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 sm:col-span-2">
+                    <Mail size={16} className="text-gray-500" />
+                    <div>
+                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="font-medium">{event.cEmail}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Attendance Options */}
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Attendance</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { value: 0, label: 'Will Attend', color: 'green' },
+                    { value: 1, label: 'Might Attend', color: 'yellow' },
+                    { value: 2, label: 'Will Not Attend', color: 'red' }
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        if (event.priceType === "paid" && option.value === 0) {
+                          window.open("https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt", "_blank");
+                        } else {
+                          onAttendanceChange(option.value, event._id);
+                        }
+                      }}
+                      disabled={attendanceLoading}
+                      className={`flex items-center justify-center gap-2 p-3 rounded-lg border-2 transition-all duration-200 ${
+                        attendanceStatus === option.value
+                          ? `border-${option.color}-500 bg-${option.color}-50 text-${option.color}-700`
+                          : 'border-gray-300 hover:border-gray-400'
+                      } ${attendanceLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      {attendanceLoading && attendanceStatus === option.value ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <CheckCircle size={16} />
+                      )}
+                      <span className="text-sm font-medium">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
+                
+                {event.priceType === "paid" ? (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <DollarSign size={16} className="text-blue-600" />
+                      <p className="text-blue-800 font-medium">
+                        Paid Event - {event.amount} {event.currency}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle size={16} className="text-green-600" />
+                      <p className="text-green-800 font-medium">Free Event</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Event Image */}
+            <div className="space-y-4">
+              <div>
+                <img
+                  src={event.picture || picture}
+                  alt="Event"
+                  className="w-full h-48 lg:h-64 object-cover rounded-lg shadow-md"
+                />
+              </div>
+
+              {/* Actions */}
+              {(event.userId === profile._id || profile.profileLevel === 0) && (
+                <div className="space-y-2">
+                  <button
+                    onClick={onEdit}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200"
+                  >
+                    <Edit size={16} />
+                    <span>Edit Event</span>
+                  </button>
+                  <button
+                    onClick={onDelete}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                  >
+                    <Trash2 size={16} />
+                    <span>Delete Event</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Attendee Summary */}
+              {event.userId === profile._id && attendees && (
+                <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900">Attendance Summary</h4>
+                    <button
+                      onClick={() => setShowAttendees(!showAttendees)}
+                      className="text-[#0A3A4C] hover:text-[#0A3A4C]/80 text-sm"
+                    >
+                      {showAttendees ? 'Hide' : 'Show'} Details
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-green-600">Will Attend:</span>
+                      <span className="font-medium">{attendees.willAttend?.length || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-yellow-600">Might Attend:</span>
+                      <span className="font-medium">{attendees.mightAttend?.length || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-red-600">Will Not Attend:</span>
+                      <span className="font-medium">{attendees.willNotAttend?.length || 0}</span>
+                    </div>
+                  </div>
+
+                  {showAttendees && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <button
+                        onClick={handleDownloadCSV}
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      >
+                        <Download size={16} />
+                        <span>Download CSV</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main Events Component
+const locales = { "en-IN": enIN };
+const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales });
 
 function Events() {
-  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "", startTime: "", endTime: "", type: "" });
-  const [allEvents, setAllEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [attendees, setAttendees] = useState();
-  const [isEditing, setIsEditing] = useState(false);
-  const [modalShow, setModalShow] = React.useState(false);
-  const [selectedEventDetails, setSelectedEventDetails] = useState(null);
-  const [selectedEventDetailsPopup, setSelectedEventDetailsPopup] = useState(null);
-  const calendarRef = useRef(null);
   const profile = useSelector((state) => state.profile);
   const { _id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [detailsModalShow, setDetailsModalShow] = useState(false);
+  const calendarRef = useRef(null);
+  
+  const [allEvents, setAllEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [attendees, setAttendees] = useState(null);
   const [attendanceStatus, setAttendanceStatus] = useState(null);
-  const [eventId, setEventId] = useState(null);
   const [attendanceLoading, setAttendanceLoading] = useState(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [view, setView] = useState(Views.MONTH);
+  const [eventId, setEventId] = useState(null);
 
-
-
-  useEffect(() => {
-    if (selectedEventDetails) {
-      setEventId(selectedEventDetails._id); // Set eventId
-    }
-  }, [selectedEventDetails]);
-
-  useEffect(() => {
-    if (eventId) {
-      checkAttendanceStatus(eventId); // Call checkAttendanceStatus only after eventId is set
-    }
-  }, [eventId]);
-
-  const [view, setView] = useState(Views.MONTH); // Default view
-
-  // Define dynamic formats based on the selected view
-  const formats = {
-    timeGutterFormat: (date, culture, localizer) =>
-      view === Views.WEEK ? format(date, "HH:mm") : format(date, "hh:mm a"),
-  };
-
-  // Handle view change
-  const handleViewChange = useCallback((newView) => {
-    setView(newView);
-  }, []);
-
-
-
-
-
-
-  const handleAttendance = async (attendance, eventId) => {
-    console.log('handling attendance')
-    setAttendanceLoading(true);
-    console.log('event titlee', selectedEvent.title, attendance, eventId)
-    try {
-      let body = {
-        userId: profile._id,
-        userName: `${profile.firstName} ${profile.lastName}`,
-        profilePicture: profile.profilePicture,
-        attendance,
-        groupName: selectedEvent.title
-      };
-
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
-        body
-      );
-
-      if (response.status === 200) {
-        toast.success('Vote submitted successfully.');
-        setNewEvent(response.data.event);
-        checkAttendanceStatus();
-        setAttendanceLoading(false);
-      } else {
-        console.error('Unexpected response status:', response.status, response.message);
-        alert('An unexpected error occurred. Please try again.');
-        setAttendanceLoading(false);
-      }
-    } catch (error) {
-      console.error('Error submitting attendance:', error);
-      toast.error(error.response?.data?.message || 'An error occurred.');
-      setAttendanceLoading(false);
-    }
-  };
-
-  // const gapi = window.gapi;
-  // const google = window.google;
-
-  // const CLIENT_ID = '221910855256-3ra04lqbdb4elusir5clvsail6ldum53.apps.googleusercontent.com';
-  // const API_KEY = 'AIzaSyCduY-X8qZOq43I8zwsHlf2WWZ1ewDjpdc';
-  // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
-  // const SCOPES = "https://www.googleapis.com/auth/calendar";
-  // const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
-
-
-
-  let admin;
-  if (profile.profileLevel === 0 || profile.profileLevel === 1) {
-    admin = true;
-  }
-
-  const handleClickOutsideCalendar = (event) => {
-    if (
-      calendarRef.current &&
-      !calendarRef.current.contains(event.target) &&
-      !event.target.closest(".modal-open")
-    ) {
-      return;
-      //setIsEditing(false);
-    }
-  };
-
-  useEffect(() => {
-    // Add event listener for clicks outside the calendar
-    window.addEventListener("click", handleClickOutsideCalendar);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("click", handleClickOutsideCalendar);
-    };
-  }, []);
-
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Delete') {
-        // Check if an event is selected
-        if (selectedEvent) {
-          handleDeleteEvent();
-        }
-      }
-    };
-
-    // Add event listener for the delete key
-    document.addEventListener('keydown', handleKeyDown);
-
-    // Remove the event listener when the component unmounts
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [selectedEvent]);
-
-
-
+  const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
 
   useEffect(() => {
     fetchEvents();
@@ -708,67 +999,57 @@ function Events() {
     }
   }, [_id]);
 
-  const fetchEventDetails = (eventId) => {
-    setLoading(true);
-    fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setSelectedEventDetailsPopup(data);
-        // setModalShow(true);
-        setDetailsModalShow(true)
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching event details:", error)
-        setLoading(false);
-      });
-
-  };
-
-  const fetchEvents = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/events`)
-      .then((response) => response.json())
-      .then((data) => {
-        // Filter events based on groupId or no groupId
-        const filteredEvents = data.filter((event) => {
-          // If groupId is not present, include the event
-          if (!event.groupId) {
-            return true;
-          }
-          // If groupId is present, check if it's in profile.groupNames
-          return profile.groupNames.includes(event.groupId);
-        });
-
-        // Convert start and end dates to JavaScript Date objects
-        const eventsWithDates = filteredEvents.map((event) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-        }));
-
-        // Add an id to each event
-        const eventsWithIds = eventsWithDates.map((event, index) => ({
-          ...event,
-          id: index + 1,
-        }));
-
-        // Set the filtered and processed events
-        setAllEvents(eventsWithIds);
-      })
-      .catch((error) => {
-        console.error("Error fetching events:", error);
-      });
-  };
-
-
-
-  const checkAttendanceStatus = async () => {
-    if (!eventId) {
-      console.log('No eventId provided, skipping API call.');
-      return; // Exit early if eventId is null or undefined
+  useEffect(() => {
+    if (selectedEvent) {
+      setEventId(selectedEvent._id);
     }
+  }, [selectedEvent]);
 
-    console.log('eventId check', eventId);
+  useEffect(() => {
+    if (eventId) {
+      checkAttendanceStatus(eventId);
+    }
+  }, [eventId]);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events`);
+      const data = await response.json();
+      
+      const filteredEvents = data.filter((event) => {
+        if (!event.groupId) return true;
+        return profile.groupNames.includes(event.groupId);
+      });
+
+      const eventsWithDates = filteredEvents.map((event, index) => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+        id: index + 1,
+      }));
+
+      setAllEvents(eventsWithDates);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  const fetchEventDetails = async (eventId) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`);
+      const data = await response.json();
+      setSelectedEvent(data);
+    } catch (error) {
+      console.error("Error fetching event details:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkAttendanceStatus = async (eventId) => {
+    if (!eventId) return;
+    
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/events/attendees/${eventId}`);
       if (response.status === 200) {
@@ -776,11 +1057,9 @@ function Events() {
         determineAttendanceStatus(response.data);
       }
     } catch (error) {
-      console.error('Error :', error);
-      toast.error(error.response?.data?.message || 'An error occurred.');
+      console.error('Error checking attendance:', error);
     }
   };
-
 
   const determineAttendanceStatus = (attendees) => {
     if (attendees.willAttend.some(user => user.userId === profile._id)) {
@@ -794,542 +1073,170 @@ function Events() {
     }
   };
 
+  const handleAttendance = async (attendance, eventId) => {
+    setAttendanceLoading(true);
+    try {
+      const body = {
+        userId: profile._id,
+        userName: `${profile.firstName} ${profile.lastName}`,
+        profilePicture: profile.profilePicture,
+        attendance,
+        groupName: selectedEvent.title
+      };
 
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
+        body
+      );
 
+      if (response.status === 200) {
+        toast.success('Attendance updated successfully!');
+        checkAttendanceStatus(eventId);
+      }
+    } catch (error) {
+      console.error('Error updating attendance:', error);
+      toast.error(error.response?.data?.message || 'Failed to update attendance');
+    } finally {
+      setAttendanceLoading(false);
+    }
+  };
 
-
-  function handleEventClick(event) {
-
+  const handleEventClick = (event) => {
     setSelectedEvent(event);
-    checkAttendanceStatus(event._id)
-    console.log("selected event", selectedEvent)
-    setIsEditing(true);
-    console.log("edit", isEditing)
-    setNewEvent({
-      title: event.title,
-      start: event.start,
-      end: event.end,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      picture: event.picture,
-      cName: event.cName,
-      cNumber: event.cNumber,
-      cEmail: event.cEmail
-    });
-    setSelectedEventDetails(event);
-  }
-
-
-
-  const handleDeleteEvent = (e) => {
-    const eventId = selectedEvent._id;
-    console.log("id", eventId);
-    fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`, {
-      method: 'DELETE',
-    })
-      .then(() => {
-        // Remove the event from the events array
-        const updatedEvents = allEvents.filter(
-          (event) => event._id !== eventId
-        );
-
-        setAllEvents(updatedEvents);
-        setSelectedEvent(null);
-        setIsEditing(false);
-
-        toast.success('Event deleted successfully.');
-      })
-      .catch((error) => console.error('Error deleting event:', error));
-
+    setEventId(event._id);
   };
 
+  const handleDeleteEvent = async () => {
+    if (!selectedEvent?._id) return;
+    
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
 
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL}/events/${selectedEvent._id}`, {
+        method: 'DELETE',
+      });
 
-  const [open, setOpen] = useState(false);
-  const handleOpenModal = (eventId) => {
-    console.log('eventid openmodal', eventId)
-    checkAttendanceStatus(eventId);
-    setOpen(true)
+      const updatedEvents = allEvents.filter(event => event._id !== selectedEvent._id);
+      setAllEvents(updatedEvents);
+      setSelectedEvent(null);
+      toast.success('Event deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event');
+    }
   };
-  const handleCloseModal = () => setOpen(false);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' };
-    return date.toLocaleDateString('en-US', options);
+  const handleViewChange = useCallback((newView) => {
+    setView(newView);
+  }, []);
+
+  const formats = {
+    timeGutterFormat: (date, culture, localizer) =>
+      view === Views.WEEK ? format(date, "HH:mm") : format(date, "hh:mm a"),
   };
-
-  const handleDownloadCSV = () => {
-    // Flatten all attendees into one array with a status field
-    const allAttendees = [
-      ...attendees.willAttend.map(u => ({ status: 'Will Attend', ...u })),
-      ...attendees.mightAttend.map(u => ({ status: 'Might Attend', ...u })),
-      ...attendees.willNotAttend.map(u => ({ status: 'Will Not Attend', ...u })),
-    ]
-
-    // Build CSV rows: header + data rows
-    const header = ['User ID', 'User Name', 'Profile Picture', 'Status']
-    const rows = allAttendees.map(u => [
-      u.userId,
-      u.userName,
-      u.profilePicture,
-      u.status
-    ])
-
-    // Join into a single CSV string
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      [header, ...rows]
-        .map(row => row.map(field => `"${field}"`).join(','))
-        .join('\n')
-
-    // Create a temporary link to trigger download
-    const encodedUri = encodeURI(csvContent)
-    const link = document.createElement('a')
-    link.setAttribute('href', encodedUri)
-    link.setAttribute('download', 'event_attendees.csv')
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-
 
   return (
-    <div className="Events mx-auto px-[5%] py-[38px] mt-3 ">
-      {/* <div style={{ textAlign: 'left', padding: '20px', borderRadius: '10px', marginBottom: '10px', backgroundColor: '#71be95' }}>
-        <h2 style={{ margin: '0', color: 'white' }}>Event Calendar</h2>
-        <p style={{ marginTop: '10px', fontSize: '15px', color: 'black' }}>
-          Stay updated on upcoming events and opportunities to connect.
-        </p>
-      </div> */}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
+        {/* Header */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden mb-4 sm:mb-6">
+          <div className="bg-[#CEF3DF] p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <CalendarIcon size={20} className="sm:size-6 text-[#0A3A4C]" />
+                </div>
+                <div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#136175]">
+                    Event Calendar
+                  </h1>
+                  <p className="text-sm sm:text-base lg:text-lg text-[#136175]/80">
+                    Stay updated on upcoming events and opportunities to connect.
+                  </p>
+                </div>
+              </div>
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    setModalShow(true);
+                    setIsEditing(false);
+                  }}
+                  className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200 font-medium shadow-md hover:shadow-lg transform hover:scale-105"
+                >
+                  <Plus size={16} />
+                  <span className="hidden sm:inline">Create Event</span>
+                  <span className="sm:hidden">Create</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
 
-      <div className='bg-[#cef3df] p-4 rounded-lg mb-3 text-start'>
-        <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Event Calendar</h2>
-        <p className='text-base md:text-lg text-[#136175]' >
-          Stay updated on upcoming events and opportunities to connect.
-        </p>
-      </div>
+        {/* Calendar */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+          <div className="p-4 sm:p-6" ref={calendarRef}>
+            <Calendar
+              localizer={localizer}
+              events={allEvents}
+              startAccessor="start"
+              endAccessor="end"
+              style={{
+                height: '60vh',
+                fontWeight: '600',
+              }}
+              selectable
+              onSelectEvent={handleEventClick}
+              view={view}
+              onView={handleViewChange}
+              formats={formats}
+              className="modern-calendar"
+            />
+          </div>
+        </div>
 
-
-
-      <div class="bg-white rounded-lg p-4 shadow-lg" ref={calendarRef}>
-        <MyVerticallyCenteredModal
+        {/* Modals */}
+        <EventModal
           show={modalShow}
           isEditing={isEditing}
           selectedEvent={selectedEvent}
           onHide={() => {
             setModalShow(false);
-            setSelectedEventDetails(null);
+            setSelectedEvent(null);
+            setIsEditing(false);
           }}
         />
-        <div className="relative z-[0]">
-          <Calendar
-            localizer={localizer}
-            events={allEvents}
-            startAccessor="start"
-            endAccessor="end"
-            style={{
-              height: '60vh',
-              fontWeight: '600',
-              backgroundColor: 'white',
-              zIndex: 1, // Important fallback
-              position: 'relative'
+
+        {selectedEvent && (
+          <EventDetailsModal
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+            onEdit={() => {
+              setIsEditing(true);
+              setModalShow(true);
             }}
-            selectable
-            onSelectEvent={handleEventClick}
-            view={view}
-            onView={handleViewChange}
-            formats={formats}
+            onDelete={handleDeleteEvent}
+            profile={profile}
+            attendees={attendees}
+            attendanceStatus={attendanceStatus}
+            onAttendanceChange={handleAttendance}
+            attendanceLoading={attendanceLoading}
           />
-        </div>
+        )}
 
-          {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-          <Button
-            className="add-event-button-mobile md:hidden"
-            variant="primary"
-            onClick={() => {
-              setModalShow(true);
-              setIsEditing(false);
-            }}
-            style={{
-              borderRadius: '50%',
-              width: '49px',
-              height: '49px',
-              position: 'absolute',
-              backgroundColor: '#301c5B'
-            }}
-          >
-            <FaCalendarPlus />
-          </Button>)}
-
-
-
-        {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-          <Button
-            className="add-event-button hidden md:block"
-            variant="primary"
-            onClick={() => {
-              setModalShow(true);
-              setIsEditing(false);
-            }}
-            style={{
-              borderRadius: '50%',
-              width: '60px',
-              height: '60px',
-              position: 'absolute',
-              backgroundColor: '#301c5B'
-            }}
-          >
-            <FaCalendarPlus />
-          </Button>)}
-
-
-        {selectedEventDetails && (
-          // Outer modal wrapper (Center + Backdrop)
-          <div className="fixed inset-0 z-50 flex items-center justify-center ">
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={() => setSelectedEventDetails(null)}
-            ></div>
-
-            {/* Modal Container */}
-            <div className="relative bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 ">
-              {/* Header */}
-              <div className="bg-[#02172B] px-5 py-3 flex justify-between items-center rounded-t-xl">
-                <h2 className="text-white text-xl font-semibold">
-                  Event Details
-                </h2>
-                <button
-                  onClick={() => setSelectedEventDetails(null)}
-                  className="text-white text-2xl leading-none hover:text-gray-300"
-                >
-                  &times;
-                </button>
-              </div>
-
-              {/* Body */}
-              <div className="p-6  rounded-b-xl max-h-[400px] md:max-h-[600px] overflow-y-auto">
-                {/* Top section: event info + image */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Left side: event info */}
-                  <div className="md:col-span-2">
-                    <div className="bg-white rounded-md  p-4 space-y-2">
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">Title:</span>
-                        <span className="text-gray-800">{selectedEventDetails.title}</span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">Start Date:</span>
-                        <span className="text-gray-800">
-                          {formatDate(selectedEventDetails.start)}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">End Date:</span>
-                        <span className="text-gray-800">
-                          {formatDate(selectedEventDetails.end)}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">Start Time:</span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.startTime} hrs
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">End Time:</span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.endTime} hrs
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">
-                          Coordinator:
-                        </span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.cName}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">Phone:</span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.cNumber}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">Email:</span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.cEmail}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-start font-semibold">
-                        <span className="font-semibold w-28 text-gray-700">
-                          Location:
-                        </span>
-                        <span className="text-gray-800">
-                          {selectedEventDetails.location}
-                        </span>
-                      </div>
-                      {/* Display whether event is paid/free */}
-                      {selectedEventDetails.priceType === "paid" ? (
-                        <p className="mt-4 text-red-500 font-semibold">
-                          This is a paid event
-                        </p>
-                      ) : selectedEventDetails.priceType === "free" ? (
-                        <p className="mt-4 text-green-600 font-semibold">
-                          This is a free event
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {/* Right side: event image */}
-                  <div className="flex items-center justify-center">
-                    <img
-                      src={selectedEventDetails.picture}
-                      alt="Event"
-                      className="h-48 w-auto rounded-md shadow"
-                    />
-                  </div>
-                </div>
-
-                {/* Attendance Options */}
-                <div className="mt-8 bg-white rounded-md shadow p-4">
-                  <p className="text-gray-700 text-xl font-medium mb-4">Your Attendance:</p>
-                  <div className="flex flex-wrap items-center justify-around gap-6">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-5 w-5 text-indigo-600"
-                        checked={attendanceStatus === 0}
-                        onChange={() => {
-                          if (selectedEventDetails.priceType === "free") {
-                            handleAttendance(0, selectedEventDetails._id);
-                          } else if (selectedEventDetails.priceType === "paid") {
-                            window.open(
-                              "https://razorpay.com/payment-link/plink_PA5q7Jm6wJENlt",
-                              "_blank"
-                            );
-                          }
-                        }}
-                      />
-                      <span>I will attend</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-5 w-5 text-indigo-600"
-                        checked={attendanceStatus === 1}
-                        onChange={() => handleAttendance(1, selectedEventDetails._id)}
-                      />
-                      <span>I might attend</span>
-                    </label>
-
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        className="form-checkbox h-5 w-5 text-indigo-600"
-                        checked={attendanceStatus === 2}
-                        onChange={() => handleAttendance(2, selectedEventDetails._id)}
-                      />
-                      <span>I will not attend</span>
-                    </label>
-
-                    {attendanceLoading && (
-                      <l-line-spinner
-                        size="20"
-                        stroke="3"
-                        speed="1"
-                        color="black"
-                      ></l-line-spinner>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  {/* See Attendees (if user is event creator) */}
-                  {selectedEventDetails.userId === profile._id && (
-                    <div className="mt-4 text-right">
-                      <button
-                        onClick={() => handleOpenModal(selectedEventDetails._id)}
-                        className="text-indigo-600 hover:underline"
-                      >
-                        See event attendees
-                      </button>
-                    </div>
-                  )}
-                  {/* Edit/Delete Buttons (if user is event creator or admin) */}
-                  {(selectedEventDetails.userId === profile._id ||
-                    profile.profileLevel === 0) && (
-                      <div className="mt-6 flex justify-start space-x-4">
-                        <button
-                          onClick={() => setModalShow(true)}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => {
-                            handleDeleteEvent();
-                            setSelectedEventDetails(null);
-                          }}
-                          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-
-
-                </div>
-
-                {/* Attendees Modal */}
-                {open && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    {/* Backdrop */}
-                    <div
-                      className="absolute inset-0 bg-black/50"
-                      onClick={handleCloseModal}
-                    />
-
-                    {/* Modal Container */}
-                    <div className="relative bg-white rounded-md shadow-2xl max-w-xl w-full mx-4">
-                      {/* Header */}
-                      <div className="bg-[#02172B] px-4 py-3 flex justify-between items-center">
-                        <h2 className="text-white text-lg font-semibold">Event Attendees</h2>
-                        <div className="flex items-center space-x-2">
-
-                          <button
-                            onClick={handleCloseModal}
-                            className="text-white text-2xl leading-none hover:text-gray-300"
-                          >
-                            &times;
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Body */}
-                      <div className="p-6 bg-[#f8fafc]">
-                        <div className="flex justify-center mb-5">
-
-                          <button
-                            onClick={handleDownloadCSV}
-                            className="bg-[#02172B] text-white px-3 py-1 max-w-[400px] text-lg rounded hover:bg-blue-900"
-                          >
-                            Download CSV
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-3 gap-6">
-
-                          {/* Will Attend */}
-
-                          <div>
-                            <h3 className="font-semibold text-gray-700">Will Attend</h3>
-                            <p className="text-sm text-gray-600">
-                              Total: {attendees?.willAttend.length}
-                            </p>
-                            {/* {attendees?.willAttend.map((user) => (
-                              <div
-                                key={user.userId}
-                                className="flex items-center space-x-2 mt-2"
-                              >
-                                <img
-                                  src={user.profilePicture || pic}
-                                  alt={user.userName}
-                                  className="h-8 w-8 rounded-full object-cover"
-                                />
-                                <span>{user.userName}</span>
-                              </div>
-                            ))} */}
-                          </div>
-
-                          {/* Might Attend */}
-                          <div>
-                            <h3 className="font-semibold text-gray-700">Might Attend</h3>
-                            <p className="text-sm text-gray-600">
-                              Total: {attendees?.mightAttend.length}
-                            </p>
-                            {/* {attendees?.mightAttend.map((user) => (
-                              <div
-                                key={user.userId}
-                                className="flex items-center space-x-2 mt-2"
-                              >
-                                <img
-                                  src={user.profilePicture || pic}
-                                  alt={user.userName}
-                                  className="h-8 w-8 rounded-full object-cover"
-                                />
-                                <span>{user.userName}</span>
-                              </div>
-                            ))} */}
-                          </div>
-
-                          {/* Will Not Attend */}
-                          <div>
-                            <h3 className="font-semibold text-gray-700">Will Not Attend</h3>
-                            <p className="text-sm text-gray-600">
-                              Total: {attendees?.willNotAttend.length}
-                            </p>
-                            {/* {attendees?.willNotAttend.map((user) => (
-                              <div
-                                key={user.userId}
-                                className="flex items-center space-x-2 mt-2"
-                              >
-                                <img
-                                  src={user.profilePicture || pic}
-                                  alt={user.userName}
-                                  className="h-8 w-8 rounded-full object-cover"
-                                />
-                                <span>{user.userName}</span>
-                              </div>
-                            ))} */}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+        {/* Loading Overlay */}
+        {loading && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 shadow-xl">
+              <div className="flex items-center gap-3">
+                <Loader2 size={24} className="animate-spin text-[#0A3A4C]" />
+                <span className="text-gray-700">Loading event details...</span>
               </div>
             </div>
           </div>
         )}
-
-        {selectedEventDetailsPopup && (
-          <div className="event-details-popup">
-            <div className="event-details-popup-content" style={{ textAlign: 'left' }}>
-              <span className="close-btn-event" onClick={() => setSelectedEventDetailsPopup(null)}>&times;</span>
-
-              <h2 align='center'>Event Details</h2>
-
-              <EventDisplay event={selectedEventDetailsPopup} />
-              {/* {(selectedEventDetailsPopup.userId === profile._id || profile.profileLevel === 0) && (
-                <div className="event-edit-delete">
-                  <Button variant="primary" onClick={() => setModalShow(true)}>
-                    Edit Event
-                  </Button>
-                  <Button variant="danger" onClick={() => {
-                    handleDeleteEvent();
-                    setSelectedEventDetails(null);
-                  }}>
-                    Delete Event
-                  </Button>
-                </div>
-              )} */}
-            </div>
-          </div>
-        )}
-        {loading && <><l-line-spinner
-          size="40"
-          stroke="3"
-          speed="1"
-          color="black"
-        ></l-line-spinner></>}
       </div>
     </div>
   );
 }
-
 
 export default Events;

@@ -772,7 +772,7 @@ const CreateDonation = ({ edit }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 ">
         {/* Header */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden mb-4 sm:mb-6">
           <div className="bg-[#CEF3DF] p-4 sm:p-6">

@@ -31,7 +31,7 @@ const Donations = () => {
   const [loading, setLoading] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const profile = useSelector((state) => state.profile);
-  const LIMIT = 40;
+  const LIMIT = 400;
   let [page, setPage] = useState(1);
   let [previousPage, setPreviousPage] = useState(0);
 
@@ -83,116 +83,202 @@ const Donations = () => {
     getUserDonations();
   }, []);
 
+  const DoanationHome = () => {
+    return (<>
+
+      <DonSpon title="Business Connect" icon={icon} />
+
+
+      <div>
+        <PageSubTitle
+          buttontext1={buttontext1}
+          buttontext2={buttontext2}
+          buttontext3={buttontext3}
+          buttontext1Link={buttontext1Link}
+          buttontext2Link={buttontext2Link}
+          buttontext3Link={buttontext3Link}
+          name="donations"
+          create={admin}
+        />
+        {/* Create Button */}
+        {admin && (
+          <div style={{ margin: '1rem 0', textAlign: 'right' }}>
+            <button
+              className='hover:bg-[#136175] bg-[#0A3A4C] text-white py-3 px-4 rounded-md font-semibold'
+              onClick={() => navigate('/home/donations/create')}
+              style={{
+                // padding: '10px 20px',
+                // backgroundColor: '#0A3A4C',
+                // color: '#fff',
+                // border: 'none',
+                // borderRadius: '8px',
+                // cursor: 'pointer',
+                // fontSize: '16px',
+                // fontWeight: '500',
+              }}
+            >
+              Create Business Donation Request
+            </button>
+          </div>
+        )}
+
+      </div>
+
+    </>)
+  }
+
+  const DoanationRequest = () => {
+    return (<>
+
+      <DonSpon title="Business Connect" icon={icon} />
+
+
+      <div>
+        <PageSubTitle
+          buttontext1={buttontext1}
+          buttontext2={buttontext2}
+          buttontext3={buttontext3}
+          buttontext1Link={buttontext1Link}
+          buttontext2Link={buttontext2Link}
+          buttontext3Link={buttontext3Link}
+          name="donations"
+          create={admin}
+        />
+        {/* Create Button */}
+        {admin && (
+          <div style={{ margin: '1rem 0', textAlign: 'right' }}>
+            <button
+              className='hover:bg-[#136175] bg-[#0A3A4C] text-white py-3 px-4 rounded-md font-semibold'
+              onClick={() => navigate('/home/donations/create')}
+              style={{
+                // padding: '10px 20px',
+                // backgroundColor: '#0A3A4C',
+                // color: '#fff',
+                // border: 'none',
+                // borderRadius: '8px',
+                // cursor: 'pointer',
+                // fontSize: '16px',
+                // fontWeight: '500',
+              }}
+            >
+              Create Business Donation Request
+            </button>
+          </div>
+        )}
+
+      </div>
+
+    </>)
+  }
+
+  const DoanationConnect = () => {
+    return (<>
+
+      <DonSpon title="Business Connect" icon={icon} />
+
+
+      <div>
+        <PageSubTitle
+          buttontext1={buttontext1}
+          buttontext2={buttontext2}
+          buttontext3={buttontext3}
+          buttontext1Link={buttontext1Link}
+          buttontext2Link={buttontext2Link}
+          buttontext3Link={buttontext3Link}
+          name="donations"
+          create={admin}
+        />
+        {/* Create Button */}
+        {admin && (
+          <div style={{ margin: '1rem 0', textAlign: 'right' }}>
+            <button
+              className='hover:bg-[#136175] bg-[#0A3A4C] text-white py-3 px-4 rounded-md font-semibold'
+              onClick={() => navigate('/home/donations/create')}
+              style={{
+                // padding: '10px 20px',
+                // backgroundColor: '#0A3A4C',
+                // color: '#fff',
+                // border: 'none',
+                // borderRadius: '8px',
+                // cursor: 'pointer',
+                // fontSize: '16px',
+                // fontWeight: '500',
+              }}
+            >
+              Create Business Donation Request
+            </button>
+          </div>
+        )}
+
+      </div>
+
+    </>)
+  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', padding: '2% 5%' }}>
-      <DonSpon title="Business Connect" icon={icon}/>
+    <div className="min-h-screen bg-gray-50">
 
-      {/* Create Button */}
-      {admin && (
-        <div style={{ margin: '1rem 0', textAlign: 'right' }}>
-          <button
-          className='hover:bg-[#136175] bg-[#0A3A4C] text-white py-3 px-4 rounded-md font-semibold'
-            onClick={() => navigate('/home/donations/create')}
-            style={{
-              // padding: '10px 20px',
-              // backgroundColor: '#0A3A4C',
-              // color: '#fff',
-              // border: 'none',
-              // borderRadius: '8px',
-              // cursor: 'pointer',
-              // fontSize: '16px',
-              // fontWeight: '500',
-            }}
-          >
-            Create Business Donation Request
-          </button>
-        </div>
-      )}
-      {/* tabs here */}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <PageSubTitle
-              buttontext1={buttontext1}
-              buttontext2={buttontext2}
-              buttontext3={buttontext3}
-              buttontext1Link={buttontext1Link}
-              buttontext2Link={buttontext2Link}
-              buttontext3Link={buttontext3Link}
-              name="donations"
-              create={admin}
-            />
-          }
-        />
-        <Route
-          path="/my-donation-requests"
-          element={
-            <PageSubTitle
-              buttontext1={buttontext1}
-              buttontext2={buttontext2}
-              buttontext3={buttontext3}
-              buttontext1Link={buttontext1Link}
-              buttontext2Link={buttontext2Link}
-              buttontext3Link={buttontext3Link}
-              name="donations"
-              create={admin}
-            />
-          }
-        />
-        <Route
-          path="/businessConnect"
-          element={
-            <PageSubTitle
-              buttontext1={buttontext1}
-              buttontext2={buttontext2}
-              buttontext3={buttontext3}
-              buttontext1Link={buttontext1Link}
-              buttontext2Link={buttontext2Link}
-              buttontext3Link={buttontext3Link}
-              name="donations"
-              create={admin}
-            />
-          }
-        />
-        <Route path="/:_id" element={<IndividualDonSpon />} />
-        <Route path="/create" element={<CreateDonation name="donation" />} />
-        <Route path="/edit/:_id" element={<CreateDonation name="donation" edit={true} />} />
-      </Routes>
 
-      <Routes>
-        {admin ? (
-          <>
-            <Route
-              path="/my-donation-requests"
-              element={<BrowseDonations donSpon={donations} name="donations" />}
-            />
-            <Route path="/businessConnect" element={<Bconnect />} />
-          </>
-        ) :alumni ? (
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
+        {/* tabs here */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <DoanationHome />
+            }
+          />
           <Route
             path="/my-donation-requests"
-            element={<BrowseDonations donSpon={userDonations} name="donations" />}
+            element={
+              <DoanationRequest />
+            }
           />
-        ) : null}
-        {/* browse businesses */}
-        <Route
-          path="/"
-          element={
-            <BrowseDonations
-              donSpon={donations}
-              name="donations"
-              updateDonations={updateDonations}
-              totalDonations={totalDonations}
-              limit={LIMIT}
-              page={page}
-              loading={loading}
-              isLoading={isLoading}
+          <Route
+            path="/businessConnect"
+            element={
+              <DoanationConnect />
+            }
+          />
+          <Route path="/:_id" element={<IndividualDonSpon />} />
+          <Route path="/create" element={<CreateDonation name="donation" />} />
+          <Route path="/edit/:_id" element={<CreateDonation name="donation" edit={true} />} />
+        </Routes>
+
+        <Routes>
+          {admin ? (
+            <>
+              <Route
+                path="/my-donation-requests"
+                element={<BrowseDonations donSpon={donations} name="donations" />}
+              />
+              <Route path="/businessConnect" element={<Bconnect />} />
+            </>
+          ) : alumni ? (
+            <Route
+              path="/my-donation-requests"
+              element={<BrowseDonations donSpon={userDonations} name="donations" />}
             />
-          }
-        />
-        <Route path="/businessConnect" element={<Bconnect />} />
-      </Routes>
+          ) : null}
+          {/* browse businesses */}
+          <Route
+            path="/"
+            element={
+              <BrowseDonations
+                donSpon={donations}
+                name="donations"
+                updateDonations={updateDonations}
+                totalDonations={totalDonations}
+                limit={LIMIT}
+                page={page}
+                loading={loading}
+                isLoading={isLoading}
+              />
+            }
+          />
+          <Route path="/businessConnect" element={<Bconnect />} />
+        </Routes>
+      </div>
     </div>
   );
 };

@@ -314,7 +314,7 @@ const IndividualGroup = () => {
                 </div>
               ) : (
                 group.map((groupItem) => (
-                  <div key={groupItem._id} className="max-w-7xl mx-auto">
+                  <div key={groupItem._id} className="max-w-6xl mx-auto">
                     {/* Header Section */}
                     <div className=" rounded-2xl shadow-lg overflow-hidden mb-6">
                       {/* Cover Image and Profile Picture (overlapping) */}

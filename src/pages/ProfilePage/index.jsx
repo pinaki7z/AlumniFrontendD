@@ -115,7 +115,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         {/* Validation Banner */}
         {(!profile.validated && ![0,1].includes(profile.profileLevel) && !profile.ID) ? (
           <div className="mx-4 mt-4 mb-6">
