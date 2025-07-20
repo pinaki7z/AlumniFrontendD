@@ -1,40 +1,24 @@
 import './topbar.css'
-import { FaPlus, FaHome, FaBell } from 'react-icons/fa';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover';
-import { BiSolidBriefcase } from 'react-icons/bi';
-import JobsInt from '../JobsInt';
+import { FaBell } from 'react-icons/fa';
 import { useState, useEffect, useRef } from 'react';
-import { HiUserGroup } from 'react-icons/hi';
 import { LuMessageSquare } from "react-icons/lu";
-import { BsCurrencyRupee } from 'react-icons/bs';
-import { GoSponsorTiers } from 'react-icons/go';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from 'react-redux';
-import { Notifications } from './Notifications';
-import { closeWebSocket } from '../../store/webSocketSlice';
-import WebSocketUtility from '../../utils/webSocketUtility';
 import { IoSearchSharp } from "react-icons/io5";
-import { SearchedResults } from '../SearchedResults';
+import { Search, ChevronDown } from "lucide-react";
 import { lineSpinner } from 'ldrs';
-import baseUrl from '../../config';
 import profilePic from "../../images/profilepic.jpg";
 import { NotificationsP } from '../NotificationsP';
-import { Drawer, IconButton } from '@mui/material';
-import LeftSidebar from '../left-sidebar';
 
 lineSpinner.register()
 
-
-const TopBar = ({ handleLogout }) => {
+const TopBar = ({ handleLogout, onMenuClick }) => {
     const navigate = useNavigate();
-    const [showModal, setShowModal] = useState(false);
-    const [showPopover, setShowPopover] = useState(false);
     const [showProfileOptions, setShowProfileOptions] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [showMessages, setShowMessages] = useState(false);
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
     const [cookie, setCookie, removeCookie] = useCookies('token');
     const navigateTo = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -44,24 +28,9 @@ const TopBar = ({ handleLogout }) => {
     const [searchLoading, setSearchLoading] = useState(false);
     const [notificationCount, setNotificationCount] = useState(0);
 
-
     const updateNotificationCount = (count) => {
-        setNotificationCount(count); // Update the count from the child component
+        setNotificationCount(count);
     };
-    const [drawerOpen, setDrawerOpen] = useState(false);
-
-
-    const toggleDrawer = (open) => (event) => {
-        if (
-            event.type === "keydown" &&
-            (event.key === "Tab" || event.key === "Shift")
-        ) {
-            return;
-        }
-        setDrawerOpen(open);
-    };
-
-
 
     const settings = useSelector((state) => {
         if (state.settings[0] === undefined) {
@@ -70,6 +39,7 @@ const TopBar = ({ handleLogout }) => {
             return state.settings[0];
         }
     });
+
     const { brandName, logo } = settings;
     const dispatch = useDispatch();
     const profileOptionsRef = useRef(null);
@@ -84,6 +54,8 @@ const TopBar = ({ handleLogout }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
+                notificationsOptionsRef.current &&
+                profileOptionsRef.current &&
                 !notificationsOptionsRef.current.contains(event.target) &&
                 !profileOptionsRef.current.contains(event.target) &&
                 !(event.target.closest('.notifications-card'))
@@ -100,28 +72,11 @@ const TopBar = ({ handleLogout }) => {
         };
     }, []);
 
-
-
-    const onHideModal = (modalVisibility) => {
-        setShowModal(modalVisibility);
-    };
-    const [selectedFile, setSelectedFile] = useState('');
-    const handleFileInputChange = (e) => {
-        setSelectedFile(e.target.files[0]);
-        console.log(selectedFile)
-
-    };
-    const popover = (popoverVisibility) => {
-        setShowPopover(popoverVisibility);
-    }
     const logout = () => {
         console.log('logout', cookie.token)
         removeCookie('token');
-
-        // toast.success("Logged out successfully!");
         handleLogout();
         navigate('/login');
-
     };
 
     const handleSearch = async (e) => {
@@ -130,16 +85,10 @@ const TopBar = ({ handleLogout }) => {
         console.log('handling search', searchText)
 
         try {
-            // const response = await fetch(`${process.env.REACT_APP_API_URL}/search/search?keyword=${searchText}`);
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
-            // const data = await response.json();
             navigateTo(`/home/?search=${encodeURIComponent(searchText)}`);
-            //setSearchResults(data);
             setSearchLoading(false);
+            setShowMobileSearch(false);
         } catch (error) {
-
             console.error('Error fetching search results:', error);
             setSearchResults(null);
         }
@@ -149,149 +98,232 @@ const TopBar = ({ handleLogout }) => {
         setSearchText(e.target.value);
     };
 
-    console.log('search data results ', searchResults)
-
     return (
         <>
-            <div className="bg-[rgba(111,188,148,0.15)] flex justify-center sticky top-0 z-3 py-2 sm:py-4 pl-[2%]"
-            >
-                <div className="h-full flex items-center  text-white w-[94%] justify-between md:pr-[70px]"
-                >
-
-                    {/* Hamburger Menu for Mobile */}
-                    <div className="md:hidden  " style={{ zIndex: 50 }}>
-                        <IconButton onClick={toggleDrawer(true)}>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="36"
-                                height="36"
-                                fill="currentColor"
-                                class="bi bi-list"
-                                viewBox="0 0 16 16"
-                                className="text-[#004C8A]"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"
-                                />
-                            </svg>
-                        </IconButton>
-
-                        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
-                            <div
-                                role="presentation"
-                                onClick={toggleDrawer(false)}
-                                onKeyDown={toggleDrawer(false)}
-                            >
-                                <LeftSidebar />
-                            </div>
-                        </Drawer>
+            {/* Main TopBar with gradient background */}
+            <div className="flex items-center justify-between h-16 px-4">
+                
+                {/* Left Section - Logo/Brand (Mobile) */}
+                <div className="flex items-center lg:hidden">
+                    <div className="flex items-center">
+                        <img 
+                            src="/v2/logo2.png" 
+                            alt="Logo" 
+                            className="h-8 w-auto"
+                        />
                     </div>
+                </div>
 
-                    <div className="search" style={{ display: 'flex', width: '67%' }}>
-                        <form onSubmit={handleSearch} className="flex items-center w-full">
-                            <div className="relative w-full bg-[#E9F5EF] border-2 border-[#508f9fa3] rounded-md">
-                                <input
-                                    type="search"
-                                    name="search"
-                                    id="search"
-                                    placeholder="Search for people, forums, and groups"
-                                    value={searchText}
-                                    onChange={handleChange}
-                                    className="w-full  bg-transparent p-2  outline-none "
-                                />
-                                <button
-                                    type="submit"
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent text-[#0a3a4c] p-1"
-                                >
-                                    {searchLoading ? (
-                                        <l-line-spinner size="15" stroke="3" speed="1" color="#0a3a4c"></l-line-spinner>
-                                    ) : (
-                                        <IoSearchSharp className="w-5 h-5" />
-                                    )}
-                                </button>
+                {/* Center Section - Search Bar (Desktop) */}
+                <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+                    <form onSubmit={handleSearch} className="w-full">
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search className="h-5 w-5 text-[#0a3a4c]" />
                             </div>
-                        </form>
-
-
-                    </div>
-                    <div className="profile-list">
-                        <LuMessageSquare style={{ cursor: 'pointer', display: 'none' }} onClick={() => {
-                            setShowNotifications(false);
-                            setShowProfileOptions(false);
-                            setShowMessages(!showMessages)
-                        }} />
-                        {showMessages && (
-                            <div className="messages-card">
-                                No New Messages
-                            </div>
-                        )}
-                        <div className="relative" ref={notificationsOptionsRef}>
+                            <input
+                                type="search"
+                                name="search"
+                                id="search"
+                                placeholder="Search people, forums, groups..."
+                                value={searchText}
+                                onChange={handleChange}
+                                className="block w-full pl-10 pr-12 py-3 border-2 border-[#508f9fa3] rounded-full bg-[#E9F5EF] text-[#0a3a4c] placeholder-[#0a3a4c]/60 focus:outline-none focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-all duration-200 shadow-lg"
+                            />
                             <button
-                                onClick={() => {
-                                    setShowProfileOptions(false);
-                                    setShowMessages(false);
-                                    setShowNotifications(!showNotifications);
-                                }}
-                                className="relative p-2 text-[#0a3a4c] hover:text-yellow-600 transition-colors"
-                                title="Notifications"
+                                type="submit"
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
                             >
-                                <FaBell className="w-6 h-6" />
-                                {notificationCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5">
-                                        {notificationCount}
-                                    </span>
+                                {searchLoading ? (
+                                    <l-line-spinner size="20" stroke="3" speed="1" color="#0a3a4c"></l-line-spinner>
+                                ) : (
+                                    <div className="bg-[#71be95] hover:bg-[#5fa080] text-white p-2 rounded-full transition-colors duration-200 shadow-lg">
+                                        <IoSearchSharp className="w-4 h-4" />
+                                    </div>
                                 )}
                             </button>
-
-                            {showNotifications && (
-                                <div className="absolute right-0 mt-2 w-[60vw] max-w-[600px] thin-scroller bg-white border border-gray-200 rounded-md shadow-xl z-[99999] overflow-hidden ">
-                                    <div className="h-[500px] overflow-y-auto thin-scroller scrollbar-track-gray-100 z-[99999] ">
-                                        <NotificationsP sendNotificationCount={updateNotificationCount} topBar={true} />
-                                    </div>
-                                </div>
-                            )}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1vw', cursor: 'pointer' }} ref={profileOptionsRef}
+                    </form>
+                </div>
+
+                {/* Right Section - Actions */}
+                <div className="flex items-center space-x-1 sm:space-x-3">
+                    
+                    {/* Mobile Search Button */}
+                    <button
+                        onClick={() => setShowMobileSearch(true)}
+                        className="lg:hidden p-2 rounded-full hover:bg-white/20 text-white transition-all duration-200 hover:scale-105 shadow-lg"
+                    >
+                        <Search className="w-5 h-5" />
+                    </button>
+
+                    {/* Notifications */}
+                    <div className="relative" ref={notificationsOptionsRef}>
+                        <button
                             onClick={() => {
-                                console.log('clicked image')
+                                setShowProfileOptions(false);
+                                setShowMessages(false);
+                                setShowNotifications(!showNotifications);
+                            }}
+                            className="relative p-2 rounded-full bg-white/20 text-white transition-all duration-200 hover:scale-105 shadow-lg"
+                            title="Notifications"
+                        >
+                            <FaBell className="w-5 h-5" />
+                            {notificationCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center animate-pulse shadow-lg">
+                                    {notificationCount > 99 ? '99+' : notificationCount}
+                                </span>
+                            )}
+                        </button>
+
+                        {showNotifications && (
+                            <div className="absolute right-0 mt-3 w-[95vw] sm:w-[400px] lg:w-[500px] bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-[99999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                    <h3 className="text-white font-semibold text-lg">Notifications</h3>
+                                </div>
+                                <div className="h-[300px] sm:h-[400px] overflow-y-auto">
+                                    <NotificationsP sendNotificationCount={updateNotificationCount} topBar={true} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Profile Dropdown */}
+                    <div className="relative" ref={profileOptionsRef}>
+                        <button
+                            onClick={() => {
                                 setShowMessages(false);
                                 setShowNotifications(false);
                                 setShowProfileOptions(!showProfileOptions);
-                            }} >
-                            <img src={profile.profilePicture ? profile.profilePicture : profilePic} alt='profile-pic' className="w-[40px] h-[40px] rounded-full object-cover"
-                            />
-                            <p className='hidden md:block' style={{ marginBottom: '0px', color: '#3A3A3A', fontWeight: '600', fontSize: '20px', lineHeight: '24.2px' }}>{profile.firstName}</p>
-                        </div>
-                        {showProfileOptions && (
-                           <ul className="absolute top-12 right-2 bg-white list-none p-0 border border-gray-300 shadow-md z-10 w-44 sm:w-48 md:w-[13vw] text-black rounded-md">
+                            }}
+                            className="flex items-center space-x-2 p-2 rounded-full bg-white/20 transition-all duration-200 group shadow-lg"
+                        >
+                            <div className="relative">
+                                <img 
+                                    src={profile.profilePicture || profilePic} 
+                                    alt='profile-pic' 
+                                    className="w-10 h-10 rounded-full object-cover border-2 border-white/50 group-hover:border-white transition-colors duration-200 shadow-lg"
+                                />
+                                <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#71be95] border-2 border-white rounded-full shadow-sm"></div>
+                            </div>
+                            <div className="hidden sm:block">
+                                <span className="text-white font-semibold text-sm max-w-[100px] truncate block drop-shadow-sm">
+                                    {profile.firstName}
+                                </span>
+                                <span className="text-white/70 text-xs drop-shadow-sm">Online</span>
+                            </div>
+                            <ChevronDown className="hidden sm:block w-4 h-4 text-white/70 group-hover:text-white transition-transform duration-200 group-hover:rotate-180" />
+                        </button>
 
-                                <li
-                                    onClick={() => navigate('/home/profile')}
-                                    className="px-4 py-2 cursor-pointer hover:bg-[#174873] hover:text-white"
-                                >
-                                    Profile
-                                </li>
-                                {/* Uncomment and adapt when needed
-    {(profile.profileLevel === 0 || profile.profileLevel === 1) && (
-      <a href="/settings" className="no-underline text-black">
-        <li className="px-4 py-2 hover:bg-[#174873] hover:text-white">Settings</li>
-      </a>
-    )} */}
-                                <li
-                                    onClick={logout}
-                                    className="px-4 py-2 cursor-pointer hover:bg-[#174873] hover:text-white"
-                                >
-                                    <p>Log out</p>
-                                </li>
-                            </ul>
+                        {showProfileOptions && (
+                            <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                    <div className="flex items-center space-x-3">
+                                        <img 
+                                            src={profile.profilePicture || profilePic} 
+                                            alt='profile-pic' 
+                                            className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm"
+                                        />
+                                        <div>
+                                            <p className="text-white font-semibold text-sm drop-shadow-sm">{profile.firstName} {profile.lastName}</p>
+                                            <p className="text-white/80 text-xs drop-shadow-sm">View profile</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="py-2">
+                                    <button
+                                        onClick={() => {
+                                            navigate('/home/profile');
+                                            setShowProfileOptions(false);
+                                        }}
+                                        className="w-full px-4 py-3 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
+                                    >
+                                        <div className="w-8 h-8 bg-[#71be95]/20 rounded-full flex items-center justify-center">
+                                            <span className="text-[#71be95] text-sm">👤</span>
+                                        </div>
+                                        <span className="font-medium">My Profile</span>
+                                    </button>
+                                    
+                                    <div className="border-t border-[#71be95]/20 my-1"></div>
+                                    
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            setShowProfileOptions(false);
+                                        }}
+                                        className="w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center space-x-3"
+                                    >
+                                        <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                            <span className="text-red-600 text-sm">🚪</span>
+                                        </div>
+                                        <span className="font-medium">Sign Out</span>
+                                    </button>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>
             </div>
 
+            {/* Mobile Search Overlay with gradient */}
+            {showMobileSearch && (
+                <div className="lg:hidden fixed inset-0 bg-white z-50 animate-in slide-in-from-top duration-300">
+                    <div className="flex flex-col h-full">
+                        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#0A3A4C] to-[#174873] shadow-lg">
+                            <h2 className="text-lg font-semibold text-white drop-shadow-sm">Search</h2>
+                            <button
+                                onClick={() => setShowMobileSearch(false)}
+                                className="p-2 rounded-full hover:bg-white/20 text-white transition-all duration-200 hover:scale-105"
+                            >
+                                <span className="text-xl">✕</span>
+                            </button>
+                        </div>
+                        
+                        <div className="p-4 flex-1 bg-gradient-to-b from-[#E9F5EF]/30 to-white">
+                            <form onSubmit={handleSearch} className="w-full">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <Search className="h-6 w-6 text-[#0a3a4c]/60" />
+                                    </div>
+                                    <input
+                                        type="search"
+                                        name="search"
+                                        id="mobile-search"
+                                        placeholder="Search people, forums, groups..."
+                                        value={searchText}
+                                        onChange={handleChange}
+                                        autoFocus
+                                        className="block w-full pl-12 pr-16 py-4 text-lg border-2 border-[#508f9fa3] rounded-2xl bg-[#E9F5EF] text-[#0a3a4c] placeholder-[#0a3a4c]/60 focus:outline-none focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-all duration-200 shadow-lg"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                                    >
+                                        {searchLoading ? (
+                                            <l-line-spinner size="24" stroke="3" speed="1" color="#0a3a4c"></l-line-spinner>
+                                        ) : (
+                                            <div className="bg-[#71be95] hover:bg-[#5fa080] text-white p-3 rounded-xl transition-colors duration-200 shadow-lg">
+                                                <IoSearchSharp className="w-6 h-6" />
+                                            </div>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                            
+                            {/* Recent searches */}
+                            <div className="mt-6">
+                                <h3 className="text-sm font-medium text-[#0a3a4c]/70 mb-3">RECENT SEARCHES</h3>
+                                <div className="space-y-2">
+                                    <p className="text-[#0a3a4c]/50 text-sm italic">No recent searches</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
-    )
-}
+    );
+};
 
 export default TopBar;

@@ -748,7 +748,7 @@ function EventDetailsModal({ event, onClose, onEdit, onDelete, profile, attendee
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       
-      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-7xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="bg-[#0A3A4C] p-4 sm:p-6">
           <div className="flex items-center justify-between">
@@ -1137,7 +1137,7 @@ function Events() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
         {/* Header */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden mb-4 sm:mb-6">
           <div className="bg-[#CEF3DF] p-4 sm:p-6">

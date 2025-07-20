@@ -12,12 +12,13 @@ import { dotPulse } from 'ldrs';
 import EventDisplay from './EventDisplay';
 import PollDisplay from './PollDisplay';
 import { useParams } from 'react-router-dom';
+import { RefreshCw, TrendingUp, Users, Plus } from 'lucide-react';
 import baseUrl from '../../config';
 
 dotPulse.register();
 
 function Feed({
-  profilePage=false,
+  profilePage = false,
   photoUrl,
   username,
   showCreatePost,
@@ -63,11 +64,8 @@ function Feed({
       setTotalPosts(data.total);
 
       setPosts(prev => {
-        // build a set of existing IDs
         const existing = new Set(prev.map(p => p._id));
-        // filter out any duplicates
         const newOnes = postsData.filter(p => !existing.has(p._id));
-        // return [...prev, ...newOnes];
         return data.records;
       });
     } catch (err) {
@@ -107,7 +105,6 @@ function Feed({
   const handleDeletePost = () => {
     toast.success('Deleted successfully!');
     getPosts(activePageRef.current);
-    // you can remove window.reload if it's no longer needed
   };
 
   // Like / comment refresh handlers
@@ -133,165 +130,202 @@ function Feed({
     }
   };
 
-  // ★ NEW: Prepend the brand-new post by resetting and reloading page 1
+  // NEW: Prepend the brand-new post by resetting and reloading page 1
   const handleNewPost = () => {
     toast.success('Posted successfully!');
-    // clear out old posts so page 1 (with new item at the top) shows up
     setPosts([]);
     activePageRef.current = 1;
-    // scroll back to top
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
     getPosts(1);
   };
 
+  const handleRefresh = () => {
+    setPosts([]);
+    activePageRef.current = 1;
+    getPosts(1);
+  };
+
   return (
-    <div className="feed">
-      {([0,1].includes(profile.profileLevel) && entityType!="news" && profilePage==false) && (
-        <CreatePost1
-          photoUrl={photoUrl}
-          username={username}
-          onNewPost={handleNewPost}
-          entityType={entityType}
-          setLoadingPost={setLoadingPost}
-          loadingPost={loadingPost}
-        />
+    <div className="feed space-y-3 sm:space-y-4 lg:space-y-6">
+      {/* Mobile Stats Bar */}
+      <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4">
+        <div className="flex items-center justify-between">
+          {/* Mobile stats - stacked */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0">
+            <div className="flex items-center space-x-2 text-gray-600">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#71be95]" />
+              <span className="text-xs sm:text-sm font-medium">{totalPosts} Posts</span>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-600">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#71be95]" />
+              <span className="text-xs sm:text-sm font-medium">Active</span>
+            </div>
+          </div>
+          {/* Mobile refresh button */}
+          <button
+            onClick={handleRefresh}
+            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-md sm:rounded-lg hover:shadow-lg transition-all duration-200"
+          >
+            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="text-xs sm:text-sm font-medium hidden sm:inline">Refresh</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Create Post Section */}
+      {([0, 1].includes(profile.profileLevel) && entityType != "news" && profilePage == false) && (
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-[#71be95]/10 to-[#5fa080]/10 p-3 sm:p-4 border-b border-gray-100">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800">Share Your Thoughts</h3>
+            <p className="text-xs sm:text-sm text-gray-600">Connect with your community</p>
+          </div>
+          <div className="p-3 sm:p-4">
+            <CreatePost1
+              photoUrl={photoUrl}
+              username={username}
+              onNewPost={handleNewPost}
+              entityType={entityType}
+              setLoadingPost={setLoadingPost}
+              loadingPost={loadingPost}
+            />
+          </div>
+        </div>
       )}
 
+      {/* Mobile Create Button */}
       {showCreateButton && (
-        <div className="w-full">
-          <button className="font-inter font-medium text-lg bg-gray-100 p-5 rounded-lg border-none mt-5 hover:bg-gray-200">
-            Create
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 text-center">
+          <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>Create New Post</span>
           </button>
         </div>
       )}
 
+      {/* Mobile Posts Container */}
       <div
         ref={scrollContainerRef}
-        className="infiniteScroll flex flex-col items-center w-full md:overflow-y-auto md:h-[100vh]"
+        className="space-y-3 sm:space-y-4 lg:space-y-6 max-h-screen overflow-y-auto"
       >
-        {posts.map(post => {
-          // only render Post items belonging to this group
-          if (post.type === 'Post' && post.groupID === _id) {
-            return (
-              <div
-                key={post._id}
-                className="mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
-              >
-                <Post
-                  userId={post.userId._id}
-                  postId={post._id}
-                  post={post}
-                  username={`${post.userId.firstName} ${post.userId.lastName}`}
-                  text={post.description}
-                  image={post.picturePath}
-                  profilePicture={post.userId.profilePicture}
-                  video={post.videoPath}
-                  timestamp={post.createdAt}
-                  likes={post.likes}
-                  entityType={entityType}
-                  admin={admin}
-                  showDeleteButton={showDeleteButton}
-                  handleLikes={handleLikes}
-                  onCommentIconClick={() => toggleComments(post._id)}
-                  onDeletePost={() => handleDeletePost(post._id)}
-                  groupID={post.groupID}
-                />
-
-                {visibleComments[post._id] && (
-                  <CommentSection
-                    entityId={post._id}
-                    entityType="posts"
-                    comments={post.comments.filter(c => !c.reported)}
-                    onCommentSubmit={refreshComments}
-                    onDeleteComment={refreshComments}
-                    onClose={() => toggleComments(post._id)}
+        {posts.length === 0 && !loading ? (
+          <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8 lg:p-12 text-center">
+            <div className="text-gray-400 text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📱</div>
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No Posts Yet</h3>
+            <p className="text-sm sm:text-base text-gray-500">Be the first to share something with the community!</p>
+          </div>
+        ) : (
+          posts.map(post => {
+            if (post.type === 'Post' && (!_id || post.groupID === _id)) {
+              return (
+                <div key={post._id} className="transform transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]">
+                  <Post
+                    userId={post.userId._id}
+                    postId={post._id}
+                    post={post}
+                    username={`${post.userId.firstName} ${post.userId.lastName}`}
+                    text={post.description}
+                    image={post.picturePath}
+                    profilePicture={post.userId.profilePicture}
+                    video={post.videoPath}
+                    timestamp={post.createdAt}
+                    likes={post.likes}
+                    entityType={entityType}
+                    admin={admin}
+                    showDeleteButton={showDeleteButton}
+                    handleLikes={handleLikes}
+                    onCommentIconClick={() => toggleComments(post._id)}
+                    onDeletePost={() => handleDeletePost(post._id)}
+                    groupID={post.groupID}
                   />
-                )}
-              </div>
-            );
-          }
 
-          // Job, Poll, Event, News renderers...
-          // if (post.type === 'Job' && post.groupID === _id) {
-          //   return (
-          //     <div
-          //       key={post._id}
-          //       className="border border-gray-200 p-4 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
-          //     >
-          //       <JobIntDisplay
-          //         jobId={post._id}
-          //         picture={post.coverImage}
-          //         jobTitle={post.jobTitle}
-          //         location={post.location}
-          //         salaryMin={post.salaryMin}
-          //         salaryMax={post.salaryMax}
-          //         currency={post.currency}
-          //         jobType={post.jobType}
-          //         category={post.category}
-          //         description={post.description}
-          //       />
-          //     </div>
-          //   );
-          // }
+                  {visibleComments[post._id] && (
+                    <CommentSection
+                      entityId={post._id}
+                      entityType="posts"
+                      comments={post.comments.filter(c => !c.reported)}
+                      onCommentSubmit={refreshComments}
+                      onDeleteComment={refreshComments}
+                      onClose={() => toggleComments(post._id)}
+                    />
+                  )}
+                </div>
+              );
+            }
 
-          if (post.type === 'poll') {
-            return (
-              <div
-                key={post._id}
-                className="border border-gray-200 p-3 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
-              >
-                <PollDisplay poll={post} userId={post.userId._id} userData={post.userId}/>
-              </div>
-            );
-          }
+            // Mobile-first other post types
+            if (post.type === 'poll') {
+              return (
+                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-2 sm:p-3 border-b border-gray-100">
+                    <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Poll</span>
+                  </div>
+                  <div className="p-3 sm:p-4">
+                    <PollDisplay poll={post} userId={post.userId._id} userData={post.userId} />
+                  </div>
+                </div>
+              );
+            }
 
-          if (post.type === 'event') {
-            return (
-              <div
-                key={post._id}
-                className="border border-gray-200 p-3 shadow-sm bg-white mb-4 rounded-xl w-full md:w-full xl:w-[650px]"
-              >
-                <EventDisplay event={post} userId={post.userId._id} userData={post.userId}/>
-              </div>
-            );
-          }
+            if (post.type === 'event') {
+              return (
+                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 p-2 sm:p-3 border-b border-gray-100">
+                    <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Event</span>
+                  </div>
+                  <div className="p-3 sm:p-4">
+                    <EventDisplay event={post} userId={post.userId._id} userData={post.userId} />
+                  </div>
+                </div>
+              );
+            }
 
-          if (post.type === 'news') {
-            return (
-              <div
-                key={post._id}
-                className="p-4 rounded-xl w-full md:w-full xl:min-w-[650px]"
-              >
-                <DisplayNews
-                  userId={post.userId}
-                  postId={post._id}
-                  description={post.description}
-                  createdAt={post.createdAt}
-                  picturePath={post.picturePath}
-                  videoPath={post.videoPath}
-                  department={post.department}
-                  title={post.title}
-                  author={post.author}
-                  picture={post.picture}
-                  onDeletePost={() => handleDeletePost(post._id)}
-                />
-              </div>
-            );
-          }
+            if (post.type === 'news') {
+              return (
+                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                  <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 p-2 sm:p-3 border-b border-gray-100">
+                    <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">News</span>
+                  </div>
+                  <div className="p-3 sm:p-4">
+                    <DisplayNews
+                      userId={post.userId}
+                      postId={post._id}
+                      description={post.description}
+                      createdAt={post.createdAt}
+                      picturePath={post.picturePath}
+                      videoPath={post.videoPath}
+                      department={post.department}
+                      title={post.title}
+                      author={post.author}
+                      picture={post.picture}
+                      onDeletePost={() => handleDeletePost(post._id)}
+                    />
+                  </div>
+                </div>
+              );
+            }
 
-          return null;
-        })}
+            return null;
+          })
+        )}
 
+        {/* Mobile Loading Indicator */}
         {loading && (
-          <div>
-            <l-dot-pulse size="35" speed="1.0" color="#b3b4b5" />
+          <div className="flex justify-center py-6 sm:py-8">
+            <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+              <l-dot-pulse size="30" speed="1.0" color="#71be95" />
+            </div>
           </div>
         )}
 
+        {/* Mobile End of Posts Message */}
         {totalPosts !== 0 && posts.length >= totalPosts && (
-          <p>You have seen all the {entityType}</p>
+          <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8 text-center">
+            <div className="text-gray-400 text-3xl sm:text-4xl mb-2 sm:mb-3">🎉</div>
+            <p className="text-sm sm:text-base text-gray-600 font-medium">You've seen all the {entityType}!</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1">Check back later for new updates</p>
+          </div>
         )}
       </div>
     </div>

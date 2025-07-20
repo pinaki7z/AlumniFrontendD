@@ -57,7 +57,7 @@ const AddReplies = () => {
   }
 
   return (
-     <div className="max-w-6xl mx-auto p-6">
+     <div className="max-w-7xl mx-auto p-6">
       <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg border border-gray-100 p-8 space-y-8">
         {/* Header */}
         <div className="border-b border-gray-200 pb-4">

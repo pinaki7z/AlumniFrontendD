@@ -146,7 +146,7 @@ const LoginPage = ({ handleLogin }) => {
           <img src={io} alt="InsideOut Logo" className="w-[200px] mb-8 " />
 
           {/* Panels Container */}
-          <div className="flex w-full max-w-4xl bg-white rounded-3xl shadow-lg overflow-hidden">
+          <div className="flex w-full max-w-7xl bg-white rounded-3xl shadow-lg overflow-hidden">
             {/* Left Panel */}
             <div className="hidden md:flex w-1/2 bg-[#0a3a4c] text-white flex-col justify-center p-10 space-y-4">
               <h2 className="text-4xl font-bold">REDISCOVER</h2>

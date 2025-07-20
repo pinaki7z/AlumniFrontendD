@@ -107,7 +107,7 @@ const ForumPost = () => {
 
   return (
     <div className="min-h-screen ">
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6">
         <div className="bg-white rounded-lg">
           <div className="p-6 border-b flex items-start justify-between">
             <div>

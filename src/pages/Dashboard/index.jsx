@@ -33,15 +33,12 @@ import { Archive } from "../Jobs/Archive/index.jsx";
 import DonSponRequest from "../../components/DonSponRequest/index.jsx";
 import { SearchedResults } from "../../components/SearchedResults";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PhotoGallery from "../PhotoGallery/index.jsx";
 import { CreateJob } from "../Jobs/CreateJob/index.jsx";
 import { InterestedJobCandidates } from "../Jobs/InterestedJobCandidates/index.jsx";
 import { CreateNews } from "../News/CreateNews/index.jsx";
 import NewsDetails from "../News/NewsDetails.jsx";
-import { Drawer, IconButton } from "@mui/material";
-import { useState } from "react";
-import "./Dashboard.css"
 import MemberForm from "../Members/MemberForm.jsx";
 import ValidateUser from "../ValidateUser/ValidateUser.jsx";
 import V2PhotoGallery from "../PhotoGallery/V2PhotoGallary.jsx";
@@ -49,24 +46,23 @@ import MessagingPage from "../Chat2/MessagingPage.jsx";
 import TopicPage from "../Forum/TopicPage.jsx";
 import DiscussionPage from "../Forum/DiscussionPage.jsx";
 import ForumPost from "../Forum/ForumPost.jsx";
-const Dashboard = ({ handleLogout }) => {
+import { Menu, X } from "lucide-react";
 
+const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get('search');
   const navigate = useNavigate();
   const profile = useSelector((state) => state.profile);
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    setDrawerOpen(open);
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
   };
 
   useEffect(() => {
@@ -76,139 +72,121 @@ const Dashboard = ({ handleLogout }) => {
   }, [profile.accountDeleted, profile.expirationDate]);
 
   return (
-    <>
-      {/* <TopBar handleLogout={handleLogout} /> */}
-      <div className="d-flex flex-row h-100 w-100 overflow-hidden"
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <div className="d-none d-sm-block border-end border-secondary">
-          <LeftSidebar />
-        </div>
+    <div className="flex flex-col h-screen w-full overflow-hidden">
+     {/* Top Bar with Hamburger Menu */}
+<div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 relative z-50 shadow-lg">
+  <button
+    onClick={toggleSidebar}
+    className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
+  >
+    <Menu className="h-6 w-6 text-white" />
+  </button>
+  <div className="flex-1">
+    <TopBar handleLogout={handleLogout} />
+  </div>
+</div>
 
 
-        <div className="top-bar-resp">
-          <TopBar handleLogout={handleLogout} />
-          <Routes>
+      {/* Main Content Area */}
+      <div className="flex-1 relative overflow-hidden">
+        {/* Sidebar Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+            onClick={closeSidebar}
+          />
+        )}
 
-            <Route path="/groups/*" element={<Groups />} />
-            {/* <Route path="/groups/:_id/*" element={<IndividualGroup />} /> */}
-            {searchQuery && (
-              <Route
-                path="/*"
-                element={<SearchedResults searchQuery={searchQuery} />}
-              />
-            )}
-            {/* Route for displaying <SocialMedia /> when search query is not present */}
-            {!searchQuery && (
-              <Route
-                path="/*"
-                element={
-                  <div className="grid grid-cols-12 gap-2 bg-gray-100 min-h-[100vh]">
-                    <div className="md:mt-7 col-span-12 md:col-span-8 feed-resp">
-                      <SocialMediaPost showCreatePost={true} />
+       {/* Sidebar */}
+<div className={`
+  fixed top-0 left-0 h-full shadow-2xl z-50
+  transform transition-transform duration-300 ease-in-out
+  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+  w-72 max-w-[85vw]
+`}>
+  {/* Sidebar Content */}
+  <div className="h-full">
+    <LeftSidebar onNavigate={closeSidebar} />
+  </div>
+</div>
+
+        {/* Main Content */}
+        <div className="h-full overflow-auto bg-gray-100">
+          <div className="">
+            <Routes>
+              <Route path="/groups/*" element={<Groups />} />
+              {searchQuery && (
+                <Route
+                  path="/*"
+                  element={<SearchedResults searchQuery={searchQuery} />}
+                />
+              )}
+              {!searchQuery && (
+                <Route
+                  path="/*"
+                  element={
+                    <div className="grid grid-cols-12 gap-4">
+                      <div className="col-span-12 lg:col-span-8">
+                        <SocialMediaPost showCreatePost={true} />
+                      </div>
+                      <div className="col-span-12 lg:col-span-4 hidden lg:block">
+                        <SideWidgets />
+                      </div>
                     </div>
-                    <div className="md:mt-7 md:col-span-4 d-none d-lg-block">
-                      <SideWidgets />
-                    </div>
-                  </div>
-                }
-              />
-            )}
-            <Route path="/donations/*" element={<Donations />} />
-            <Route path="/guidance/*" element={<Guidance />} />
-            {/* <Route path="/photo-gallery/*" element={<PhotoGallery />} /> */}
-            <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
-            {/* <Route path="/chatv2/*" element={<MessagingPage />} /> */}
-            <Route path="/chatv2">
-              <Route index element={<MessagingPage />} />
-              <Route path=":userId" element={<MessagingPage />} />
-            </Route>
-
-
-            <Route path="/sponsorships/*" element={<Sponsorships />} />
-            <Route path="/members/*" element={<div style={{ width: '100%', padding: '0%' }}><Members showHeading={true} /></div>} />
-            <Route path="/members/create" element={
-              <div style={{ width: '100%' }}>
-                <MemberForm name='member' />
-              </div>
-            } />
-            <Route path="/members/:id/*" element={<Profile />} />
-            <Route path="/profile/*" element={<ProfilePage />} />
-            <Route path="/notifications/*" element={<NotificationsPage />} />
-            <Route path="/events/*" element={<Events />} />
-            {/* <Route path="/chat/*" element={<Chat />} /> */}
-            <Route path="/jobs/*" element={<Jobs />} />
-            <Route
-              path="/jobs/create"
-              element={<CreateJob />}
-            />
-            <Route path="/jobs/candidates" element={<InterestedJobCandidates />} />
-            {/* <Route path="/internships/*" element={<Internships />} /> */}
-            <Route path="/settings/*" element={<Settings />} />
-            <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
-            <Route path="/posts/:_id/" element={<Ipost />} />
-            <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
-            {/* <Route path="/forums/*" element={<Forum />} />
-            <Route path="/forums/create" element={<CreateForum />} />
-            <Route path="/forums/edit/:id" element={<CreateForum />} />
-            <Route path="/forums/:id/*" element={<IForum />} /> */}
-
-
-
-            <Route path="/forums/*" element={<Forum />} />
-            <Route path="/forums/category/:categoryId" element={<TopicPage />} />
-            <Route path="/forums/category/:categoryId/topic/:topicId" element={<ForumPost />} />
-            <Route path="/forums/category/:categoryId/topic/:topicId/post/:postId" element={<DiscussionPage />} />
-
-
-
-            <Route path="/profile/:id/following" element={<Following />} />
-            <Route path="/profile/:id/followers" element={<Followers />} />
-            <Route path="/profile/workExperience" element={<WorkExperience />} />
-            <Route path="/profile/profile-settings" element={<ProfileSettings />} />
-
-
-            <Route path="/news/*" element={
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '100%',
-                  padding: ' 0',
-                }}
-              >
-                <div>
+                  }
+                />
+              )}
+              <Route path="/donations/*" element={<Donations />} />
+              <Route path="/guidance/*" element={<Guidance />} />
+              <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
+              <Route path="/chatv2">
+                <Route index element={<MessagingPage />} />
+                <Route path=":userId" element={<MessagingPage />} />
+              </Route>
+              <Route path="/sponsorships/*" element={<Sponsorships />} />
+              <Route path="/members/*" element={
+                <div className="w-full">
+                  <Members showHeading={true} />
+                </div>
+              } />
+              <Route path="/members/create" element={
+                <div className="w-full">
+                  <MemberForm name='member' />
+                </div>
+              } />
+              <Route path="/members/:id/*" element={<Profile />} />
+              <Route path="/profile/*" element={<ProfilePage />} />
+              <Route path="/notifications/*" element={<NotificationsPage />} />
+              <Route path="/events/*" element={<Events />} />
+              <Route path="/jobs/*" element={<Jobs />} />
+              <Route path="/jobs/create" element={<CreateJob />} />
+              <Route path="/jobs/candidates" element={<InterestedJobCandidates />} />
+              <Route path="/settings/*" element={<Settings />} />
+              <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
+              <Route path="/posts/:_id/" element={<Ipost />} />
+              <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
+              <Route path="/forums/*" element={<Forum />} />
+              <Route path="/forums/category/:categoryId" element={<TopicPage />} />
+              <Route path="/forums/category/:categoryId/topic/:topicId" element={<ForumPost />} />
+              <Route path="/forums/category/:categoryId/topic/:topicId/post/:postId" element={<DiscussionPage />} />
+              <Route path="/profile/:id/following" element={<Following />} />
+              <Route path="/profile/:id/followers" element={<Followers />} />
+              <Route path="/profile/workExperience" element={<WorkExperience />} />
+              <Route path="/profile/profile-settings" element={<ProfileSettings />} />
+              <Route path="/news/*" element={
+                <div className="w-full">
                   <News />
                 </div>
-                {/* <SideWidgets /> */}
-              </div>
-            }
-
-            />
-            <Route path="/news/:id/*" element={<NewsDetails />} />
-            <Route path="/news/:id/edit" element={<CreateNews />} />
-            <Route path="/news/createNews" element={<CreateNews />} />
-            <Route path="/validate-user" element={<ValidateUser />} />
-          </Routes>
-
-        </div>
-        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)} >
-          <div
-            role="presentation"
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-          >
-            <LeftSidebar />
+              } />
+              <Route path="/news/:id/*" element={<NewsDetails />} />
+              <Route path="/news/:id/edit" element={<CreateNews />} />
+              <Route path="/news/createNews" element={<CreateNews />} />
+              <Route path="/validate-user" element={<ValidateUser />} />
+            </Routes>
           </div>
-        </Drawer>
-
-
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
