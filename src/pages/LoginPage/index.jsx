@@ -7,6 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile, setAdmin } from "../../store/profileSlice";
 import ReCAPTCHA from "react-google-recaptcha";
 import CryptoJS from "crypto-js";
+import { 
+  Eye, 
+  EyeOff, 
+  Mail, 
+  Lock, 
+  Loader2, 
+  UserCheck, 
+  ArrowRight,
+  Shield,
+  Star,
+  Users,
+  Heart,
+  CheckCircle,
+  LogIn
+} from 'lucide-react';
 
 const LoginPage = ({ handleLogin }) => {
   const [email, setEmail] = useState('');
@@ -18,6 +33,8 @@ const LoginPage = ({ handleLogin }) => {
   const [captchaToken, setCaptchaToken] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const SECRET_KEY = "f3c8a3c9b8a9f0b2440a646f3a5b8f9e6d6e46555a4b2b5c6d7c8d9e0a1b2c3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8g9h0";
 
@@ -34,212 +51,391 @@ const LoginPage = ({ handleLogin }) => {
     }
   }, []);
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  
-  // if (!captchaToken) {
-  //   toast.error("Please complete the CAPTCHA.");
-  //   setLoading(false);
-  //   return;
-  // }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    if (rememberDevice) {
-      localStorage.setItem("savedEmail", email);
-      localStorage.setItem("savedPassword", encrypt(password));
-    } else {
-      localStorage.removeItem("savedEmail");
-      localStorage.removeItem("savedPassword");
-    }
-
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const currentDate = new Date();
-
-    const loginUrl = `${process.env.REACT_APP_API_URL}/alumni/login`;
-    // alert(`Trying to log in at: ${loginUrl}`);
-
-    const response = await fetch(loginUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // credentials: 'include', // remove if you're not using cookies
-      body: JSON.stringify({ email, password, captchaToken }),
-    });
-
-    // alert(`Fetch call complete. Status: ${response.status}, OK: ${response.ok}`);
-
-    if (response.ok) {
-      const responseData = await response.json();
-      handleLogin();
-
-      const { token, alumni } = responseData;
-      dispatch(updateProfile(alumni));
-      setCookie("token", token, { path: "/" });
-
-      if (alumni.profileLevel === 0) {
-        dispatch(setAdmin(true));
-      }
-
-      if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
-        toast.error("Your account has expired. Contact admin.");
-        setLoading(false);
-        return;
-      }
-
-      // toast.success("Logged in successfully!");
-      setLoading(false);
-
-      const currentUrl = window.location.href;
-      const loginPath = '/login';
-      const baseUrl = currentUrl.endsWith(loginPath)
-        ? currentUrl.slice(0, -loginPath.length)
-        : currentUrl;
-
-      if (currentUrl.endsWith(loginPath)) {
-        window.location.href = baseUrl + "/home";
+    try {
+      if (rememberDevice) {
+        localStorage.setItem("savedEmail", email);
+        localStorage.setItem("savedPassword", encrypt(password));
       } else {
-        window.location.href = window.location.href;
+        localStorage.removeItem("savedEmail");
+        localStorage.removeItem("savedPassword");
       }
-    } else {
-      // Try to parse error JSON (if any)
-      let errorText = "";
-      try {
-        const errorData = await response.json();
-        errorText = JSON.stringify(errorData);
-      } catch (parseErr) {
-        errorText = "Unable to parse error response";
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const currentDate = new Date();
+
+      const loginUrl = `${process.env.REACT_APP_API_URL}/alumni/login`;
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, captchaToken }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        handleLogin();
+
+        const { token, alumni } = responseData;
+        dispatch(updateProfile(alumni));
+        setCookie("token", token, { path: "/" });
+
+        if (alumni.profileLevel === 0) {
+          dispatch(setAdmin(true));
+        }
+
+        if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
+          toast.error("Your account has expired. Contact admin.");
+          setLoading(false);
+          return;
+        }
+
+        toast.success("Welcome back!");
+        setLoading(false);
+
+        const currentUrl = window.location.href;
+        const loginPath = '/login';
+        const baseUrl = currentUrl.endsWith(loginPath)
+          ? currentUrl.slice(0, -loginPath.length)
+          : currentUrl;
+
+        if (currentUrl.endsWith(loginPath)) {
+          window.location.href = baseUrl + "/home";
+        } else {
+          window.location.href = window.location.href;
+        }
+      } else {
+        let errorText = "";
+        try {
+          const errorData = await response.json();
+          errorText = errorData.message || "Login failed";
+        } catch (parseErr) {
+          errorText = "Login failed";
+        }
+        toast.error(errorText);
+        setLoading(false);
       }
-      alert(`Login failed.\nStatus: ${response.status}\nError: ${errorText}`);
-      console.error("Fetch failed response:", errorText);
-      
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Network error. Please try again.");
       setLoading(false);
     }
-  } catch (error) {
-    // Better error object inspection
-    let details = '';
-    if (error instanceof TypeError) {
-      details = "TypeError (maybe network or CORS issue)";
-    } else {
-      details = error.toString();
-    }
-
-    // alert(`Catch block error:\n${details}\n\nMessage: ${error.message}`);
-    console.error("Catch block error:", error);
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
-    <>
-      <div className="relative min-h-screen">
-
+    <div className="h-screen relative overflow-hidden bg-gray-50">
+      {/* Background Image with Overlay */}
+      <div className="absolute inset-0">
         <img
           src="/v2/loginBg.webp"
           alt="Background"
-          className="absolute inset-0 w-full h-full object-cover brightness-[1.5] filter opacity-50 blur-xl"
+          className="w-full h-full object-cover"
         />
-        <div className=" relative  flex flex-col items-center justify-center  p-4">
-          {/* Logo */}
-          <img src={io} alt="InsideOut Logo" className="w-[200px] mb-8 " />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0A3A4C]/90 via-[#174873]/80 to-[#71be95]/70"></div>
+        <div className="absolute inset-0 backdrop-blur-sm"></div>
+      </div>
 
-          {/* Panels Container */}
-          <div className="flex w-full max-w-7xl bg-white rounded-3xl shadow-lg overflow-hidden">
-            {/* Left Panel */}
-            <div className="hidden md:flex w-1/2 bg-[#0a3a4c] text-white flex-col justify-center p-10 space-y-4">
-              <h2 className="text-4xl font-bold">REDISCOVER</h2>
-              <h2 className="text-4xl font-bold">RECONNECT</h2>
-              <h2 className="text-4xl font-bold">REIGNITE</h2>
-              <p className="text-lg">Your Alumni Journey Starts Here!</p>
+      {/* Mobile Layout */}
+      <div className="lg:hidden relative h-full flex flex-col items-center justify-center p-4">
+        {/* Mobile Logo */}
+        <div className="mb-6">
+          <img 
+            src={io} 
+            alt="InsideOut Logo" 
+            className="w-32 sm:w-40 drop-shadow-2xl transform hover:scale-105 transition-transform duration-300" 
+          />
+        </div>
+
+        {/* Mobile Form Container */}
+        <div className="w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/20">
+          <div className="text-center space-y-2 mb-6">
+            <h1 className="text-lg font-medium text-gray-800">Welcome Back To</h1>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+              ALUMNIFY
+            </h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Mobile Email Field */}
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold text-gray-700">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] transition-all duration-200"
+                  required
+                />
+              </div>
             </div>
 
-            {/* Right Panel */}
-            <div className="w-full md:w-1/2 bg-gray-50 p-8 flex flex-col justify-center">
-              <h1 className="text-2xl font-normal text-gray-800 mb-2">Welcome To</h1>
-              <div className="mb-6">
-                <span className="text-5xl font-bold text-[#0a3a4c]">ALUMNIFY</span>
+            {/* Mobile Password Field */}
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold text-gray-700">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type={passwordVisible ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] transition-all duration-200"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
+                  {passwordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Remember & Forgot */}
+            <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={rememberDevice}
+                  onChange={() => setRememberDevice(!rememberDevice)}
+                  className="w-4 h-4 text-[#71be95] border-gray-300 rounded"
+                />
+                <span className="text-gray-700">Remember</span>
+              </label>
+              <button
+                type="button"
+                onClick={() => navigateTo('/forgot-password')}
+                className="text-[#71be95] hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
+
+            {/* Mobile Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Signing In...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </>
+              )}
+            </button>
+
+            {/* Mobile Register Link */}
+            <div className="text-center text-sm">
+              <span className="text-gray-600">Don't have an account? </span>
+              <a href="/register" className="text-[#71be95] font-semibold hover:underline">
+                Register
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex relative h-full items-center justify-center p-8">
+        <div className="w-full max-w-5xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden border border-white/20 h-[650px]">
+          <div className="flex h-full">
+            {/* Left Panel - Features with Logo */}
+            <div className="w-1/2 bg-gradient-to-br from-[#0A3A4C] to-[#174873] text-white relative overflow-hidden flex flex-col">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+                <div className="absolute bottom-20 right-10 w-24 h-24 bg-[#71be95] rounded-full blur-2xl"></div>
+                <div className="absolute top-1/2 right-20 w-16 h-16 bg-white rounded-full blur-xl"></div>
+              </div>
+              
+              {/* Logo at top */}
+              <div className="relative z-10  text-center">
+                <img 
+                  src="/v2/logo2.png" 
+                  alt="InsideOut Logo" 
+                  className="w-[280px] mx-auto drop-shadow-2xl transform hover:scale-105 transition-transform duration-300" 
+                />
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Email Field */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email address"
-                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none"
-                  />
-                </div>
-
-                {/* Password Field */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Password</label>
-                  <div className="relative">
-                    <input
-                      type={passwordVisible ? 'text' : 'password'}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Password"
-                      className="w-full border border-gray-300 rounded-lg p-2 pr-10 focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setPasswordVisible(!passwordVisible)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                    >
-                      👁️
-                    </button>
+              {/* Content */}
+              <div className="relative z-10 flex-1 flex flex-col justify-center px-10 space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 transform hover:translate-x-2 transition-transform duration-300">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <UserCheck className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-2xl xl:text-3xl font-bold">REDISCOVER</h2>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 transform hover:translate-x-2 transition-transform duration-300 delay-100">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <Users className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-2xl xl:text-3xl font-bold">RECONNECT</h2>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 transform hover:translate-x-2 transition-transform duration-300 delay-200">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <Star className="w-5 h-5" />
+                    </div>
+                    <h2 className="text-2xl xl:text-3xl font-bold">REIGNITE</h2>
                   </div>
                 </div>
+                
+                <p className="text-lg text-white/90 font-medium">Your Alumni Journey Starts Here!</p>
 
-                {/* Remember & Forgot */}
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={rememberDevice}
-                      onChange={() => setRememberDevice(!rememberDevice)}
-                      className="h-4 w-4 text-teal-600 border-gray-300 rounded"
-                    />
-                    <span className="text-teal-600">Remember this device</span>
-                  </label>
+                {/* Compact Features List */}
+                <div className="space-y-2">
+                  {[
+                    "Connect with fellow alumni",
+                    "Discover career opportunities", 
+                    "Share your success stories"
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2 text-white/80 text-sm">
+                      <CheckCircle className="w-3 h-3 text-[#71be95] flex-shrink-0" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Panel - Login Form */}
+            <div className="w-1/2 p-10 flex flex-col justify-center">
+              <div className="max-w-sm mx-auto w-full space-y-6">
+                {/* Header */}
+                <div className="text-center space-y-2">
+                  <h1 className="text-xl font-medium text-gray-800">Welcome Back To</h1>
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+                    ALUMNIFY
+                  </h2>
+                  <p className="text-gray-600 text-sm">Sign in to continue your journey</p>
+                </div>
+
+                {/* Login Form */}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Email Field */}
+                  <div className="space-y-1">
+                    <label className="block text-sm font-semibold text-gray-700">Email Address</label>
+                    <div className="relative">
+                      <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${emailFocused ? 'text-[#71be95]' : 'text-gray-400'}`} />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={() => setEmailFocused(true)}
+                        onBlur={() => setEmailFocused(false)}
+                        placeholder="Enter your email address"
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 transition-all duration-200 bg-gray-50/50"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Field */}
+                  <div className="space-y-1">
+                    <label className="block text-sm font-semibold text-gray-700">Password</label>
+                    <div className="relative">
+                      <Lock className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${passwordFocused ? 'text-[#71be95]' : 'text-gray-400'}`} />
+                      <input
+                        type={passwordVisible ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={() => setPasswordFocused(true)}
+                        onBlur={() => setPasswordFocused(false)}
+                        placeholder="Enter your password"
+                        className="w-full pl-10 pr-10 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 transition-all duration-200 bg-gray-50/50"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPasswordVisible(!passwordVisible)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-[#71be95] transition-colors"
+                      >
+                        {passwordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Remember & Forgot */}
+                  <div className="flex items-center justify-between text-sm">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={rememberDevice}
+                        onChange={() => setRememberDevice(!rememberDevice)}
+                        className="w-4 h-4 text-[#71be95] border-gray-300 rounded focus:ring-[#71be95]/20"
+                      />
+                      <span className="text-gray-700 font-medium">Remember device</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => navigateTo('/forgot-password')}
+                      className="text-[#71be95] hover:text-[#5fa080] font-medium hover:underline transition-colors"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+
+                  {/* Submit Button */}
                   <button
-                    type="button"
-                    onClick={() => navigateTo('/forgot-password')}
-                    className="text-gray-800 hover:underline"
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] hover:from-[#5fa080] hover:to-[#71be95] text-white py-3 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
                   >
-                    Forgot Password?
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Signing In...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="w-5 h-5" />
+                        Sign In
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
+
+                  {/* Register Link */}
+                  <div className="text-center">
+                    <p className="text-gray-600 text-sm">
+                      Don't have an account?{' '}
+                      <a 
+                        href="/register" 
+                        className="text-[#71be95] hover:text-[#5fa080] font-semibold hover:underline transition-colors"
+                      >
+                        Create Account
+                      </a>
+                    </p>
+                  </div>
+                </form>
+
+                {/* Security Badge */}
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                  <Shield className="w-3 h-3" />
+                  <span>Your data is secure and encrypted</span>
                 </div>
-
-                {/* reCAPTCHA */}
-                {/* <ReCAPTCHA sitekey="6LdPzXgqAAAAACrakqqSjHvl4XIVyec6u1UimfSM" onChange={token => setCaptchaToken(token)} /> */}
-
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  className="w-full bg-green-400 hover:bg-green-500 text-white py-3 rounded-lg text-lg font-medium"
-                  disabled={loading}
-                >
-                  {loading ? 'Logging in...' : 'Login'}
-                </button>
-
-                {/* Register Link */}
-                <div className="text-center text-sm">
-                  <span className="text-gray-600">Don’t have an account?</span>
-                  <a href="/register" className="ml-1 text-blue-600 hover:underline">Register</a>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-    </>
+    </div>
   );
 };
 
