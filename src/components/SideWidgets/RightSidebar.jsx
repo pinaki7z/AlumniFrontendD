@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
   MessageSquare, 
   Newspaper, 
@@ -11,8 +11,28 @@ import {
   Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import socket from '../../socket';
+
 
 const RightSidebar = () => {
+    const socketRef = useRef(socket);
+
+      const [onlineCount, setOnlineCount] = useState(0);
+    
+        useEffect(() => {
+    socketRef.current.connect();
+
+    socketRef.current.on("connect", () => {
+      console.log("Connected to socket:", socketRef.current.id);
+    });
+    
+    socket.on("online-users", list => setOnlineCount(list?.length));
+
+    return () => {
+      socketRef.current?.off("online-users");
+      socketRef.current?.disconnect();
+    };
+  }, []);
   // Dummy forum data
   const forumTopics = [
     {
@@ -87,6 +107,19 @@ const RightSidebar = () => {
 
   return (
     <div className="space-y-4">
+
+        {/* Online Users */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-gray-900">Online Now</span>
+          </div>
+          <div className="bg-[#71be95] text-white text-xs font-bold px-2 py-1 rounded-full">
+            {onlineCount}
+          </div>
+        </div>
+      </div>
       {/* Forums Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
@@ -149,116 +182,7 @@ const RightSidebar = () => {
         </div>
       </div>
 
-      {/* News Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <Newspaper className="w-5 h-5 text-[#71be95]" />
-            <h3 className="font-semibold text-gray-900">Latest News</h3>
-          </div>
-          <Link 
-            to="/home/news" 
-            className="text-[#71be95] hover:text-[#5fa080] transition-colors"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-        
-        <div className="p-4 space-y-4">
-          {newsItems.map((news) => (
-            <article key={news.id} className="group cursor-pointer">
-              <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Newspaper className="w-4 h-4 text-blue-600" />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 text-sm leading-tight line-clamp-2 group-hover:text-[#71be95] transition-colors mb-2">
-                      {news.title}
-                    </h4>
-                    
-                    <p className="text-xs text-gray-600 line-clamp-2 mb-2">
-                      {news.summary}
-                    </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                          {news.category}
-                        </span>
-                        <span className="text-xs text-gray-500">{news.publishedAt}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1 text-xs text-gray-500">
-                        <Eye className="w-3 h-3" />
-                        {news.views}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
-          
-          <Link
-            to="/home/news"
-            className="block w-full text-center py-2 text-sm text-[#71be95] hover:text-[#5fa080] font-medium transition-colors"
-          >
-            Read All News
-          </Link>
-        </div>
-      </div>
-
-      {/* Trending Topics */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="flex items-center gap-2 p-4 border-b border-gray-100">
-          <TrendingUp className="w-5 h-5 text-[#71be95]" />
-          <h3 className="font-semibold text-gray-900">Trending</h3>
-        </div>
-        
-        <div className="p-4 space-y-2">
-          {[
-            { tag: "#AlumniMeetup2025", posts: 45 },
-            { tag: "#CareerTips", posts: 32 },
-            { tag: "#TechTalks", posts: 28 },
-            { tag: "#Entrepreneurship", posts: 19 },
-            { tag: "#UniversityNews", posts: 15 }
-          ].map((trend, index) => (
-            <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-              <span className="text-sm font-medium text-[#71be95]">{trend.tag}</span>
-              <span className="text-xs text-gray-500">{trend.posts} posts</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Links */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="flex items-center gap-2 p-4 border-b border-gray-100">
-          <ExternalLink className="w-5 h-5 text-[#71be95]" />
-          <h3 className="font-semibold text-gray-900">Quick Links</h3>
-        </div>
-        
-        <div className="p-4 space-y-2">
-          {[
-            { name: "Academic Calendar", href: "/calendar" },
-            { name: "Alumni Directory", href: "/directory" },
-            { name: "Event Gallery", href: "/gallery" },
-            { name: "Career Resources", href: "/careers" },
-            { name: "Contact Support", href: "/support" }
-          ].map((link, index) => (
-            <Link
-              key={index}
-              to={link.href}
-              className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700 hover:text-[#71be95] no-underline"
-            >
-              {link.name}
-              <ChevronRight className="w-3 h-3" />
-            </Link>
-          ))}
-        </div>
-      </div>
+    
     </div>
   );
 };

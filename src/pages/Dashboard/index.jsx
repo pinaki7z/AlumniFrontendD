@@ -56,14 +56,14 @@ const Dashboard = ({ handleLogout }) => {
   const navigate = useNavigate();
   const profile = useSelector((state) => state.profile);
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  const toggleMobileSidebar = () => {
+    setMobileSidebarOpen(!mobileSidebarOpen);
   };
 
-  const closeSidebar = () => {
-    setSidebarOpen(false);
+  const closeMobileSidebar = () => {
+    setMobileSidebarOpen(false);
   };
 
   useEffect(() => {
@@ -73,46 +73,56 @@ const Dashboard = ({ handleLogout }) => {
   }, [profile.accountDeleted, profile.expirationDate]);
 
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden">
-     {/* Top Bar with Hamburger Menu */}
-<div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 relative z-50 shadow-lg">
-  <button
-    onClick={toggleSidebar}
-    className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
-  >
-    <Menu className="h-6 w-6 text-white" />
-  </button>
-  <div className="flex-1">
-    <TopBar handleLogout={handleLogout} />
-  </div>
-</div>
-
+    <div className="flex h-screen w-full overflow-hidden">
+      {/* Desktop Sidebar - Collapsed by default, expands on hover */}
+      <div className="hidden lg:block">
+        <LeftSidebar onNavigate={() => {}} isMobile={false} isExpanded={false} />
+      </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 relative overflow-hidden">
-        {/* Sidebar Overlay */}
-        {sidebarOpen && (
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Bar with Mobile Hamburger Menu */}
+        <div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 relative z-50 shadow-lg lg:hidden">
+          <button
+            onClick={toggleMobileSidebar}
+            className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
+          >
+            <Menu className="h-6 w-6 text-white" />
+          </button>
+          <div className="flex-1">
+            <TopBar handleLogout={handleLogout} />
+          </div>
+        </div>
+
+        {/* Desktop TopBar - No hamburger menu */}
+        <div className="hidden lg:block">
+          <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 shadow-lg">
+            <TopBar handleLogout={handleLogout} />
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {mobileSidebarOpen && (
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-            onClick={closeSidebar}
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+            onClick={closeMobileSidebar}
           />
         )}
 
-       {/* Sidebar */}
-<div className={`
-  fixed top-0 left-0 h-full shadow-2xl z-50
-  transform transition-transform duration-300 ease-in-out
-  ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-  w-72 max-w-[85vw]
-`}>
-  {/* Sidebar Content */}
-  <div className="h-full">
-    <LeftSidebar onNavigate={closeSidebar} />
-  </div>
-</div>
+        {/* Mobile Sidebar */}
+        <div className={`
+          lg:hidden fixed top-0 left-0 h-full shadow-2xl z-50
+          transform transition-transform duration-300 ease-in-out
+          ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          w-72 max-w-[85vw]
+        `}>
+          <div className="h-full">
+            <LeftSidebar onNavigate={closeMobileSidebar} isMobile={true} isExpanded={true} />
+          </div>
+        </div>
 
         {/* Main Content */}
-        <div className="h-full overflow-auto bg-gray-100">
+        <div className="flex-1 overflow-auto bg-gray-100">
           <div className="">
             <Routes>
               <Route path="/groups/*" element={<Groups />} />
@@ -122,36 +132,37 @@ const Dashboard = ({ handleLogout }) => {
                   element={<SearchedResults searchQuery={searchQuery} />}
                 />
               )}
-            {!searchQuery && (
-  <Route
-    path="/*"
-    element={
-      <div className="md:max-w-7xl mx-auto md:p-4">
-        <div className="grid grid-cols-12 gap-4">
-          {/* Left Sidebar - Sticky */}
-          <div className="col-span-12 lg:col-span-3 hidden lg:block">
-            <div className="sticky top-4">
-              <SideWidgets />
-            </div>
-          </div>
-          
-          {/* Middle Column - Wider and Scrollable */}
-          <div className="col-span-12 lg:col-span-6">
-            <SocialMediaPost showCreatePost={true} />
-          </div>
-          
-          {/* Right Sidebar - Sticky */}
-          <div className="col-span-12 lg:col-span-3 hidden lg:block">
-            <div className="sticky top-4">
-              <RightSidebar />
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-  />
-)}
+              {!searchQuery && (
+                <Route
+                  path="/*"
+                  element={
+                    <div className="md:max-w-7xl mx-auto md:p-4">
+                      <div className="grid grid-cols-12 gap-4">
+                        {/* Left Sidebar - Sticky */}
+                        <div className="col-span-12 lg:col-span-3 hidden lg:block">
+                          <div className="sticky top-4">
+                            <SideWidgets />
+                          </div>
+                        </div>
+                        
+                        {/* Middle Column - Wider and Scrollable */}
+                        <div className="col-span-12 lg:col-span-6">
+                          <SocialMediaPost showCreatePost={true} />
+                        </div>
+                        
+                        {/* Right Sidebar - Sticky */}
+                        <div className="col-span-12 lg:col-span-3 hidden lg:block">
+                          <div className="sticky top-4">
+                            <RightSidebar />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                />
+              )}
 
+              {/* All other routes remain the same */}
               <Route path="/donations/*" element={<Donations />} />
               <Route path="/guidance/*" element={<Guidance />} />
               <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />

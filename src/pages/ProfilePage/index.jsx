@@ -22,7 +22,14 @@ import {
   Badge,
   Calendar,
   AlertTriangle,
-  Clock
+  Clock,
+  Edit3,
+  Star,
+  Award,
+  Info,
+  Loader2,
+  Target,
+  TrendingUp
 } from "lucide-react";
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
@@ -75,7 +82,6 @@ const ProfilePage = () => {
 
   const handleFileChange = (e, type) => {
     setLoading(true);
-
     const file = e.target.files[0];
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formData = new FormData();
@@ -113,8 +119,26 @@ const ProfilePage = () => {
     } catch (err) { toast.error(err.response?.data?.message || 'Delete failed'); }
   };
 
+  const getRoleBadge = () => {
+    const badges = {
+      0: { label: "SUPER ADMIN", gradient: "from-red-500 to-pink-600", icon: <Star size={14} /> },
+      1: { label: "ADMIN", gradient: "from-orange-500 to-red-500", icon: <Award size={14} /> },
+      2: { label: "ALUMNI", gradient: "from-[#0A3A4C] to-[#174873]", icon: <Users size={14} /> },
+      3: { label: "STUDENT", gradient: "from-[#71be95] to-[#5fa080]", icon: <Users size={14} /> }
+    };
+    
+    const badge = badges[profile.profileLevel] || badges[2];
+    
+    return (
+      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white bg-gradient-to-r ${badge.gradient} shadow-lg font-semibold text-sm`}>
+        {badge.icon}
+        {badge.label}
+      </div>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50 md:p-4 py-2">
       <div className="mx-auto max-w-7xl">
         {/* Validation Banner */}
         {(!profile.validated && ![0,1].includes(profile.profileLevel) && !profile.ID) ? (
@@ -125,13 +149,14 @@ const ProfilePage = () => {
             >
               <div className="flex items-center space-x-3 p-4">
                 <AlertTriangle className="w-6 h-6 flex-shrink-0" />
-                <div>
+                <div className="flex-1">
                   <p className="font-semibold">Account Validation Required</p>
                   <p className="text-sm opacity-90">
                     Please upload your <span className="underline font-semibold">ID</span> before{' '}
                     <span className="font-semibold">{new Date(profile.expirationDate).toLocaleDateString()}</span> to validate your account.
                   </p>
                 </div>
+                <ChevronRight className="w-5 h-5" />
               </div>
             </div>
           </div>
@@ -150,37 +175,39 @@ const ProfilePage = () => {
         ) : null}
 
         {/* Cover Section */}
-        <div className="relative mx-4 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="relative mx-2 md:mx-4 rounded-2xl overflow-hidden shadow-xl">
           <div 
-            className="h-80 bg-cover bg-center relative"
+            className="h-48 sm:h-64 lg:h-80 bg-cover bg-center relative"
             style={{ backgroundImage: `url(${profile.coverPicture || picture})` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0A3A4C]/20 to-[#174873]/20" />
             
             {/* Cover Actions */}
             <div className="absolute top-4 left-4 right-4 flex justify-between">
               <button 
                 onClick={() => handleDelete('cover')}
-                className="bg-white/90 backdrop-blur-sm hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="bg-white/90 backdrop-blur-sm hover:bg-white p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                title="Delete cover photo"
               >
-                <Trash2 className="w-5 h-5 text-gray-700" />
+                <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
               </button>
               
-              <div className="flex space-x-3">
+              <div className="flex space-x-2 sm:space-x-3">
                 <button 
                   onClick={() => navigate('/home/profile/profile-settings')}
-                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-1 border border-red-800 md:px-4 py-2 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
                 >
                   <Settings className="w-4 h-4" />
-                  <span className="text-sm font-medium">Settings</span>
+                  <span className="text-sm font-medium hidden sm:inline">Settings</span>
                 </button>
                 
                 <button 
                   onClick={() => document.getElementById('coverInput').click()}
-                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-1 border border-red-800 md:px-4 py-2 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
                 >
                   <Camera className="w-4 h-4" />
-                  <span className="text-sm font-medium">Edit Cover</span>
+                  <span className="text-sm font-medium hidden sm:inline">Edit Cover</span>
                 </button>
               </div>
             </div>
@@ -191,25 +218,27 @@ const ProfilePage = () => {
             id="coverInput" 
             className="hidden" 
             onChange={e => handleFileChange(e, 'coverPicture')} 
+            accept="image/*"
           />
         </div>
 
         {/* Profile Card */}
-        <div className="relative mx-4 bg-white rounded-2xl shadow-xl -mt-20 pt-[90px] pb-2">
+        <div className="relative mx-2 md:mx-4 bg-white rounded-2xl shadow-xl -mt-16 sm:-mt-20 pt-16 sm:pt-20 ">
           {/* Profile Picture */}
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <div className="relative group">
               <img 
                 src={profile.profilePicture || "/images/profilepic.jpg"} 
                 alt="profile" 
-                className="w-32 h-32 rounded-full border-4 border-white object-cover shadow-2xl group-hover:shadow-3xl transition-shadow duration-300" 
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-white object-cover shadow-2xl group-hover:shadow-3xl transition-all duration-300" 
               />
               
               <button 
                 onClick={() => handleDelete('profile')}
-                className="absolute -top-2 -left-2 bg-red-500 hover:bg-red-600 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 bg-red-500 hover:bg-red-600 p-1.5 sm:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                title="Delete profile picture"
               >
-                <Trash2 className="w-4 h-4 text-white" />
+                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </button>
               
               <input 
@@ -217,94 +246,106 @@ const ProfilePage = () => {
                 id="profileInput" 
                 className="hidden" 
                 onChange={e => handleFileChange(e, 'profilePicture')} 
+                accept="image/*"
               />
               
               <button 
                 onClick={() => document.getElementById('profileInput').click()}
-                className="absolute -bottom-2 -right-2 bg-blue-500 hover:bg-blue-600 p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-[#71be95] hover:bg-[#5fa080] p-1.5 sm:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                title="Change profile picture"
               >
-                <Camera className="w-4 h-4 text-white" />
+                <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </button>
             </div>
           </div>
 
           {/* Profile Info */}
-          <div className="text-center px-8">
-            <div className="flex items-center justify-center space-x-3 mb-2">
-              <h2 className="text-xl md:text-3xl font-bold text-gray-800">
+          <div className="text-center px-6 sm:px-8">
+            <div className="flex items-center justify-center space-x-3 mb-3">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
                 {profile.firstName} {profile.lastName}
               </h2>
               {profile.validated && (
                 <div className="relative">
-                  <Badge className="w-8 h-8 text-green-500 fill-current" />
-                  <CheckCircle className="w-4 h-4 text-white absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                  </div>
+                  <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-20"></div>
                 </div>
               )}
             </div>
             
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                member.profileLevel === 1 ? 'bg-purple-100 text-purple-800' :
-                member.profileLevel === 2 ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
-              }`}>
-                {(member.profileLevel === 1 || member.profileLevel===0)? 'ADMIN' : member.profileLevel === 2 ? 'ALUMNI' : 'STUDENT'}
-              </div>
+            <div className="flex justify-center mb-4">
+              {getRoleBadge()}
             </div>
             
             {profile.aboutMe && (
-              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">{profile.aboutMe}</p>
+              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">{profile.aboutMe}</p>
             )}
           </div>
 
           {/* Stats */}
-          <div className="mt-3 grid grid-cols-3 divide-x divide-gray-200">
+          <div className="mt-6 grid grid-cols-3 divide-x divide-gray-200">
             {[
-              { label: 'Groups', count: profile.groupNames.length, icon: Users, link: `/home/groups/${profile._id}/joined-groups` },
-              { label: 'Followers', count: profile.followers.length, icon: UserCheck, link: `/home/profile/${profile._id}/followers` },
-              { label: 'Following', count: profile.following.length, icon: UserPlus, link: `/home/profile/${profile._id}/following` }
+              { label: 'Groups', count: profile.groupNames?.length || 0, icon: Users, link: `/home/groups/${profile._id}/joined-groups` },
+              { label: 'Followers', count: profile.followers?.length || 0, icon: UserCheck, link: `/home/profile/${profile._id}/followers` },
+              { label: 'Following', count: profile.following?.length || 0, icon: UserPlus, link: `/home/profile/${profile._id}/following` }
             ].map((stat, i) => (
               <Link 
                 to={stat.link} 
                 key={i} 
-                className="group flex flex-col items-center py-2 hover:bg-gray-50 transition-colors duration-200 rounded-lg"
+                className="group flex flex-col items-center py-4 hover:bg-gray-50 transition-colors duration-200 rounded-lg"
               >
-                {/* <stat.icon className="w-6 h-6 text-gray-400 group-hover:text-blue-500 transition-colors duration-200 mb-2" /> */}
-                <p className="text-sm font-medium text-gray-600 group-hover:text-gray-800">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-800 group-hover:text-blue-600">{stat.count}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600 group-hover:text-gray-800 mb-1">{stat.label}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-800 group-hover:text-[#71be95] transition-colors">{stat.count}</p>
               </Link>
             ))}
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col xl:flex-row gap-6 mt-8 px-4 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8 px-4 pb-8">
           {/* Posts Feed */}
-          <div className="flex-1">
-            <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                  <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+                  My Posts
+                </h3>
+                <p className="text-white/80 text-sm mt-1">Share your thoughts and updates</p>
+              </div>
+              <div className="p-4 sm:p-6">
+                <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
+              </div>
+            </div>
           </div>
 
           {/* Sidebar */}
-          <aside className="xl:w-96 space-y-6">
+          <aside className="lg:col-span-1 space-y-6">
             {/* Profile Completion */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white p-4">
                 <div className="flex items-center space-x-3">
                   <div className="bg-white/20 p-2 rounded-lg">
-                    <CheckCircle className="w-5 h-5" />
+                    <Target className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-lg">Profile Completion</h3>
+                  <div>
+                    <h3 className="font-semibold text-lg">Profile Completion</h3>
+                    <p className="text-white/80 text-sm">Complete your profile</p>
+                  </div>
                 </div>
               </div>
               
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm font-medium text-gray-700">Progress</span>
-                  <span className="text-sm font-bold text-blue-600">{completionPct}%</span>
+                  <span className="text-sm font-bold text-[#71be95]">{completionPct}%</span>
                 </div>
                 
                 <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
                   <div 
-                    className="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-500" 
+                    className="bg-gradient-to-r from-[#71be95] to-[#5fa080] h-3 rounded-full transition-all duration-500" 
                     style={{ width: `${completionPct}%` }} 
                   />
                 </div>
@@ -327,15 +368,15 @@ const ProfilePage = () => {
                           <item.icon className={`w-4 h-4 ${isCompleted ? 'text-green-600' : 'text-gray-400'}`} />
                         </div>
                         
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           {isCompleted ? (
-                            <span className="text-sm font-medium text-gray-800">
+                            <span className="text-sm font-medium text-gray-800 truncate block">
                               {item.label}: {displayValue}
                             </span>
                           ) : (
                             <Link 
                               to={item.link} 
-                              className="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                              className="text-sm font-medium text-[#71be95] hover:text-[#5fa080] transition-colors duration-200"
                             >
                               Add your {item.label.toLowerCase()}
                             </Link>
@@ -343,7 +384,7 @@ const ProfilePage = () => {
                         </div>
                         
                         {isCompleted && (
-                          <CheckCircle className="w-5 h-5 text-green-500" />
+                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
                         )}
                       </div>
                     );
@@ -353,11 +394,11 @@ const ProfilePage = () => {
             </div>
 
             {/* About Me */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-4">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white p-4">
                 <div className="flex items-center space-x-3">
                   <div className="bg-white/20 p-2 rounded-lg">
-                    <UserCheck className="w-5 h-5" />
+                    <Info className="w-5 h-5" />
                   </div>
                   <h3 className="font-semibold text-lg">About Me</h3>
                 </div>
@@ -369,10 +410,10 @@ const ProfilePage = () => {
                     href={profile.linkedIn} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                    className="inline-flex items-center space-x-2 text-[#71be95] hover:text-[#5fa080] transition-colors duration-200 font-medium"
                   >
                     <ExternalLink className="w-4 h-4" />
-                    <span className="font-medium">LinkedIn Profile</span>
+                    <span>LinkedIn Profile</span>
                   </a>
                 ) : (
                   <p className="text-gray-500 italic">User has not updated their bio</p>
@@ -383,13 +424,13 @@ const ProfilePage = () => {
             {/* Work Experience */}
             <Link 
               to='/home/profile/workExperience' 
-              className="block bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
+              className="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="bg-blue-100 p-3 rounded-lg">
-                      <Briefcase className="w-6 h-6 text-blue-600" />
+                    <div className="bg-[#71be95]/10 p-3 rounded-lg">
+                      <Briefcase className="w-6 h-6 text-[#71be95]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Work Experience</h3>
@@ -409,12 +450,38 @@ const ProfilePage = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 shadow-2xl">
             <div className="flex items-center space-x-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-2 border-blue-600 border-t-transparent"></div>
+              <Loader2 className="w-8 h-8 text-[#71be95] animate-spin" />
               <p className="text-gray-700 font-medium">Uploading...</p>
             </div>
           </div>
         </div>
       )}
+
+      {/* Custom Scrollbar Styles */}
+      <style jsx>{`
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #71be95 transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 1px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #71be95, #5fa080);
+          border-radius: 1px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #5fa080, #4d8a66);
+        }
+      `}</style>
     </div>
   );
 };

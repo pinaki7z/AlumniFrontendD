@@ -24,13 +24,14 @@ import { IoIosNotifications } from "react-icons/io";
 import { LuHeartHandshake } from 'react-icons/lu';
 import { GrGallery, GrUserAdmin } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { updateMember } from "../../store/membersSlice";
 
-const LeftSidebar = ({ onNavigate }) => {
+const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     const profile = useSelector((state) => state.profile);
     const dispatch = useDispatch();
     const location = useLocation();
+    const [hovered, setHovered] = useState(false);
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -92,95 +93,174 @@ const LeftSidebar = ({ onNavigate }) => {
         }
     };
 
+    // Determine if sidebar should show full content
+    // Mobile: always show full if expanded, Desktop: show full only on hover
+    const showFullContent = isMobile ? isExpanded : hovered;
+
     return (
-        <div className="h-full bg-gradient-to-b from-[#0A3A4C] to-[#174873] text-white flex flex-col">
+        <div 
+            className={`h-full bg-gradient-to-b from-[#0A3A4C] to-[#174873] text-white flex flex-col transition-all duration-300 ease-in-out ${
+                isMobile 
+                    ? 'w-72' 
+                    : showFullContent 
+                        ? 'w-72' 
+                        : 'w-20'
+            }`}
+            onMouseEnter={() => !isMobile && setHovered(true)}
+            onMouseLeave={() => !isMobile && setHovered(false)}
+        >
             {/* Logo Section */}
-            <div className="p-6 text-center border-b border-white/10">
+            <div className={`text-center border-b border-white/10 transition-all duration-300 ${
+                showFullContent ? 'p-6' : 'p-4'
+            }`}>
                 <Link 
                     to="/home" 
                     className="block"
                     onClick={handleNavigation}
                 >
-                    <img 
-                        src="/v2/logo2.png" 
-                        alt="InsideOut Logo" 
-                        className="w-40 h-20 mx-auto rounded-lg object-contain"
-                    />
+                    {showFullContent ? (
+                        <img 
+                            src="/v2/logo2.png" 
+                            alt="InsideOut Logo" 
+                            className="w-40 h-20 mx-auto rounded-lg object-contain transition-all duration-300"
+                        />
+                    ) : (
+                        <div className="w-12 h-12 mx-auto bg-white/20 rounded-lg flex items-center justify-center">
+                            <span className="text-2xl font-bold text-white">I</span>
+                        </div>
+                    )}
                 </Link>
             </div>
 
             {/* Navigation Items */}
-            <div className="flex-1 px-3 py-4 overflow-y-auto">
+            <div className="flex-1 px-3 py-4 overflow-y-auto custom-scrollbar">
                 <nav className="space-y-1">
                     {sidebarItems.map((item, idx) => (
-                        <Link
-                            key={idx}
-                            to={item.path}
-                            onClick={handleNavigation}
-                            className={`
-                                flex items-center px-4 py-3 rounded-lg transition-all duration-200 group
-                                ${isActive(item.path) 
-                                    ? 'bg-[#71be95] text-white shadow-lg scale-[1.02] font-medium' 
-                                    : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-1'
-                                }
-                            `}
-                        >
-                            <span className={`text-lg mr-4 flex-shrink-0 transition-transform duration-200 ${
-                                isActive(item.path) ? 'scale-110' : 'group-hover:scale-105'
-                            }`}>
-                                {item.icon}
-                            </span>
-                            <span className="font-medium truncate text-sm">
-                                {item.label}
-                            </span>
-                            {isActive(item.path) && (
-                                <div className="ml-auto w-1 h-6 bg-white rounded-full"></div>
+                        <div key={idx} className="relative group">
+                            <Link
+                                to={item.path}
+                                onClick={handleNavigation}
+                                className={`
+                                    flex items-center rounded-lg transition-all duration-200 group/item relative
+                                    ${showFullContent ? 'px-4 py-3' : 'px-2 py-3 justify-center'}
+                                    ${isActive(item.path) 
+                                        ? 'bg-[#71be95] text-white shadow-lg scale-[1.02] font-medium' 
+                                        : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                    }
+                                `}
+                            >
+                                <span className={`text-lg flex-shrink-0 transition-transform duration-200 ${
+                                    isActive(item.path) ? 'scale-110' : 'group-hover/item:scale-105'
+                                } ${showFullContent ? 'mr-4' : ''}`}>
+                                    {item.icon}
+                                </span>
+                                
+                                {showFullContent && (
+                                    <>
+                                        <span className="font-medium truncate text-sm">
+                                            {item.label}
+                                        </span>
+                                        {isActive(item.path) && (
+                                            <div className="ml-auto w-1 h-6 bg-white rounded-full"></div>
+                                        )}
+                                    </>
+                                )}
+                            </Link>
+                            
+                            {/* Tooltip for collapsed state - only show on desktop when not expanded */}
+                            {!isMobile && !showFullContent && (
+                                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                    {item.label}
+                                    <div className="absolute right-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+                                </div>
                             )}
-                        </Link>
+                        </div>
                     ))}
 
                     {adminItems.map((item, idx) =>
                         item.roles.includes(profile.profileLevel) && (
-                            <>
+                            <div key={`admin-${idx}`}>
                                 <div className="border-t border-white/10 my-3"></div>
-                                <Link
-                                    key={`admin-${idx}`}
-                                    to={item.path}
-                                    onClick={handleNavigation}
-                                    className={`
-                                        flex items-center px-4 py-3 rounded-lg transition-all duration-200 group
-                                        ${isActive(item.path) 
-                                            ? 'bg-[#71be95] text-white shadow-lg scale-[1.02] font-medium' 
-                                            : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-1'
-                                        }
-                                    `}
-                                >
-                                    <span className={`text-lg mr-4 flex-shrink-0 transition-transform duration-200 ${
-                                        isActive(item.path) ? 'scale-110' : 'group-hover:scale-105'
-                                    }`}>
-                                        {item.icon}
-                                    </span>
-                                    <span className="font-medium truncate text-sm">
-                                        {item.label}
-                                    </span>
-                                    {isActive(item.path) && (
-                                        <div className="ml-auto w-1 h-6 bg-white rounded-full"></div>
+                                <div className="relative group">
+                                    <Link
+                                        to={item.path}
+                                        onClick={handleNavigation}
+                                        className={`
+                                            flex items-center rounded-lg transition-all duration-200 group/item relative
+                                            ${showFullContent ? 'px-4 py-3' : 'px-2 py-3 justify-center'}
+                                            ${isActive(item.path) 
+                                                ? 'bg-[#71be95] text-white shadow-lg scale-[1.02] font-medium' 
+                                                : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                            }
+                                        `}
+                                    >
+                                        <span className={`text-lg flex-shrink-0 transition-transform duration-200 ${
+                                            isActive(item.path) ? 'scale-110' : 'group-hover/item:scale-105'
+                                        } ${showFullContent ? 'mr-4' : ''}`}>
+                                            {item.icon}
+                                        </span>
+                                        
+                                        {showFullContent && (
+                                            <>
+                                                <span className="font-medium truncate text-sm">
+                                                    {item.label}
+                                                </span>
+                                                {isActive(item.path) && (
+                                                    <div className="ml-auto w-1 h-6 bg-white rounded-full"></div>
+                                                )}
+                                            </>
+                                        )}
+                                    </Link>
+                                    
+                                    {/* Tooltip for collapsed state */}
+                                    {!isMobile && !showFullContent && (
+                                        <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                                            {item.label}
+                                            <div className="absolute right-full top-1/2 transform -translate-y-1/2 border-4 border-transparent border-r-gray-900"></div>
+                                        </div>
                                     )}
-                                </Link>
-                            </>
+                                </div>
+                            </div>
                         )
                     )}
                 </nav>
             </div>
 
-            {/* Footer Section */}
-            <div className="p-4 border-t border-white/10">
-                <div className="text-center">
-                    <p className="text-xs text-white/60">
-                        © 2025 InsideOut Platform
-                    </p>
+            {/* Footer Section - Only show when expanded */}
+            {showFullContent && (
+                <div className="p-4 border-t border-white/10">
+                    <div className="text-center">
+                        <p className="text-xs text-white/60">
+                            © 2025 InsideOut Platform
+                        </p>
+                    </div>
                 </div>
-            </div>
+            )}
+
+            {/* Custom Scrollbar Styles */}
+            <style jsx>{`
+                .custom-scrollbar {
+                    scrollbar-width: thin;
+                    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 2px;
+                }
+
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255, 255, 255, 0.5);
+                }
+            `}</style>
         </div>
     );
 };

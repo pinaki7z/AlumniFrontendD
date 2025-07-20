@@ -1,362 +1,577 @@
 import React, { useState, useEffect } from 'react';
-import PageTitle from '../PageTitle';
 import { RiBriefcase4Line } from "react-icons/ri";
 import { useCookies } from 'react-cookie';
-import './workExperience.css';
 import { useSelector } from "react-redux";
-import baseUrl from '../../config';
 import { toast } from "react-toastify";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import { IoMdClose,IoIosList } from "react-icons/io";
-import Form from 'react-bootstrap/Form';
-
+import { 
+  Plus, 
+  Briefcase, 
+  MapPin, 
+  Calendar, 
+  Building2, 
+  User, 
+  X, 
+  Edit2, 
+  Trash2,
+  Loader2,
+  Clock,
+  Globe
+} from 'lucide-react';
 
 export const WorkExperience = () => {
-    const [workExperiences, setWorkExperiences] = useState([]);
-    const icon = <RiBriefcase4Line />;
-    const [cookie] = useCookies(['token']);
-    const profile = useSelector((state) => state.profile);
-    const [modalShow, setModalShow] = useState(false);
-    const [loading, setLoading] = useState(false);
+  const [workExperiences, setWorkExperiences] = useState([]);
+  const [cookie] = useCookies(['token']);
+  const profile = useSelector((state) => state.profile);
+  const [modalShow, setModalShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(-1);
 
-    useEffect(() => {
-        fetchWorkExperiences();
-    }, []);
+  useEffect(() => {
+    fetchWorkExperiences();
+  }, []);
 
-    const fetchWorkExperiences = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
-                headers: {
-                    'Authorization': `Bearer ${cookie.token}`
-                }
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch work experiences');
-            }
-            const data = await response.json();
-            setWorkExperiences(data);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching work experiences:', error);
-            setLoading(false);
+  const fetchWorkExperiences = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
+        headers: {
+          'Authorization': `Bearer ${cookie.token}`
         }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch work experiences');
+      }
+      const data = await response.json();
+      setWorkExperiences(data);
+    } catch (error) {
+      console.error('Error fetching work experiences:', error);
+      toast.error('Failed to load work experiences');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const WorkExperienceModal = ({ show, onHide, editData = null }) => {
+    const [forms, setForms] = useState(editData ? [editData] : [{}]);
+    const [submitting, setSubmitting] = useState(false);
+
+    const generateYears = () => {
+      const currentYear = new Date().getFullYear();
+      const years = [];
+      for (let i = currentYear; i >= currentYear - 50; i--) {
+        years.push(i);
+      }
+      return years;
     };
 
-    function MyVerticallyCenteredModal(props) {
-        const [forms, setForms] = useState([{}]);
-        const [currentWork, setCurrentWork] = useState(false);
-    
-        const generateYears = () => {
-          const currentYear = new Date().getFullYear();
-          const years = [];
-          for (let i = currentYear; i >= currentYear - 100; i--) {
-            years.push(i);
-          }
-          return years;
-        };
-    
-        const handleAddExperience = () => {
-          setForms([...forms, {}]);
-        };
-    
-        const handleCloseAdditionalForm = (index) => {
-          setForms(forms.filter((_, i) => i !== index));
-        };
-    
-        const handleInputChange = (event, index, field) => {
-          const newForms = [...forms];
-          newForms[index][field] = event.target.value;
-          setForms(newForms);
-        };
-    
-    
-        const handleCurrentWorkChange = (index) => {
-          const newForms = [...forms];
-          newForms[index].currentWork = !newForms[index].currentWork;
-          setForms(newForms);
-          setCurrentWork(newForms[index].currentWork);
-        };
-    
-        const handleSave = () => {
-          const updatedForms = forms.map(form => {
-            if (!form.endMonth && !form.endYear) {
-              return {
-                ...form,
-                endMonth: 'current'
-              };
-            }
-            return form;
-          });
-    
-          let body = JSON.stringify(updatedForms);
-    
-          fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
-            method: 'PUT',
-            body,
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${cookie.token}`
-            }
-          })
-            .then(response => response.json())
-            .then(data => {
-              console.log(data);
-              toast.success("Added successfully!");
-              window.location.reload();
-              props.onHide();
-            })
-            .catch(error => console.error('Error:', error));
-        };
-    
-    
-    
-        return (
-          <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Header closeButton>
-              <Modal.Title id="contained-modal-title-vcenter">
-                Add Experience
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Button onClick={handleAddExperience}>Add</Button>
-              <Form>
-                {forms.map((form, index) => (
-                  <div key={index}>
-                    <Form.Group controlId="formBasicAddDelete">
-                      {index > 0 && (
-                        <>
-                          <Button onClick={handleAddExperience}>Add</Button>
-                          <Button variant="danger" onClick={() => handleCloseAdditionalForm(index)} style={{ float: 'right' }}>
-                            <IoMdClose />
-                          </Button>
-                        </>
-                      )}
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicTitle">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter title"
-                        value={forms[index].title || ''}
-                        onChange={(event) => handleInputChange(event, index, 'title')}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicCompanyName">
-                      <Form.Label>Company Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Company Name"
-                        value={forms[index].companyName || ''}
-                        onChange={(event) => handleInputChange(event, index, 'companyName')}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicLocation">
-                      <Form.Label>Location</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Location"
-                        value={forms[index].location || ''}
-                        onChange={(event) => handleInputChange(event, index, 'location')}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicLocationType">
-                      <Form.Label>Location Type</Form.Label>
-                      <Form.Control
-                        as="select"
-                        value={forms[index].locationType || ''}
-                        onChange={(event) => handleInputChange(event, index, 'locationType')}
-                      >
-                        <option value="">Location Type</option>
-                        <option value="On-site">On-site</option>
-                        <option value="Hybrid">Hybrid</option>
-                        <option value="Remote">Remote</option>
-                      </Form.Control>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicCurrentWork">
-                      <Form.Check
-                        type="checkbox"
-                        label="I currently work here"
-                        checked={forms[index].currentWork || false}
-                        onChange={() => handleCurrentWorkChange(index)}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicStartDate">
-                      <Form.Label>Start Date</Form.Label>
-                      <div className="d-flex">
-                        <Form.Control
-                          as="select"
-                          className="me-2"
-                          value={forms[index].startMonth || ''}
-                          onChange={(event) => handleInputChange(event, index, 'startMonth')}
-                        >
-                          <option value="">Month</option>
-                          <option value="January">January</option>
-                          <option value="February">February</option>
-                          <option value="March">March</option>
-                          <option value="April">April</option>
-                          <option value="May">May</option>
-                          <option value="June">June</option>
-                          <option value="July">July</option>
-                          <option value="August">August</option>
-                          <option value="September">September</option>
-                          <option value="October">October</option>
-                          <option value="November">November</option>
-                          <option value="December">December</option>
-                        </Form.Control>
-                        <Form.Control
-                          as="select"
-                          value={forms[index].startYear || ''}
-                          onChange={(event) => handleInputChange(event, index, 'startYear')}
-                        >
-                          <option value="">Year</option>
-                          {generateYears().map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </Form.Control>
-                      </div>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicEndDate">
-                      <Form.Label>End Date</Form.Label>
-                      <div className="d-flex">
-                        <Form.Control
-                          as="select"
-                          className="me-2"
-                          value={forms[index].endMonth || ''}
-                          onChange={(event) => handleInputChange(event, index, 'endMonth')}
-                          disabled={forms[index].currentWork}
-                        >
-                          <option value="">Month</option>
-                          <option value="January">January</option>
-                          <option value="February">February</option>
-                          <option value="March">March</option>
-                          <option value="April">April</option>
-                          <option value="May">May</option>
-                          <option value="June">June</option>
-                          <option value="July">July</option>
-                          <option value="August">August</option>
-                          <option value="September">September</option>
-                          <option value="October">October</option>
-                          <option value="November">November</option>
-                          <option value="December">December</option>
-                        </Form.Control>
-                        <Form.Control
-                          as="select"
-                          value={forms[index].endYear || ''}
-                          onChange={(event) => handleInputChange(event, index, 'endYear')}
-                          disabled={forms[index].currentWork}
-                        >
-                          <option value="">Year</option>
-                          {generateYears().map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </Form.Control>
-                      </div>
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicIndustry">
-                      <Form.Label>Industry</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Industry"
-                        value={forms[index].industry || ''}
-                        onChange={(event) => handleInputChange(event, index, 'industry')}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicDescription">
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={3}
-                        value={forms[index].description || ''}
-                        onChange={(event) => handleInputChange(event, index, 'description')}
-                      />
-                    </Form.Group>
-    
-                    <Form.Group className="mb-3" controlId="formBasicProfileHeadline">
-                      <Form.Label>Profile Headline</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Profile Headline"
-                        value={forms[index].profileHeadline || ''}
-                        onChange={(event) => handleInputChange(event, index, 'profileHeadline')}
-                      />
-                    </Form.Group>
-                  </div>
-                ))}
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={handleSave}>Save</Button>
-              <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-          </Modal>
-        );
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const handleAddExperience = () => {
+      setForms([...forms, {}]);
+    };
+
+    const handleRemoveExperience = (index) => {
+      if (forms.length > 1) {
+        setForms(forms.filter((_, i) => i !== index));
+      }
+    };
+
+    const handleInputChange = (index, field, value) => {
+      const newForms = [...forms];
+      newForms[index][field] = value;
+      
+      // If current work is checked, clear end date
+      if (field === 'currentWork' && value) {
+        newForms[index].endMonth = '';
+        newForms[index].endYear = '';
+      }
+      
+      setForms(newForms);
+    };
+
+    const validateForm = (form) => {
+      const required = ['title', 'companyName', 'startMonth', 'startYear'];
+      return required.every(field => form[field] && form[field].trim());
+    };
+
+    const handleSave = async () => {
+      // Validate all forms
+      const invalidForms = forms.filter(form => !validateForm(form));
+      if (invalidForms.length > 0) {
+        toast.error('Please fill in all required fields');
+        return;
       }
 
+      setSubmitting(true);
+      try {
+        const updatedForms = forms.map(form => ({
+          ...form,
+          endMonth: form.currentWork ? 'current' : form.endMonth,
+          endYear: form.currentWork ? '' : form.endYear
+        }));
+
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(updatedForms),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${cookie.token}`
+          }
+        });
+
+        if (response.ok) {
+          toast.success(editData ? 'Experience updated successfully!' : 'Experience added successfully!');
+          fetchWorkExperiences();
+          onHide();
+        } else {
+          throw new Error('Failed to save experience');
+        }
+      } catch (error) {
+        console.error('Error saving experience:', error);
+        toast.error('Failed to save experience');
+      } finally {
+        setSubmitting(false);
+      }
+    };
+
+    if (!show) return null;
+
     return (
-      <>
-      <div  style={{ width: '100%', padding: '0% 5%' }}>
-      <div style={{
-        paddingBottom: '2em',
-        display: 'flex',
-        flexDirection: 'column',
-        paddingTop: '25px',
-      }}>
-         <div className='bg-[#cef3df] p-4 rounded-lg mb-3 '>
-          <h2 className='text-[#136175] mb-2 text-3xl md:text-4xl font-bold'>Work Experience</h2>
-          <p className='text-base md:text-lg text-[#136175]' >
-            {`  Showcase your professional journey and career milestones.`}
-          </p>
-        </div>
-            {/* <PageTitle title='Work Experience' icon={icon} /> */}
-         <div style={{paddingTop: '20px'}}>
-            <button
-                type="button"
-                style={{ backgroundColor: 'white', display: 'flex', alignItems: 'center', gap: '7px', border: '2px solid #71be95', color: '#0a3a4c', borderRadius: '5px',padding: '10px' }}
-                onClick={() => setModalShow(true)}
-              >
-                <IoIosList/>
-                <p style={{ marginBottom: '0px' }}>Add Work Experience</p>
-              </button>
-                <MyVerticallyCenteredModal
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white">
+            <div className="flex items-center gap-3">
+              <Briefcase className="w-6 h-6" />
+              <h2 className="text-xl font-semibold">
+                {editData ? 'Edit Experience' : 'Add Work Experience'}
+              </h2>
             </div>
-            <div style={{ marginTop: '15px' }}>
-                {loading && 'Loading...'}
-                {workExperiences.map((experience, index) => (
-                    <div className="work-experience-card" key={index}>
-                        <div className="work-experience-title">{experience.title}</div>
-                        <div className="work-experience-company">{experience.companyName}</div>
-                        <div className="work-experience-date">{`${experience.startMonth} ${experience.startYear} - ${experience.endMonth} ${experience.endYear || ''}`}</div>
-                        <div className="work-experience-location">{experience.location} - {experience.locationType}</div>
+            <button 
+              onClick={onHide}
+              className="p-2 rounded-full hover:bg-white/20 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)] custom-scrollbar">
+            {forms.map((form, index) => (
+              <div key={index} className="mb-8">
+                {index > 0 && (
+                  <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+                    <span className="font-medium text-gray-700">Experience #{index + 1}</span>
+                    <button
+                      onClick={() => handleRemoveExperience(index)}
+                      className="p-1 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Title */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Job Title *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Software Engineer"
+                      value={form.title || ''}
+                      onChange={(e) => handleInputChange(index, 'title', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  {/* Company */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Company *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Google"
+                      value={form.companyName || ''}
+                      onChange={(e) => handleInputChange(index, 'companyName', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. New York, NY"
+                      value={form.location || ''}
+                      onChange={(e) => handleInputChange(index, 'location', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  {/* Location Type */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Work Type
+                    </label>
+                    <select
+                      value={form.locationType || ''}
+                      onChange={(e) => handleInputChange(index, 'locationType', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                    >
+                      <option value="">Select type</option>
+                      <option value="On-site">On-site</option>
+                      <option value="Remote">Remote</option>
+                      <option value="Hybrid">Hybrid</option>
+                    </select>
+                  </div>
+
+                  {/* Industry */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Industry
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Technology"
+                      value={form.industry || ''}
+                      onChange={(e) => handleInputChange(index, 'industry', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                    />
+                  </div>
+
+                  {/* Current Work Checkbox */}
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={form.currentWork || false}
+                        onChange={(e) => handleInputChange(index, 'currentWork', e.target.checked)}
+                        className="w-5 h-5 text-[#71be95] border-gray-300 rounded focus:ring-[#71be95]"
+                      />
+                      <span className="text-sm font-medium text-gray-700">I currently work here</span>
+                    </label>
+                  </div>
+
+                  {/* Start Date */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Start Date *
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={form.startMonth || ''}
+                        onChange={(e) => handleInputChange(index, 'startMonth', e.target.value)}
+                        className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                      >
+                        <option value="">Month</option>
+                        {months.map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={form.startYear || ''}
+                        onChange={(e) => handleInputChange(index, 'startYear', e.target.value)}
+                        className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all"
+                      >
+                        <option value="">Year</option>
+                        {generateYears().map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
                     </div>
-                ))}
-                {(workExperiences.length === 0 && loading === false) && 'No work experience'}
-            </div>
+                  </div>
+
+                  {/* End Date */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      End Date {form.currentWork && <span className="text-sm text-gray-500">(Current)</span>}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <select
+                        value={form.endMonth || ''}
+                        onChange={(e) => handleInputChange(index, 'endMonth', e.target.value)}
+                        disabled={form.currentWork}
+                        className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                      >
+                        <option value="">Month</option>
+                        {months.map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={form.endYear || ''}
+                        onChange={(e) => handleInputChange(index, 'endYear', e.target.value)}
+                        disabled={form.currentWork}
+                        className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all disabled:bg-gray-50 disabled:text-gray-500"
+                      >
+                        <option value="">Year</option>
+                        {generateYears().map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Description
+                    </label>
+                    <textarea
+                      rows={4}
+                      placeholder="Describe your role and achievements..."
+                      value={form.description || ''}
+                      onChange={(e) => handleInputChange(index, 'description', e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#71be95] focus:border-transparent transition-all resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Add More Button */}
+            <button
+              onClick={handleAddExperience}
+              className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-[#71be95] hover:text-[#71be95] transition-all flex items-center justify-center gap-2"
+            >
+              <Plus className="w-5 h-5" />
+              Add Another Experience
+            </button>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={onHide}
+              disabled={submitting}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={submitting}
+              className="px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+            >
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {submitting ? 'Saving...' : 'Save Experience'}
+            </button>
+          </div>
         </div>
       </div>
-        
-       
-      </>
     );
+  };
+
+  const formatDate = (startMonth, startYear, endMonth, endYear) => {
+    const start = `${startMonth} ${startYear}`;
+    const end = endMonth === 'current' ? 'Present' : `${endMonth} ${endYear || ''}`.trim();
+    return `${start} - ${end}`;
+  };
+
+  const calculateDuration = (startMonth, startYear, endMonth, endYear) => {
+    const startDate = new Date(`${startMonth} 1, ${startYear}`);
+    const endDate = endMonth === 'current' ? new Date() : new Date(`${endMonth} 1, ${endYear}`);
+    
+    const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
+                   (endDate.getMonth() - startDate.getMonth());
+    
+    if (months < 12) {
+      return `${months} month${months !== 1 ? 's' : ''}`;
+    } else {
+      const years = Math.floor(months / 12);
+      const remainingMonths = months % 12;
+      let duration = `${years} year${years !== 1 ? 's' : ''}`;
+      if (remainingMonths > 0) {
+        duration += ` ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''}`;
+      }
+      return duration;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] rounded-2xl p-6 sm:p-8 text-white mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-white/20 rounded-xl">
+              <Briefcase className="w-8 h-8" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold">Work Experience</h1>
+              <p className="text-white/90 mt-1">Showcase your professional journey and career milestones</p>
+            </div>
+          </div>
+          
+          <button
+            onClick={() => setModalShow(true)}
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 hover:scale-105"
+          >
+            <Plus className="w-5 h-5" />
+            Add Work Experience
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="space-y-4">
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-[#71be95] mx-auto mb-4" />
+                <p className="text-gray-600">Loading work experiences...</p>
+              </div>
+            </div>
+          ) : workExperiences.length === 0 ? (
+            <div className="bg-white rounded-xl p-8 text-center shadow-sm">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Briefcase className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No work experience yet</h3>
+              <p className="text-gray-600 mb-6">Add your professional experience to showcase your career journey</p>
+              <button
+                onClick={() => setModalShow(true)}
+                className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2 mx-auto"
+              >
+                <Plus className="w-5 h-5" />
+                Add Your First Experience
+              </button>
+            </div>
+          ) : (
+            workExperiences.map((experience, index) => (
+              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-gradient-to-r from-[#71be95] to-[#5fa080] rounded-lg flex-shrink-0">
+                      <Briefcase className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                        {experience.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-2 text-gray-600 mb-2">
+                        <div className="flex items-center gap-1">
+                          <Building2 className="w-4 h-4" />
+                          <span className="font-medium">{experience.companyName}</span>
+                        </div>
+                        {experience.location && (
+                          <>
+                            <span className="text-gray-400">•</span>
+                            <div className="flex items-center gap-1">
+                              <MapPin className="w-4 h-4" />
+                              <span>{experience.location}</span>
+                            </div>
+                          </>
+                        )}
+                        {experience.locationType && (
+                          <>
+                            <span className="text-gray-400">•</span>
+                            <div className="flex items-center gap-1">
+                              <Globe className="w-4 h-4" />
+                              <span>{experience.locationType}</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 mb-3">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{formatDate(experience.startMonth, experience.startYear, experience.endMonth, experience.endYear)}</span>
+                        </div>
+                        <span className="text-gray-400">•</span>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>{calculateDuration(experience.startMonth, experience.startYear, experience.endMonth, experience.endYear)}</span>
+                        </div>
+                        {experience.endMonth === 'current' && (
+                          <>
+                            <span className="text-gray-400">•</span>
+                            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                              Current
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      {experience.industry && (
+                        <div className="mb-3">
+                          <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                            {experience.industry}
+                          </span>
+                        </div>
+                      )}
+
+                      {experience.description && (
+                        <p className="text-gray-700 leading-relaxed">
+                          {experience.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => {
+                        setEditingIndex(index);
+                        setModalShow(true);
+                      }}
+                      className="p-2 text-gray-400 hover:text-[#71be95] hover:bg-gray-50 rounded-lg transition-colors"
+                      title="Edit experience"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Modal */}
+        <WorkExperienceModal
+          show={modalShow}
+          onHide={() => {
+            setModalShow(false);
+            setEditingIndex(-1);
+          }}
+          editData={editingIndex >= 0 ? workExperiences[editingIndex] : null}
+        />
+
+        {/* Custom Scrollbar Styles */}
+        <style jsx>{`
+          .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #71be95 transparent;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 1px;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #71be95, #5fa080);
+            border-radius: 1px;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #5fa080, #4d8a66);
+          }
+        `}</style>
+      </div>
+    </div>
+  );
 };
