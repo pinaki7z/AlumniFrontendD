@@ -452,7 +452,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                         </button>
 
                         {showNotifications && (
-                            <div className="absolute right-0 mt-3 w-[95vw] sm:w-[400px] lg:w-[500px] bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-[99999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
+                            <div className="absolute right-0 mt-3 w-[95vw] sm:w-[400px] lg:w-[500px]  rounded-xl  z-[99999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
                                 <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
                                     <h3 className="text-white font-semibold text-lg">Notifications</h3>
                                 </div>

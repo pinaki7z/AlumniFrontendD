@@ -397,7 +397,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   );
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+    <div className="bg-white rounded-xl sm:rounded-2xl border overflow-hidden">
       <div className="p-4 sm:p-6">
         {!topBar && (
           <>
