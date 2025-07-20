@@ -3,10 +3,10 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { X, Send, Heart, MessageCircle, MoreVertical, Trash2 } from 'lucide-react';
+import { Send, Heart, MoreHorizontal, Trash2, ThumbsUp } from 'lucide-react';
 import profilePic from "../../images/profilepic.jpg";
 
-const reactions = ['😍', '😂', '😡', '😞', '🤩'];
+const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
 
 const CommentSection = ({
   comments,
@@ -25,6 +25,7 @@ const CommentSection = ({
   const profile = useSelector((state) => state.profile);
   const [showReport, setShowReport] = useState({});
   const [likes, setLikes] = useState({});
+  const [showReactions, setShowReactions] = useState({});
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -88,7 +89,7 @@ const CommentSection = ({
     }
   };
 
-  const handleLikeToggle = (commentId, reaction = '❤️') => {
+  const handleLikeToggle = (commentId, reaction = '👍') => {
     setLikes((prevLikes) => ({
       ...prevLikes,
       [commentId]: prevLikes[commentId] === reaction ? null : reaction
@@ -108,39 +109,38 @@ const CommentSection = ({
 
   const renderComments = (commentsArray) => {
     return (
-      <div className="space-y-3 sm:space-y-4">
+      <div className="space-y-4">
         {commentsArray.map((comment) => (
           <div key={comment._id} className="group">
-            <div className="flex items-start gap-2 sm:gap-3">
-              {/* Mobile Profile Image */}
-              <div className="relative flex-shrink-0">
+            <div className="flex gap-3">
+              {/* Profile Image */}
+              <div className="flex-shrink-0">
                 <img
                   src={comment.profilePicture || profilePic}
-                  alt="Profile"
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-100"
+                  alt={comment.userName}
+                  className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-100"
                 />
-                <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-400 border-2 border-white rounded-full"></div>
               </div>
 
               <div className="flex-1 min-w-0">
-                {/* Mobile Comment Content */}
-                <div className="bg-gray-50 rounded-2xl px-3 py-2 sm:px-4 sm:py-3 relative">
-                  {/* Mobile Options Menu */}
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Comment Content */}
+                <div className="bg-gray-50 rounded-2xl px-3 py-2 relative group/comment hover:bg-gray-100 transition-colors">
+                  {/* Options Menu */}
+                  <div className="absolute top-1 right-2 opacity-0 group-hover/comment:opacity-100 transition-opacity">
                     <button
                       onClick={() => handleReportToggle(comment._id)}
                       className="p-1 rounded-full hover:bg-gray-200 text-gray-400 hover:text-gray-600 transition-colors"
                     >
-                      <MoreVertical className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <MoreHorizontal className="w-3 h-3" />
                     </button>
                     {showReport[comment._id] && (
-                      <div className="absolute right-0 mt-1 w-24 sm:w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                      <div className="absolute right-0 top-6 w-24 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1">
                         <button
                           onClick={() => {
                             handleReport(comment._id, comment.userId);
                             setShowReport({ ...showReport, [comment._id]: false });
                           }}
-                          className="w-full text-left px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-red-600 hover:bg-red-50 transition-colors rounded-lg"
+                          className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 transition-colors"
                         >
                           Report
                         </button>
@@ -148,41 +148,47 @@ const CommentSection = ({
                     )}
                   </div>
                   
-                  {/* Mobile User Info */}
+                  {/* User Name */}
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-xs sm:text-sm text-gray-800 truncate">{comment.userName}</h4>
-                    <span className="text-xs text-gray-500 flex-shrink-0">{formatTimeAgo(comment.createdAt)}</span>
+                    <h4 className="font-semibold text-sm text-gray-900">{comment.userName}</h4>
                   </div>
                   
-                  {/* Mobile Comment Text */}
-                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed break-words">{comment.content}</p>
+                  {/* Comment Text */}
+                  <p className="text-sm text-gray-800 leading-relaxed pr-6">{comment.content}</p>
                 </div>
 
-                {/* Mobile Action Buttons */}
-                <div className="flex items-center gap-3 sm:gap-4 mt-2 ml-2">
-                  {/* Mobile Like Button with Reactions */}
-                  <div className="relative group/reactions">
+                {/* Action Buttons Row */}
+                <div className="flex items-center gap-4 mt-1 ml-1">
+                  {/* Time */}
+                  {/* <span className="text-xs text-gray-500 font-medium">
+                    {formatTimeAgo(comment.createdAt)}
+                  </span> */}
+
+                  {/* Like Button with Reactions */}
+                  <div className="relative">
                     <button
-                      onMouseEnter={() => setLikes({ ...likes, hoverComment: comment._id })}
-                      onMouseLeave={() => setLikes({ ...likes, hoverComment: null })}
                       onClick={() => handleLikeToggle(comment._id)}
-                      className={`text-xs font-medium transition-colors ${
-                        likes[comment._id] ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                      onMouseEnter={() => setShowReactions({ ...showReactions, [comment._id]: true })}
+                      className={`text-xs font-semibold transition-colors hover:text-[#71be95] ${
+                        likes[comment._id] ? 'text-[#71be95]' : 'text-gray-500'
                       }`}
                     >
-                      {likes[comment._id] || 'Like'}
+                      {likes[comment._id] ? `${likes[comment._id]} Like` : 'Like'}
                     </button>
                     
-                    {/* Mobile Reaction Picker */}
-                    {likes.hoverComment === comment._id && (
-                      <div className="absolute bottom-full mb-2 left-0 flex gap-1 bg-white border border-gray-200 rounded-full shadow-lg p-1.5 sm:p-2 z-10">
+                    {/* Reaction Picker */}
+                    {showReactions[comment._id] && (
+                      <div 
+                        className="absolute bottom-full mb-2 left-0 flex gap-1 bg-white border border-gray-200 rounded-full shadow-lg p-2 z-10"
+                        onMouseLeave={() => setShowReactions({ ...showReactions, [comment._id]: false })}
+                      >
                         {reactions.map((reaction, index) => (
                           <button
                             key={index}
-                            className="text-sm sm:text-lg hover:scale-125 transition-transform p-0.5 sm:p-1"
+                            className="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform rounded-full hover:bg-gray-100"
                             onClick={() => {
                               handleLikeToggle(comment._id, reaction);
-                              setLikes({ ...likes, hoverComment: null });
+                              setShowReactions({ ...showReactions, [comment._id]: false });
                             }}
                           >
                             {reaction}
@@ -192,42 +198,42 @@ const CommentSection = ({
                     )}
                   </div>
 
-                  {/* Mobile Reply Button */}
+                  {/* Reply Button */}
                   <button
                     onClick={() =>
                       setReplyToCommentId(
                         replyToCommentId === comment._id ? null : comment._id
                       )
                     }
-                    className="text-xs font-medium text-gray-500 hover:text-[#71be95] transition-colors"
+                    className="text-xs font-semibold text-gray-500 hover:text-[#71be95] transition-colors"
                   >
                     Reply
                   </button>
 
-                  {/* Mobile Delete Button */}
+                  {/* Delete Button */}
                   {(comment.userId === profile._id || profile.profileLevel === 0) && (
                     <button
                       onClick={() => handleCommentDelete(comment._id)}
-                      className="text-xs font-medium text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1"
+                      className="text-xs font-semibold text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1"
                     >
                       <Trash2 className="w-3 h-3" />
-                      <span className="hidden sm:inline">Delete</span>
+                      Delete
                     </button>
                   )}
                 </div>
 
-                {/* Mobile Reply Input */}
+                {/* Reply Input */}
                 {replyToCommentId === comment._id && (
-                  <div className="mt-2 sm:mt-3 ml-1 sm:ml-2">
-                    <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-full p-2">
-                      <img
-                        src={profile.profilePicture || profilePic}
-                        alt="Your profile"
-                        className="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover"
-                      />
+                  <div className="mt-3 flex gap-2">
+                    <img
+                      src={profile.profilePicture || profilePic}
+                      alt="Your profile"
+                      className="w-6 h-6 rounded-full object-cover flex-shrink-0 ring-2 ring-gray-100"
+                    />
+                    <div className="flex-1 flex items-center bg-gray-50 rounded-full px-3 py-1.5 border border-gray-200 focus-within:border-[#71be95] focus-within:bg-white transition-all">
                       <input
-                        className="flex-1 bg-transparent outline-none text-xs sm:text-sm placeholder-gray-500"
-                        placeholder="Write a reply..."
+                        className="flex-1 bg-transparent outline-none text-sm placeholder-gray-500"
+                        placeholder={`Reply to ${comment.userName}...`}
                         value={reply}
                         onChange={(e) => setReply(e.target.value)}
                         onKeyPress={(e) => {
@@ -243,7 +249,7 @@ const CommentSection = ({
                           }
                         }}
                         disabled={!reply.trim()}
-                        className="p-1 rounded-full bg-[#71be95] text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        className="ml-2 p-1 rounded-full bg-[#71be95] text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors hover:bg-[#5fa080]"
                       >
                         <Send className="w-3 h-3" />
                       </button>
@@ -251,9 +257,9 @@ const CommentSection = ({
                   </div>
                 )}
 
-                {/* Mobile Nested Comments */}
+                {/* Nested Comments */}
                 {comment.comments && comment.comments.length > 0 && (
-                  <div className="ml-4 sm:ml-6 mt-3 sm:mt-4 pl-2 sm:pl-4 border-l-2 border-gray-100">
+                  <div className="mt-3 ml-4 pl-4 border-l-2 border-gray-100">
                     {renderComments(comment.comments)}
                   </div>
                 )}
@@ -266,107 +272,89 @@ const CommentSection = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-end sm:items-center justify-center z-50">
-      {/* Mobile Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-
-      {/* Mobile Modal */}
-      <div className="relative bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl h-[85vh] sm:max-h-[80vh] z-10 sm:m-4">
-        {/* Mobile Header */}
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-t-2xl">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            <h2 className="text-lg sm:text-xl font-semibold text-white">Comments</h2>
-            <span className="bg-white/20 text-white text-xs sm:text-sm px-2 py-1 rounded-full">
-              {comments?.length || 0}
-            </span>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-full hover:bg-white/20 text-white transition-colors"
-          >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
-        </div>
-
-        {/* Mobile Comment Input */}
-        <div className="p-3 sm:p-6 border-b border-gray-100">
-          <div className="flex items-start gap-2 sm:gap-3">
-            <img
-              src={profile.profilePicture || profilePic}
-              alt="Your profile"
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-200"
-            />
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h4 className="font-semibold text-sm text-gray-800">
-                  {profile.firstName} {profile.lastName}
-                </h4>
+    <div className="bg-white border-t border-gray-100">
+      {/* Comment Input Section */}
+      <div className="p-4 bg-white rounded-2xl border border-gray-200">
+        <div className="flex items-start gap-3">
+          <img
+            src={profile.profilePicture || profilePic}
+            alt="Your profile"
+            className="w-8 h-8 rounded-full object-cover flex-shrink-0 ring-2 ring-gray-100"
+          />
+          <div className="flex-1">
+            {error && (
+              <div className="mb-2 p-2 bg-red-50 border-l-4 border-red-400 rounded text-red-700 text-sm">
+                {error}
               </div>
-              
-              {error && (
-                <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-red-600 text-xs sm:text-sm">{error}</p>
-                </div>
-              )}
-              
-              <div className="relative">
-                <textarea
-                  className="w-full p-2 sm:p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#71be95] focus:border-transparent outline-none text-xs sm:text-sm resize-none transition-all"
-                  placeholder="Add a thoughtful comment..."
-                  value={content}
-                  onChange={(e) => {
-                    setContent(e.target.value);
-                    if(e.target.value.trim()) setError('');
-                  }}
-                  rows={2}
-                />
-                <div className="flex justify-between items-center mt-2 sm:mt-3">
-                  <div className="text-xs text-gray-500">
+            )}
+            
+            <div className=" focus-within:border-[#71be95] focus-within:shadow-sm transition-all">
+              <textarea
+                className="w-full p-1 bg-transparent outline-none text-sm resize-none placeholder-gray-500 rounded-2xl"
+                placeholder={`What do you think, ${profile.firstName}?`}
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                  if(e.target.value.trim()) setError('');
+                }}
+                rows={2}
+                maxLength={500}
+              />
+              <div className="flex justify-between items-center px-3 pb-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400">
                     {content.length}/500
-                  </div>
-                  <button
-                    onClick={handleCommentSubmit}
-                    disabled={isLoading || !content.trim()}
-                    className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-all ${
-                      isLoading || !content.trim()
-                        ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                        : 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-lg text-white'
-                    }`}
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white"></div>
-                        <span className="hidden sm:inline">Posting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span>Comment</span>
-                      </>
-                    )}
-                  </button>
+                  </span>
                 </div>
+                <button
+                  onClick={handleCommentSubmit}
+                  disabled={isLoading || !content.trim()}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full font-medium text-sm transition-all ${
+                    isLoading || !content.trim()
+                      ? 'bg-gray-200 cursor-not-allowed text-gray-500'
+                      : 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-md text-white'
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-3 w-3 border-b border-white"></div>
+                      <span>Posting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3 h-3" />
+                      <span>Comment</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Comments List */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-6">
-          {comments && comments.length > 0 ? (
-            renderComments(comments)
-          ) : (
-            <div className="text-center py-8 sm:py-12">
-              <MessageCircle className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
-              <h3 className="text-base sm:text-lg font-medium text-gray-600 mb-2">No comments yet</h3>
-              <p className="text-sm text-gray-500">Be the first to share your thoughts!</p>
+      {/* Comments List */}
+      <div className="px-4 pb-4">
+        {comments && comments.length > 0 ? (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-gray-700">
+                {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+              </h3>
             </div>
-          )}
-        </div>
+            <div className="max-h-96 overflow-y-auto custom-scrollbar">
+              {renderComments(comments)}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-8">
+            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+              <MoreHorizontal className="w-5 h-5 text-gray-400" />
+            </div>
+            <p className="text-sm text-gray-500 mb-1">No comments yet</p>
+            <p className="text-xs text-gray-400">Be the first to share your thoughts!</p>
+          </div>
+        )}
       </div>
     </div>
   );

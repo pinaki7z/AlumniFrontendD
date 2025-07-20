@@ -47,6 +47,7 @@ import TopicPage from "../Forum/TopicPage.jsx";
 import DiscussionPage from "../Forum/DiscussionPage.jsx";
 import ForumPost from "../Forum/ForumPost.jsx";
 import { Menu, X } from "lucide-react";
+import RightSidebar from "../../components/SideWidgets/RightSidebar.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -121,21 +122,36 @@ const Dashboard = ({ handleLogout }) => {
                   element={<SearchedResults searchQuery={searchQuery} />}
                 />
               )}
-              {!searchQuery && (
-                <Route
-                  path="/*"
-                  element={
-                    <div className="grid grid-cols-12 gap-4">
-                      <div className="col-span-12 lg:col-span-8">
-                        <SocialMediaPost showCreatePost={true} />
-                      </div>
-                      <div className="col-span-12 lg:col-span-4 hidden lg:block">
-                        <SideWidgets />
-                      </div>
-                    </div>
-                  }
-                />
-              )}
+            {!searchQuery && (
+  <Route
+    path="/*"
+    element={
+      <div className="md:max-w-7xl mx-auto md:p-4">
+        <div className="grid grid-cols-12 gap-4">
+          {/* Left Sidebar - Sticky */}
+          <div className="col-span-12 lg:col-span-3 hidden lg:block">
+            <div className="sticky top-4">
+              <SideWidgets />
+            </div>
+          </div>
+          
+          {/* Middle Column - Wider and Scrollable */}
+          <div className="col-span-12 lg:col-span-6">
+            <SocialMediaPost showCreatePost={true} />
+          </div>
+          
+          {/* Right Sidebar - Sticky */}
+          <div className="col-span-12 lg:col-span-3 hidden lg:block">
+            <div className="sticky top-4">
+              <RightSidebar />
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  />
+)}
+
               <Route path="/donations/*" element={<Donations />} />
               <Route path="/guidance/*" element={<Guidance />} />
               <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />

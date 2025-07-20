@@ -46,7 +46,7 @@ function Feed({
     setVisibleComments(v => ({ ...v, [postId]: !v[postId] }));
   };
 
-  // Core fetch + dedupe logic
+  // All your existing functions remain the same...
   const getPosts = async (pageToLoad) => {
     setLoading(true);
     try {
@@ -76,7 +76,8 @@ function Feed({
     }
   };
 
-  // Infinite scroll handler
+  // ... all other existing functions remain the same ...
+
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -96,18 +97,15 @@ function Feed({
     return () => container.removeEventListener('scroll', onScroll);
   }, [loading, posts.length, totalPosts]);
 
-  // Initial load
   useEffect(() => {
     getPosts(activePageRef.current);
   }, []);
 
-  // When a post is deleted we just re-fetch the current page
   const handleDeletePost = () => {
     toast.success('Deleted successfully!');
     getPosts(activePageRef.current);
   };
 
-  // Like / comment refresh handlers
   const handleLikes = async (entityId) => {
     try {
       const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}`);
@@ -130,7 +128,6 @@ function Feed({
     }
   };
 
-  // NEW: Prepend the brand-new post by resetting and reloading page 1
   const handleNewPost = () => {
     toast.success('Posted successfully!');
     setPosts([]);
@@ -148,78 +145,47 @@ function Feed({
   };
 
   return (
-    <div className="feed space-y-3 sm:space-y-4 lg:space-y-6">
-      {/* Mobile Stats Bar */}
-      <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-3 sm:p-4">
-        <div className="flex items-center justify-between">
-          {/* Mobile stats - stacked */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0">
-            <div className="flex items-center space-x-2 text-gray-600">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#71be95]" />
-              <span className="text-xs sm:text-sm font-medium">{totalPosts} Posts</span>
-            </div>
-            <div className="flex items-center space-x-2 text-gray-600">
-              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#71be95]" />
-              <span className="text-xs sm:text-sm font-medium">Active</span>
-            </div>
-          </div>
-          {/* Mobile refresh button */}
-          <button
-            onClick={handleRefresh}
-            className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-md sm:rounded-lg hover:shadow-lg transition-all duration-200"
-          >
-            <RefreshCw className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span className="text-xs sm:text-sm font-medium hidden sm:inline">Refresh</span>
-          </button>
-        </div>
-      </div>
+    <div className="w-full max-w-3xl mx-auto space-y-4">
+      
 
-      {/* Mobile Create Post Section */}
+      {/* Create Post Section - Same width as posts */}
       {([0, 1].includes(profile.profileLevel) && entityType != "news" && profilePage == false) && (
-        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-[#71be95]/10 to-[#5fa080]/10 p-3 sm:p-4 border-b border-gray-100">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-800">Share Your Thoughts</h3>
-            <p className="text-xs sm:text-sm text-gray-600">Connect with your community</p>
-          </div>
-          <div className="p-3 sm:p-4">
-            <CreatePost1
-              photoUrl={photoUrl}
-              username={username}
-              onNewPost={handleNewPost}
-              entityType={entityType}
-              setLoadingPost={setLoadingPost}
-              loadingPost={loadingPost}
-            />
-          </div>
-        </div>
+        <CreatePost1
+          photoUrl={photoUrl}
+          username={username}
+          onNewPost={handleNewPost}
+          entityType={entityType}
+          setLoadingPost={setLoadingPost}
+          loadingPost={loadingPost}
+        />
       )}
 
-      {/* Mobile Create Button */}
+      {/* Create Button - Same width as posts */}
       {showCreateButton && (
-        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 text-center">
-          <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
-            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+          <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 px-4 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
+            <Plus className="w-4 h-4" />
             <span>Create New Post</span>
           </button>
         </div>
       )}
 
-      {/* Mobile Posts Container */}
+      {/* Posts Container - Same width constraint */}
       <div
         ref={scrollContainerRef}
-        className="space-y-3 sm:space-y-4 lg:space-y-6 max-h-screen overflow-y-auto"
+        className="space-y-4 "
       >
         {posts.length === 0 && !loading ? (
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8 lg:p-12 text-center">
-            <div className="text-gray-400 text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">📱</div>
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No Posts Yet</h3>
-            <p className="text-sm sm:text-base text-gray-500">Be the first to share something with the community!</p>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+            <div className="text-gray-400 text-5xl mb-4">📱</div>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Posts Yet</h3>
+            <p className="text-gray-500">Be the first to share something with the community!</p>
           </div>
         ) : (
           posts.map(post => {
             if (post.type === 'Post' && (!_id || post.groupID === _id)) {
               return (
-                <div key={post._id} className="transform transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]">
+                <div key={post._id}>
                   <Post
                     userId={post.userId._id}
                     postId={post._id}
@@ -240,28 +206,31 @@ function Feed({
                     groupID={post.groupID}
                   />
 
-                  {visibleComments[post._id] && (
-                    <CommentSection
-                      entityId={post._id}
-                      entityType="posts"
-                      comments={post.comments.filter(c => !c.reported)}
-                      onCommentSubmit={refreshComments}
-                      onDeleteComment={refreshComments}
-                      onClose={() => toggleComments(post._id)}
-                    />
-                  )}
+                 {/* Inline Comment Section */}
+        {visibleComments[post._id] && (
+          <div className="w-full  -mt-3">
+            <CommentSection
+              entityId={post._id}
+              entityType="posts"
+              comments={post.comments.filter(c => !c.reported)}
+              onCommentSubmit={refreshComments}
+              onDeleteComment={refreshComments}
+              onClose={() => toggleComments(post._id)}
+            />
+          </div>
+        )}
                 </div>
               );
             }
 
-            // Mobile-first other post types
+            // Other post types with same width constraint
             if (post.type === 'poll') {
               return (
-                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-2 sm:p-3 border-b border-gray-100">
+                <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-3 border-b border-gray-100">
                     <span className="text-xs font-semibold text-purple-600 uppercase tracking-wide">Poll</span>
                   </div>
-                  <div className="p-3 sm:p-4">
+                  <div className="p-4">
                     <PollDisplay poll={post} userId={post.userId._id} userData={post.userId} />
                   </div>
                 </div>
@@ -270,11 +239,11 @@ function Feed({
 
             if (post.type === 'event') {
               return (
-                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 p-2 sm:p-3 border-b border-gray-100">
+                <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 p-3 border-b border-gray-100">
                     <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Event</span>
                   </div>
-                  <div className="p-3 sm:p-4">
+                  <div className="p-4">
                     <EventDisplay event={post} userId={post.userId._id} userData={post.userId} />
                   </div>
                 </div>
@@ -283,11 +252,11 @@ function Feed({
 
             if (post.type === 'news') {
               return (
-                <div key={post._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                  <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 p-2 sm:p-3 border-b border-gray-100">
+                <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 p-3 border-b border-gray-100">
                     <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">News</span>
                   </div>
-                  <div className="p-3 sm:p-4">
+                  <div className="p-4">
                     <DisplayNews
                       userId={post.userId}
                       postId={post._id}
@@ -310,21 +279,21 @@ function Feed({
           })
         )}
 
-        {/* Mobile Loading Indicator */}
+        {/* Loading Indicator */}
         {loading && (
-          <div className="flex justify-center py-6 sm:py-8">
-            <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
+          <div className="flex justify-center py-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <l-dot-pulse size="30" speed="1.0" color="#71be95" />
             </div>
           </div>
         )}
 
-        {/* Mobile End of Posts Message */}
+        {/* End of Posts Message */}
         {totalPosts !== 0 && posts.length >= totalPosts && (
-          <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8 text-center">
-            <div className="text-gray-400 text-3xl sm:text-4xl mb-2 sm:mb-3">🎉</div>
-            <p className="text-sm sm:text-base text-gray-600 font-medium">You've seen all the {entityType}!</p>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">Check back later for new updates</p>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+            <div className="text-gray-400 text-4xl mb-3">🎉</div>
+            <p className="text-gray-600 font-medium">You've seen all the {entityType}!</p>
+            <p className="text-sm text-gray-500 mt-1">Check back later for new updates</p>
           </div>
         )}
       </div>
