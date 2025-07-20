@@ -82,7 +82,7 @@ const Dashboard = ({ handleLogout }) => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar with Mobile Hamburger Menu */}
-        <div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 relative z-50 shadow-lg lg:hidden">
+        <div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 md:px-5 px-2 relative z-50 shadow-lg lg:hidden">
           <button
             onClick={toggleMobileSidebar}
             className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"

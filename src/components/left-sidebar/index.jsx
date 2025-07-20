@@ -125,9 +125,7 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
                             className="w-40 h-20 mx-auto rounded-lg object-contain transition-all duration-300"
                         />
                     ) : (
-                        <div className="w-12 h-12 mx-auto bg-white/20 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl font-bold text-white">I</span>
-                        </div>
+                       ""
                     )}
                 </Link>
             </div>

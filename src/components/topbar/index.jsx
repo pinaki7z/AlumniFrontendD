@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { IoSearchSharp } from "react-icons/io5";
-import { Search, ChevronDown, Users, Calendar, UsersIcon, X, Clock, LucideTrendingUp } from "lucide-react";
+import { Search, ChevronDown, Users, Calendar, UsersIcon, X, Clock, TrendingUp } from "lucide-react";
 import { lineSpinner } from 'ldrs';
 import profilePic from "../../images/profilepic.jpg";
 import { NotificationsP } from '../NotificationsP';
@@ -236,54 +236,8 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
             {/* Main TopBar with gradient background */}
             <div className="flex items-center justify-between h-16 px-4">
                 
-                {/* Left Section - Logo/Brand (Mobile) */}
-                <div className="flex items-center lg:hidden">
-                    <div className="flex items-center">
-                        <img 
-                            src="/v2/logo2.png" 
-                            alt="Logo" 
-                            className="h-8 w-auto"
-                        />
-                    </div>
-                </div>
-
-                {/* Left Section - Navigation (Desktop Only) */}
-                <div className="hidden lg:flex items-center space-x-1">
-                    {/* Logo */}
-                    <div className="flex items-center mr-8">
-                        <img 
-                            src="/v2/logo2.png" 
-                            alt="Logo" 
-                            className="h-8 w-auto"
-                        />
-                    </div>
-
-                    {/* Navigation Links */}
-                    <div className="flex items-center space-x-1">
-                        {navigationItems.map((item) => {
-                            const IconComponent = item.icon;
-                            return (
-                                <button
-                                    key={item.name}
-                                    onClick={() => navigate(item.path)}
-                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 group ${
-                                        item.active
-                                            ? 'bg-white/20 text-white shadow-lg'
-                                            : 'text-white/80 hover:text-white hover:bg-white/10'
-                                    }`}
-                                >
-                                    <IconComponent className={`w-5 h-5 transition-all duration-200 ${
-                                        item.active ? 'scale-110' : 'group-hover:scale-105'
-                                    }`} />
-                                    <span className="font-medium text-sm">{item.name}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                {/* Center Section - Enhanced Search Bar (Desktop) */}
-                <div className="hidden lg:flex flex-1 max-w-xl mx-8" ref={searchRef}>
+                {/* Left Section - Search Bar (Desktop Only) */}
+                <div className="hidden lg:flex flex-1 max-w-md" ref={searchRef}>
                     <form onSubmit={handleSearch} className="w-full relative">
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -389,7 +343,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                     <>
                                         <div className="bg-gray-50 px-4 py-2">
                                             <h3 className="text-gray-600 font-medium text-sm flex items-center gap-2">
-                                                <LucideTrendingUp className="w-4 h-4" />
+                                                <TrendingUp className="w-4 h-4" />
                                                 Trending Searches
                                             </h3>
                                         </div>
@@ -400,7 +354,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                                     onClick={() => selectRecentSearch(search)}
                                                     className="w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center space-x-3 text-sm text-gray-700"
                                                 >
-                                                    <LucideTrendingUp className="w-4 h-4 text-gray-400" />
+                                                    <TrendingUp className="w-4 h-4 text-gray-400" />
                                                     <span>{search}</span>
                                                 </button>
                                             ))}
@@ -410,6 +364,29 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                             </div>
                         )}
                     </form>
+                </div>
+
+                {/* Center Section - Navigation Links (Desktop Only) */}
+                <div className="hidden lg:flex items-center space-x-1 flex-shrink-0">
+                    {navigationItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <button
+                                key={item.name}
+                                onClick={() => navigate(item.path)}
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 group ${
+                                    item.active
+                                        ? 'bg-white/20 text-white shadow-lg'
+                                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                                }`}
+                            >
+                                <IconComponent className={`w-5 h-5 transition-all duration-200 ${
+                                    item.active ? 'scale-110' : 'group-hover:scale-105'
+                                }`} />
+                                <span className="font-medium text-sm">{item.name}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Right Section - Actions */}
@@ -471,7 +448,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                 setShowNotifications(false);
                                 setShowProfileOptions(!showProfileOptions);
                             }}
-                            className="flex items-center space-x-2 p-2 rounded-full bg-white/20 transition-all duration-200 group shadow-lg"
+                            className="flex items-center space-x-2 py-2 px-2 rounded-full bg-white/20 transition-all duration-200 group shadow-lg"
                         >
                             <div className="relative">
                                 <img 
@@ -520,35 +497,8 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                         <span className="font-medium">My Profile</span>
                                     </button>
                                     
-                                    {/* Mobile Navigation Links in Profile Dropdown */}
-                                    <div className="lg:hidden border-t border-[#71be95]/20 my-1">
-                                        {navigationItems.map((item) => {
-                                            const IconComponent = item.icon;
-                                            return (
-                                                <button
-                                                    key={`mobile-${item.name}`}
-                                                    onClick={() => {
-                                                        navigate(item.path);
-                                                        setShowProfileOptions(false);
-                                                    }}
-                                                    className={`w-full px-4 py-3 text-left transition-colors duration-200 flex items-center space-x-3 ${
-                                                        item.active 
-                                                            ? 'bg-[#71be95]/10 text-[#71be95]' 
-                                                            : 'text-[#3A3A3A] hover:bg-[#174873] hover:text-white'
-                                                    }`}
-                                                >
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                                        item.active ? 'bg-[#71be95]/20' : 'bg-gray-100'
-                                                    }`}>
-                                                        <IconComponent className={`w-4 h-4 ${
-                                                            item.active ? 'text-[#71be95]' : 'text-gray-600'
-                                                        }`} />
-                                                    </div>
-                                                    <span className="font-medium">{item.name}</span>
-                                                </button>
-                                            );
-                                        })}
-                                        
+                                    {/* Mobile Messages Link - Only visible on mobile */}
+                                    <div className="lg:hidden">
                                         <button
                                             onClick={() => {
                                                 navigate('/home/chatv2');
@@ -675,7 +625,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                         </>
                                     ) : (
                                         <>
-                                            <LucideTrendingUp className="w-4 h-4" />
+                                            <TrendingUp className="w-4 h-4" />
                                             TRENDING SEARCHES
                                         </>
                                     )}
@@ -693,7 +643,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                             {recentSearches.length > 0 ? (
                                                 <Clock className="w-4 h-4 text-gray-400" />
                                             ) : (
-                                                <LucideTrendingUp className="w-4 h-4 text-gray-400" />
+                                                <TrendingUp className="w-4 h-4 text-gray-400" />
                                             )}
                                             <span className="text-sm text-gray-700">{search}</span>
                                         </button>
