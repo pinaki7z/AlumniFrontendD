@@ -95,8 +95,9 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
 
     // Determine if sidebar should show full content
     // Mobile: always show full if expanded, Desktop: show full only on hover
-    const showFullContent = isMobile ? isExpanded : hovered;
 
+    const showFullContent = isMobile ? isExpanded : hovered;
+    // const showFullContent = true;
     return (
         <div 
             className={`h-full bg-gradient-to-b from-[#0A3A4C] to-[#174873] text-white flex flex-col transition-all duration-300 ease-in-out ${
