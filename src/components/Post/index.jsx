@@ -175,7 +175,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 </div>
               ) : image && image.length === 1 && image[0] ? (
                 <div className="mb-3 rounded-lg overflow-hidden">
-                  <img src={image[0]} alt="Post" className="w-full h-48 sm:h-64 lg:h-80 object-cover" />
+                  <img src={image[0]} alt="Post" className="w-full  object-cover" />
                 </div>
               ) : null}
 
