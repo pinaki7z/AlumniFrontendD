@@ -310,7 +310,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
     return (
         <>
             {/* Desktop Layout */}
-            <div className="hidden lg:flex items-center justify-between h-16 px-4">
+            <div className="hidden lg:flex items-center justify-between h-[70px] px-4">
                 
                 {/* Left Section - Search Bar */}
                 <div className="flex-1 max-w-md" ref={searchRef}>
@@ -459,7 +459,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                 </div>
 
                 {/* Center Section - Navigation Links */}
-                <div className="flex items-center space-x-1 flex-shrink-0">
+                <div className="flex items-center ">
                     {navigationItems.map((item) => {
                         const IconComponent = item.icon;
                         return (
@@ -527,10 +527,11 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                     {/* Desktop Profile Dropdown - Full Options */}
                     <div className="relative" ref={profileOptionsRef}>
                         <button
-                            onClick={() => {
+                            onClick={(e) => {
+                                 e.stopPropagation();
                                 setShowMessages(false);
                                 setShowNotifications(false);
-                                setShowProfileOptions(!showProfileOptions);
+                                setShowProfileOptions((prev) => !prev);
                             }}
                             className="flex items-center space-x-2 py-2 px-2 rounded-full bg-white/20 transition-all duration-200 group shadow-lg"
                         >
@@ -554,7 +555,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                         {/* Desktop Profile Dropdown with Full Options */}
                         {showProfileOptions && (
                             <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-2">
                                     <div className="flex items-center space-x-3">
                                         <img 
                                             src={profile.profilePicture || profilePic} 
@@ -574,12 +575,12 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                             navigate('/home/profile');
                                             setShowProfileOptions(false);
                                         }}
-                                        className="w-full px-4 py-3 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
+                                        className="w-full px-4 py-2 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
                                     >
                                         <div className="w-8 h-8 bg-[#71be95]/20 rounded-full flex items-center justify-center">
-                                            <span className="text-[#71be95] text-sm">👤</span>
+                                            <span className="text-[#71be95] text-xs">👤</span>
                                         </div>
-                                        <span className="font-medium">My Profile</span>
+                                        <span className="font-medium text-sm">My Profile</span>
                                     </button>
 
                                     <button
@@ -587,12 +588,12 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                             navigate('/home/profile/profile-settings');
                                             setShowProfileOptions(false);
                                         }}
-                                        className="w-full px-4 py-3 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
+                                        className="w-full px-4 py-2 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
                                     >
                                         <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                                            <span className="text-gray-600 text-sm">⚙️</span>
+                                            <span className="text-gray-600 text-xs">⚙️</span>
                                         </div>
-                                        <span className="font-medium">Settings</span>
+                                        <span className="font-medium text-sm">Settings</span>
                                     </button>
 
                                     <button
@@ -600,12 +601,12 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                             navigate('/home/profile/workExperience');
                                             setShowProfileOptions(false);
                                         }}
-                                        className="w-full px-4 py-3 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
+                                        className="w-full px-4 py-2 text-left text-[#3A3A3A] hover:bg-[#174873] hover:text-white transition-colors duration-200 flex items-center space-x-3"
                                     >
                                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <span className="text-blue-600 text-sm">💼</span>
+                                            <span className="text-blue-600 text-xs">💼</span>
                                         </div>
-                                        <span className="font-medium">Work Experience</span>
+                                        <span className="font-medium text-sm">Work Experience</span>
                                     </button>
                                     
                                     <div className="border-t border-[#71be95]/20 my-1"></div>
@@ -615,12 +616,12 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                             logout();
                                             setShowProfileOptions(false);
                                         }}
-                                        className="w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center space-x-3"
+                                        className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition-colors duration-200 flex items-center space-x-3"
                                     >
                                         <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                                            <span className="text-red-600 text-sm">🚪</span>
+                                            <span className="text-red-600 text-xs">🚪</span>
                                         </div>
-                                        <span className="font-medium">Sign Out</span>
+                                        <span className="font-medium text-sm">Sign Out</span>
                                     </button>
                                 </div>
                             </div>
