@@ -96,8 +96,11 @@ const Dashboard = ({ handleLogout }) => {
 
         {/* Desktop TopBar - No hamburger menu */}
         <div className="hidden lg:block ">
-          <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 px-5 shadow-lg">
-            <div className="max-w-7xl mx-auto">
+          <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-3 px-5 shadow-lg">
+            <div className="text-white font-semibold text-lg absolute left-[0.5%] top-[0%]">
+                <img src="/v2/logo2.png" alt="InsideOut Logo" className="w-[200px] h-[99px] mx-auto rounded-lg object-contain transition-all duration-300" />
+               </div>
+            <div className="max-w-6xl mx-auto">
 
             <TopBar handleLogout={handleLogout} />
             </div>

@@ -110,8 +110,8 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
             onMouseLeave={() => !isMobile && setHovered(false)}
         >
             {/* Logo Section */}
-            <div className={`text-center border-b border-white/10 transition-all duration-300 ${
-                showFullContent ? 'p-6' : 'p-4'
+            <div className={`text-center transition-all duration-300 ${
+                showFullContent ? 'p-6' : 'p-6'
             }`}>
                 <Link 
                     to="/home" 
@@ -119,13 +119,13 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
                     onClick={handleNavigation}
                 >
                     {showFullContent ? (
-                        <img 
-                            src="/v2/logo2.png" 
-                            alt="InsideOut Logo" 
-                            className="w-40 h-20 mx-auto rounded-lg object-contain transition-all duration-300"
-                        />
+                        <div className='h-[70px]'>
+
+                       </div>
                     ) : (
-                       ""
+                       <div className='h-[70px]'>
+
+                       </div>
                     )}
                 </Link>
             </div>
