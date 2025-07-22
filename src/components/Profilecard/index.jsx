@@ -137,14 +137,14 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
   const roleInfo = getRoleInfo(member.profileLevel)
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden group">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden group">
       {/* Header with action buttons */}
-      <div className="relative bg-gradient-to-br from-slate-50 to-gray-100 p-6 pb-0">
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 p-4 pb-0">
         {addButton && (
           <button
             onClick={isOwner ? null : () => handleAddMember(_id || id, member._id)}
             disabled={isOwner}
-            className={`absolute top-4 right-4 px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+            className={`absolute top-2 right-2 px-2 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
               isOwner
                 ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                 : isAdded
@@ -154,13 +154,13 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           >
             {isOwner ? (
               <span className="flex items-center gap-1">
-                <Users size={12} />
-                Group Admin
+                <Users size={10} />
+                Owner
               </span>
             ) : isAdded ? (
               "Remove"
             ) : (
-              <UserPlus size={14} />
+              <UserPlus size={12} />
             )}
           </button>
         )}
@@ -171,7 +171,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
             <img
               src={member.profilePicture || picture}
               alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg ring-2 ring-gray-100"
+              className="w-20 h-20 rounded-full object-cover border-3 border-white shadow-md ring-2 ring-gray-100"
             />
 
             {admin && deleteButton && !(profile.profileLevel === 1 && member.profileLevel === 1) && (
@@ -179,16 +179,16 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
                 {member.accountDeleted ? (
                   <button
                     onClick={handleDelete}
-                    className="w-8 h-8 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
+                    className="w-6 h-6 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-md flex items-center justify-center transition-colors duration-200"
                   >
-                    <RotateCcw size={14} />
+                    <RotateCcw size={12} />
                   </button>
                 ) : (
                   <button
                     onClick={handleDelete}
-                    className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-200"
+                    className="w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-md flex items-center justify-center transition-colors duration-200"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </button>
                 )}
               </div>
@@ -198,57 +198,55 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
       </div>
 
       {/* Profile Info */}
-      <div className="  flex flex-col justify-between p-2 pt-2">
+      <div className="flex flex-col justify-between p-3 pt-2">
         <Link 
           to={isFollowPresent ? `/home/members/${member.userId}` : `/home/members/${member._id}`}
-          className="block h-[106px] text-center group-hover:scale-[1.02] transition-transform duration-200"
+          className="block h-[90px] text-center group-hover:scale-[1.02] transition-transform duration-200"
         >
-          <h3 className="text-lg font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
+          <h3 className="text-base font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors truncate">
             {member.userName || `${member.firstName} ${member.lastName}`}
           </h3>
 
           {/* Role Badge */}
-          <div className="flex justify-center mb-3">
-            <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${roleInfo.color}`}>
+          <div className="flex justify-center mb-2">
+            <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${roleInfo.color}`}>
               {roleInfo.label}
             </span>
           </div>
 
           {/* Department and Year */}
-          <div className="space-y-1 mb-4">
-            {member.department && <p className="text-sm text-gray-600 font-medium">{member.department}</p>}
+          <div className="space-y-1 mb-2">
+            {member.department && <p className="text-xs text-gray-600 font-medium truncate">{member.department}</p>}
             {(member.graduatingYear || member.class) && (
-              <p className="text-sm text-gray-500">Class of {member.graduatingYear || member.class}</p>
+              <p className="text-xs text-gray-500">Class of {member.graduatingYear || member.class}</p>
             )}
           </div>
-
-  
         </Link>
 
         {/* Follow Button */}
         {name !== "follow" && (
-          <div className="mt-4">
+          <div className="mt-2">
             {loading ? (
-              <div className="flex justify-center py-3">
-                <l-orbit size="24" speed="1.5" color="#3b82f6"></l-orbit>
+              <div className="flex justify-center py-2">
+                <l-orbit size="20" speed="1.5" color="#0A3A4C"></l-orbit>
               </div>
             ) : (
               <button
                 onClick={handleFollowToggle}
-                className={`w-full py-2 px-4 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${
+                className={`w-full py-2 px-3 rounded-lg font-semibold text-xs transition-all duration-200 flex items-center justify-center gap-2 ${
                   isFollowing
                     ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
-                    : "bg-[#0A3A4C] text-white hover:bg-teal-700 shadow-md hover:shadow-lg"
+                    : "bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white hover:opacity-90 shadow-sm"
                 }`}
               >
                 {isFollowing ? (
                   <>
-                    <Users size={16} />
+                    <Users size={14} />
                     Following
                   </>
                 ) : (
                   <>
-                    <UserPlus size={16} />
+                    <UserPlus size={14} />
                     Follow
                   </>
                 )}

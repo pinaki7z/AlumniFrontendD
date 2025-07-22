@@ -74,8 +74,8 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
     switch (level) {
       case 1:
         label = "ADMIN";
-        colorClass = "bg-purple-100 text-purple-800";
-        icon = <UserCheck size={12} className="text-purple-600" />;
+        colorClass = "bg-orange-100 text-orange-800";
+        icon = <UserCheck size={12} className="text-orange-600" />;
         break;
       case 2:
         label = "ALUMNI";
@@ -107,34 +107,31 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         to={`/home/members/${member._id}`}
         className="block hover:bg-gray-50 transition-colors duration-200"
       >
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-shadow duration-200">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 hover:shadow-md transition-shadow duration-200">
+          <div className="flex items-center gap-3">
             <div className="flex-shrink-0">
               <img 
                 src={member.profilePicture || profileImage} 
                 alt={`${member.firstName} ${member.lastName}`}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-gray-200"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-gray-200"
               />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 truncate">
+                  <h3 className="text-sm font-semibold text-gray-900 truncate">
                     {member.firstName} {member.lastName}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
                     {getRoleBadge(member.profileLevel)}
                   </div>
                 </div>
-                <div className="text-sm text-gray-500 space-y-1">
+                <div className="text-xs text-gray-500 sm:text-right">
                   {member.graduatingYear && (
                     <p>Class of {member.graduatingYear}</p>
                   )}
                   {member.department && (
-                    <p>{member.department}</p>
-                  )}
-                  {member.batch && (
-                    <p>Batch: {member.batch}</p>
+                    <p className="truncate sm:max-w-24">{member.department}</p>
                   )}
                 </div>
               </div>
@@ -245,101 +242,97 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
-        {/* Header */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden mb-4 sm:mb-6">
-          <div className="bg-[#CEF3DF] p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  <Users size={20} className="sm:size-6 text-[#0A3A4C]" />
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#136175]">
-                    Members
-                  </h1>
-                  <p className="text-sm sm:text-base lg:text-lg text-[#136175]/80">
-                    Explore profiles and expand your network with fellow members.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="bg-white/20 rounded-lg px-3 py-1.5">
-                  <span className="text-sm font-medium text-[#0A3A4C]">
-                    {totalMembers} members
-                  </span>
-                </div>
-              </div>
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+        {/* Simple Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+              <Users size={16} className="sm:size-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Members</h1>
+              <p className="text-xs sm:text-sm text-gray-600">{totalMembers} members total</p>
             </div>
           </div>
+          
+          {/* Create Member Button */}
+          {admin && (
+            <Link 
+              to="/home/members/create"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+            >
+              <UserPlus size={16} />
+              <span>Create Member</span>
+            </Link>
+          )}
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-4">
           {/* Search Bar */}
-          <div className="relative mb-4 sm:mb-6">
+          <div className="relative mb-3 sm:mb-4">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search size={18} className="text-gray-400" />
+              <Search size={16} className="text-gray-400" />
             </div>
             <input
               type="text"
               placeholder="Search members by name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+              className="w-full pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm"
             />
           </div>
 
           {/* Filter Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200 text-sm sm:text-base"
+                className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
               >
-                <Filter size={16} />
+                <Filter size={14} />
                 <span>Filters</span>
                 {activeFiltersCount > 0 && (
-                  <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full">
+                  <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
                     {activeFiltersCount}
                   </span>
                 )}
-                <ChevronDown size={16} className={`transition-transform duration-200 ${showFilters ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`transition-transform duration-200 ${showFilters ? 'rotate-180' : ''}`} />
               </button>
               
               {activeFiltersCount > 0 && (
                 <button
                   onClick={clearFilters}
-                  className="flex items-center gap-1 px-3 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 text-sm"
+                  className="flex items-center gap-1 px-2 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 text-sm"
                 >
-                  <RefreshCw size={14} />
-                  <span>Clear</span>
+                  <RefreshCw size={12} />
+                  <span className="hidden sm:inline">Clear</span>
                 </button>
               )}
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 ${
                   viewMode === 'grid' 
                     ? 'bg-white text-gray-900 shadow-sm' 
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <Grid size={16} />
+                <Grid size={14} />
                 <span className="hidden sm:inline">Grid</span>
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 ${
                   viewMode === 'list' 
                     ? 'bg-white text-gray-900 shadow-sm' 
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                <List size={16} />
+                <List size={14} />
                 <span className="hidden sm:inline">List</span>
               </button>
             </div>
@@ -347,16 +340,16 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
           {/* Filter Options */}
           {showFilters && (
-            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Member Role
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Role
                   </label>
                   <select
                     value={memberRole}
                     onChange={(e) => setMemberRole(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-xs"
                   >
                     <option value="">All Roles</option>
                     <option value="1">Admin</option>
@@ -366,13 +359,13 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
                     Department
                   </label>
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-xs"
                   >
                     <option value="">All Departments</option>
                     <option value="Agricultural Engineering">Agricultural</option>
@@ -384,13 +377,13 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
                     Batch
                   </label>
                   <select
                     value={batch}
                     onChange={(e) => setBatch(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-xs"
                   >
                     <option value="">All Batches</option>
                     {generateBatches().map(batch => (
@@ -400,13 +393,13 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Graduating Year
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Year
                   </label>
                   <select
                     value={graduatingYear}
                     onChange={(e) => setGraduatingYear(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm"
+                    className="w-full px-2 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-xs"
                   >
                     <option value="">All Years</option>
                     {generateYears().map(year => (
@@ -422,36 +415,19 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         {/* Members Display */}
         <Routes>
           <Route path="/" element={
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-4">
               {/* No Results Message */}
               {noUsersFound && (
-                <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-                  <Users size={48} className="mx-auto text-gray-300 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No members found</h3>
-                  <p className="text-gray-600">Try adjusting your search criteria or filters.</p>
+                <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-6 sm:p-8 text-center">
+                  <Users size={40} className="sm:size-48 mx-auto text-gray-300 mb-3" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-1">No members found</h3>
+                  <p className="text-gray-600 text-sm">Try adjusting your search criteria or filters.</p>
                 </div>
               )}
 
               {/* Grid View */}
               {viewMode === 'grid' && !noUsersFound && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                  {/* Add Member Card */}
-                  {admin && (
-                    <Link 
-                      to="/home/members/create"
-                      className="group"
-                    >
-                      <div className="bg-white border-2 border-dashed border-[#71be95] rounded-xl p-8 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 h-full flex flex-col items-center justify-center min-h-[250px]">
-                        <div className="w-16 h-16 bg-[#71be95]/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-[#0A3A4C]/10 transition-colors duration-200">
-                          <UserPlus size={24} className="text-[#71be95] group-hover:text-[#0A3A4C] transition-colors duration-200" />
-                        </div>
-                        <h3 className="text-sm font-medium text-gray-600 group-hover:text-[#0A3A4C] transition-colors duration-200">
-                          Add New Member
-                        </h3>
-                      </div>
-                    </Link>
-                  )}
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
                   {/* Member Cards */}
                   {displayedMembers.map((member) => (
                     <Profilecard
@@ -469,7 +445,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
               {/* List View */}
               {viewMode === 'list' && !noUsersFound && (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-2">
                   {displayedMembers.map((member) => (
                     <ListViewItem
                       key={member._id}
@@ -481,24 +457,24 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
               {/* Loading State */}
               {loading && (
-                <div className="flex justify-center items-center py-8">
-                  <Loader2 size={24} className="animate-spin text-[#0A3A4C] mr-2" />
-                  <span className="text-gray-600">Loading members...</span>
+                <div className="flex justify-center items-center py-6">
+                  <Loader2 size={20} className="animate-spin text-[#0A3A4C] mr-2" />
+                  <span className="text-gray-600 text-sm">Loading members...</span>
                 </div>
               )}
 
               {/* Load More Button */}
               {activePageRef.current * LIMIT < totalMembers && !noUsersFound && (
-                <div className="flex justify-center pt-4 sm:pt-6">
+                <div className="flex justify-center pt-4">
                   <button
                     onClick={loadMoreMembers}
                     disabled={loading}
-                    className="flex items-center gap-2 px-6 py-3 bg-[#0A3A4C] text-white rounded-xl hover:bg-[#0A3A4C]/90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
                   >
                     {loading ? (
-                      <Loader2 size={18} className="animate-spin" />
+                      <Loader2 size={16} className="animate-spin" />
                     ) : (
-                      <Plus size={18} />
+                      <Plus size={16} />
                     )}
                     <span>Load More Members</span>
                   </button>
@@ -506,7 +482,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               )}
             </div>
           } />
-          <Route path="/create" element={<DonSponRequest name='member' />} />
+          {/* <Route path="/create" element={<DonSponRequest name='member' />} /> */}
         </Routes>
       </div>
     </div>

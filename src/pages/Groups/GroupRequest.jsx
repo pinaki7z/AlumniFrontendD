@@ -48,11 +48,11 @@ const GroupRequest = ({ edit }) => {
 
   // Category options with icons
   const categories = [
-    { value: 'Education', label: 'Education', icon: <BookOpen size={16} className="text-blue-600" /> },
-    { value: 'Business Connect', label: 'Business Connect', icon: <Building size={16} className="text-green-600" /> },
-    { value: 'Entertainment', label: 'Entertainment', icon: <Gamepad2 size={16} className="text-purple-600" /> },
-    { value: 'Sports', label: 'Sports', icon: <Trophy size={16} className="text-orange-600" /> },
-    { value: 'Pets and Animals', label: 'Pets and Animals', icon: <Heart size={16} className="text-pink-600" /> },
+    { value: 'Education', label: 'Education', icon: <BookOpen size={14} className="text-blue-600" /> },
+    { value: 'Business Connect', label: 'Business Connect', icon: <Building size={14} className="text-green-600" /> },
+    { value: 'Entertainment', label: 'Entertainment', icon: <Gamepad2 size={14} className="text-purple-600" /> },
+    { value: 'Sports', label: 'Sports', icon: <Trophy size={14} className="text-orange-600" /> },
+    { value: 'Pets and Animals', label: 'Pets and Animals', icon: <Heart size={14} className="text-pink-600" /> },
   ];
 
   // Handle image file input and convert to Data URL
@@ -194,69 +194,59 @@ const GroupRequest = ({ edit }) => {
   const getGroupTypeIcon = (type) => {
     switch (type) {
       case 'Public':
-        return <Globe size={16} className="text-green-600" />;
+        return <Globe size={14} className="text-green-600" />;
       case 'Private':
-        return <Lock size={16} className="text-red-600" />;
+        return <Lock size={14} className="text-red-600" />;
       default:
-        return <Users size={16} className="text-gray-600" />;
+        return <Users size={14} className="text-gray-600" />;
     }
   };
 
   const getCategoryIcon = (cat) => {
     const category = categories.find(c => c.value === cat);
-    return category ? category.icon : <Tag size={16} className="text-gray-600" />;
+    return category ? category.icon : <Tag size={14} className="text-gray-600" />;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-6">
-        {/* Header */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden mb-4 sm:mb-6">
-          <div className="bg-[#CEF3DF] p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                  {edit ? (
-                    <Edit size={20} className="sm:size-6 text-[#0A3A4C]" />
-                  ) : (
-                    <Users size={20} className="sm:size-6 text-[#0A3A4C]" />
-                  )}
-                </div>
-                <div>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#136175]">
-                    {edit ? 'Edit Group' : 'Create New Group'}
-                  </h1>
-                  <p className="text-sm sm:text-base text-[#136175]/80">
-                    {edit ? 'Update your group information' : 'Create a community for like-minded people'}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Link
-                  to="/home/groups"
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/20 text-[#0A3A4C] rounded-lg hover:bg-white/30 transition-colors duration-200 text-sm sm:text-base"
-                >
-                  <ArrowLeft size={16} />
-                  <span className="hidden sm:inline">Back to Groups</span>
-                  <span className="sm:hidden">Back</span>
-                </Link>
-              </div>
+    <div className="bg-gray-50">
+      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
+        {/* Simple Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+              {edit ? (
+                <Edit size={16} className="sm:size-5 text-white" />
+              ) : (
+                <Users size={16} className="sm:size-5 text-white" />
+              )}
             </div>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+              {edit ? 'Edit Group' : 'Create Group'}
+            </h1>
           </div>
+          
+          <Link
+            to="/home/groups"
+            className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm w-full sm:w-auto"
+          >
+            <ArrowLeft size={14} />
+            <span>Back</span>
+          </Link>
         </div>
 
-        {/* Form */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6">
+        {/* Form Container */}
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm mb-3">
+          <form onSubmit={handleSubmit} className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-5">
             {/* Basic Information */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
-                <div className="w-8 h-8 bg-[#0A3A4C]/10 rounded-lg flex items-center justify-center">
-                  <FileText size={16} className="text-[#0A3A4C]" />
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <FileText size={12} className="text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
+                <h3 className="text-base font-semibold text-gray-900">Basic Information</h3>
               </div>
 
+              {/* Group Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Group Name*
@@ -267,7 +257,8 @@ const GroupRequest = ({ edit }) => {
                     value={groupName}
                     onChange={(e) => handleInputChange('groupName', e.target.value)}
                     placeholder="Enter group name"
-                    className={`w-full px-3 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm sm:text-base ${
+                    maxLength="50"
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm ${
                       errors.groupName ? 'border-red-300' : 'border-gray-300'
                     }`}
                   />
@@ -276,28 +267,30 @@ const GroupRequest = ({ edit }) => {
                   </div>
                 </div>
                 {errors.groupName && (
-                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                    <AlertCircle size={14} />
+                  <p className="flex items-center gap-1 text-red-600 text-xs mt-1">
+                    <AlertCircle size={12} className="flex-shrink-0" />
                     {errors.groupName}
                   </p>
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Group Type and Category */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {/* Group Type */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Group Type*
                   </label>
                   <div className="space-y-2">
                     {['Public', 'Private'].map((type) => (
-                      <label key={type} className="flex items-center gap-3 cursor-pointer">
+                      <label key={type} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="radio"
                           name="groupType"
                           value={type}
                           checked={groupType === type}
                           onChange={(e) => handleInputChange('groupType', e.target.value)}
-                          className="w-4 h-4 text-[#0A3A4C] border-gray-300 focus:ring-[#0A3A4C]"
+                          className="w-3 h-3 text-[#0A3A4C] border-gray-300 focus:ring-[#0A3A4C]"
                         />
                         <div className="flex items-center gap-2">
                           {getGroupTypeIcon(type)}
@@ -312,13 +305,14 @@ const GroupRequest = ({ edit }) => {
                     ))}
                   </div>
                   {errors.groupType && (
-                    <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                      <AlertCircle size={14} />
+                    <p className="flex items-center gap-1 text-red-600 text-xs mt-1">
+                      <AlertCircle size={12} className="flex-shrink-0" />
                       {errors.groupType}
                     </p>
                   )}
                 </div>
 
+                {/* Category */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category*
@@ -326,7 +320,7 @@ const GroupRequest = ({ edit }) => {
                   <select
                     value={category}
                     onChange={(e) => handleInputChange('category', e.target.value)}
-                    className={`w-full px-3 py-2 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm sm:text-base ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm ${
                       errors.category ? 'border-red-300' : 'border-gray-300'
                     }`}
                   >
@@ -338,15 +332,15 @@ const GroupRequest = ({ edit }) => {
                     ))}
                   </select>
                   {errors.category && (
-                    <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                      <AlertCircle size={14} />
+                    <p className="flex items-center gap-1 text-red-600 text-xs mt-1">
+                      <AlertCircle size={12} className="flex-shrink-0" />
                       {errors.category}
                     </p>
                   )}
                   {category && (
-                    <div className="flex items-center gap-2 mt-2 px-3 py-1 bg-gray-50 rounded-lg w-fit">
+                    <div className="flex items-center gap-2 mt-2 px-2 py-1 bg-gray-50 rounded-lg w-fit">
                       {getCategoryIcon(category)}
-                      <span className="text-sm text-gray-700">{category}</span>
+                      <span className="text-xs text-gray-700">{category}</span>
                     </div>
                   )}
                 </div>
@@ -354,15 +348,15 @@ const GroupRequest = ({ edit }) => {
             </div>
 
             {/* Media Upload */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
-                <div className="w-8 h-8 bg-[#0A3A4C]/10 rounded-lg flex items-center justify-center">
-                  <Image size={16} className="text-[#0A3A4C]" />
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
+                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Image size={12} className="text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900">Group Images</h3>
+                <h3 className="text-base font-semibold text-gray-900">Group Images</h3>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Background Image */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -371,20 +365,20 @@ const GroupRequest = ({ edit }) => {
                   <div className="space-y-3">
                     <div
                       onClick={() => document.getElementById('backgroundUpload').click()}
-                      className="group border-2 border-dashed border-gray-300 rounded-lg   hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+                      className="group border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
                     >
                       {uploadingBackground ? (
-                        <div className="flex items-center justify-center">
-                          <Loader2 size={24} className="animate-spin text-[#0A3A4C] mr-2" />
-                          <span className="text-sm text-gray-600">Uploading...</span>
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <Loader2 size={20} className="animate-spin text-[#0A3A4C]" />
+                          <span className="text-xs text-gray-600">Uploading...</span>
                         </div>
                       ) : (
                         <div className="space-y-2">
-                          <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
-                            <Camera size={24} className="text-[#0A3A4C]" />
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
+                            <Camera size={18} className="sm:size-6 text-[#0A3A4C]" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Upload background image</p>
+                            <p className="text-sm font-medium text-gray-700">Upload background</p>
                             <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
                           </div>
                         </div>
@@ -394,12 +388,12 @@ const GroupRequest = ({ edit }) => {
                         type="file"
                         accept="image/*"
                         onChange={(e) => handleImageChange(e, setBackground, setUploadingBackground)}
-                        className="sr-only"
+                        className="hidden"
                       />
                     </div>
                     {errors.background && (
-                      <p className="flex items-center gap-1 text-red-600 text-sm">
-                        <AlertCircle size={14} />
+                      <p className="flex items-center gap-1 text-red-600 text-xs">
+                        <AlertCircle size={12} className="flex-shrink-0" />
                         {errors.background}
                       </p>
                     )}
@@ -408,14 +402,14 @@ const GroupRequest = ({ edit }) => {
                         <img
                           src={background}
                           alt="Background"
-                          className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                          className="w-full h-24 sm:h-32 object-cover rounded-lg border-2 border-gray-200"
                         />
                         <button
                           type="button"
                           onClick={() => setBackground('')}
-                          className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
+                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
                         >
-                          <X size={16} />
+                          <X size={12} />
                         </button>
                       </div>
                     )}
@@ -430,20 +424,20 @@ const GroupRequest = ({ edit }) => {
                   <div className="space-y-3">
                     <div
                       onClick={() => document.getElementById('logoUpload').click()}
-                      className="group border-2 border-dashed border-gray-300 rounded-lg   hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+                      className="group border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
                     >
                       {uploadingLogo ? (
-                        <div className="flex items-center justify-center">
-                          <Loader2 size={24} className="animate-spin text-[#0A3A4C] mr-2" />
-                          <span className="text-sm text-gray-600">Uploading...</span>
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <Loader2 size={20} className="animate-spin text-[#0A3A4C]" />
+                          <span className="text-xs text-gray-600">Uploading...</span>
                         </div>
                       ) : (
                         <div className="space-y-2">
-                          <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
-                            <Upload size={24} className="text-[#0A3A4C]" />
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
+                            <Upload size={18} className="sm:size-6 text-[#0A3A4C]" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-gray-700">Upload group logo</p>
+                            <p className="text-sm font-medium text-gray-700">Upload logo</p>
                             <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
                           </div>
                         </div>
@@ -453,28 +447,28 @@ const GroupRequest = ({ edit }) => {
                         type="file"
                         accept="image/*"
                         onChange={(e) => handleImageChange(e, setGroupLogo, setUploadingLogo)}
-                        className="sr-only"
+                        className="hidden"
                       />
                     </div>
                     {errors.groupLogo && (
-                      <p className="flex items-center gap-1 text-red-600 text-sm">
-                        <AlertCircle size={14} />
+                      <p className="flex items-center gap-1 text-red-600 text-xs">
+                        <AlertCircle size={12} className="flex-shrink-0" />
                         {errors.groupLogo}
                       </p>
                     )}
                     {groupLogo && (
-                      <div className="relative">
+                      <div className="relative mx-auto w-fit">
                         <img
                           src={groupLogo}
                           alt="Logo"
-                          className="w-24 h-24 object-cover rounded-lg border-2 border-gray-200 mx-auto"
+                          className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg border-2 border-gray-200"
                         />
                         <button
                           type="button"
                           onClick={() => setGroupLogo('')}
-                          className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
+                          className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
                         >
-                          <X size={12} />
+                          <X size={10} />
                         </button>
                       </div>
                     )}
@@ -484,27 +478,27 @@ const GroupRequest = ({ edit }) => {
             </div>
 
             {/* Submit Actions */}
-            <div className="flex flex-row justify-end gap-3 pt-6 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4 border-t border-gray-200">
               <Link
                 to="/home/groups"
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm"
               >
-                <ArrowLeft size={16} />
+                <ArrowLeft size={14} />
                 <span>Cancel</span>
               </Link>
               <button
                 type="submit"
                 disabled={loading || uploadingBackground || uploadingLogo}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-[#0A3A4C] text-white rounded-lg hover:bg-[#0A3A4C]/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {loading ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={14} className="animate-spin" />
                     <span>{edit ? 'Updating...' : 'Creating...'}</span>
                   </>
                 ) : (
                   <>
-                    <Save size={16} />
+                    <Save size={14} />
                     <span>{edit ? 'Update Group' : 'Create Group'}</span>
                   </>
                 )}

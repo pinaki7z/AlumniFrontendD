@@ -3,11 +3,9 @@ import Feeed from '../Feeed';
 
 function SocialMediaPost({ showCreatePost, groupID }) {
   return (
-    <div className="min-h-screen  mx-auto max-w-2xl">
-   
-      
-      {/* Feed Container - Centered with consistent width */}
-      <div className="flex flex-col items-center px-2">
+    <div className="min-h-screen mx-auto max-w-2xl">
+      {/* Feed Container - Now works with window scroll */}
+      <div className="flex flex-col items-center px-2 pb-8">
         <Feeed 
           entityType='posts' 
           showCreatePost={showCreatePost} 

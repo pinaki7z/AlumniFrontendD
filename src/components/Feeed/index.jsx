@@ -5,15 +5,13 @@ import axios from 'axios';
 import './feed.scss';
 import { toast } from "react-toastify";
 import CommentSection from '../CommentSection';
-import JobIntDisplay from '../JobsInt/JobIntDispay';
 import { useSelector } from 'react-redux';
 import { DisplayNews } from '../DisplayNews';
 import { dotPulse } from 'ldrs';
 import EventDisplay from './EventDisplay';
 import PollDisplay from './PollDisplay';
 import { useParams } from 'react-router-dom';
-import { RefreshCw, TrendingUp, Users, Plus } from 'lucide-react';
-import baseUrl from '../../config';
+import { RefreshCw, Plus } from 'lucide-react';
 
 dotPulse.register();
 
@@ -33,12 +31,16 @@ function Feed({
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingPost, setLoadingPost] = useState(false);
-  const [totalPosts, setTotalPosts] = useState(0);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  
   const profile = useSelector((state) => state.profile);
-  const scrollContainerRef = useRef(null);
-  const activePageRef = useRef(1);
   const { _id } = useParams();
-  const LIMIT = 45500;
+  const LIMIT = 5;
+
+  // Ref for the load more trigger element
+  const loadMoreRef = useRef(null);
 
   // Track which comment sections are expanded
   const [visibleComments, setVisibleComments] = useState({});
@@ -46,72 +48,98 @@ function Feed({
     setVisibleComments(v => ({ ...v, [postId]: !v[postId] }));
   };
 
-  // All your existing functions remain the same...
-  const getPosts = async (pageToLoad) => {
-    setLoading(true);
+  // Simple fetch function
+  const fetchPosts = async (pageNum, isFirstLoad = false) => {
+    if (isFirstLoad) {
+      setLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
+
     try {
       let url;
       if (userId) {
-        url = `${process.env.REACT_APP_API_URL}/${entityType}/userPosts/${userId}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/${entityType}/userPosts/${userId}?page=${pageNum}&size=${LIMIT}`;
       } else if (groupID) {
-        url = `${process.env.REACT_APP_API_URL}/groups/groups/${groupID}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/groups/groups/${groupID}?page=${pageNum}&size=${LIMIT}`;
       } else {
-        url = `${process.env.REACT_APP_API_URL}/${entityType}?page=${pageToLoad}&size=${LIMIT}`;
+        url = `${process.env.REACT_APP_API_URL}/${entityType}?page=${pageNum}&size=${LIMIT}`;
       }
 
-      const { data } = await axios.get(url);
-      const postsData = data.records;
-      setTotalPosts(data.total);
+      const response = await axios.get(url);
+      const newPosts = response.data.records || [];
+      
+      if (isFirstLoad) {
+        setPosts(newPosts);
+      } else {
+        setPosts(prev => [...prev, ...newPosts]);
+      }
 
-      setPosts(prev => {
-        const existing = new Set(prev.map(p => p._id));
-        const newOnes = postsData.filter(p => !existing.has(p._id));
-        return data.records;
-      });
-    } catch (err) {
-      console.error('Error fetching posts:', err);
+      // Simple hasMore check
+      setHasMore(newPosts.length === LIMIT);
+
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      toast.error('Failed to load posts');
     } finally {
       setLoading(false);
-      setLoadingPost(false);
+      setIsLoadingMore(false);
     }
   };
 
-  // ... all other existing functions remain the same ...
+  // Load next page
+  const loadMore = () => {
+    if (!isLoadingMore && hasMore) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchPosts(nextPage, false);
+    }
+  };
 
+  // Intersection Observer for auto-loading when load more button is visible
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        // If the load more element is visible and we have more posts to load
+        if (entry.isIntersecting && hasMore && !isLoadingMore && !loading) {
+          console.log('Load more button is visible, auto-loading...'); // Debug log
+          loadMore();
+        }
+      },
+      {
+        // Trigger when element is 50% visible
+        threshold: 0.5,
+        // Add some margin to trigger a bit before the element is fully visible
+        rootMargin: '100px',
+      }
+    );
 
-    const onScroll = () => {
-      const { scrollTop, clientHeight, scrollHeight } = container;
-      if (
-        scrollTop + clientHeight >= scrollHeight - 10 &&
-        !loading &&
-        posts.length < totalPosts
-      ) {
-        activePageRef.current += 1;
-        getPosts(activePageRef.current);
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
       }
     };
-    container.addEventListener('scroll', onScroll);
-    return () => container.removeEventListener('scroll', onScroll);
-  }, [loading, posts.length, totalPosts]);
+  }, [hasMore, isLoadingMore, loading, page]); // Include dependencies
 
+  // Initial load
   useEffect(() => {
-    getPosts(activePageRef.current);
+    fetchPosts(1, true);
   }, []);
 
-  const handleDeletePost = () => {
+  const handleDeletePost = (postId) => {
+    setPosts(prev => prev.filter(p => p._id !== postId));
     toast.success('Deleted successfully!');
-    getPosts(activePageRef.current);
   };
 
   const handleLikes = async (entityId) => {
     try {
       const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}`);
-      setPosts(prev =>
-        prev.map(p => (p._id === entityId ? updatedPost : p))
-      );
+      setPosts(prev => prev.map(p => (p._id === entityId ? updatedPost : p)));
     } catch (err) {
       console.error('Error fetching likes:', err);
     }
@@ -120,9 +148,7 @@ function Feed({
   const refreshComments = async (postId) => {
     try {
       const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
-      setPosts(prev =>
-        prev.map(p => (p._id === postId ? updatedPost : p))
-      );
+      setPosts(prev => prev.map(p => (p._id === postId ? updatedPost : p)));
     } catch (err) {
       console.error('Error fetching comments:', err);
     }
@@ -131,25 +157,22 @@ function Feed({
   const handleNewPost = () => {
     toast.success('Posted successfully!');
     setPosts([]);
-    activePageRef.current = 1;
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = 0;
-    }
-    getPosts(1);
+    setPage(1);
+    setHasMore(true);
+    fetchPosts(1, true);
   };
 
   const handleRefresh = () => {
     setPosts([]);
-    activePageRef.current = 1;
-    getPosts(1);
+    setPage(1);
+    setHasMore(true);
+    fetchPosts(1, true);
   };
 
   return (
     <div className="w-full max-w-3xl mx-auto space-y-4">
-      
-
-      {/* Create Post Section - Same width as posts */}
-      {([0, 1].includes(profile.profileLevel) && entityType != "news" && profilePage == false) && (
+      {/* Create Post Section */}
+      {([0, 1].includes(profile.profileLevel) && entityType !== "news" && !profilePage) && (
         <CreatePost1
           photoUrl={photoUrl}
           username={username}
@@ -160,7 +183,7 @@ function Feed({
         />
       )}
 
-      {/* Create Button - Same width as posts */}
+      {/* Create Button */}
       {showCreateButton && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
           <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 px-4 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
@@ -170,19 +193,23 @@ function Feed({
         </div>
       )}
 
-      {/* Posts Container - Same width constraint */}
-      <div
-        ref={scrollContainerRef}
-        className="space-y-4 "
-      >
-        {posts.length === 0 && !loading ? (
+      {/* Posts */}
+      <div className="space-y-4">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+              <l-dot-pulse size="40" speed="1.0" color="#71be95" />
+              <p className="text-center text-gray-500 mt-4">Loading posts...</p>
+            </div>
+          </div>
+        ) : posts.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <div className="text-gray-400 text-5xl mb-4">📱</div>
             <h3 className="text-lg font-semibold text-gray-600 mb-2">No Posts Yet</h3>
             <p className="text-gray-500">Be the first to share something with the community!</p>
           </div>
         ) : (
-          posts.map(post => {
+          posts.map((post, index) => {
             if (post.type === 'Post' && (!_id || post.groupID === _id)) {
               return (
                 <div key={post._id}>
@@ -206,24 +233,22 @@ function Feed({
                     groupID={post.groupID}
                   />
 
-                 {/* Inline Comment Section */}
-        {visibleComments[post._id] && (
-          <div className="w-full  -mt-3">
-            <CommentSection
-              entityId={post._id}
-              entityType="posts"
-              comments={post.comments.filter(c => !c.reported)}
-              onCommentSubmit={refreshComments}
-              onDeleteComment={refreshComments}
-              onClose={() => toggleComments(post._id)}
-            />
-          </div>
-        )}
+                  {visibleComments[post._id] && (
+                    <div className="w-full -mt-3">
+                      <CommentSection
+                        entityId={post._id}
+                        entityType="posts"
+                        comments={post.comments?.filter(c => !c.reported) || []}
+                        onCommentSubmit={refreshComments}
+                        onDeleteComment={refreshComments}
+                        onClose={() => toggleComments(post._id)}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             }
 
-            // Other post types with same width constraint
             if (post.type === 'poll') {
               return (
                 <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -279,17 +304,34 @@ function Feed({
           })
         )}
 
-        {/* Loading Indicator */}
-        {loading && (
-          <div className="flex justify-center py-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <l-dot-pulse size="30" speed="1.0" color="#71be95" />
-            </div>
+        {/* Auto-trigger element for infinite scroll */}
+        {hasMore && !loading && (
+          <div 
+            ref={loadMoreRef}
+            className="flex justify-center py-6"
+          >
+            {isLoadingMore ? (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-center space-x-3">
+                  <l-dot-pulse size="30" speed="1.0" color="#71be95" />
+                  <span className="text-gray-500">Loading more posts...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <button
+                  onClick={loadMore}
+                  className="px-6 py-2 bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
+                >
+                  Load More Posts
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* End of Posts Message */}
-        {totalPosts !== 0 && posts.length >= totalPosts && (
+        {!hasMore && posts.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
             <div className="text-gray-400 text-4xl mb-3">🎉</div>
             <p className="text-gray-600 font-medium">You've seen all the {entityType}!</p>

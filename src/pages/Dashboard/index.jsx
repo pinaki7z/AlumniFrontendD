@@ -128,7 +128,7 @@ const Dashboard = ({ handleLogout }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-gray-100">
+        <div className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain py-4">
           <div className="">
             <Routes>
               <Route path="/groups/*" element={<Groups />} />
@@ -183,9 +183,7 @@ const Dashboard = ({ handleLogout }) => {
                 </div>
               } />
               <Route path="/members/create" element={
-                <div className="w-full">
                   <MemberForm name='member' />
-                </div>
               } />
               <Route path="/members/:id/*" element={<Profile />} />
               <Route path="/profile/*" element={<ProfilePage />} />
