@@ -40,10 +40,14 @@ import {
   Minus
 } from 'lucide-react';
 import { toast } from 'react-toastify';
-
+import { CommentThread } from './CommentThread';
+import { useRef } from 'react';
 const BusinessConnectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  /* inside component */
+const commentRef = useRef(null);
+const [comments,setComments] = useState([]);
   const profile = useSelector((state) => state.profile);
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -82,6 +86,35 @@ const BusinessConnectDetails = () => {
       setLoading(false);
     }
   };
+
+  /* after fetchBusinessDetails() also call fetchComments() */
+useEffect(()=>{ if(id){ fetchBusinessDetails(); fetchComments(); } },[id]);
+
+
+/* add comment or reply */
+const addComment = async (text,parentId=null) =>{
+  if(!text.trim()) return;
+  const body = {
+    userId: profile._id,
+    userName: `${profile.firstName} ${profile.lastName}`,
+    userEmail: profile.email,
+    text
+  };
+  const url = parentId
+    ? `${process.env.REACT_APP_API_URL}/api/business/${id}/comments/${parentId}/reply`
+    : `${process.env.REACT_APP_API_URL}/api/business/${id}/comments`;
+  await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  fetchComments();
+};
+
+
+  /* fetch comments */
+const fetchComments = async () => {
+  const res = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/comments`);
+  const json = await res.json();
+  if (json.success) setComments(json.comments);
+};
+
 
   // Handle funding update with add/remove operations (Admin only)
   const handleFundingOperation = async (operation) => {
@@ -125,6 +158,13 @@ const BusinessConnectDetails = () => {
       setSavingFunding(false);
     }
   };
+
+  const formatINR = (num = 0) => {
+  if (num >= 1e7)      return `₹${(num/1e7).toFixed(1)} Cr`;
+  if (num >= 1e5)      return `₹${(num/1e5).toFixed(1)} L`;
+  if (num >= 1e3)      return `₹${(num/1e3).toFixed(1)} K`;
+  return `₹${num.toLocaleString()}`;
+};
 
   // Cancel funding edit
   const handleCancelFundingEdit = () => {
@@ -589,7 +629,7 @@ const BusinessConnectDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm font-medium text-gray-600">Investment</p>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">₹{(business.investmentAmount / 100000).toFixed(1)}L</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{formatINR(business.investmentAmount)}</p>
                   </div>
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <DollarSign size={16} className="text-blue-600" />
@@ -600,7 +640,7 @@ const BusinessConnectDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm font-medium text-gray-600">Revenue</p>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">₹{(business.currentRevenue / 100000).toFixed(1)}L</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{formatINR(business.currentRevenue)}</p>
                   </div>
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                     <TrendingUp size={16} className="text-green-600" />
@@ -611,7 +651,7 @@ const BusinessConnectDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs sm:text-sm font-medium text-gray-600">Funding Goal</p>
-                    <p className="text-lg sm:text-xl font-bold text-gray-900">₹{(business.fundingGoal / 100000).toFixed(1)}L</p>
+                    <p className="text-lg sm:text-xl font-bold text-gray-900">{formatINR(business.fundingGoal)}</p>
                   </div>
                   <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
                     <TrendingUp size={16} className="text-teal-600" />
@@ -629,11 +669,13 @@ const BusinessConnectDetails = () => {
                     <span className="text-sm font-medium text-gray-900">{likesCount}</span>
                     <span className="text-sm text-gray-600">Likes</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MessageCircle size={16} className="text-blue-500" />
-                    <span className="text-sm font-medium text-gray-900">{business.comments || 0}</span>
-                    <span className="text-sm text-gray-600">Comments</span>
-                  </div>
+                 <div className="flex items-center gap-2">
+  <MessageCircle size={16} className="text-blue-500" />
+  <button onClick={()=>commentRef.current.scrollIntoView({behavior:'smooth'})}
+    className="text-sm font-medium text-gray-900">{comments.length}
+  <span className="text-sm text-gray-600">Comments</span>
+  </button>
+</div>
                   <div className="flex items-center gap-2">
                     <Share2 size={16} className="text-green-500" />
                     <span className="text-sm font-medium text-gray-900">{sharesCount}</span>
@@ -815,6 +857,12 @@ const BusinessConnectDetails = () => {
                 </div>
               </div>
             )}
+
+            <CommentThread ref={commentRef}
+  ownerEmail={business.ownerEmail}
+  comments={comments}
+  onAdd={addComment}
+/>
           </div>
 
           {/* Right Sidebar - Investment Box & Support - Sticky */}
