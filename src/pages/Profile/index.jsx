@@ -250,111 +250,192 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Main Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Feed Section - Enhanced but keeping your exact structure */}
-          <div className="lg:col-span-2">
-            <div className="flex justify-center flex-col items-center overflow-hidden">
-              <div className="bg-gradient-to-r rounded-t-2xl mb-3 from-[#0A3A4C] to-[#174873] p-4 sm:p-6 w-full md:w-full xl:w-[650px] shadow-lg">
-                <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                  <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Users size={14} className="text-white" />
-                  </div>
-                  Recent Activity
-                </h2>
-                <p className="text-white/80 mt-1 text-xs sm:text-sm">Latest posts and updates</p>
-              </div>
-              <div className="">
-                <Feeed profilePage={true} entityType="posts" showCreatePost={false} showDeleteButton={true} userId={id} />
-              </div>
+       {/* Main Content Area */}
+<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+  {/* Left Sidebar - About & Profile Info - Sticky */}
+  <div className="lg:col-span-3">
+    <div className="lg:sticky lg:top-6 space-y-6">
+      {/* About Section - Enhanced styling */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] p-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+              <Info size={16} className="text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white">About {member.firstName}</h3>
+              <p className="text-white/80 text-xs">Get to know them better</p>
             </div>
           </div>
+        </div>
+        <div className="p-4">
+          <p className="text-gray-700 leading-relaxed text-sm">
+            {member.aboutMe || "🌟 This user hasn't shared their story yet. Every great story starts with a single step!"}
+          </p>
+        </div>
+      </div>
 
-          {/* Enhanced Sidebar - Better design but same functionality */}
-          <aside className="lg:col-span-1 space-y-6">
-            {/* About Section - Enhanced styling */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-              <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] p-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Info size={16} className="text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-white">About {member.firstName}</h3>
-                    <p className="text-white/80 text-xs">Get to know them better</p>
-                  </div>
-                </div>
+      {/* Additional Info Card */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+              <Users size={16} className="text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white">Profile Stats</h3>
+              <p className="text-white/80 text-xs">Activity overview</p>
+            </div>
+          </div>
+        </div>
+        <div className="p-4">
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-sm">Joined</span>
+              <span className="font-semibold text-gray-900 text-sm">
+                {member.createdAt ? new Date(member.createdAt).toLocaleDateString() : 'N/A'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-sm">Department</span>
+              <span className="font-semibold text-gray-900 text-sm">
+                {member.department || 'Not specified'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600 text-sm">Batch</span>
+              <span className="font-semibold text-gray-900 text-sm">
+                {member.batch || 'Not specified'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {/* Center - Feed Section - Enhanced but keeping your exact structure */}
+  <div className="lg:col-span-6">
+    <div className="flex justify-center flex-col items-center overflow-hidden">
+      <div className="bg-gradient-to-r rounded-t-2xl mb-3 from-[#0A3A4C] to-[#174873] p-4 sm:p-6 w-full shadow-lg">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+          <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+            <Users size={14} className="text-white" />
+          </div>
+          Recent Activity
+        </h2>
+        <p className="text-white/80 mt-1 text-xs sm:text-sm">Latest posts and updates</p>
+      </div>
+      <div className="w-full">
+        <Feeed profilePage={true} entityType="posts" showCreatePost={false} showDeleteButton={true} userId={id} />
+      </div>
+    </div>
+  </div>
+
+  {/* Right Sidebar - Work Experience & Actions - Sticky */}
+  <div className="lg:col-span-3">
+    <div className="lg:sticky lg:top-6 space-y-6">
+      {/* Enhanced Current Work Section - Better styling but same data */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+              <Briefcase size={16} className="text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white">Current Role</h3>
+              <p className="text-white/80 text-xs">Professional journey</p>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-[#71be95] to-[#5fa080] rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                <Briefcase size={16} className="text-white" />
               </div>
-              <div className="p-4">
-                <p className="text-gray-700 leading-relaxed text-sm">
-                  {member.aboutMe || "🌟 This user hasn't shared their story yet. Every great story starts with a single step!"}
+              <div className="flex-1">
+                <h4 className="font-bold text-gray-900 mb-1 text-sm">
+                  {currentWork?.title || "🚀 Ready for new opportunities"}
+                </h4>
+                <p className="text-gray-600 text-sm">
+                  {currentWork?.companyName || "Looking for the perfect role"}
                 </p>
               </div>
             </div>
-
-            {/* Enhanced Current Work Section - Better styling but same data */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                    <Briefcase size={16} className="text-white" />
+            
+            {currentWork && (
+              <>
+                {currentWork.startMonth && currentWork.startYear && (
+                  <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
+                    <Calendar size={16} className="text-[#71be95]" />
+                    <span className="font-medium text-sm">
+                      {`${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`}
+                    </span>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-white">Current Role</h3>
-                    <p className="text-white/80 text-xs">Professional journey</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-[#71be95] to-[#5fa080] rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                      <Briefcase size={16} className="text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-gray-900 mb-1 text-sm">
-                        {currentWork?.title || "🚀 Ready for new opportunities"}
-                      </h4>
-                      <p className="text-gray-600 text-sm">
-                        {currentWork?.companyName || "Looking for the perfect role"}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  {currentWork && (
-                    <>
-                      {currentWork.startMonth && currentWork.startYear && (
-                        <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
-                          <Calendar size={16} className="text-[#71be95]" />
-                          <span className="font-medium text-sm">
-                            {`${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {currentWork.location && currentWork.locationType && (
-                        <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
-                          <MapPin size={16} className="text-[#71be95]" />
-                          <span className="font-medium text-sm">
-                            {`${currentWork.location} • ${currentWork.locationType}`}
-                          </span>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
+                )}
                 
-                <Link
-                  to={`/home/members/${id}/experience`}
-                  className="group flex items-center justify-between w-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg p-3 font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
-                >
-                  <span className="text-sm">View Full Experience</span>
-                  <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
-              </div>
-            </div>
-          </aside>
+                {currentWork.location && currentWork.locationType && (
+                  <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
+                    <MapPin size={16} className="text-[#71be95]" />
+                    <span className="font-medium text-sm">
+                      {`${currentWork.location} • ${currentWork.locationType}`}
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          
+          <Link
+            to={`/home/members/${id}/experience`}
+            className="group flex items-center justify-between w-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg p-3 font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
+          >
+            <span className="text-sm">View Full Experience</span>
+            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+          </Link>
         </div>
+      </div>
+
+      {/* Contact/Connect Section */}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
+        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+              <UserPlus size={16} className="text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white">Connect</h3>
+              <p className="text-white/80 text-xs">Build your network</p>
+            </div>
+          </div>
+        </div>
+        <div className="p-4 space-y-3">
+          <div className="text-center">
+            <p className="text-gray-600 text-sm mb-3">
+              Connect with {member.firstName} to expand your professional network
+            </p>
+            
+            {member.email && (
+              <a
+                href={`mailto:${member.email}`}
+                className="inline-flex items-center gap-2 w-full justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg p-2 font-medium transition-colors duration-200 mb-2"
+              >
+                <MapPin size={16} />
+                <span className="text-sm">Send Email</span>
+              </a>
+            )}
+            
+            <div className="text-xs text-gray-500 mt-2">
+              Member since {member.createdAt ? new Date(member.createdAt).getFullYear() : 'N/A'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
 
       {/* Custom Scrollbar Styles */}

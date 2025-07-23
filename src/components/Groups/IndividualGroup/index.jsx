@@ -310,7 +310,7 @@ const IndividualGroup = () => {
                   <div className="bg-white p-8 rounded-2xl ">
                     <l-line-spinner size="40" stroke="3" speed="1" color="#3b82f6"></l-line-spinner>
                   </div>
-                    <p className="mt-1 text-gray-600 font-semibold text-lg md:text-xl">Loading group...</p>
+                  <p className="mt-1 text-gray-600 font-semibold text-lg md:text-xl">Loading group...</p>
                 </div>
               ) : (
                 group.map((groupItem) => (
@@ -455,165 +455,173 @@ const IndividualGroup = () => {
                       </div>
                     )}
 
-                    {/* Main Content */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {/* Posts Section */}
-                      <div
-                        className={`lg:col-span-2 ${
-                          (isMember && isApproved) || profile._id === groupItem.userId || admin
-                            ? ""
-                            : "blur-lg pointer-events-none select-none"
-                        }`}
-                      >
-                        <Routes>
-                          <Route
-                            exact
-                            path="/"
-                            element={
-                              <div className=" rounded-2xl  overflow-hidden ">
-                                <SocialMediaPost showCreatePost={true} groupID={_id} />
-                              </div>
-                            }
-                          />
-                          <Route
-                            exact
-                            path="/groupInvite"
-                            element={
-                              <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <GroupInvite />
-                              </div>
-                            }
-                          />
-                          <Route
-                            exact
-                            path="/invite"
-                            element={
-                              <div className="bg-white rounded-2xl shadow-lg p-6">
-                                <JoinGroup />
-                              </div>
-                            }
-                          />
-                        </Routes>
-                      </div>
+                   {/* Main Content */}
+<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+  {/* Left Sidebar - Group Members - Sticky */}
+  <div className="lg:col-span-3">
+    <div className="lg:sticky lg:top-6">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b">
+          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <Users size={20} className="text-purple-600" />
+            Group Members
+          </h3>
+        </div>
 
-                      {/* Sidebar */}
-                      <div className="lg:col-span-1 space-y-6">
-                        {/* Join Requests */}
-                        {(profile._id === groupItem.userId || admin) && groupItem.groupType === "Private" && (
-                          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
-                              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <UserPlus size={20} className="text-blue-600" />
-                                Join Requests
-                              </h3>
-                            </div>
+        <div className="p-4 max-h-96 overflow-y-auto">
+          {allMembers?.length > 0 ? (
+            <div className="space-y-3">
+              {allMembers?.map((member, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  <img
+                    src={member?.userId?.profilePicture || profilePic}
+                    alt=""
+                    className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                  />
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {member?.userId?.firstName + " " + member?.userId?.lastName}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Users size={48} className="text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">No members yet</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
 
-                            <div className="p-4 max-h-96 overflow-y-auto">
-                              {allPendingReq?.length > 0 ? (
-                                <div className="space-y-3">
-                                  {allPendingReq?.map((member, index) => (
-                                    <div key={index} className="bg-gray-50 rounded-xl p-4">
-                                      <div className="flex items-center gap-3 mb-3">
-                                        <img
-                                          src={member?.userId?.profilePicture || profilePic}
-                                          alt=""
-                                          className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-                                        />
-                                        <div>
-                                          <p className="font-semibold text-gray-900">
-                                            {member?.userId?.firstName + " " + member?.userId?.lastName}
-                                          </p>
-                                        </div>
-                                      </div>
+  {/* Center - Posts Section */}
+  <div
+    className={`lg:col-span-6 ${
+      (isMember && isApproved) || profile._id === groupItem.userId || admin
+        ? ""
+        : "blur-lg pointer-events-none select-none"
+    }`}
+  >
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={
+          <div className=" rounded-2xl  overflow-hidden ">
+            <SocialMediaPost showCreatePost={true} groupID={_id} />
+          </div>
+        }
+      />
+      <Route
+        exact
+        path="/groupInvite"
+        element={
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <GroupInvite />
+          </div>
+        }
+      />
+      <Route
+        exact
+        path="/invite"
+        element={
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <JoinGroup />
+          </div>
+        }
+      />
+    </Routes>
+  </div>
 
-                                      <div className="flex gap-2">
-                                        <button
-                                          className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
-                                          onClick={() => handleAccept(member.userId?._id)}
-                                        >
-                                          <Check size={14} />
-                                          Accept
-                                        </button>
-                                        <button
-                                          className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
-                                          onClick={() => handleDecline(member.userId?._id)}
-                                        >
-                                          <X size={14} />
-                                          Decline
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className="text-center py-8">
-                                  <UserPlus size={48} className="text-gray-300 mx-auto mb-3" />
-                                  <p className="text-gray-500">No pending requests</p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
+  {/* Right Sidebar - Sticky */}
+  <div className="lg:col-span-3">
+    <div className="lg:sticky lg:top-6 space-y-6">
+      {/* Join Requests */}
+      {(profile._id === groupItem.userId || admin) && groupItem.groupType === "Private" && (
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <UserPlus size={20} className="text-blue-600" />
+              Join Requests
+            </h3>
+          </div>
 
-                        {/* Group Actions */}
-                        {(profile._id === groupItem.userId || admin) && (
-                          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b">
-                              <h3 className="text-lg font-bold text-gray-900">Group Actions</h3>
-                            </div>
-
-                            <div className="p-4">
-                              <Link
-                                to={`/home/groups/${_id}/groupInvite`}
-                                className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-blue-600 hover:text-blue-700"
-                              >
-                                <Mail size={20} />
-                                <span className="font-semibold">Generate Group Link</span>
-                              </Link>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Group Members */}
-                        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
-                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                              <Users size={20} className="text-purple-600" />
-                              Group Members
-                            </h3>
-                          </div>
-
-                          <div className="p-4 max-h-96 overflow-y-auto">
-                            {allMembers?.length > 0 ? (
-                              <div className="space-y-3">
-                                {allMembers?.map((member, index) => (
-                                  <div
-                                    key={index}
-                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
-                                  >
-                                    <img
-                                      src={member?.userId?.profilePicture || profilePic}
-                                      alt=""
-                                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-                                    />
-                                    <div>
-                                      <p className="font-semibold text-gray-900">
-                                        {member?.userId?.firstName + " " + member?.userId?.lastName}
-                                      </p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="text-center py-8">
-                                <Users size={48} className="text-gray-300 mx-auto mb-3" />
-                                <p className="text-gray-500">No members yet</p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+          <div className="p-4 max-h-96 overflow-y-auto">
+            {allPendingReq?.length > 0 ? (
+              <div className="space-y-3">
+                {allPendingReq?.map((member, index) => (
+                  <div key={index} className="bg-gray-50 rounded-xl p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <img
+                        src={member?.userId?.profilePicture || profilePic}
+                        alt=""
+                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                      />
+                      <div>
+                        <p className="font-semibold text-gray-900">
+                          {member?.userId?.firstName + " " + member?.userId?.lastName}
+                        </p>
                       </div>
                     </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
+                        onClick={() => handleAccept(member.userId?._id)}
+                      >
+                        <Check size={14} />
+                        Accept
+                      </button>
+                      <button
+                        className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg text-sm transition-colors flex items-center justify-center gap-1"
+                        onClick={() => handleDecline(member.userId?._id)}
+                      >
+                        <X size={14} />
+                        Decline
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <UserPlus size={48} className="text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-500">No pending requests</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Group Actions */}
+      {(profile._id === groupItem.userId || admin) && (
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b">
+            <h3 className="text-lg font-bold text-gray-900">Group Actions</h3>
+          </div>
+
+          <div className="p-4">
+            <Link
+              to={`/home/groups/${_id}/groupInvite`}
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-blue-600 hover:text-blue-700"
+            >
+              <Mail size={20} />
+              <span className="font-semibold">Generate Group Link</span>
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+
                   </div>
                 ))
               )}
