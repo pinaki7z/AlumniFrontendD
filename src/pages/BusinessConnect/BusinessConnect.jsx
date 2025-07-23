@@ -20,7 +20,8 @@ import {
   Eye,
   Edit,
   Trash2,
-  Loader2
+  Loader2,
+  Shield // Added new icon for admin verification
 } from 'lucide-react';
 
 const BusinessConnect = () => {
@@ -41,6 +42,7 @@ const BusinessConnect = () => {
 
   const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
 
+  // ... All your existing functions remain unchanged ...
   const industries = [
     'Technology',
     'Healthcare', 
@@ -336,7 +338,7 @@ const BusinessConnect = () => {
   return (
     <div className="bg-gray-50">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
-        {/* Header */}
+        {/* Header - UPDATED with Admin Verify button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
@@ -353,6 +355,19 @@ const BusinessConnect = () => {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* NEW: Admin Verify Button - Only visible to admins */}
+            {isAdmin && (
+              <Link
+                to="/home/business-connect/admin/verify"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              >
+                <Shield size={16} />
+                <span className="hidden sm:inline">Admin Verify</span>
+                <span className="sm:hidden">Verify</span>
+              </Link>
+            )}
+            
+            {/* Existing Create Business Button */}
             <Link
               to="/home/business-connect/create"
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
@@ -363,6 +378,7 @@ const BusinessConnect = () => {
           </div>
         </div>
 
+        {/* All remaining JSX stays exactly the same */}
         {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4">

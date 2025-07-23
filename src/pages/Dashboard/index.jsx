@@ -132,7 +132,7 @@ const Dashboard = ({ handleLogout }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain py-4">
+        <div className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
           <div className="">
             <Routes>
               <Route path="/groups/*" element={<Groups />} />
