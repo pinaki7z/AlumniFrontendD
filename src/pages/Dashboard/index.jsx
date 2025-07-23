@@ -48,6 +48,10 @@ import DiscussionPage from "../Forum/DiscussionPage.jsx";
 import ForumPost from "../Forum/ForumPost.jsx";
 import { Menu, X } from "lucide-react";
 import RightSidebar from "../../components/SideWidgets/RightSidebar.jsx";
+import BusinessConnect from "../BusinessConnect/BusinessConnect.jsx";
+import CreateBusiness from "../BusinessConnect/CreateBusiness.jsx";
+import BusinessVerificationPanel from "../BusinessConnect/BusinessVerificationPanel.jsx";
+import BusinessConnectDetails from "../BusinessConnect/BusinessConnectDetails.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -170,6 +174,17 @@ const Dashboard = ({ handleLogout }) => {
 
               {/* All other routes remain the same */}
               <Route path="/donations/*" element={<Donations />} />
+
+
+              {/* all business connect routes */}
+              <Route path="/business-connect" element={<BusinessConnect />} />
+              <Route path="/business-connect/:id/" element={<BusinessConnectDetails/>} />
+              <Route path="/business-connect/create" element={<CreateBusiness />} />
+              <Route path="/business-connect/edit/:id" element={<CreateBusiness/>} />
+              <Route path="/business-connect/admin/verify" element={<BusinessVerificationPanel/>} />
+
+
+
               <Route path="/guidance/*" element={<Guidance />} />
               <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
               <Route path="/chatv2">
