@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom'; // Added navigation imports
 import {
   CheckCircle,
   X,
@@ -17,26 +18,30 @@ import {
   Search,
   Loader2,
   RotateCcw,
-  List
+  List,
+  ArrowLeft, // Added back arrow icon
+  Shield
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const BusinessVerificationPanel = () => {
   const profile = useSelector((state) => state.profile);
+  const navigate = useNavigate(); // Added navigation hook
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [businesses, setBusinesses] = useState([]);
-  const [activeStatTab, setActiveStatTab] = useState('all'); // Changed default to 'all'
+  const [activeStatTab, setActiveStatTab] = useState('all');
   const [stats, setStats] = useState({
     pending: 0,
     approvedToday: 0,
     totalReviewed: 0,
-    totalRequests: 0 // Added total requests count
+    totalRequests: 0
   });
 
-  // Initial data fetch
+
+    // Initial data fetch
   useEffect(() => {
     fetchAdminStats();
     fetchBusinessesByStatus();
@@ -51,21 +56,31 @@ const BusinessVerificationPanel = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  // All existing functions remain the same...
   const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
 
   if (!isAdmin) {
     return (
-      <div className="bg-gray-50">
+      <div className="bg-gray-50 min-h-screen">
         <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
           <div className="bg-white rounded-lg shadow-sm p-8 text-center">
             <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
             <p className="text-gray-600">You don't have permission to access this panel.</p>
+            <Link
+              to="/home/business-connect"
+              className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+            >
+              <ArrowLeft size={16} />
+              Back to Business Connect
+            </Link>
           </div>
         </div>
       </div>
     );
   }
+
+
 
   // Fetch admin statistics
   const fetchAdminStats = async () => {
@@ -264,11 +279,11 @@ const BusinessVerificationPanel = () => {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       
       <div className="relative bg-white rounded-lg sm:rounded-xl shadow-2xl max-w-4xl w-full my-4 max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 rounded-t-lg">
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 rounded-t-lg sm:rounded-t-xl">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{business.businessName}</h2>
-              <p className="text-gray-600">{business.industry}</p>
+              <p className="text-gray-600 text-sm sm:text-base">{business.industry}</p>
             </div>
             <button
               onClick={onClose}
@@ -285,7 +300,7 @@ const BusinessVerificationPanel = () => {
               <img
                 src={business.backgroundImage}
                 alt="Business"
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full h-48 sm:h-56 object-cover rounded-lg"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}
@@ -299,18 +314,18 @@ const BusinessVerificationPanel = () => {
               <div className="space-y-3">
                 <div>
                   <label className="text-sm font-medium text-gray-600">Description</label>
-                  <p className="text-gray-900">{business.description}</p>
+                  <p className="text-gray-900 text-sm sm:text-base mt-1">{business.description}</p>
                 </div>
                 {business.targetMarket && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">Target Market</label>
-                    <p className="text-gray-900">{business.targetMarket}</p>
+                    <p className="text-gray-900 text-sm sm:text-base mt-1">{business.targetMarket}</p>
                   </div>
                 )}
                 {business.competitiveAdvantage && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">Competitive Advantage</label>
-                    <p className="text-gray-900">{business.competitiveAdvantage}</p>
+                    <p className="text-gray-900 text-sm sm:text-base mt-1">{business.competitiveAdvantage}</p>
                   </div>
                 )}
               </div>
@@ -319,17 +334,17 @@ const BusinessVerificationPanel = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Financial Details</h3>
               <div className="space-y-3">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-gray-600">Investment Amount</span>
-                  <span className="text-gray-900 font-semibold">₹{business.investmentAmount.toLocaleString()}</span>
+                  <span className="text-gray-900 font-semibold text-sm sm:text-base">₹{business.investmentAmount.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-gray-600">Current Revenue</span>
-                  <span className="text-gray-900 font-semibold">₹{business.currentRevenue.toLocaleString()}</span>
+                  <span className="text-gray-900 font-semibold text-sm sm:text-base">₹{business.currentRevenue.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-gray-600">Funding Goal</span>
-                  <span className="text-gray-900 font-semibold">₹{business.fundingGoal.toLocaleString()}</span>
+                  <span className="text-gray-900 font-semibold text-sm sm:text-base">₹{business.fundingGoal.toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -342,13 +357,13 @@ const BusinessVerificationPanel = () => {
                 {business.teamExperience && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">Team Experience</label>
-                    <p className="text-gray-900">{business.teamExperience}</p>
+                    <p className="text-gray-900 text-sm sm:text-base mt-1">{business.teamExperience}</p>
                   </div>
                 )}
                 {business.marketingStrategy && (
                   <div>
                     <label className="text-sm font-medium text-gray-600">Marketing Strategy</label>
-                    <p className="text-gray-900">{business.marketingStrategy}</p>
+                    <p className="text-gray-900 text-sm sm:text-base mt-1">{business.marketingStrategy}</p>
                   </div>
                 )}
               </div>
@@ -359,16 +374,16 @@ const BusinessVerificationPanel = () => {
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <User size={16} className="text-gray-500" />
-                  <span className="text-gray-900">{business.ownerName}</span>
+                  <span className="text-gray-900 text-sm sm:text-base">{business.ownerName}</span>
                 </div>
                 {business.ownerEmail && (
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-900">{business.ownerEmail}</span>
+                    <span className="text-gray-900 text-sm sm:text-base break-all">{business.ownerEmail}</span>
                   </div>
                 )}
                 {business.ownerPhone && (
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-900">{business.ownerPhone}</span>
+                    <span className="text-gray-900 text-sm sm:text-base">{business.ownerPhone}</span>
                   </div>
                 )}
               </div>
@@ -379,17 +394,17 @@ const BusinessVerificationPanel = () => {
             <div className="mb-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Documents</h3>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <FileText size={20} className="text-gray-500" />
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">Business Plan</p>
+                <FileText size={20} className="text-gray-500 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-gray-900 text-sm sm:text-base">Business Plan</p>
                   <p className="text-sm text-gray-600">PDF Document</p>
                 </div>
                 <button 
                   onClick={() => handleDownloadBusinessPlan(business.businessPlan, business.businessName)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-[#0A3A4C] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm flex-shrink-0"
                 >
                   <Download size={14} />
-                  Download
+                  <span className="hidden sm:inline">Download</span>
                 </button>
               </div>
             </div>
@@ -440,13 +455,24 @@ const BusinessVerificationPanel = () => {
   );
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
-        {/* Header */}
+        {/* UPDATED: Back Button - Mobile and Desktop */}
+        <div className="mb-4">
+          <Link
+            to="/home/business-connect"
+            className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 text-sm w-fit"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Business Connect</span>
+          </Link>
+        </div>
+
+        {/* UPDATED: Header - Improved design consistency */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
-              <CheckCircle size={16} className="sm:size-5 text-white" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-600 to-purple-700 rounded-lg flex items-center justify-center">
+              <Shield size={16} className="sm:size-5 text-white" />
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
@@ -459,90 +485,95 @@ const BusinessVerificationPanel = () => {
           </div>
         </div>
 
-        {/* Clickable Stats - Now with 4 columns */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          {/* New All Requests Tab - First Position */}
+        {/* UPDATED: Clickable Stats - Enhanced design matching */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+          {/* All Requests Tab */}
           <div 
             onClick={() => handleStatTabClick('all')}
-            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
               activeStatTab === 'all' ? 'ring-2 ring-gray-500 border-gray-300' : ''
             }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">All Requests</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalRequests}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">All Requests</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stats.totalRequests}</p>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                <List size={20} className="text-gray-600" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                <List size={16} className="text-gray-600 sm:w-5 sm:h-5" />
               </div>
             </div>
           </div>
 
+          {/* Pending Review Tab */}
           <div 
             onClick={() => handleStatTabClick('pending')}
-            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
               activeStatTab === 'pending' ? 'ring-2 ring-yellow-500 border-yellow-300' : ''
             }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending Review</p>
-                <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Pending Review</p>
+                <p className="text-lg sm:text-2xl font-bold text-yellow-600">{stats.pending}</p>
               </div>
-              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <Clock size={20} className="text-yellow-600" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <Clock size={16} className="text-yellow-600 sm:w-5 sm:h-5" />
               </div>
             </div>
           </div>
           
+          {/* Approved Today Tab */}
           <div 
             onClick={() => handleStatTabClick('approved')}
-            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
               activeStatTab === 'approved' ? 'ring-2 ring-green-500 border-green-300' : ''
             }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Approved Today</p>
-                <p className="text-2xl font-bold text-green-600">{stats.approvedToday}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Approved Today</p>
+                <p className="text-lg sm:text-2xl font-bold text-green-600">{stats.approvedToday}</p>
               </div>
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <CheckCircle size={20} className="text-green-600" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <CheckCircle size={16} className="text-green-600 sm:w-5 sm:h-5" />
               </div>
             </div>
           </div>
           
+          {/* Total Reviewed Tab */}
           <div 
             onClick={() => handleStatTabClick('reviewed')}
-            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+            className={`bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
               activeStatTab === 'reviewed' ? 'ring-2 ring-blue-500 border-blue-300' : ''
             }`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Reviewed</p>
-                <p className="text-2xl font-bold text-blue-600">{stats.totalReviewed}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600">Total Reviewed</p>
+                <p className="text-lg sm:text-2xl font-bold text-blue-600">{stats.totalReviewed}</p>
               </div>
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Building size={20} className="text-blue-600" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Building size={16} className="text-blue-600 sm:w-5 sm:h-5" />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Active Tab Indicator */}
+        {/* UPDATED: Active Tab Indicator - Better responsive design */}
         <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-4">
-          <div className="flex items-center gap-3 mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">{getActiveTabTitle()}</h2>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              activeStatTab === 'all' ? 'bg-gray-100 text-gray-800' :
-              activeStatTab === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-              activeStatTab === 'approved' ? 'bg-green-100 text-green-800' :
-              'bg-blue-100 text-blue-800'
-            }`}>
-              {businesses.length} businesses
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+            <div className="flex items-center gap-3">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900">{getActiveTabTitle()}</h2>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                activeStatTab === 'all' ? 'bg-gray-100 text-gray-800' :
+                activeStatTab === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                activeStatTab === 'approved' ? 'bg-green-100 text-green-800' :
+                'bg-blue-100 text-blue-800'
+              }`}>
+                {businesses.length} businesses
+              </span>
+            </div>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3">
@@ -564,15 +595,15 @@ const BusinessVerificationPanel = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={32} className="animate-spin text-[#0A3A4C]" />
+            <Loader2 size={28} className="animate-spin text-[#0A3A4C] sm:w-8 sm:h-8" />
           </div>
         )}
 
-        {/* Businesses List */}
+        {/* UPDATED: Businesses List - Enhanced mobile responsiveness */}
         {!loading && (
           <div className="space-y-4">
             {businesses.map((business) => (
-              <div key={business._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              <div key={business._id} className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
                 <div className="p-4 sm:p-6">
                   <div className="flex flex-col lg:flex-row lg:items-start gap-4">
                     <div className="flex-shrink-0">
@@ -594,8 +625,8 @@ const BusinessVerificationPanel = () => {
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
-                        <div>
-                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 truncate">
                             {business.businessName}
                           </h3>
                           <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -617,7 +648,7 @@ const BusinessVerificationPanel = () => {
                           </p>
                         </div>
                         
-                        <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
                           <button
                             onClick={() => {
                               setSelectedBusiness(business);
@@ -633,16 +664,16 @@ const BusinessVerificationPanel = () => {
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <DollarSign size={14} />
-                          <span>Investment: ₹{business.investmentAmount.toLocaleString()}</span>
+                          <DollarSign size={14} className="flex-shrink-0" />
+                          <span className="truncate">Investment: ₹{business.investmentAmount.toLocaleString()}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <User size={14} />
-                          <span>Owner: {business.ownerName}</span>
+                          <User size={14} className="flex-shrink-0" />
+                          <span className="truncate">Owner: {business.ownerName}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <Calendar size={14} />
-                          <span>Submitted: {new Date(business.createdAt).toLocaleDateString()}</span>
+                          <Calendar size={14} className="flex-shrink-0" />
+                          <span className="truncate">Submitted: {new Date(business.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
 
@@ -693,13 +724,14 @@ const BusinessVerificationPanel = () => {
           </div>
         )}
 
+        {/* UPDATED: Empty State - Better responsive design */}
         {!loading && businesses.length === 0 && (
           <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-8 sm:p-12 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={32} className="text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">No businesses found</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm sm:text-base">
               {searchQuery ? 'No businesses match your search criteria.' : `No ${activeStatTab} businesses found.`}
             </p>
           </div>

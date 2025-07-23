@@ -21,7 +21,8 @@ import {
   Edit,
   Trash2,
   Loader2,
-  Shield // Added new icon for admin verification
+  Shield, // Added new icon for admin verification
+  X
 } from 'lucide-react';
 
 const BusinessConnect = () => {
@@ -212,128 +213,189 @@ const BusinessConnect = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const BusinessCard = ({ business }) => (
-    <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden">
-      <div className="relative h-32 sm:h-40 overflow-hidden">
+const BusinessCard = ({ business }) => {
+  // Format currency compactly
+  const formatCurrency = (amount) => {
+    if (amount >= 1e7) return `₹${(amount/1e7).toFixed(1)}Cr`;
+    if (amount >= 1e5) return `₹${(amount/1e5).toFixed(1)}L`;
+    if (amount >= 1e3) return `₹${(amount/1e3).toFixed(1)}K`;
+    return `₹${amount.toLocaleString()}`;
+  };
+
+  return (
+    <div className="group bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 overflow-hidden hover:-translate-y-1">
+      {/* Compact Image Header */}
+      <div className="relative h-28 sm:h-32 overflow-hidden">
         {business.backgroundImage ? (
           <img
             src={business.backgroundImage}
             alt={business.businessName}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               e.target.src = '/api/placeholder/800/400';
             }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] flex items-center justify-center">
-            <Building size={32} className="text-white" />
+          <div className="w-full h-full bg-gradient-to-br from-[#0A3A4C] via-[#174873] to-[#2A5F7A] flex items-center justify-center relative overflow-hidden">
+            <Building size={28} className="text-white/90 relative z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute top-3 right-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            business.status === 'verified' 
-              ? 'bg-green-100 text-green-800' 
-              : business.status === 'pending'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {business.status === 'verified' ? 'Verified' : business.status === 'pending' ? 'Pending' : 'Rejected'}
-          </span>
-        </div>
-        <div className="absolute bottom-3 left-3">
-          <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-gray-800 rounded-full text-xs font-medium">
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        
+        {/* Compact Status & Industry */}
+        <div className="absolute top-2 left-2 right-2 flex justify-between items-start">
+          <span className="px-2 py-1 bg-white/95 backdrop-blur-sm text-gray-800 rounded-md text-xs font-medium border border-white/50">
             {business.industry}
           </span>
+          <span className={`px-2 py-1 rounded-md text-xs font-semibold backdrop-blur-sm ${
+            business.status === 'verified' 
+              ? 'bg-green-500/90 text-white' 
+              : business.status === 'pending'
+              ? 'bg-yellow-500/90 text-white'
+              : 'bg-red-500/90 text-white'
+          }`}>
+            {business.status === 'verified' ? '✓' : business.status === 'pending' ? '⏱' : '✗'}
+          </span>
         </div>
-      </div>
 
-      <div className="p-4 sm:p-6">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-            {business.businessName}
-          </h3>
+        {/* Floating Action Menu */}
+        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
           <div className="flex gap-1">
             <button 
-              onClick={() => navigate(`/home/business-connect/${business._id}`)}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/home/business-connect/${business._id}`);
+              }}
+              className="p-1.5 bg-white/95 backdrop-blur-sm hover:bg-white rounded-lg transition-colors duration-200 shadow-lg"
+              title="View Details"
             >
-              <Eye size={16} className="text-gray-500" />
+              <Eye size={14} className="text-gray-700" />
             </button>
             {(isAdmin || business.ownerEmail === profile.email) && (
               <>
                 <button 
-                  onClick={() => navigate(`/home/business-connect/edit/${business._id}`)}
-                  className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/home/business-connect/edit/${business._id}`);
+                  }}
+                  className="p-1.5 bg-white/95 backdrop-blur-sm hover:bg-white rounded-lg transition-colors duration-200 shadow-lg"
+                  title="Edit"
                 >
-                  <Edit size={16} className="text-gray-500" />
+                  <Edit size={14} className="text-gray-700" />
                 </button>
                 <button 
-                  onClick={() => handleDelete(business._id)}
-                  className="p-1.5 hover:bg-red-100 rounded-lg transition-colors duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(business._id);
+                  }}
+                  className="p-1.5 bg-red-500/95 backdrop-blur-sm hover:bg-red-600 rounded-lg transition-colors duration-200 shadow-lg"
+                  title="Delete"
                 >
-                  <Trash2 size={16} className="text-red-500" />
+                  <Trash2 size={14} className="text-white" />
                 </button>
               </>
             )}
           </div>
         </div>
+      </div>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {business.description}
-        </p>
+      {/* Compact Content Section */}
+      <div className="p-4">
+        {/* Header */}
+        <div className="mb-3">
+          <h3 className="text-lg font-bold text-gray-900 line-clamp-1 mb-1 group-hover:text-[#0A3A4C] transition-colors duration-200">
+            {business.businessName}
+          </h3>
+          <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
+            {business.description}
+          </p>
+        </div>
 
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <DollarSign size={14} />
-            <span>Investment: ₹{business.investmentAmount.toLocaleString()}</span>
+        {/* Compact Financial Grid */}
+        <div className="grid grid-cols-3 gap-2 mb-4">
+          <div className="text-center p-2 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-1">
+              <DollarSign size={10} className="text-white" />
+            </div>
+            <p className="text-xs font-bold text-blue-900">{formatCurrency(business.investmentAmount)}</p>
+            <p className="text-xs text-blue-700">Investment</p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <TrendingUp size={14} />
-            <span>Revenue: ₹{business.currentRevenue.toLocaleString()}</span>
+          
+          <div className="text-center p-2 bg-green-50 rounded-lg border border-green-100">
+            <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+              <TrendingUp size={10} className="text-white" />
+            </div>
+            <p className="text-xs font-bold text-green-900">{formatCurrency(business.currentRevenue)}</p>
+            <p className="text-xs text-green-700">Revenue</p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Users size={14} />
-            <span>Goal: ₹{business.fundingGoal.toLocaleString()}</span>
+          
+          <div className="text-center p-2 bg-purple-50 rounded-lg border border-purple-100">
+            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-1">
+              <Users size={10} className="text-white" />
+            </div>
+            <p className="text-xs font-bold text-purple-900">{formatCurrency(business.fundingGoal)}</p>
+            <p className="text-xs text-purple-700">Goal</p>
           </div>
         </div>
 
-        {/* Admin actions for pending businesses */}
+        {/* Compact Admin Actions */}
         {isAdmin && business.status === 'pending' && (
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-3 p-2 bg-amber-50 rounded-lg border-l-4 border-amber-400">
             <button
-              onClick={() => handleStatusUpdate(business._id, 'verified')}
-              className="flex-1 px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStatusUpdate(business._id, 'verified');
+              }}
+              className="flex-1 px-2 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 text-xs font-medium flex items-center justify-center gap-1"
             >
+              <CheckCircle size={12} />
               Approve
             </button>
             <button
-              onClick={() => handleStatusUpdate(business._id, 'rejected')}
-              className="flex-1 px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm font-medium"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStatusUpdate(business._id, 'rejected');
+              }}
+              className="flex-1 px-2 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium flex items-center justify-center gap-1"
             >
+              <X size={12} />
               Reject
             </button>
           </div>
         )}
 
+        {/* Compact Footer */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-              <User size={12} className="text-gray-500" />
+            <div className="w-6 h-6 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center relative">
+              <User size={10} className="text-gray-600" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
             </div>
-            <span className="text-sm text-gray-600">{business.ownerName}</span>
+            <div>
+              <p className="text-xs font-medium text-gray-900 line-clamp-1">{business.ownerName}</p>
+              <p className="text-xs text-gray-500">Owner</p>
+            </div>
           </div>
+          
           <button 
-            onClick={() => navigate(`/home/business-connect/${business._id}`)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/home/business-connect/${business._id}`);
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 hover:shadow-lg transition-all duration-200 text-xs font-medium group/btn"
           >
-            <span>View Details</span>
-            <ArrowRight size={14} />
+            <span>View</span>
+            <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
           </button>
         </div>
       </div>
     </div>
   );
+};
+
 
   return (
     <div className="bg-gray-50">
