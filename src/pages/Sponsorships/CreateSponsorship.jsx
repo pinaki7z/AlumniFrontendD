@@ -1,94 +1,150 @@
 // components/CreateSponsorship.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle,
-  User,
-  Award,
-  DollarSign,
-  FileText,
-  Upload,
-  X,
-  Loader2,
-  AlertCircle,
-  Calendar,
-  MapPin,
-  Users
+  ArrowLeft, ArrowRight, CheckCircle, User, Award, DollarSign, FileText,
+  Upload, X, Loader2, AlertCircle, Calendar, MapPin, Users
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const CreateSponsorship = () => {
   const navigate = useNavigate();
+  const { id } = useParams(); // For edit mode
   const profile = useSelector((state) => state.profile);
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const [formData, setFormData] = useState({
-    // Basic Info
-    title: '',
-    description: '',
-    detailedDescription: '',
-    category: '',
-    sponsorshipType: '',
-    amount: '',
-    duration: '',
-    
-    // Sponsor Info
-    sponsorName: `${profile.firstName} ${profile.lastName}`,
-    sponsorEmail: profile.email,
-    sponsorPhone: '',
-    sponsorWebsite: '',
-    sponsorLogo: null,
-    
-    // Event Info
-    eventName: '',
-    eventDate: '',
-    eventLocation: '',
-    expectedAudience: '',
-    targetDemographic: '',
-    
-    // Benefits & Media
-    benefits: [''],
-    deliverables: [''],
-    marketingReach: '',
-    images: [],
-    proposalDocument: null,
-    priority: 'medium',
-    tags: '',
-    expiresAt: ''
+    title: '', description: '', detailedDescription: '', category: '', sponsorshipType: '',
+    amount: '', duration: '', sponsorName: `${profile.firstName} ${profile.lastName}`,
+    sponsorEmail: profile.email, sponsorPhone: '', sponsorWebsite: '', sponsorLogo: null,
+    eventName: '', eventDate: '', eventLocation: '', expectedAudience: '', targetDemographic: '',
+    benefits: [''], deliverables: [''], marketingReach: '', images: [], proposalDocument: null,
+    priority: 'medium', tags: '', expiresAt: ''
   });
 
-  const steps = [
-    {
-      id: 1,
-      title: 'Basic Information',
-      subtitle: 'Sponsorship details',
-      icon: <Award size={16} />
-    },
-    {
-      id: 2,
-      title: 'Sponsor Details',
-      subtitle: 'Your information',
-      icon: <User size={16} />
-    },
-    {
-      id: 3,
-      title: 'Event Information',
-      subtitle: 'Event or project details',
-      icon: <Calendar size={16} />
-    },
-    {
-      id: 4,
-      title: 'Benefits & Media',
-      subtitle: 'What sponsors get',
-      icon: <FileText size={16} />
+  // Load existing sponsorship data for edit mode
+  useEffect(() => {
+    if (id) {
+      setIsEditMode(true);
+      loadSponsorshipData();
     }
+  }, [id]);
+
+  const loadSponsorshipData = async () => {
+    setLoadingData(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}?edit=true`);
+      const result = await response.json();
+
+      if (result.success) {
+        const sponsorship = result.sponsorship;
+        
+        // Check if user can edit
+          const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
+        if (!isAdmin && sponsorship.ownerEmail !== profile.email) {
+          toast.error('You do not have permission to edit this sponsorship');
+          navigate('/home/sponsorship-connect');
+          return;
+        }
+
+        // Populate form with existing data
+        setFormData({
+          title: sponsorship.title || '',
+          description: sponsorship.description || '',
+          detailedDescription: sponsorship.detailedDescription || '',
+          category: sponsorship.category || '',
+          sponsorshipType: sponsorship.sponsorshipType || '',
+          amount: sponsorship.amount?.toString() || '',
+          duration: sponsorship.duration || '',
+          sponsorName: sponsorship.sponsorName || '',
+          sponsorEmail: sponsorship.sponsorEmail || '',
+          sponsorPhone: sponsorship.sponsorPhone || '',
+          sponsorWebsite: sponsorship.sponsorWebsite || '',
+          sponsorLogo: sponsorship.sponsorLogo || null,
+          eventName: sponsorship.eventName || '',
+          eventDate: sponsorship.eventDate ? new Date(sponsorship.eventDate).toISOString().split('T')[0] : '',
+          eventLocation: sponsorship.eventLocation || '',
+          expectedAudience: sponsorship.expectedAudience?.toString() || '',
+          targetDemographic: sponsorship.targetDemographic || '',
+          benefits: sponsorship.benefits?.length > 0 ? sponsorship.benefits : [''],
+          deliverables: sponsorship.deliverables?.length > 0 ? sponsorship.deliverables : [''],
+          marketingReach: sponsorship.marketingReach || '',
+          images: sponsorship.images || [],
+          proposalDocument: sponsorship.proposalDocument || null,
+          priority: sponsorship.priority || 'medium',
+          tags: sponsorship.tags?.join(', ') || '',
+          expiresAt: sponsorship.expiresAt ? new Date(sponsorship.expiresAt).toISOString().split('T')[0] : ''
+        });
+      } else {
+        toast.error(result.message || 'Failed to load sponsorship data');
+        navigate('/home/sponsorship-connect');
+      }
+    } catch (error) {
+      console.error('Load sponsorship error:', error);
+      toast.error('Failed to load sponsorship data');
+      navigate('/home/sponsorship-connect');
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  // Update the submit handler
+  const handleSubmit = async () => {
+    if (!validateStep(currentStep)) return;
+
+    setLoading(true);
+    try {
+      const sponsorshipData = {
+        ...formData,
+        benefits: formData.benefits.filter(b => b.trim()),
+        deliverables: formData.deliverables.filter(d => d.trim()),
+        tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
+        expectedAudience: formData.expectedAudience ? Number(formData.expectedAudience) : null,
+        amount: Number(formData.amount),
+        ownerEmail: profile.email,
+        createdBy: `${profile.firstName} ${profile.lastName}`
+      };
+
+      const url = isEditMode 
+        ? `${process.env.REACT_APP_API_URL}/api/sponsorship/${id}`
+        : `${process.env.REACT_APP_API_URL}/api/sponsorship/create`;
+      
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sponsorshipData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success(result.message || `Sponsorship ${isEditMode ? 'updated' : 'created'} successfully!`);
+        navigate('/home/sponsorship-connect');
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} sponsorship. Please try again.`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const steps = [
+    { id: 1, title: 'Basic Information', subtitle: 'Sponsorship details', icon: <Award size={16} /> },
+    { id: 2, title: 'Sponsor Details', subtitle: 'Your information', icon: <User size={16} /> },
+    { id: 3, title: 'Event Information', subtitle: 'Event or project details', icon: <Calendar size={16} /> },
+    { id: 4, title: 'Benefits & Media', subtitle: 'What sponsors get', icon: <FileText size={16} /> }
   ];
 
   const categories = ['Event', 'Product', 'Service', 'Content', 'Community'];
@@ -111,10 +167,8 @@ const CreateSponsorship = () => {
         if (!formData.sponsorEmail.trim()) newErrors.sponsorEmail = 'Email is required';
         break;
       case 3:
-        // Event info is optional
         break;
       case 4:
-        // Benefits and media are optional
         break;
     }
     
@@ -220,43 +274,19 @@ const CreateSponsorship = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
-  const handleSubmit = async () => {
-    if (!validateStep(currentStep)) return;
+  const progress = (currentStep / 4) * 100;
 
-    setLoading(true);
-    try {
-      const sponsorshipData = {
-        ...formData,
-        benefits: formData.benefits.filter(b => b.trim()),
-        deliverables: formData.deliverables.filter(d => d.trim()),
-        tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
-        expectedAudience: formData.expectedAudience ? Number(formData.expectedAudience) : null,
-        amount: Number(formData.amount)
-      };
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sponsorshipData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        toast.success('Sponsorship created successfully!');
-        navigate('/home/sponsorship-connect');
-      } else {
-        throw new Error(result.message);
-      }
-    } catch (error) {
-      console.error('Submit error:', error);
-      toast.error('Failed to create sponsorship. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Show loading spinner while loading data
+  if (loadingData) {
+    return (
+      <div className="bg-gray-50 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 size={48} className="animate-spin text-[#0A3A4C] mx-auto mb-4" />
+          <p className="text-gray-600">Loading sponsorship data...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -849,8 +879,6 @@ const CreateSponsorship = () => {
     }
   };
 
-  const progress = (currentStep / 4) * 100;
-
   return (
     <div className="bg-gray-50">
       <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
@@ -863,10 +891,25 @@ const CreateSponsorship = () => {
             <ArrowLeft size={20} />
           </button>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create Sponsorship</h1>
-            <p className="text-sm text-gray-600">Create a new sponsorship opportunity</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              {isEditMode ? 'Edit Sponsorship' : 'Create Sponsorship'}
+            </h1>
+            <p className="text-sm text-gray-600">
+              {isEditMode ? 'Update your sponsorship opportunity' : 'Create a new sponsorship opportunity'}
+            </p>
           </div>
         </div>
+
+        {isEditMode && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center gap-2">
+              <AlertCircle size={16} className="text-yellow-600" />
+              <p className="text-sm text-yellow-800">
+                <span className="font-medium">Note:</span> After editing, your sponsorship will be sent for admin re-verification.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Progress */}
         <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-6 mb-4">
@@ -951,12 +994,12 @@ const CreateSponsorship = () => {
               {loading ? (
                 <>
                   <Loader2 size={16} className="animate-spin" />
-                  <span>Creating...</span>
+                  <span>{isEditMode ? 'Updating...' : 'Creating...'}</span>
                 </>
               ) : (
                 <>
                   <CheckCircle size={16} />
-                  <span>Create Sponsorship</span>
+                  <span>{isEditMode ? 'Update Sponsorship' : 'Create Sponsorship'}</span>
                 </>
               )}
             </button>

@@ -55,6 +55,7 @@ import BusinessConnectDetails from "../BusinessConnect/BusinessConnectDetails.js
 import SponsorshipConnect from "../Sponsorships/SponsorshipConnect.jsx";
 import CreateSponsorship from "../Sponsorships/CreateSponsorship.jsx";
 import SponsorshipDetails from "../Sponsorships/SponsorshipDetails.jsx";
+import SponsorshipVerificationPanel from "../Sponsorships/SponsorshipVerificationPanel.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -191,6 +192,8 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/sponsorship-connect/:id/" element={<SponsorshipDetails/>} />
               <Route path="/sponsorship-connect/create" element={<CreateSponsorship />} />
               <Route path="/sponsorship-connect/edit/:id" element={<CreateSponsorship/>} />
+              <Route path="/sponsorship-connect/admin/verify" element={<SponsorshipVerificationPanel/>} />
+
 
 
 
