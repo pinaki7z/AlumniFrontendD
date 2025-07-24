@@ -131,8 +131,10 @@ const SponsorshipConnect = () => {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center">
-            <Award size={32} className="text-white" />
+          <div className="w-full h-full bg-gradient-to-br from-[#0A3A4C] via-[#174873] to-[#2A5F7A] flex items-center justify-center relative overflow-hidden">
+            <Award size={32} className="text-white/90 relative z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
+            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -209,7 +211,7 @@ const SponsorshipConnect = () => {
           
           <button 
             onClick={() => navigate(`/home/sponsorship-connect/${sponsorship._id}`)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+            className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
           >
             <span>View Details</span>
           </button>
@@ -224,7 +226,7 @@ const SponsorshipConnect = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
               <Award size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -240,7 +242,7 @@ const SponsorshipConnect = () => {
           <div className="flex items-center gap-2">
             <Link
               to="/home/sponsorship-connect/create"
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
             >
               <Plus size={16} />
               <span>Create Sponsorship</span>
@@ -302,7 +304,7 @@ const SponsorshipConnect = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs sm:text-sm font-medium text-gray-600">Total Value</p>
-                <p className="text-lg sm:text-2xl font-bold text-purple-600">₹{(stats.totalAmount / 100000).toFixed(1)}L</p>
+                <p className="text-lg sm:text-2xl font-bold text-gradient-to-r from-[#0A3A4C] to-[#174873]">₹{(stats.totalAmount / 100000).toFixed(1)}L</p>
               </div>
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 <TrendingUp size={16} className="text-purple-600" />
@@ -323,7 +325,7 @@ const SponsorshipConnect = () => {
                 placeholder="Search sponsorships..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 text-sm"
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
               />
             </div>
             
@@ -331,7 +333,7 @@ const SponsorshipConnect = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
               >
                 {categories.map(category => (
                   <option key={category.value} value={category.value}>{category.label}</option>
@@ -341,7 +343,7 @@ const SponsorshipConnect = () => {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 text-sm"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
               >
                 {statusOptions.map(status => (
                   <option key={status.value} value={status.value}>{status.label}</option>
@@ -354,7 +356,7 @@ const SponsorshipConnect = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 size={32} className="animate-spin text-purple-600" />
+            <Loader2 size={32} className="animate-spin text-[#0A3A4C]" />
           </div>
         )}
 
@@ -378,7 +380,7 @@ const SponsorshipConnect = () => {
             </p>
             <Link
               to="/home/sponsorship-connect/create"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
             >
               <Plus size={16} />
               Create First Sponsorship

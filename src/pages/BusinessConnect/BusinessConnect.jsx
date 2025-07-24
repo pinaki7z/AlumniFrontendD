@@ -262,7 +262,7 @@ const BusinessCard = ({ business }) => {
         </div>
 
         {/* Floating Action Menu */}
-        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+        <div className="absolute bottom-2 right-2  group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
           <div className="flex gap-1">
             <button 
               onClick={(e) => {
@@ -421,7 +421,7 @@ const BusinessCard = ({ business }) => {
             {isAdmin && (
               <Link
                 to="/home/business-connect/admin/verify"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
               >
                 <Shield size={16} />
                 <span className="hidden sm:inline">Admin Verify</span>

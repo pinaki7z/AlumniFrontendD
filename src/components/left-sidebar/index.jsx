@@ -63,7 +63,7 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
         },
         { path: '/home/news', label: 'News', icon: <BiNews /> },
         { path: '/home/business-connect', label: 'Business Connect', icon: <LuHeartHandshake /> },
-        { path: '/home/sponsorships', label: 'Sponsorships', icon: <GoSponsorTiers /> },
+        { path: '/home/sponsorship-connect', label: 'Sponsorships', icon: <GoSponsorTiers /> },
         { path: '/home/events', label: 'Events', icon: <MdOutlineEvent /> },
         { path: '/home/jobs', label: 'Jobs/Internships', icon: <FaBriefcase /> },
         { path: '/home/photo-gallery', label: 'Photo Gallery', icon: <GrGallery /> },

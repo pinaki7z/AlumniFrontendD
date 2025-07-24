@@ -272,7 +272,7 @@ const CreateSponsorship = () => {
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
                 placeholder="Enter sponsorship title"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                   errors.title ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -293,7 +293,7 @@ const CreateSponsorship = () => {
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 placeholder="Brief description of the sponsorship opportunity"
                 rows={3}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 resize-vertical ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 resize-vertical ${
                   errors.description ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -313,7 +313,7 @@ const CreateSponsorship = () => {
                 <select
                   value={formData.category}
                   onChange={(e) => handleInputChange('category', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                     errors.category ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -337,7 +337,7 @@ const CreateSponsorship = () => {
                 <select
                   value={formData.sponsorshipType}
                   onChange={(e) => handleInputChange('sponsorshipType', e.target.value)}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                     errors.sponsorshipType ? 'border-red-300' : 'border-gray-300'
                   }`}
                 >
@@ -365,7 +365,7 @@ const CreateSponsorship = () => {
                   value={formData.amount}
                   onChange={(e) => handleInputChange('amount', e.target.value)}
                   placeholder="Enter amount"
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                     errors.amount ? 'border-red-300' : 'border-gray-300'
                   }`}
                 />
@@ -384,7 +384,7 @@ const CreateSponsorship = () => {
                 <select
                   value={formData.duration}
                   onChange={(e) => handleInputChange('duration', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 >
                   <option value="">Select Duration</option>
                   {durations.map(duration => (
@@ -403,7 +403,7 @@ const CreateSponsorship = () => {
                 onChange={(e) => handleInputChange('detailedDescription', e.target.value)}
                 placeholder="Detailed description of the sponsorship opportunity, terms, and conditions"
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 resize-vertical"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 resize-vertical"
               />
             </div>
           </div>
@@ -421,7 +421,7 @@ const CreateSponsorship = () => {
                 value={formData.sponsorName}
                 onChange={(e) => handleInputChange('sponsorName', e.target.value)}
                 placeholder="Enter sponsor name"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                   errors.sponsorName ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -442,7 +442,7 @@ const CreateSponsorship = () => {
                 value={formData.sponsorEmail}
                 onChange={(e) => handleInputChange('sponsorEmail', e.target.value)}
                 placeholder="Enter email address"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                   errors.sponsorEmail ? 'border-red-300' : 'border-gray-300'
                 }`}
               />
@@ -464,7 +464,7 @@ const CreateSponsorship = () => {
                   value={formData.sponsorPhone}
                   onChange={(e) => handleInputChange('sponsorPhone', e.target.value)}
                   placeholder="Enter phone number"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 />
               </div>
 
@@ -477,7 +477,7 @@ const CreateSponsorship = () => {
                   value={formData.sponsorWebsite}
                   onChange={(e) => handleInputChange('sponsorWebsite', e.target.value)}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 />
               </div>
             </div>
@@ -504,17 +504,17 @@ const CreateSponsorship = () => {
               ) : (
                 <div
                   onClick={() => document.getElementById('logoUpload').click()}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-purple-600 hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
                 >
                   {uploadingImage ? (
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 size={20} className="animate-spin text-purple-600" />
+                      <Loader2 size={20} className="animate-spin text-[#0A3A4C]" />
                       <span className="text-sm text-gray-600">Uploading...</span>
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <div className="w-12 h-12 bg-purple-600/10 rounded-full flex items-center justify-center mx-auto">
-                        <Upload size={24} className="text-purple-600" />
+                      <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto">
+                        <Upload size={24} className="text-[#0A3A4C]" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-700">Upload Logo</p>
@@ -547,7 +547,7 @@ const CreateSponsorship = () => {
                 value={formData.eventName}
                 onChange={(e) => handleInputChange('eventName', e.target.value)}
                 placeholder="Enter event or project name"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
               />
             </div>
 
@@ -560,7 +560,7 @@ const CreateSponsorship = () => {
                   type="date"
                   value={formData.eventDate}
                   onChange={(e) => handleInputChange('eventDate', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 />
               </div>
 
@@ -573,7 +573,7 @@ const CreateSponsorship = () => {
                   value={formData.expectedAudience}
                   onChange={(e) => handleInputChange('expectedAudience', e.target.value)}
                   placeholder="Number of expected attendees"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 />
               </div>
             </div>
@@ -587,7 +587,7 @@ const CreateSponsorship = () => {
                 value={formData.eventLocation}
                 onChange={(e) => handleInputChange('eventLocation', e.target.value)}
                 placeholder="Enter event location"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
               />
             </div>
 
@@ -600,7 +600,7 @@ const CreateSponsorship = () => {
                 onChange={(e) => handleInputChange('targetDemographic', e.target.value)}
                 placeholder="Describe the target audience demographics"
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 resize-vertical"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 resize-vertical"
               />
             </div>
 
@@ -613,7 +613,7 @@ const CreateSponsorship = () => {
                 onChange={(e) => handleInputChange('marketingReach', e.target.value)}
                 placeholder="Describe the marketing reach and exposure opportunities"
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200 resize-vertical"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 resize-vertical"
               />
             </div>
           </div>
@@ -634,7 +634,7 @@ const CreateSponsorship = () => {
                       value={benefit}
                       onChange={(e) => handleArrayChange('benefits', index, e.target.value)}
                       placeholder="Enter sponsor benefit"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                     />
                     {formData.benefits.length > 1 && (
                       <button
@@ -650,7 +650,7 @@ const CreateSponsorship = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem('benefits')}
-                  className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+                  className="text-sm text-[#0A3A4C] hover:text-[#174873] font-medium"
                 >
                   + Add Benefit
                 </button>
@@ -669,7 +669,7 @@ const CreateSponsorship = () => {
                       value={deliverable}
                       onChange={(e) => handleArrayChange('deliverables', index, e.target.value)}
                       placeholder="Enter deliverable"
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                     />
                     {formData.deliverables.length > 1 && (
                       <button
@@ -685,7 +685,7 @@ const CreateSponsorship = () => {
                 <button
                   type="button"
                   onClick={() => addArrayItem('deliverables')}
-                  className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+                  className="text-sm text-[#0A3A4C] hover:text-[#174873] font-medium"
                 >
                   + Add Deliverable
                 </button>
@@ -700,7 +700,7 @@ const CreateSponsorship = () => {
                 <select
                   value={formData.priority}
                   onChange={(e) => handleInputChange('priority', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -716,7 +716,7 @@ const CreateSponsorship = () => {
                   type="date"
                   value={formData.expiresAt}
                   onChange={(e) => handleInputChange('expiresAt', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
                 />
               </div>
             </div>
@@ -730,7 +730,7 @@ const CreateSponsorship = () => {
                 value={formData.tags}
                 onChange={(e) => handleInputChange('tags', e.target.value)}
                 placeholder="Enter tags separated by commas"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-purple-600 transition-colors duration-200"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
               />
               <p className="text-xs text-gray-500 mt-1">Separate tags with commas (e.g., technology, startup, innovation)</p>
             </div>
@@ -766,17 +766,17 @@ const CreateSponsorship = () => {
                 
                 <div
                   onClick={() => document.getElementById('imageUpload').click()}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-purple-600 hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
                 >
                   {uploadingImage ? (
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 size={20} className="animate-spin text-purple-600" />
+                      <Loader2 size={20} className="animate-spin text-[#0A3A4C]" />
                       <span className="text-sm text-gray-600">Uploading...</span>
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <div className="w-12 h-12 bg-purple-600/10 rounded-full flex items-center justify-center mx-auto">
-                        <Upload size={24} className="text-purple-600" />
+                      <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto">
+                        <Upload size={24} className="text-[#0A3A4C]" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-700">Upload Images</p>
@@ -813,17 +813,17 @@ const CreateSponsorship = () => {
               ) : (
                 <div
                   onClick={() => document.getElementById('docUpload').click()}
-                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-purple-600 hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer text-center"
                 >
                   {uploadingDoc ? (
                     <div className="flex items-center justify-center gap-2">
-                      <Loader2 size={20} className="animate-spin text-purple-600" />
+                      <Loader2 size={20} className="animate-spin text-[#0A3A4C]" />
                       <span className="text-sm text-gray-600">Uploading...</span>
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <div className="w-12 h-12 bg-purple-600/10 rounded-full flex items-center justify-center mx-auto">
-                        <Upload size={24} className="text-purple-600" />
+                      <div className="w-12 h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto">
+                        <Upload size={24} className="text-[#0A3A4C]" />
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-700">Upload Proposal</p>
@@ -877,7 +877,7 @@ const CreateSponsorship = () => {
           
           <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
             <div 
-              className="bg-gradient-to-r from-purple-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -888,7 +888,7 @@ const CreateSponsorship = () => {
               <div key={step.id} className="flex items-center">
                 <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-colors duration-200 ${
                   currentStep >= step.id 
-                    ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white' 
+                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white' 
                     : 'bg-gray-200 text-gray-500'
                 }`}>
                   {currentStep > step.id ? <CheckCircle size={16} /> : step.id}
@@ -901,7 +901,7 @@ const CreateSponsorship = () => {
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`w-8 sm:w-16 h-px mx-2 sm:mx-4 ${
-                    currentStep > step.id ? 'bg-gradient-to-r from-purple-600 to-indigo-600' : 'bg-gray-200'
+                    currentStep > step.id ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873]' : 'bg-gray-200'
                   }`} />
                 )}
               </div>
@@ -937,7 +937,7 @@ const CreateSponsorship = () => {
           {currentStep < 4 ? (
             <button
               onClick={handleNext}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
             >
               <span>Next</span>
               <ArrowRight size={16} />
@@ -946,7 +946,7 @@ const CreateSponsorship = () => {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

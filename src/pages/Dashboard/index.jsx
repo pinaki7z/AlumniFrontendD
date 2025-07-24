@@ -190,6 +190,8 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/sponsorship-connect" element={<SponsorshipConnect />} />
               <Route path="/sponsorship-connect/:id/" element={<SponsorshipDetails/>} />
               <Route path="/sponsorship-connect/create" element={<CreateSponsorship />} />
+              <Route path="/sponsorship-connect/edit/:id" element={<CreateSponsorship/>} />
+
 
 
 
