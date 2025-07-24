@@ -52,6 +52,9 @@ import BusinessConnect from "../BusinessConnect/BusinessConnect.jsx";
 import CreateBusiness from "../BusinessConnect/CreateBusiness.jsx";
 import BusinessVerificationPanel from "../BusinessConnect/BusinessVerificationPanel.jsx";
 import BusinessConnectDetails from "../BusinessConnect/BusinessConnectDetails.jsx";
+import SponsorshipConnect from "../Sponsorships/SponsorshipConnect.jsx";
+import CreateSponsorship from "../Sponsorships/CreateSponsorship.jsx";
+import SponsorshipDetails from "../Sponsorships/SponsorshipDetails.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -182,6 +185,12 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/business-connect/create" element={<CreateBusiness />} />
               <Route path="/business-connect/edit/:id" element={<CreateBusiness/>} />
               <Route path="/business-connect/admin/verify" element={<BusinessVerificationPanel/>} />
+
+            {/* all sponsorship routes */}
+              <Route path="/sponsorship-connect" element={<SponsorshipConnect />} />
+              <Route path="/sponsorship-connect/:id/" element={<SponsorshipDetails/>} />
+              <Route path="/sponsorship-connect/create" element={<CreateSponsorship />} />
+
 
 
 
