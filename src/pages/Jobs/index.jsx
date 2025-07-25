@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import IntJobs from "../../components/IntJobs";
-import PageSubTitle from "../../components/PageSubTitle";
 import JobPost from "../../components/JobPost";
 import { Archive } from "./Archive";
 import { StarredJobs } from "../../components/StarredJobs";
