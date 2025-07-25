@@ -4,41 +4,25 @@ import TopBar from "../../components/topbar";
 import SocialMediaPost from "../../components/Social-wall-post";
 import SideWidgets from "../../components/SideWidgets";
 import Groups from "../Groups";
-import Donations from "../Donations";
-import Sponsorships from "../Sponsorships";
 import Settings from "../Settings";
 import ProfilePage from "../ProfilePage";
 import Members from '../Members';
 import Profile from '../Profile';
 import Events from "../Events";
 import Jobs from "../Jobs";
-import LandingPage from "../LandingPage/index.jsx";
 import IndividualJobPost from "../Jobs/IndividualJobPost.jsx";
-import Internships from "../Internships";
 import NotificationsPage from "../NotificationsPage";
-import News from "../News/index.jsx";
 import Forum from "../Forum";
-import CreateForum from "../../components/Forum/CreateForum";
-import IForum from "../../components/Forum/IForum";
-import Chatbox from "../../components/Chatbox"
 import { ProfileSettings } from "../ProfilePage/ProfileSettings/index.jsx";
 import { Following } from "../../components/Following/index.jsx";
 import { Followers } from "../../components/Followers/index.jsx";
 import { Ipost } from "../../components/Ipost"
-import IndividualGroup from "../../components/Groups/IndividualGroup/index.jsx";
-import Chat from "../../pages/Chat";
 import { WorkExperience } from "../../components/WorkExperience/index.jsx";
-import Guidance from "../Guidance/index.jsx";
-import { Archive } from "../Jobs/Archive/index.jsx";
-import DonSponRequest from "../../components/DonSponRequest/index.jsx";
 import { SearchedResults } from "../../components/SearchedResults";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import PhotoGallery from "../PhotoGallery/index.jsx";
 import { CreateJob } from "../Jobs/CreateJob/index.jsx";
 import { InterestedJobCandidates } from "../Jobs/InterestedJobCandidates/index.jsx";
-import { CreateNews } from "../News/CreateNews/index.jsx";
-import NewsDetails from "../News/NewsDetails.jsx";
 import MemberForm from "../Members/MemberForm.jsx";
 import ValidateUser from "../ValidateUser/ValidateUser.jsx";
 import V2PhotoGallery from "../PhotoGallery/V2PhotoGallary.jsx";
@@ -182,7 +166,7 @@ const Dashboard = ({ handleLogout }) => {
               )}
 
               {/* All other routes remain the same */}
-              <Route path="/donations/*" element={<Donations />} />
+              {/* <Route path="/donations/*" element={<Donations />} /> */}
 
 
               {/* all business connect routes */}
@@ -208,13 +192,13 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/news/analytics" element={<AnalyticsPage />} />
 
 
-              <Route path="/guidance/*" element={<Guidance />} />
+              {/* <Route path="/guidance/*" element={<Guidance />} /> */}
               <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
               <Route path="/chatv2">
                 <Route index element={<MessagingPage />} />
                 <Route path=":userId" element={<MessagingPage />} />
               </Route>
-              <Route path="/sponsorships/*" element={<Sponsorships />} />
+              {/* <Route path="/sponsorships/*" element={<Sponsorships />} /> */}
               <Route path="/members/*" element={
                 <div className="w-full">
                   <Members showHeading={true} />
@@ -234,10 +218,14 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
               <Route path="/posts/:_id/" element={<Ipost />} />
               <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
+
+
               <Route path="/forums/*" element={<Forum />} />
               <Route path="/forums/category/:categoryId" element={<TopicPage />} />
               <Route path="/forums/category/:categoryId/topic/:topicId" element={<ForumPost />} />
               <Route path="/forums/category/:categoryId/topic/:topicId/post/:postId" element={<DiscussionPage />} />
+
+
               <Route path="/profile/:id/following" element={<Following />} />
               <Route path="/profile/:id/followers" element={<Followers />} />
               <Route path="/profile/workExperience" element={<WorkExperience />} />
