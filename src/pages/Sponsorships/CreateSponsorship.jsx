@@ -1,10 +1,10 @@
-// components/CreateSponsorship.js
+// components/CreateSponsorship.js - Updated with Funding Goal
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   ArrowLeft, ArrowRight, CheckCircle, User, Award, DollarSign, FileText,
-  Upload, X, Loader2, AlertCircle, Calendar, MapPin, Users
+  Upload, X, Loader2, AlertCircle, Calendar, MapPin, Users, Target
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -26,7 +26,7 @@ const CreateSponsorship = () => {
     sponsorEmail: profile.email, sponsorPhone: '', sponsorWebsite: '', sponsorLogo: null,
     eventName: '', eventDate: '', eventLocation: '', expectedAudience: '', targetDemographic: '',
     benefits: [''], deliverables: [''], marketingReach: '', images: [], proposalDocument: null,
-    priority: 'medium', tags: '', expiresAt: ''
+    priority: 'medium', tags: '', expiresAt: '', fundingGoal: '' // Added fundingGoal
   });
 
   // Load existing sponsorship data for edit mode
@@ -47,7 +47,7 @@ const CreateSponsorship = () => {
         const sponsorship = result.sponsorship;
         
         // Check if user can edit
-          const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
+        const isAdmin = profile.profileLevel === 0 || profile.profileLevel === 1;
         if (!isAdmin && sponsorship.ownerEmail !== profile.email) {
           toast.error('You do not have permission to edit this sponsorship');
           navigate('/home/sponsorship-connect');
@@ -80,7 +80,8 @@ const CreateSponsorship = () => {
           proposalDocument: sponsorship.proposalDocument || null,
           priority: sponsorship.priority || 'medium',
           tags: sponsorship.tags?.join(', ') || '',
-          expiresAt: sponsorship.expiresAt ? new Date(sponsorship.expiresAt).toISOString().split('T')[0] : ''
+          expiresAt: sponsorship.expiresAt ? new Date(sponsorship.expiresAt).toISOString().split('T')[0] : '',
+          fundingGoal: sponsorship.fundingGoal?.toString() || '' // Added fundingGoal
         });
       } else {
         toast.error(result.message || 'Failed to load sponsorship data');
@@ -108,6 +109,7 @@ const CreateSponsorship = () => {
         tags: formData.tags.split(',').map(t => t.trim()).filter(t => t),
         expectedAudience: formData.expectedAudience ? Number(formData.expectedAudience) : null,
         amount: Number(formData.amount),
+        fundingGoal: formData.fundingGoal ? Number(formData.fundingGoal) : Number(formData.amount), // Added fundingGoal handling
         ownerEmail: profile.email,
         createdBy: `${profile.firstName} ${profile.lastName}`
       };
@@ -161,6 +163,10 @@ const CreateSponsorship = () => {
         if (!formData.category) newErrors.category = 'Category is required';
         if (!formData.sponsorshipType) newErrors.sponsorshipType = 'Sponsorship type is required';
         if (!formData.amount) newErrors.amount = 'Amount is required';
+        // Validate funding goal if provided
+        if (formData.fundingGoal && Number(formData.fundingGoal) < Number(formData.amount)) {
+          newErrors.fundingGoal = 'Funding goal should be greater than or equal to sponsorship amount';
+        }
         break;
       case 2:
         if (!formData.sponsorName.trim()) newErrors.sponsorName = 'Sponsor name is required';
@@ -388,13 +394,13 @@ const CreateSponsorship = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Amount (₹)*
+                  Sponsorship Amount (₹)*
                 </label>
                 <input
                   type="number"
                   value={formData.amount}
                   onChange={(e) => handleInputChange('amount', e.target.value)}
-                  placeholder="Enter amount"
+                  placeholder="Enter sponsorship amount"
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
                     errors.amount ? 'border-red-300' : 'border-gray-300'
                   }`}
@@ -409,19 +415,44 @@ const CreateSponsorship = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Duration
+                  Funding Goal (₹)
+                  <span className="text-xs text-gray-500 ml-1">(Optional - defaults to sponsorship amount)</span>
                 </label>
-                <select
-                  value={formData.duration}
-                  onChange={(e) => handleInputChange('duration', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
-                >
-                  <option value="">Select Duration</option>
-                  {durations.map(duration => (
-                    <option key={duration} value={duration}>{duration}</option>
-                  ))}
-                </select>
+                <input
+                  type="number"
+                  value={formData.fundingGoal}
+                  onChange={(e) => handleInputChange('fundingGoal', e.target.value)}
+                  placeholder="Enter funding goal"
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 ${
+                    errors.fundingGoal ? 'border-red-300' : 'border-gray-300'
+                  }`}
+                />
+                {errors.fundingGoal && (
+                  <p className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                    <AlertCircle size={12} />
+                    {errors.fundingGoal}
+                  </p>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  Set a funding goal if you want to raise more than the sponsorship amount through donations
+                </p>
               </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Duration
+              </label>
+              <select
+                value={formData.duration}
+                onChange={(e) => handleInputChange('duration', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200"
+              >
+                <option value="">Select Duration</option>
+                {durations.map(duration => (
+                  <option key={duration} value={duration}>{duration}</option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -881,7 +912,7 @@ const CreateSponsorship = () => {
 
   return (
     <div className="bg-gray-50">
-      <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
         {/* Header */}
         <div className="flex items-center gap-3 mb-4 sm:mb-6">
           <button

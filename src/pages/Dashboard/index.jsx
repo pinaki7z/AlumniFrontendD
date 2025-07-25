@@ -56,6 +56,11 @@ import SponsorshipConnect from "../Sponsorships/SponsorshipConnect.jsx";
 import CreateSponsorship from "../Sponsorships/CreateSponsorship.jsx";
 import SponsorshipDetails from "../Sponsorships/SponsorshipDetails.jsx";
 import SponsorshipVerificationPanel from "../Sponsorships/SponsorshipVerificationPanel.jsx";
+import NewsUpdatesPage from "../NewsV2/NewsUpdatesPage.jsx";
+import NewsDetailPage from "../NewsV2/NewsDetailPage.jsx";
+import CreateNewsPage from "../NewsV2/CreateNewsPage.jsx";
+import DraftsPage from "../NewsV2/DraftsPage.jsx";
+import AnalyticsPage from "../NewsV2/AnalyticsPage.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -195,8 +200,12 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/sponsorship-connect/admin/verify" element={<SponsorshipVerificationPanel/>} />
 
 
-
-
+              {/* all newsv2 routes */}
+              <Route path="/news/*" element={<NewsUpdatesPage />} />
+              <Route path="/news/create" element={<CreateNewsPage />} />
+              <Route path="/news/:id" element={<NewsDetailPage />} />
+              <Route path="/news/drafts" element={<DraftsPage />} />
+              <Route path="/news/analytics" element={<AnalyticsPage />} />
 
 
               <Route path="/guidance/*" element={<Guidance />} />
@@ -233,14 +242,14 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/profile/:id/followers" element={<Followers />} />
               <Route path="/profile/workExperience" element={<WorkExperience />} />
               <Route path="/profile/profile-settings" element={<ProfileSettings />} />
-              <Route path="/news/*" element={
+              {/* <Route path="/news/*" element={
                 <div className="w-full">
                   <News />
                 </div>
               } />
               <Route path="/news/:id/*" element={<NewsDetails />} />
               <Route path="/news/:id/edit" element={<CreateNews />} />
-              <Route path="/news/createNews" element={<CreateNews />} />
+              <Route path="/news/createNews" element={<CreateNews />} /> */}
               <Route path="/validate-user" element={<ValidateUser />} />
             </Routes>
           </div>

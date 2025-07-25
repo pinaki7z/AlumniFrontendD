@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  Building, Plus, Search, Filter, DollarSign, Calendar, MapPin, Users, Eye,
-  Award, Zap, Target, Loader2, Edit, Trash2, MoreVertical, CheckCircle,
-  Clock, XCircle, AlertCircle
+  Award, Plus, Search, Filter, DollarSign, Calendar, MapPin, Users, Eye,
+  Building, Zap, Target, Loader2, Edit, Trash2, MoreVertical, CheckCircle,
+  Clock, XCircle, AlertCircle, ArrowRight, TrendingUp, User, X
 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -163,170 +163,197 @@ const SponsorshipConnect = () => {
     return () => clearTimeout(timer);
   }, [searchQuery, selectedCategory, activeTab]);
 
-const SponsorshipCard = ({ sponsorship }) => {
-  const canEdit = isAdmin || sponsorship.ownerEmail === profile.email;
+  // Format currency compactly (matching BusinessCard style)
+  const formatCurrency = (amount) => {
+    if (amount >= 1e7) return `₹${(amount/1e7).toFixed(1)}Cr`;
+    if (amount >= 1e5) return `₹${(amount/1e5).toFixed(1)}L`;
+    if (amount >= 1e3) return `₹${(amount/1e3).toFixed(1)}K`;
+    return `₹${amount.toLocaleString()}`;
+  };
 
-  return (
-    <div className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 overflow-hidden group">
-      <div className="relative h-32 sm:h-40 overflow-hidden">
-        {sponsorship.images && sponsorship.images[0] ? (
-          <img
-            src={sponsorship.images[0]}
-            alt={sponsorship.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#0A3A4C] via-[#174873] to-[#2A5F7A] flex items-center justify-center relative overflow-hidden">
-            <Award size={32} className="text-white/90 relative z-10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
-            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        
-        <div className="absolute top-3 right-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            sponsorship.verificationStatus === 'verified' ? 'bg-green-100 text-green-800' :
-            sponsorship.verificationStatus === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-red-100 text-red-800'
-          }`}>
-            {sponsorship.verificationStatus.charAt(0).toUpperCase() + sponsorship.verificationStatus.slice(1)}
-          </span>
-        </div>
-        
-        <div className="absolute bottom-3 left-3">
-          <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-gray-800 rounded-full text-xs font-medium">
-            {sponsorship.category}
-          </span>
-        </div>
+  const SponsorshipCard = ({ sponsorship }) => {
+    const canEdit = isAdmin || sponsorship.ownerEmail === profile.email;
 
-        {/* Always Visible Edit/Delete Buttons - Fixed Version */}
-        {canEdit && (
-          <div className="absolute top-3 left-3 flex gap-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/home/sponsorship-connect/edit/${sponsorship._id}`);
+    return (
+      <div className="group bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-gray-300 transition-all duration-300 overflow-hidden hover:-translate-y-1">
+        {/* Compact Image Header */}
+        <div className="relative h-28 sm:h-32 overflow-hidden">
+          {sponsorship.images && sponsorship.images[0] ? (
+            <img
+              src={sponsorship.images[0]}
+              alt={sponsorship.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => {
+                e.target.src = '/api/placeholder/800/400';
               }}
-              className="p-1.5 bg-white/90 hover:bg-white rounded-lg shadow-sm transition-colors duration-200"
-              title="Edit Sponsorship"
-            >
-              <Edit size={14} className="text-gray-700" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete(sponsorship._id);
-              }}
-              className="p-1.5 bg-red-500/90 hover:bg-red-500 rounded-lg shadow-sm transition-colors duration-200"
-              title="Delete Sponsorship"
-            >
-              <Trash2 size={14} className="text-white" />
-            </button>
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-[#0A3A4C] via-[#174873] to-[#2A5F7A] flex items-center justify-center relative overflow-hidden">
+              <Award size={28} className="text-white/90 relative z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
+            </div>
+          )}
+          
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          
+          {/* Compact Status & Category */}
+          <div className="absolute top-2 left-2 right-2 flex justify-between items-start">
+            <span className="px-2 py-1 bg-white/95 backdrop-blur-sm text-gray-800 rounded-md text-xs font-medium border border-white/50">
+              {sponsorship.category}
+            </span>
+            <span className={`px-2 py-1 rounded-md text-xs font-semibold backdrop-blur-sm ${
+              sponsorship.verificationStatus === 'verified' 
+                ? 'bg-green-500/90 text-white' 
+                : sponsorship.verificationStatus === 'pending'
+                ? 'bg-yellow-500/90 text-white'
+                : 'bg-red-500/90 text-white'
+            }`}>
+              {sponsorship.verificationStatus === 'verified' ? '✓' : sponsorship.verificationStatus === 'pending' ? '⏱' : '✗'}
+            </span>
           </div>
-        )}
-      </div>
 
-      <div className="p-4 sm:p-6">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
-            {sponsorship.title}
-          </h3>
-          <div className="flex items-center gap-1 text-sm text-gray-500">
-            <Eye size={14} />
-            <span>{sponsorship.views || 0}</span>
+          {/* Floating Action Menu */}
+          <div className="absolute bottom-2 right-2 opacity- group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+            <div className="flex gap-1">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/home/sponsorship-connect/${sponsorship._id}`);
+                }}
+                className="p-1.5 bg-white/95 backdrop-blur-sm hover:bg-white rounded-lg transition-colors duration-200 shadow-lg"
+                title="View Details"
+              >
+                <Eye size={14} className="text-gray-700" />
+              </button>
+              {canEdit && (
+                <>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/home/sponsorship-connect/edit/${sponsorship._id}`);
+                    }}
+                    className="p-1.5 bg-white/95 backdrop-blur-sm hover:bg-white rounded-lg transition-colors duration-200 shadow-lg"
+                    title="Edit"
+                  >
+                    <Edit size={14} className="text-gray-700" />
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(sponsorship._id);
+                    }}
+                    className="p-1.5 bg-red-500/95 backdrop-blur-sm hover:bg-red-600 rounded-lg transition-colors duration-200 shadow-lg"
+                    title="Delete"
+                  >
+                    <Trash2 size={14} className="text-white" />
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {sponsorship.description}
-        </p>
-
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <DollarSign size={14} />
-            <span className="font-semibold">₹{sponsorship.amount.toLocaleString()}</span>
-            {sponsorship.duration && <span>for {sponsorship.duration}</span>}
+        {/* Compact Content Section */}
+        <div className="p-4">
+          {/* Header */}
+          <div className="mb-3">
+            <h3 className="text-lg font-bold text-gray-900 line-clamp-1 mb-1 group-hover:text-[#0A3A4C] transition-colors duration-200">
+              {sponsorship.title}
+            </h3>
+            <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
+              {sponsorship.description}
+            </p>
           </div>
-          
-          {sponsorship.eventDate && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Calendar size={14} />
-              <span>{new Date(sponsorship.eventDate).toLocaleDateString()}</span>
-            </div>
-          )}
-          
-          {sponsorship.eventLocation && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin size={14} />
-              <span>{sponsorship.eventLocation}</span>
-            </div>
-          )}
-          
-          {sponsorship.expectedAudience && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Users size={14} />
-              <span>{sponsorship.expectedAudience.toLocaleString()} expected audience</span>
-            </div>
-          )}
-        </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-              <Building size={12} className="text-gray-500" />
+          {/* Compact Financial Grid */}
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="text-center p-2 bg-blue-50 rounded-lg border border-blue-100">
+              <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                <DollarSign size={10} className="text-white" />
+              </div>
+              <p className="text-xs font-bold text-blue-900">{formatCurrency(sponsorship.amount)}</p>
+              <p className="text-xs text-blue-700">Amount</p>
             </div>
-            <span className="text-sm text-gray-600">{sponsorship.sponsorName}</span>
+            
+            <div className="text-center p-2 bg-green-50 rounded-lg border border-green-100">
+              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                <TrendingUp size={10} className="text-white" />
+              </div>
+              <p className="text-xs font-bold text-green-900">{formatCurrency(sponsorship.fundingRaised || 0)}</p>
+              <p className="text-xs text-green-700">Raised</p>
+            </div>
+            
+            <div className="text-center p-2 bg-purple-50 rounded-lg border border-purple-100">
+              <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-1">
+                <Target size={10} className="text-white" />
+              </div>
+              <p className="text-xs font-bold text-purple-900">{formatCurrency(sponsorship.fundingGoal || sponsorship.amount)}</p>
+              <p className="text-xs text-purple-700">Goal</p>
+            </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            {isAdmin && activeTab === 'pending' && (
-              <>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleVerify(sponsorship._id, 'approve');
-                  }}
-                  className="flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded text-xs hover:bg-green-200 transition-colors duration-200"
-                >
-                  <CheckCircle size={10} />
-                  Approve
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const reason = prompt('Rejection reason (optional):');
-                    handleVerify(sponsorship._id, 'reject', reason || '');
-                  }}
-                  className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors duration-200"
-                >
-                  <XCircle size={10} />
-                  Reject
-                </button>
-              </>
-            )}
+
+      
+          {/* Compact Admin Actions */}
+          {isAdmin && sponsorship.verificationStatus === 'pending' && (
+            <div className="flex gap-2 mb-3 p-2 bg-amber-50 rounded-lg border-l-4 border-amber-400">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleVerify(sponsorship._id, 'approve');
+                }}
+                className="flex-1 px-2 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 text-xs font-medium flex items-center justify-center gap-1"
+              >
+                <CheckCircle size={12} />
+                Approve
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const reason = prompt('Rejection reason (optional):');
+                  handleVerify(sponsorship._id, 'reject', reason || '');
+                }}
+                className="flex-1 px-2 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 text-xs font-medium flex items-center justify-center gap-1"
+              >
+                <X size={12} />
+                Reject
+              </button>
+            </div>
+          )}
+
+          {/* Compact Footer */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center relative">
+                <User size={10} className="text-gray-600" />
+                <div className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full border border-white"></div>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-gray-900 line-clamp-1">{sponsorship.sponsorName}</p>
+                <p className="text-xs text-gray-500">Sponsor</p>
+              </div>
+            </div>
             
             <button 
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/home/sponsorship-connect/${sponsorship._id}`);
               }}
-              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 hover:shadow-lg transition-all duration-200 text-xs font-medium group/btn"
             >
-              <span>View Details</span>
+              <span>View</span>
+              <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
             </button>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
+    );
+  };
 
   return (
     <div className="bg-gray-50">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 pb-3">
-        {/* Header */}
+        {/* Header - Updated with Admin Verify button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
@@ -343,13 +370,15 @@ const SponsorshipCard = ({ sponsorship }) => {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Admin Verify Button - Only visible to admins */}
             {isAdmin && (
               <Link
                 to="/home/sponsorship-connect/admin/verify"
                 className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
               >
                 <CheckCircle size={16} />
-                <span>Admin Verify</span>
+                <span className="hidden sm:inline">Admin Verify</span>
+                <span className="sm:hidden">Verify</span>
                 {stats.pending > 0 && (
                   <span className="ml-1 px-2 py-1 bg-white/20 rounded-full text-xs">
                     {stats.pending}
@@ -357,6 +386,8 @@ const SponsorshipCard = ({ sponsorship }) => {
                 )}
               </Link>
             )}
+            
+            {/* Existing Create Sponsorship Button */}
             <Link
               to="/home/sponsorship-connect/create"
               className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
@@ -367,23 +398,33 @@ const SponsorshipCard = ({ sponsorship }) => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="bg-white rounded-lg shadow-sm p-1 mb-4">
-          <div className="flex flex-wrap gap-1">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
+        {/* Search and Filters */}
+        <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-4">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search size={16} className="text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search sponsorships..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
+              />
+            </div>
+            
+            <div className="sm:w-48">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
               >
-                {tab.icon}
-                <span className="hidden sm:inline">{tab.label}</span>
-              </button>
-            ))}
+                {categories.map(category => (
+                  <option key={category.value} value={category.value}>{category.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -454,33 +495,31 @@ const SponsorshipCard = ({ sponsorship }) => {
           )}
         </div>
 
-        {/* Search and Filters */}
+        {/* Tabs */}
         <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-3 sm:p-4 mb-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search size={16} className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search sponsorships..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
-              />
-            </div>
-            
-            <div className="flex gap-3">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-colors duration-200 text-sm"
+          <div className="flex gap-1 sm:gap-2 overflow-x-auto">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
-                {categories.map(category => (
-                  <option key={category.value} value={category.value}>{category.label}</option>
-                ))}
-              </select>
-            </div>
+                {tab.icon}
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className={`px-1.5 py-0.5 rounded-full text-xs ${
+                  activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'
+                }`}>
+                  {tab.id === 'verified' ? stats.verified :
+                   tab.id === 'my-sponsorships' ? stats.mySponsorships :
+                   tab.id === 'pending' ? stats.pending :
+                   tab.id === 'rejected' ? stats.rejected : stats.total}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -500,6 +539,7 @@ const SponsorshipCard = ({ sponsorship }) => {
           </div>
         )}
 
+        {/* Empty State */}
         {!loading && sponsorships.length === 0 && (
           <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-8 sm:p-12 text-center">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
