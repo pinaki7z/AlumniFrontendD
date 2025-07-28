@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import Profilecard from '../Profilecard';
 import DisplayPost from '../DisplayPost';
-import DisplayForum from '../DisplayForum';
 import JobPost from '../JobPost';
 
 export const SearchedResults = () => {
@@ -174,22 +173,7 @@ export const SearchedResults = () => {
               </div>
             )}
 
-            {/* Forums Section */}
-            {(activeFilter === 'all' || activeFilter === 'forum') && searchResults.forum && searchResults.forum.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] p-6">
-                  <div className="flex items-center gap-3">
-                    <MessageSquare className="w-6 h-6 text-white" />
-                    <h2 className="text-xl font-semibold text-white">
-                      Forums ({searchResults.forum.length})
-                    </h2>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <DisplayForum forumData={searchResults.forum} />
-                </div>
-              </div>
-            )}
+        
 
             {/* Groups Section */}
             {(activeFilter === 'all' || activeFilter === 'group') && searchResults.group && searchResults.group.length > 0 && (

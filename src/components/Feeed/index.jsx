@@ -6,7 +6,6 @@ import './feed.scss';
 import { toast } from "react-toastify";
 import CommentSection from '../CommentSection';
 import { useSelector } from 'react-redux';
-import { DisplayNews } from '../DisplayNews';
 import { dotPulse } from 'ldrs';
 import EventDisplay from './EventDisplay';
 import PollDisplay from './PollDisplay';
@@ -275,30 +274,7 @@ function Feed({
               );
             }
 
-            if (post.type === 'news') {
-              return (
-                <div key={post._id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-red-500/10 to-orange-500/10 p-3 border-b border-gray-100">
-                    <span className="text-xs font-semibold text-red-600 uppercase tracking-wide">News</span>
-                  </div>
-                  <div className="p-4">
-                    <DisplayNews
-                      userId={post.userId}
-                      postId={post._id}
-                      description={post.description}
-                      createdAt={post.createdAt}
-                      picturePath={post.picturePath}
-                      videoPath={post.videoPath}
-                      department={post.department}
-                      title={post.title}
-                      author={post.author}
-                      picture={post.picture}
-                      onDeletePost={() => handleDeletePost(post._id)}
-                    />
-                  </div>
-                </div>
-              );
-            }
+      
 
             return null;
           })
