@@ -20,7 +20,7 @@ const AddReplies = () => {
     files.forEach(file => formData.append("images", file))
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/uploadImage/image`,
+        `${import.meta.env.VITE_API_URL}/uploadImage/image`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       )
@@ -40,7 +40,7 @@ const AddReplies = () => {
     //   images: uploadedImages
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/forumv2/replies`, // adjust endpoint as needed
+        `${import.meta.env.VITE_API_URL}/forumv2/replies`, // adjust endpoint as needed
         {
           content: {
             html: editorHtml,

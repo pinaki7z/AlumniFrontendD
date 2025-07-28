@@ -88,7 +88,7 @@ function CreatePost({ photoUrl, username, onNewPost ,entityType}) {
 
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/${entityType}/create`,
+          `${import.meta.env.VITE_API_URL}/${entityType}/create`,
           formDataObject,
         );
         const newPost = await response.data;
@@ -105,7 +105,7 @@ function CreatePost({ photoUrl, username, onNewPost ,entityType}) {
     try {
       console.log("request body", formDataObject);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/${entityType}/create?folder=${folderName}`,
+        `${import.meta.env.VITE_API_URL}/${entityType}/create?folder=${folderName}`,
         formDataObject,
         {
           headers: {
@@ -128,7 +128,7 @@ function CreatePost({ photoUrl, username, onNewPost ,entityType}) {
     try {
       console.log("request body", formDataObject);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/${entityType}/create`,
+        `${import.meta.env.VITE_API_URL}/${entityType}/create`,
         formDataObject,
       );
       const newPost = await response.data;

@@ -74,7 +74,7 @@ const BusinessConnectDetails = () => {
   const fetchBusinessDetails = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}`);
       const result = await response.json();
 
       if (result.success) {
@@ -99,7 +99,7 @@ const BusinessConnectDetails = () => {
     if (!profile._id) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/like-status/${profile._id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/like-status/${profile._id}`);
       const result = await response.json();
       
       if (result.success) {
@@ -114,7 +114,7 @@ const BusinessConnectDetails = () => {
   // Fetch comments
   const fetchComments = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/comments`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/comments`);
       const result = await response.json();
       if (result.success) {
         setComments(result.comments);
@@ -136,8 +136,8 @@ const BusinessConnectDetails = () => {
     };
     
     const url = parentId
-      ? `${process.env.REACT_APP_API_URL}/api/business/${id}/comments/${parentId}/reply`
-      : `${process.env.REACT_APP_API_URL}/api/business/${id}/comments`;
+      ? `${import.meta.env.VITE_API_URL}/api/business/${id}/comments/${parentId}/reply`
+      : `${import.meta.env.VITE_API_URL}/api/business/${id}/comments`;
     
     try {
       const response = await fetch(url, {
@@ -159,7 +159,7 @@ const BusinessConnectDetails = () => {
   // Handle like/unlike
   const handleLike = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/like`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: profile._id }),
@@ -185,7 +185,7 @@ const BusinessConnectDetails = () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/share`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/share`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -205,7 +205,7 @@ const BusinessConnectDetails = () => {
   // Handle business plan download
   const handleDownloadBusinessPlan = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/download-business-plan`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/download-business-plan`);
       const result = await response.json();
 
       if (result.success) {
@@ -235,7 +235,7 @@ const BusinessConnectDetails = () => {
 
     setSavingFunding(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/funding`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/funding`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ operation, amount: fundingAmount }),
@@ -274,7 +274,7 @@ const handleInvestment = async (amount) => {
     }
 
     // Step 2: Create order
-    const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/create-order`, {
+    const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/create-order`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount }),
@@ -305,7 +305,7 @@ const handleInvestment = async (amount) => {
         
         // Payment successful - verify on backend
         try {
-          const paymentResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}/payment-success`, {
+          const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}/payment-success`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

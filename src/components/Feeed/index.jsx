@@ -59,11 +59,11 @@ function Feed({
     try {
       let url;
       if (userId) {
-        url = `${process.env.REACT_APP_API_URL}/${entityType}/userPosts/${userId}?page=${pageNum}&size=${LIMIT}`;
+        url = `${import.meta.env.VITE_API_URL}/${entityType}/userPosts/${userId}?page=${pageNum}&size=${LIMIT}`;
       } else if (groupID) {
-        url = `${process.env.REACT_APP_API_URL}/groups/groups/${groupID}?page=${pageNum}&size=${LIMIT}`;
+        url = `${import.meta.env.VITE_API_URL}/groups/groups/${groupID}?page=${pageNum}&size=${LIMIT}`;
       } else {
-        url = `${process.env.REACT_APP_API_URL}/${entityType}?page=${pageNum}&size=${LIMIT}`;
+        url = `${import.meta.env.VITE_API_URL}/${entityType}?page=${pageNum}&size=${LIMIT}`;
       }
 
       const response = await axios.get(url);
@@ -138,7 +138,7 @@ function Feed({
 
   const handleLikes = async (entityId) => {
     try {
-      const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${entityId}`);
+      const { data: updatedPost } = await axios.get(`${import.meta.env.VITE_API_URL}/${entityType}/${entityId}`);
       setPosts(prev => prev.map(p => (p._id === entityId ? updatedPost : p)));
     } catch (err) {
       console.error('Error fetching likes:', err);
@@ -147,7 +147,7 @@ function Feed({
 
   const refreshComments = async (postId) => {
     try {
-      const { data: updatedPost } = await axios.get(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
+      const { data: updatedPost } = await axios.get(`${import.meta.env.VITE_API_URL}/${entityType}/${postId}`);
       setPosts(prev => prev.map(p => (p._id === postId ? updatedPost : p)));
     } catch (err) {
       console.error('Error fetching comments:', err);

@@ -86,7 +86,7 @@ export const ProfileSettings = () => {
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0]
 
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
     formDataImage.append('image', file);
 
@@ -99,7 +99,7 @@ export const ProfileSettings = () => {
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0]
 
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
     formDataImage.append('image', file);
 
@@ -112,7 +112,7 @@ export const ProfileSettings = () => {
   const handleUploadID = (e) => {
     const file = e.target.files[0]
 
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
     formDataImage.append('image', file);
 
@@ -145,7 +145,7 @@ export const ProfileSettings = () => {
     const userID = profile._id
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/${userID}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/alumni/${userID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -182,7 +182,7 @@ export const ProfileSettings = () => {
 
     if (value.length >= 3) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/search/search/company?q=${value}`)
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/search/search/company?q=${value}`)
         if (response.ok) {
           const data = await response.json()
           setSearchResults(data.companies)

@@ -9,7 +9,7 @@ const savedUser = JSON.parse(localStorage.getItem("user"));
 
 export const fetchMembers = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/all`);
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/all`);
     console.log("settings data", response.data);
     return response.data;
   } catch (error) {
@@ -20,7 +20,7 @@ export const fetchMembers = async () => {
 
 export const fetchSettings = async () => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/settings/`);
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/settings/`);
     return response.data;
   } catch (error) {
     console.error("Error fetching settings:", error);
@@ -58,7 +58,7 @@ const accessToken = jwtToken;
       Authorization: `Bearer ${accessToken}`,
     };
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/alumni/${userId}`,
+      `${import.meta.env.VITE_API_URL}/alumni/${userId}`,
       { headers }
     );
     console.log("profile data", response.data);

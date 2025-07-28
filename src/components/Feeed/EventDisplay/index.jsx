@@ -40,7 +40,7 @@ const EventDisplay = ({ event, userId, userData }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/events/attendees/${event._id}`,
+        `${import.meta.env.VITE_API_URL}/events/attendees/${event._id}`,
       );
       if (response.status === 200) {
         setAttendees(response.data);
@@ -81,7 +81,7 @@ const EventDisplay = ({ event, userId, userData }) => {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
+        `${import.meta.env.VITE_API_URL}/events/attendEvent/${eventId}`,
         body
       );
 
@@ -127,7 +127,7 @@ const EventDisplay = ({ event, userId, userData }) => {
   const handleDeleteEvent = async () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
-        const url = `${process.env.REACT_APP_API_URL}/events/${event._id}`;
+        const url = `${import.meta.env.VITE_API_URL}/events/${event._id}`;
         const requestBody = { groupName: event.title };
         const response = await axios.delete(url, { data: requestBody });
 

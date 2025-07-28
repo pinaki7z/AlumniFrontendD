@@ -40,7 +40,7 @@ const SponsorshipDetails = () => {
   const fetchSponsorshipDetails = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}`);
       const result = await response.json();
 
       if (result.success) {
@@ -65,7 +65,7 @@ const SponsorshipDetails = () => {
     if (!profile._id) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/like-status/${profile._id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/like-status/${profile._id}`);
       const result = await response.json();
       
       if (result.success) {
@@ -80,7 +80,7 @@ const SponsorshipDetails = () => {
   // Fetch comments
   const fetchComments = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/comments`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/comments`);
       const result = await response.json();
       if (result.success) {
         setComments(result.comments);
@@ -102,8 +102,8 @@ const SponsorshipDetails = () => {
     };
     
     const url = parentId
-      ? `${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/comments/${parentId}/reply`
-      : `${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/comments`;
+      ? `${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/comments/${parentId}/reply`
+      : `${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/comments`;
     
     try {
       const response = await fetch(url, {
@@ -125,7 +125,7 @@ const SponsorshipDetails = () => {
   // Handle like/unlike
   const handleLike = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/like`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: profile._id }),
@@ -151,7 +151,7 @@ const SponsorshipDetails = () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/share`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/share`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -177,7 +177,7 @@ const SponsorshipDetails = () => {
 
     setSavingFunding(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/funding`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/funding`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ operation, amount: fundingAmount }),
@@ -215,7 +215,7 @@ const SponsorshipDetails = () => {
       }
 
       // Create order
-      const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/create-order`, {
+      const orderResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount }),
@@ -238,7 +238,7 @@ const SponsorshipDetails = () => {
         image: sponsorship.sponsorLogo || '',
         handler: async function (response) {
           try {
-            const paymentResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/payment-success`, {
+            const paymentResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/payment-success`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

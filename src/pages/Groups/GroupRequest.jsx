@@ -74,7 +74,7 @@ const GroupRequest = ({ edit }) => {
 
     setUploading(true);
     try {
-      const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`;
+      const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`;
       const formData = new FormData();
       formData.append('image', file);
       
@@ -94,7 +94,7 @@ const GroupRequest = ({ edit }) => {
 
   const fetchGroup = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/${_id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups/${_id}`);
       const group = response.data;
       setGroupName(group.groupName || '');
       setGroupType(group.groupType || '');
@@ -174,10 +174,10 @@ const GroupRequest = ({ edit }) => {
       };
 
       if (edit) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/groups/${_id}`, body);
+        await axios.put(`${import.meta.env.VITE_API_URL}/groups/${_id}`, body);
         toast.success('Group updated successfully!');
       } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/groups/create`, body);
+        await axios.post(`${import.meta.env.VITE_API_URL}/groups/create`, body);
         toast.success('Group created successfully!');
       }
       

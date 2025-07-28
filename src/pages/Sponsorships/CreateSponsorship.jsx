@@ -40,7 +40,7 @@ const CreateSponsorship = () => {
   const loadSponsorshipData = async () => {
     setLoadingData(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}?edit=true`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}?edit=true`);
       const result = await response.json();
 
       if (result.success) {
@@ -115,8 +115,8 @@ const CreateSponsorship = () => {
       };
 
       const url = isEditMode 
-        ? `${process.env.REACT_APP_API_URL}/api/sponsorship/${id}`
-        : `${process.env.REACT_APP_API_URL}/api/sponsorship/create`;
+        ? `${import.meta.env.VITE_API_URL}/api/sponsorship/${id}`
+        : `${import.meta.env.VITE_API_URL}/api/sponsorship/create`;
       
       const method = isEditMode ? 'PUT' : 'POST';
 
@@ -239,8 +239,8 @@ const CreateSponsorship = () => {
       formDataUpload.append(isImage ? 'image' : 'document', file);
 
       const endpoint = isImage 
-        ? `${process.env.REACT_APP_API_URL}/api/sponsorship/upload-image`
-        : `${process.env.REACT_APP_API_URL}/api/sponsorship/upload-document`;
+        ? `${import.meta.env.VITE_API_URL}/api/sponsorship/upload-image`
+        : `${import.meta.env.VITE_API_URL}/api/sponsorship/upload-document`;
 
       const response = await fetch(endpoint, {
         method: 'POST',

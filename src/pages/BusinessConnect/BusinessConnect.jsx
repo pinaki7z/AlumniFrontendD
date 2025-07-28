@@ -62,7 +62,7 @@ const BusinessConnect = () => {
   // Fetch statistics
   const fetchStats = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/stats/overview`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/stats/overview`);
       const result = await response.json();
       
       if (result.success) {
@@ -76,7 +76,7 @@ const BusinessConnect = () => {
   // Fetch my businesses count
   const fetchMyBusinessesCount = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/my/${encodeURIComponent(profile.email)}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/my/${encodeURIComponent(profile.email)}`);
       const result = await response.json();
       
       if (result.success) {
@@ -91,7 +91,7 @@ const BusinessConnect = () => {
   const fetchBusinesses = async () => {
     setLoading(true);
     try {
-      let url = `${process.env.REACT_APP_API_URL}/api/business`;
+      let url = `${import.meta.env.VITE_API_URL}/api/business`;
       let params = new URLSearchParams();
 
       switch (activeTab) {
@@ -143,7 +143,7 @@ const BusinessConnect = () => {
   // Handle business status update (admin only)
   const handleStatusUpdate = async (businessId, newStatus) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${businessId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${businessId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ const BusinessConnect = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${businessId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${businessId}`, {
         method: 'DELETE',
       });
 

@@ -32,7 +32,7 @@ const PasswordReset = () => {
 
     try {
       // Send the new password to the backend API along with the token
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/forgotPass/reset-password/${encodeURIComponent(token)}`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/forgotPass/reset-password/${encodeURIComponent(token)}`, {
         newPassword,
         confirmNewPassword: confirmPassword,
       });

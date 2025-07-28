@@ -61,7 +61,7 @@ const ValidateUser = () => {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/validate/user`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/validate/user`);
       setUsers(response.data.records || []);
       setCount(response.data.count || 0);
     } catch (error) {
@@ -102,7 +102,7 @@ const ValidateUser = () => {
   const validateUser = async (id) => {
     setProcessing(prev => ({ ...prev, [id]: 'validating' }));
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/alumni/alumni/${id}/validateAlumni`);
+      await axios.put(`${import.meta.env.VITE_API_URL}/alumni/alumni/${id}/validateAlumni`);
       await fetchUsers();
     } catch (error) {
       console.error('Error validating user:', error);
@@ -114,7 +114,7 @@ const ValidateUser = () => {
   const toggleDelete = async (id) => {
     setProcessing(prev => ({ ...prev, [id]: 'deleting' }));
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/alumni/alumni/${id}/deleteAccount`);
+      await axios.put(`${import.meta.env.VITE_API_URL}/alumni/alumni/${id}/deleteAccount`);
       await fetchUsers();
     } catch (error) {
       console.error('Error toggling delete:', error);
@@ -130,9 +130,9 @@ const ValidateUser = () => {
     try {
       const promises = selectedUsers.map(userId => {
         if (action === 'validate') {
-          return axios.put(`${process.env.REACT_APP_API_URL}/alumni/alumni/${userId}/validateAlumni`);
+          return axios.put(`${import.meta.env.VITE_API_URL}/alumni/alumni/${userId}/validateAlumni`);
         } else if (action === 'delete') {
-          return axios.put(`${process.env.REACT_APP_API_URL}/alumni/alumni/${userId}/deleteAccount`);
+          return axios.put(`${import.meta.env.VITE_API_URL}/alumni/alumni/${userId}/deleteAccount`);
         }
         return Promise.resolve();
       });

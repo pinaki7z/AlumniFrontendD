@@ -33,7 +33,7 @@ export const NotificationsDeclined = ({ sendDeclinedCount }) => {
   const getDeclinedNotifications = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups/requests/req`);
       const filteredData = response.data.filter(notification => notification.status === true);
       setNotificationList(filteredData);
       if (sendDeclinedCount) {
@@ -53,11 +53,11 @@ export const NotificationsDeclined = ({ sendDeclinedCount }) => {
     try {
       let url = '';
       if (type === 'forum') {
-        url = `${process.env.REACT_APP_API_URL}/forums/members/${groupId}`;
+        url = `${import.meta.env.VITE_API_URL}/forums/members/${groupId}`;
       } else if (type === 'group') {
-        url = `${process.env.REACT_APP_API_URL}/groups/members/${groupId}`;
+        url = `${import.meta.env.VITE_API_URL}/groups/members/${groupId}`;
       } else if (type === 'ID') {
-        url = `${process.env.REACT_APP_API_URL}/alumni/alumni/validateId`;
+        url = `${import.meta.env.VITE_API_URL}/alumni/alumni/validateId`;
       }
 
       await axios.put(url, {
@@ -84,7 +84,7 @@ export const NotificationsDeclined = ({ sendDeclinedCount }) => {
     setProcessing(prev => ({ ...prev, [notificationId]: 'delete' }));
     
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/alumni/deleteNotification`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/alumni/alumni/deleteNotification`, {
         data: { notificationId }
       });
       
@@ -107,7 +107,7 @@ export const NotificationsDeclined = ({ sendDeclinedCount }) => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/search/search/notifications?keyword=${searchUser}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/search/search/notifications?keyword=${searchUser}`);
       setNotificationList(response.data.filter(notification => notification.status === true));
     } catch (error) {
       console.error("Error searching:", error);

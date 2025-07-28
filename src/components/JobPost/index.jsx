@@ -142,7 +142,7 @@ const JobPost = ({
   const handleArchive = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/${type + 's'}/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/${type + 's'}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ const JobPost = ({
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/${type + 's'}/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/${type + 's'}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

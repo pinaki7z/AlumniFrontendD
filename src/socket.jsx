@@ -20,9 +20,9 @@ const token = document.cookie.split(';').reduce((c, cookie) => {
   const [name, value] = cookie.split('=').map(v => v.trim());
   return name === 'token' ? value : c;
 }, '');
-console.log("🔌 Connecting socket to", process.env.REACT_APP_API_URL, "with token:", token);
+console.log("🔌 Connecting socket to", import.meta.env.VITE_API_URL, "with token:", token);
 
-const socket = io(process.env.REACT_APP_API_URL, {
+const socket = io(import.meta.env.VITE_API_URL, {
   transports: ["polling"],
   auth: { token }
 });

@@ -31,7 +31,7 @@ const NewsDetailPage = () => {
     const fetchArticleDetails = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}`);
         const result = await response.json();
 
         if (result.success) {
@@ -60,7 +60,7 @@ const NewsDetailPage = () => {
       if (!profile._id || !id) return;
       
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/like-status/${profile._id}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/like-status/${profile._id}`);
         const result = await response.json();
         
         if (result.success) {
@@ -80,7 +80,7 @@ const NewsDetailPage = () => {
       if (!id) return;
       
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/comments`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/comments`);
         const result = await response.json();
         
         if (result.success) {
@@ -100,7 +100,7 @@ const NewsDetailPage = () => {
       if (!newsArticle) return;
       
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/all?category=${newsArticle.category}&limit=3&status=published`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/all?category=${newsArticle.category}&limit=3&status=published`);
         const result = await response.json();
         
         if (result.success) {
@@ -130,7 +130,7 @@ const NewsDetailPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/like`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: profile._id }),
@@ -180,7 +180,7 @@ const NewsDetailPage = () => {
     
     // Update share count
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/share`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/share`, {
         method: 'PATCH'
       });
       const result = await response.json();
@@ -204,7 +204,7 @@ const NewsDetailPage = () => {
 
     setSubmittingComment(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/comments`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -221,7 +221,7 @@ const NewsDetailPage = () => {
         toast.success('Comment added successfully!');
         
         // Refresh comments
-        const commentsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/comments`);
+        const commentsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/comments`);
         const commentsResult = await commentsResponse.json();
         if (commentsResult.success) {
           setComments(commentsResult.comments);
@@ -246,7 +246,7 @@ const NewsDetailPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/comments/${parentCommentId}/reply`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/comments/${parentCommentId}/reply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -262,7 +262,7 @@ const NewsDetailPage = () => {
         toast.success('Reply added successfully!');
         
         // Refresh comments
-        const commentsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${id}/comments`);
+        const commentsResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${id}/comments`);
         const commentsResult = await commentsResponse.json();
         if (commentsResult.success) {
           setComments(commentsResult.comments);

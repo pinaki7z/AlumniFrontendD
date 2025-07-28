@@ -204,7 +204,7 @@ export default function Forum() {
   const [creating, setCreating] = useState(false);
 
   const fetchCategories = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/forumv2/categories`).then((res) => {
       setCategories(res.data)
       setLoading(false)
     }).catch((err) => {
@@ -223,7 +223,7 @@ export default function Forum() {
   const handleCreateCategory = async () => {
     setCreating(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/categories`, newCategory);
+      await axios.post(`${import.meta.env.VITE_API_URL}/forumv2/categories`, newCategory);
       fetchCategories();
       setShowModal(false);
       setNewCategory({ name: '', description: '' });

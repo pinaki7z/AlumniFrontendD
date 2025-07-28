@@ -41,7 +41,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
   useEffect(() => {
     const checkFollowingStatus = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`)
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/${profile._id}/following/all`)
         const followingDetails = response.data.followingDetails
         const isUserFollowing = followingDetails.some((detail) => detail.userId === member._id)
         setIsFollowing(isUserFollowing)
@@ -58,7 +58,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     setLoading(true)
     try {
       if (!isFollowing) {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         })
         if (response.status === 200) {
@@ -70,7 +70,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           setLoading(false)
         }
       } else {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         })
         if (response.status === 200) {
@@ -93,7 +93,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
     setLoading(true)
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/${isGroupURL ? `groups/members/${groupId}` : isForumURL ? `forums/members/${groupId}` : ""}`,
+        `${import.meta.env.VITE_API_URL}/${isGroupURL ? `groups/members/${groupId}` : isForumURL ? `forums/members/${groupId}` : ""}`,
         {
           userId: memberId,
         },

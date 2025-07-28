@@ -18,8 +18,8 @@ const IndividualDonSpon = () => {
     const fetchData = async () => {
       try {
         const path = location.pathname.includes('/sponsorships')
-          ? `${process.env.REACT_APP_API_URL}/sponsorships/${_id}`
-          : `${process.env.REACT_APP_API_URL}/donations/${_id}`;
+          ? `${import.meta.env.VITE_API_URL}/sponsorships/${_id}`
+          : `${import.meta.env.VITE_API_URL}/donations/${_id}`;
         const response = await fetch(path);
         const data = await response.json();
         setDonations([data]);
@@ -121,7 +121,7 @@ const IndividualDonSpon = () => {
                           <p className="font-medium text-blue-800">Business Plan:</p>
                           <a
                             href={`${donation.businessPlan}`}
-                            // href={`${process.env.REACT_APP_API_URL}/uploads/${donation.businessPlan}`}
+                            // href={`${import.meta.env.VITE_API_URL}/uploads/${donation.businessPlan}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-blue-500 hover:underline"

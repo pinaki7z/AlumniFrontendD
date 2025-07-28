@@ -22,7 +22,7 @@ const SuggestedGroups = ({ groupType, searchQuery }) => {
         }
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/groups?page=${page}&size=${LIMIT}&userId=${profile._id}`
+                `${import.meta.env.VITE_API_URL}/groups?page=${page}&size=${LIMIT}&userId=${profile._id}`
             );
             const postsData = response.data.records.filter(group => !group.businessConnect);
             setGroups((prevItems) => [...prevItems, ...postsData]);

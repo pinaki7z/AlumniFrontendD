@@ -108,7 +108,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
         setSearchLoading(true);
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/search/search?keyword=${encodeURIComponent(query)}`
+                `${import.meta.env.VITE_API_URL}/search/search?keyword=${encodeURIComponent(query)}`
             );
             setSearchResults(response.data || []);
             setShowSearchResults(true);

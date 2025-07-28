@@ -44,7 +44,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   const getNotifications = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups/requests/req`);
       const filtered = response.data.filter((n) => n.status === false);
       setNotificationList(filtered);
     } catch (error) {
@@ -104,7 +104,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   };
 
   const handleAddLink = async (notificationId, link, department) => {
-    const response = await axios.post(`${process.env.REACT_APP_API_URL}/images/addLink`, {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/images/addLink`, {
       notificationId,
       link,
       userId: profile._id,
@@ -119,11 +119,11 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
 
     switch (type) {
       case "forum":
-        url = `${process.env.REACT_APP_API_URL}/forums/members/${groupId}`;
+        url = `${import.meta.env.VITE_API_URL}/forums/members/${groupId}`;
         payload.userId = memberId;
         break;
       case "group":
-        url = `${process.env.REACT_APP_API_URL}/groups/members/${groupId}`;
+        url = `${import.meta.env.VITE_API_URL}/groups/members/${groupId}`;
         payload.members = {
           userId: memberId,
           profilePicture: profile.profilePicture,
@@ -131,11 +131,11 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
         };
         break;
       case "ID":
-        url = `${process.env.REACT_APP_API_URL}/alumni/alumni/validateId`;
+        url = `${import.meta.env.VITE_API_URL}/alumni/alumni/validateId`;
         payload.userId = memberId;
         break;
       case "Job":
-        url = `${process.env.REACT_APP_API_URL}/jobs/${groupId}`;
+        url = `${import.meta.env.VITE_API_URL}/jobs/${groupId}`;
         payload.approved = !toDelete;
         break;
       default:
@@ -147,7 +147,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   };
 
   const handleComment = async (commentId, forumId, userId, notificationId, deleteComment) => {
-    const response = await axios.put(`${process.env.REACT_APP_API_URL}/forums/${forumId}/removeBlock`, {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/forums/${forumId}/removeBlock`, {
       commentId,
       userId,
       notificationId,
@@ -157,7 +157,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
   };
 
   const handleDeleteNotification = async (notificationId) => {
-    const response = await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/alumni/deleteNotification`, {
+    const response = await axios.delete(`${import.meta.env.VITE_API_URL}/alumni/alumni/deleteNotification`, {
       data: { notificationId },
     });
     return response.data;
@@ -173,7 +173,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/search/search/notifications?keyword=${searchUser}`
+        `${import.meta.env.VITE_API_URL}/search/search/notifications?keyword=${searchUser}`
       );
       setNotificationList(
         response.data.filter((notification) => notification.status === false)
@@ -267,7 +267,7 @@ export const NotificationsP = ({ sendNotificationCount, topBar }) => {
                 <>
                   has requested business verification.{" "}
                   <a
-                    href={`${process.env.REACT_APP_API_URL}/uploads/${notification.businessVerification}`}
+                    href={`${import.meta.env.VITE_API_URL}/uploads/${notification.businessVerification}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#0A3A4C] hover:underline inline-flex items-center gap-1"

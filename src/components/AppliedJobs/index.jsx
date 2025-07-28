@@ -11,7 +11,7 @@ export const AppliedJobs = ({searchQuery}) => {
     
     const fetchAppliedJobs = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/jobApplication/applied/user/${profile._id}`);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobApplication/applied/user/${profile._id}`);
             setAppliedJobs(response.data);
             console.log("Applied Jobs:", response.data);
             setLoading(false);
@@ -24,7 +24,7 @@ export const AppliedJobs = ({searchQuery}) => {
     useEffect(() => {
         // const fetchAppliedJobs = async () => {
         //     try {
-        //         const response = await axios.get(`${process.env.REACT_APP_API_URL}/jobs/${profile._id}/appliedJobs`);
+        //         const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobs/${profile._id}/appliedJobs`);
         //         setAppliedJobs(response.data);
         //         setLoading(false);
         //     } catch (error) {

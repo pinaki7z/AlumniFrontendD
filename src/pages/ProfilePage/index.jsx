@@ -62,7 +62,7 @@ const ProfilePage = () => {
 
   const fetchWorkExperiences = async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/workExperience/${profile._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWorkExperiences(data);
@@ -83,7 +83,7 @@ const ProfilePage = () => {
   const handleFileChange = (e, type) => {
     setLoading(true);
     const file = e.target.files[0];
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`
     const formData = new FormData();
     formData.append('image', file);
     axios.post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -99,7 +99,7 @@ const ProfilePage = () => {
   const handleSubmit = async (fileData, fileType) => {
     setLoading(true);
     try {
-      const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}`, { [fileType]: fileData }, { headers: { Authorization: `Bearer ${token}` } });
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/alumni/${profile._id}`, { [fileType]: fileData }, { headers: { Authorization: `Bearer ${token}` } });
       dispatch(updateProfile(data));
       toast.dismiss()
       toast.success(`${fileType === 'profilePicture' ? 'Profile Picture' : 'Cover Picture'} updated`);
@@ -112,7 +112,7 @@ const ProfilePage = () => {
 
   const handleDelete = async (type) => {
     try {
-      const url = type === 'cover' ? `${process.env.REACT_APP_API_URL}/alumni/delete/coverPicture` : `${process.env.REACT_APP_API_URL}/alumni/delete/profilePicture`;
+      const url = type === 'cover' ? `${import.meta.env.VITE_API_URL}/alumni/delete/coverPicture` : `${import.meta.env.VITE_API_URL}/alumni/delete/profilePicture`;
       const { data } = await axios.put(url, { userId: profile._id });
       dispatch(updateProfile(data.user));
       toast.success(data.message);

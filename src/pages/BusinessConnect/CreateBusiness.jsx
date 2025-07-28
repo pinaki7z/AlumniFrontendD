@@ -108,7 +108,7 @@ const CreateBusiness = () => {
 
     setInitialLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${id}`);
       const result = await response.json();
 
       if (result.success) {
@@ -228,8 +228,8 @@ const CreateBusiness = () => {
       formDataUpload.append(type, file);
 
       const endpoint = isImage 
-        ? `${process.env.REACT_APP_API_URL}/api/business/upload-background-image`
-        : `${process.env.REACT_APP_API_URL}/api/business/upload-business-plan`;
+        ? `${import.meta.env.VITE_API_URL}/api/business/upload-background-image`
+        : `${import.meta.env.VITE_API_URL}/api/business/upload-business-plan`;
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -287,8 +287,8 @@ const CreateBusiness = () => {
       };
 
       const url = isEditMode 
-        ? `${process.env.REACT_APP_API_URL}/api/business/${id}`
-        : `${process.env.REACT_APP_API_URL}/api/business/create`;
+        ? `${import.meta.env.VITE_API_URL}/api/business/${id}`
+        : `${import.meta.env.VITE_API_URL}/api/business/create`;
       
       const method = isEditMode ? 'PUT' : 'POST';
 

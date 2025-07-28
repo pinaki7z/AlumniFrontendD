@@ -22,8 +22,8 @@ const JoinedGroups = ({ groupType, searchQuery }) => {
       return;
     }
     try {
-      // const api =   `${process.env.REACT_APP_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
-      const api =   `${process.env.REACT_APP_API_URL}/groupMember/joined/${id}?page=${page}&size=${LIMIT}`
+      // const api =   `${import.meta.env.VITE_API_URL}/groups/joined?page=${page}&size=${LIMIT}&userId=${id}`
+      const api =   `${import.meta.env.VITE_API_URL}/groupMember/joined/${id}?page=${page}&size=${LIMIT}`
       
       const response = await axios.get(api);
       const postsData = response.data.records;

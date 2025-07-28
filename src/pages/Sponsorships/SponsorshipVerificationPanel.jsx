@@ -63,7 +63,7 @@ const SponsorshipVerificationPanel = () => {
       }
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/sponsorship/admin/pending?${params.toString()}`
+        `${import.meta.env.VITE_API_URL}/api/sponsorship/admin/pending?${params.toString()}`
       );
       const result = await response.json();
 
@@ -87,7 +87,7 @@ const SponsorshipVerificationPanel = () => {
   const fetchStats = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/sponsorship/stats/overview?isAdmin=true&userEmail=${profile.email}`
+        `${import.meta.env.VITE_API_URL}/api/sponsorship/stats/overview?isAdmin=true&userEmail=${profile.email}`
       );
       const result = await response.json();
       
@@ -106,7 +106,7 @@ const SponsorshipVerificationPanel = () => {
   // Verify single sponsorship
   const handleVerify = async (id, action, rejectionReason = '') => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/verify`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/verify`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -139,7 +139,7 @@ const SponsorshipVerificationPanel = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/bulk/verify`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/bulk/verify`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -36,7 +36,7 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/all`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/alumni/all`);
                 if (response.ok) {
                     const membersData = await response.json();
                     dispatch(updateMember(membersData));

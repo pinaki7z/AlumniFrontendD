@@ -31,7 +31,7 @@ export default function YearList() {
   const fetchYears = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/photoGallary/years`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/photoGallary/years`);
       setYears(res.data.sort((a, b) => b.year - a.year));
     } catch (error) {
       console.error('Error fetching years:', error);
@@ -62,7 +62,7 @@ export default function YearList() {
     setError('');
     
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/photoGallary/years`, { 
+      await axios.post(`${import.meta.env.VITE_API_URL}/photoGallary/years`, { 
         year: yearNum 
       });
       setNewYear('');

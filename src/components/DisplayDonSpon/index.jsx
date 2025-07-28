@@ -97,7 +97,7 @@ const DisplayDonSpon = ({
 
     setDeleting(_id);
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/${name}/${_id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/${name}/${_id}`);
       toast.success(`Successfully deleted ${itemName}`);
       
       // Refresh the list without full page reload

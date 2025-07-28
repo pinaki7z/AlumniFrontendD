@@ -22,7 +22,7 @@ const MyGroups = ({ groupType, searchQuery }) => {
   //   }
   //   try {
   //     const response = await axios.get(
-  //       `${process.env.REACT_APP_API_URL}/groups?page=${page}&size=${LIMIT}`
+  //       `${import.meta.env.VITE_API_URL}/groups?page=${page}&size=${LIMIT}`
   //     );
   //     const postsData = response.data.records;
   //     setGroups((prevItems) => [...prevItems, ...postsData]);
@@ -43,7 +43,7 @@ const MyGroups = ({ groupType, searchQuery }) => {
     }
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/groups/user/${profile._id}`
+        `${import.meta.env.VITE_API_URL}/groups/user/${profile._id}`
       );
       const postsData = response.data.groups;
       setGroups(postsData);

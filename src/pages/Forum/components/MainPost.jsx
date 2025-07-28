@@ -254,7 +254,7 @@ const MainPost = () => {
   )
   const fetchTopic= async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/topics/${topicId}/`);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/forumv2/topics/${topicId}/`);
       setSelectedTopic(data);
     } catch (e) {
       console.error(e);
@@ -263,7 +263,7 @@ const MainPost = () => {
 
   const fetchPost = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/posts/${postId}/`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/forumv2/posts/${postId}/`);
       console.log(response.data);
       setMainPost(response.data);
     } catch (error) {

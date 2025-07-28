@@ -73,7 +73,7 @@ const MemberForm = ({ edit }) => {
       const data = new FormData();
       data.append('csv', fileInput.files[0]);
 
-      await axios.post(`${process.env.REACT_APP_API_URL}/alumni/alumni/bulkRegister`, data, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/alumni/alumni/bulkRegister`, data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       toast.success('Users registered successfully!');
@@ -151,7 +151,7 @@ const MemberForm = ({ edit }) => {
 
     setSubmitting(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, { ...formData });
+      await axios.post(`${import.meta.env.VITE_API_URL}/alumni/register`, { ...formData });
       toast.success('Member registered successfully!');
       navigate('/home/members');
     } catch (err) {

@@ -85,14 +85,14 @@ const BusinessVerificationPanel = () => {
   // Fetch admin statistics
   const fetchAdminStats = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/stats/admin`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/stats/admin`);
       const result = await response.json();
       
       if (result.success) {
         setStats(result.stats);
         
         // Fetch total requests count
-        const totalResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/business/all?limit=1`);
+        const totalResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/business/all?limit=1`);
         const totalResult = await totalResponse.json();
         if (totalResult.success) {
           setStats(prev => ({ 
@@ -110,7 +110,7 @@ const BusinessVerificationPanel = () => {
   const fetchBusinessesByStatus = async (status = activeStatTab, search = searchQuery) => {
     setLoading(true);
     try {
-      let url = `${process.env.REACT_APP_API_URL}/api/business/all`;
+      let url = `${import.meta.env.VITE_API_URL}/api/business/all`;
       let params = new URLSearchParams();
       params.append('limit', '50');
 
@@ -165,7 +165,7 @@ const BusinessVerificationPanel = () => {
   // Handle business approval
   const handleApprove = async (businessId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${businessId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${businessId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ const BusinessVerificationPanel = () => {
   // Handle business rejection
   const handleReject = async (businessId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${businessId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${businessId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -219,7 +219,7 @@ const BusinessVerificationPanel = () => {
   // Handle make pending (for approved businesses)
   const handleMakePending = async (businessId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/business/${businessId}/status`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/business/${businessId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

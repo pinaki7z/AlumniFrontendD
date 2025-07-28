@@ -12,7 +12,7 @@ export const AppliedInternships = ({searchQuery}) => {
     useEffect(() => {
         const fetchAppliedInternships = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/internships/${profile._id}/appliedJobs`);
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/internships/${profile._id}/appliedJobs`);
                 setAppliedInternships(response.data);
                 setLoading(false);
             } catch (error) {

@@ -52,7 +52,7 @@ export const Ipost = () => {
 
   const fetchPostData = async () => {
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/posts/${_id}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/posts/${_id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch post');
         }
@@ -170,7 +170,7 @@ export default Ipost;
 //         {video && (
 //           <div className="video">
 //             <video autoPlay={false} controls>
-//               <source src={`${process.env.REACT_APP_API_URL}/${video.videoPath}`} type="video/mp4" />
+//               <source src={`${import.meta.env.VITE_API_URL}/${video.videoPath}`} type="video/mp4" />
 //             </video>
 //             <div className="play-button">
 //               <PlayCircleOutlineRoundedIcon fontSize="large" />

@@ -97,7 +97,7 @@ export default function CreatePost1({
     try {
       setLoading(true);
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}/uploadImage/image`,
+        `${import.meta.env.VITE_API_URL}/uploadImage/image`,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -124,7 +124,7 @@ export default function CreatePost1({
     setLoading(true);
     
     axios
-      .post(`${process.env.REACT_APP_API_URL}/uploadImage/video`, formData, {
+      .post(`${import.meta.env.VITE_API_URL}/uploadImage/video`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
       .then((res) => {
@@ -189,7 +189,7 @@ export default function CreatePost1({
     
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}/poll/createPoll`,
+        `${import.meta.env.VITE_API_URL}/poll/createPoll`,
         pollData
       );
       onNewPost(data);
@@ -226,7 +226,7 @@ export default function CreatePost1({
     if (youtubeVideoId) payload.youtubeVideoId = youtubeVideoId;
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/${entityType}/create`, payload);
+      await axios.post(`${import.meta.env.VITE_API_URL}/${entityType}/create`, payload);
       resetForm();
       onNewPost();
       toast.success('Post created successfully!');
@@ -405,7 +405,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
   useEffect(() => {
     if (isEditing && selectedEvent) {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/events/${selectedEvent._id}`)
+        .get(`${import.meta.env.VITE_API_URL}/events/${selectedEvent._id}`)
         .then((res) => {
           const e = res.data;
           setNewEvent({
@@ -447,7 +447,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
       return;
     }
     
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`;
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`;
     const formData = new FormData();
     formData.append('image', file);
     
@@ -478,8 +478,8 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
     };
     
     const url = isEditing
-      ? `${process.env.REACT_APP_API_URL}/events/${selectedEvent._id}`
-      : `${process.env.REACT_APP_API_URL}/events/createEvent`;
+      ? `${import.meta.env.VITE_API_URL}/events/${selectedEvent._id}`
+      : `${import.meta.env.VITE_API_URL}/events/createEvent`;
     const method = isEditing ? 'put' : 'post';
 
     axios[method](url, payload)

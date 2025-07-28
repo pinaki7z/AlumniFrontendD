@@ -33,7 +33,7 @@ export default function DepartmentList() {
 
   const fetchYear = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/photoGallary/years`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/photoGallary/years`);
       const selected = res.data.find(y => y._id === yearId) || {};
       setYear(selected);
     } catch (error) {
@@ -44,7 +44,7 @@ export default function DepartmentList() {
   const fetchDepartments = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/photoGallary/years/${yearId}/departments`);
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/photoGallary/years/${yearId}/departments`);
       setDepartments(res.data);
     } catch (error) {
       console.error('Error fetching departments:', error);
@@ -68,7 +68,7 @@ export default function DepartmentList() {
     setError('');
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/photoGallary/years/${yearId}/departments`, { 
+      await axios.post(`${import.meta.env.VITE_API_URL}/photoGallary/years/${yearId}/departments`, { 
         name: newDept.trim() 
       });
       setNewDept('');

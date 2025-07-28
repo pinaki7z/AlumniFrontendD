@@ -105,7 +105,7 @@ const CreateNewsPage = () => {
     formData.append('featuredImage', file);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/upload-featured-image`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/upload-featured-image`, {
         method: 'POST',
         body: formData
       });
@@ -137,7 +137,7 @@ const CreateNewsPage = () => {
     });
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/upload-additional-images`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/upload-additional-images`, {
         method: 'POST',
         body: formDataObj
       });
@@ -239,7 +239,7 @@ const CreateNewsPage = () => {
         authorEmail: profile.email
       };
       
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/create`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newsData)

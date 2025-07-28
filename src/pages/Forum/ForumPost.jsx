@@ -26,7 +26,7 @@ const ForumPost = () => {
   const fetchTopic = async () => {
     try {
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/forumv2/topics/${topicId}/`
+        `${import.meta.env.VITE_API_URL}/forumv2/topics/${topicId}/`
       );
       setSelectedTopic(data);
     } catch (e) {
@@ -38,7 +38,7 @@ const ForumPost = () => {
     try {
       setLoadingPosts(true);
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API_URL}/forumv2/posts/topic/${topicId}/`
+        `${import.meta.env.VITE_API_URL}/forumv2/posts/topic/${topicId}/`
       );
       setPosts(data);
     } catch (e) {
@@ -65,7 +65,7 @@ const ForumPost = () => {
     files.forEach(file => formData.append("images", file));
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/uploadImage/image`,
+        `${import.meta.env.VITE_API_URL}/uploadImage/image`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -85,7 +85,7 @@ const ForumPost = () => {
 
     setShowPostModal(false);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/posts`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/forumv2/posts`, {
         userId: profile._id,
         topicId,
         title: postTitle,

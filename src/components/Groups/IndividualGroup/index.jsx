@@ -63,7 +63,7 @@ const IndividualGroup = () => {
   const getGroup = async () => {
     try {
       setPageLoading(true)
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/${_id}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups/${_id}`)
       setGroup([response.data])
       setGroupMembers(response.data.members)
       setSelectedMembers(
@@ -81,7 +81,7 @@ const IndividualGroup = () => {
   }
 
   const checkIsMember = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${_id}/${profile._id}`).then((res) => {
+    axios.get(`${import.meta.env.VITE_API_URL}/groupMember/isMember/${_id}/${profile._id}`).then((res) => {
       setIsMember(res.data.isMember)
       setIsApproved(res.data.approved)
     })
@@ -94,7 +94,7 @@ const IndividualGroup = () => {
 
   const handleFileChange = (event, fileType) => {
     const file = event.target.files[0]
-    const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
+    const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`
     const formData = new FormData()
     formData.append("image", file)
     axios
@@ -118,7 +118,7 @@ const IndividualGroup = () => {
     }
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/groups/${_id}`,
+        `${import.meta.env.VITE_API_URL}/groups/${_id}`,
         {
           [fileType]: fileData,
         },
@@ -148,7 +148,7 @@ const IndividualGroup = () => {
   }
 
   const countPost = () => {
-    const api = `${process.env.REACT_APP_API_URL}/groups/groups/${_id}`
+    const api = `${import.meta.env.VITE_API_URL}/groups/groups/${_id}`
     axios
       .get(api)
       .then((res) => {
@@ -161,7 +161,7 @@ const IndividualGroup = () => {
 
   const getAllPendingReq = () => {
     if (_id) {
-      const api = `${process.env.REACT_APP_API_URL}/groupMember/pending/${_id}`
+      const api = `${import.meta.env.VITE_API_URL}/groupMember/pending/${_id}`
       axios
         .get(api)
         .then((res) => {
@@ -181,7 +181,7 @@ const IndividualGroup = () => {
   }, [])
 
   const handleDecline = (userId) => {
-    const api = `${process.env.REACT_APP_API_URL}/groupMember/decline/${_id}/${userId}`
+    const api = `${import.meta.env.VITE_API_URL}/groupMember/decline/${_id}/${userId}`
     axios
       .put(api)
       .then((res) => {
@@ -194,7 +194,7 @@ const IndividualGroup = () => {
   }
 
   const handleAccept = (userId) => {
-    const api = `${process.env.REACT_APP_API_URL}/groupMember/accept/${_id}/${userId}`
+    const api = `${import.meta.env.VITE_API_URL}/groupMember/accept/${_id}/${userId}`
     axios
       .put(api)
       .then((res) => {
@@ -208,7 +208,7 @@ const IndividualGroup = () => {
 
   const getAllMemberOfGroup = () => {
     if (_id) {
-      const api = `${process.env.REACT_APP_API_URL}/groupMember/all/${_id}`
+      const api = `${import.meta.env.VITE_API_URL}/groupMember/all/${_id}`
       axios
         .get(api)
         .then((res) => {
@@ -227,7 +227,7 @@ const IndividualGroup = () => {
       approved: group[0].groupType == "Public" ? true : false,
     }
     axios
-      .post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
+      .post(`${import.meta.env.VITE_API_URL}/groupMember/add`, data)
       .then((res) => {
         if (group[0].groupType == "Public") navigate(`/home/groups`)
         else {

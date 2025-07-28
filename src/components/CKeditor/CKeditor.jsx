@@ -16,7 +16,7 @@ const CKeditor = ({ value, onChange, setNewForum }) => {
 
         // Post to your single-image upload endpoint
         return axios.post(
-          `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`,
+          `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`,
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         )

@@ -45,7 +45,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const countLikes = async ()=>{
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/postLike/counts/${postId}`
+        `${import.meta.env.VITE_API_URL}/postLike/counts/${postId}`
       )
       setLikes(response.data?.data?.like);
     } catch (error) {
@@ -58,7 +58,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const checkLike = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/postLike/check/${postId}/${loggedInUserId}`
+        `${import.meta.env.VITE_API_URL}/postLike/check/${postId}/${loggedInUserId}`
       )
       if (response.data) {
         setLiked(response.data?.data?.isLiked);
@@ -85,7 +85,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     setLikeLoading(true); // Start loading
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/postLike/`,
+        `${import.meta.env.VITE_API_URL}/postLike/`,
         { userId: loggedInUserId, userName: username, postId: postId, likeType: 'like' },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -104,7 +104,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   const handleDeletePost = async (userId) => {
     if (userId === profile._id || profile.profileLevel === 0) {
       try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/${entityType}/${postId}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/${entityType}/${postId}`);
         onDeletePost(postId);
       } catch (error) {
         console.error('Error deleting post:', error);

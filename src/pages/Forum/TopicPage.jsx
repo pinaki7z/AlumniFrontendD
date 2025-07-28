@@ -228,7 +228,7 @@ const TopicPage = () => {
 
   const fetchTopics = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/topics/category/${categoryId}/`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/forumv2/topics/category/${categoryId}/`);
       setTopics(response.data);
       setLoading(false)
 
@@ -241,7 +241,7 @@ const TopicPage = () => {
 
   const fetchCategory = async()=>{
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forumv2/categories/${categoryId}/`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/forumv2/categories/${categoryId}/`);
       setSelectedCategory(response.data);
     } catch (error) {
       console.error('Error fetching category:', error);
@@ -257,7 +257,7 @@ const TopicPage = () => {
   const handleCreateTopic = async () => {
     setCreatingTopic(true);
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/forumv2/topics`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/forumv2/topics`, {
         ...newTopic,
         categoryId,
       });

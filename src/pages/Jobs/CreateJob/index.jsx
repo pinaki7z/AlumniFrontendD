@@ -158,7 +158,7 @@ export const CreateJob = () => {
         formDataImg.append('image', file);
         
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`,
+          `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`,
           formDataImg,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
@@ -182,7 +182,7 @@ export const CreateJob = () => {
         fileArray.forEach((file) => formDataAttach.append('images', file));
         
         const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/uploadImage/image`,
+          `${import.meta.env.VITE_API_URL}/uploadImage/image`,
           formDataAttach,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
@@ -253,7 +253,7 @@ export const CreateJob = () => {
       };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/jobs/create`,
+        `${import.meta.env.VITE_API_URL}/jobs/create`,
         payload
       );
       

@@ -69,7 +69,7 @@ const IndividualJobPost = () => {
   const fetchDonationPost = async () => {
     setLoader(true)
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/${title}/${_id}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/${title}/${_id}`)
       const data = response.data;
       setJobs(data);
       setLoading(false)
@@ -80,7 +80,7 @@ const IndividualJobPost = () => {
   }
 
   const checkIfApplied = () => {
-    axios.get(`${process.env.REACT_APP_API_URL}/jobApplication/user/${profile._id}/job/${_id}`)
+    axios.get(`${import.meta.env.VITE_API_URL}/jobApplication/user/${profile._id}/job/${_id}`)
       .then(response => {
         setIsApplied(response.data.result);
       })
@@ -96,7 +96,7 @@ const IndividualJobPost = () => {
   let admin = profile.profileLevel === 0;
 
   const fetchAppliedUserIds = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/${title}/appliedCandidates/${_id}`)
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/${title}/appliedCandidates/${_id}`)
     const data = response.data;
     setAppliedCandidates(data.userIds);
     setAppliedCandidatesDetails(data.appliedCandidates);
@@ -142,7 +142,7 @@ const IndividualJobPost = () => {
       if (!file) return;
 
       setUploadingResume(true);
-      const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`;
+      const api = `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`;
       const formDataFile = new FormData();
       formDataFile.append('image', file);
 
@@ -175,7 +175,7 @@ const IndividualJobPost = () => {
       e.preventDefault();
       setApplyLoading(true);
 
-      axios.post(`${process.env.REACT_APP_API_URL}/jobApplication/`, { ...formData, experiences })
+      axios.post(`${import.meta.env.VITE_API_URL}/jobApplication/`, { ...formData, experiences })
         .then(response => {
           toast.success('Application submitted successfully!');
           navigate('/home/jobs');
@@ -474,7 +474,7 @@ const IndividualJobPost = () => {
 
     const handleSelectApplicant = (applicant) => {
       setLoading(true)
-      axios.put(`${process.env.REACT_APP_API_URL}/jobApplication/toggleSelectCandidate/job/${_id}/user/${applicant.userId._id}`)
+      axios.put(`${import.meta.env.VITE_API_URL}/jobApplication/toggleSelectCandidate/job/${_id}/user/${applicant.userId._id}`)
         .then(response => {
           fetchApplicants()
           fetchSelectedApplicants()
@@ -591,7 +591,7 @@ const IndividualJobPost = () => {
   // Similar improvements for other functions...
   const fetchApplicants = async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/jobApplication/job/${_id}`);
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/jobApplication/job/${_id}`);
       setApplicants(data);
     } catch (error) {
       console.error('Error fetching applicants:', error);
@@ -600,7 +600,7 @@ const IndividualJobPost = () => {
 
   const fetchSelectedApplicants = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/jobApplication/selectedApplicants/job/${_id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/jobApplication/selectedApplicants/job/${_id}`);
       setSelectedApplicants(response.data);
     } catch (error) {
       console.error('Error fetching selected applicants:', error);
@@ -614,7 +614,7 @@ const IndividualJobPost = () => {
 
   const handleStarred = (jobId) => {
     setStarLoading(true);
-    axios.put(`${process.env.REACT_APP_API_URL}/${title}/${jobId}`, {
+    axios.put(`${import.meta.env.VITE_API_URL}/${title}/${jobId}`, {
       starred: true,
       userId: profile._id
     })
@@ -632,7 +632,7 @@ const IndividualJobPost = () => {
 
   const handleVerifyJob = async (jobId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/jobs/make/job/${jobId}/verifyToggle`);
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/jobs/make/job/${jobId}/verifyToggle`);
       toast.success(response.data.message);
       fetchDonationPost();
     } catch (error) {

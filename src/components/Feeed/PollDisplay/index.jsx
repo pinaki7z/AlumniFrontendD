@@ -42,7 +42,7 @@ const PollDisplay = ({ poll, userId, userData }) => {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/poll/${poll._id}`,
+        `${import.meta.env.VITE_API_URL}/poll/${poll._id}`,
         body
       );
 
@@ -65,7 +65,7 @@ const PollDisplay = ({ poll, userId, userData }) => {
   const deletePoll = async () => {
     if (window.confirm('Are you sure you want to delete this poll?')) {
       try {
-        const response = await axios.delete(`${process.env.REACT_APP_API_URL}/poll/${poll._id}`);
+        const response = await axios.delete(`${import.meta.env.VITE_API_URL}/poll/${poll._id}`);
         if (response.status === 200) {
           toast.success('Poll deleted successfully.');
           window.location.reload();

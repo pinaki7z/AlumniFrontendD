@@ -13,7 +13,7 @@ export default function UserList({ currentUserId, selectedUserId, onSelectUser, 
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [conversations, setConversations] = useState({});
   const [loading, setLoading] = useState(true);
-  const API = process.env.REACT_APP_API_URL;
+  const API = import.meta.env.VITE_API_URL;
 
   // Load users and initialize conversations
   useEffect(() => {

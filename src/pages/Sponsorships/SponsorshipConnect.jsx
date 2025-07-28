@@ -48,7 +48,7 @@ const SponsorshipConnect = () => {
   const fetchSponsorships = async () => {
     setLoading(true);
     try {
-      let url = `${process.env.REACT_APP_API_URL}/api/sponsorship/all`;
+      let url = `${import.meta.env.VITE_API_URL}/api/sponsorship/all`;
       let params = new URLSearchParams();
       
       params.append('tab', activeTab);
@@ -87,7 +87,7 @@ const SponsorshipConnect = () => {
   const fetchStats = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/sponsorship/stats/overview?isAdmin=${isAdmin}&userEmail=${profile.email}`
+        `${import.meta.env.VITE_API_URL}/api/sponsorship/stats/overview?isAdmin=${isAdmin}&userEmail=${profile.email}`
       );
       const result = await response.json();
       
@@ -104,7 +104,7 @@ const SponsorshipConnect = () => {
     if (!window.confirm('Are you sure you want to delete this sponsorship?')) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}`, {
         method: 'DELETE'
       });
       
@@ -126,7 +126,7 @@ const SponsorshipConnect = () => {
   // Admin verify sponsorship
   const handleVerify = async (id, action, rejectionReason = '') => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/sponsorship/${id}/verify`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/sponsorship/${id}/verify`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

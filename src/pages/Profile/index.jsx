@@ -35,9 +35,9 @@ const Profile = () => {
 
   const getAlumni = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/${id}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/${id}`)
       setMember(response.data)
-      const followingResponse = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`)
+      const followingResponse = await axios.get(`${import.meta.env.VITE_API_URL}/alumni/${profile._id}/following/all`)
       const followingDetails = followingResponse.data.followingDetails
       const isUserFollowing = followingDetails.some((detail) => detail.userId === response.data._id)
       setIsFollowing(isUserFollowing)
@@ -56,7 +56,7 @@ const Profile = () => {
     setLoading(true)
     try {
       if (!isFollowing) {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         })
         if (response.status === 200) {
@@ -68,7 +68,7 @@ const Profile = () => {
           setLoading(false)
         }
       } else {
-        const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
+        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/alumni/${member._id}/follow`, {
           userId: profile._id,
         })
         if (response.status === 200) {

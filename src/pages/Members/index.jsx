@@ -145,7 +145,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const handleDelete = async (memberId) => {
     try {
       const token = cookie.token;
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/alumni/${memberId}`, {
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/alumni/${memberId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

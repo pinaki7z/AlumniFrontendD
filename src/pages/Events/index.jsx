@@ -99,7 +99,7 @@ function EventModal(props) {
     if (!props.selectedEvent?._id) return;
     
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/events/${props.selectedEvent._id}`);
       const data = response.data;
       
       setFormData({
@@ -178,7 +178,7 @@ function EventModal(props) {
       formDataImage.append('image', file);
       
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`,
+        `${import.meta.env.VITE_API_URL}/uploadImage/singleImage`,
         formDataImage,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
@@ -220,10 +220,10 @@ function EventModal(props) {
       };
 
       if (props.isEditing && props.selectedEvent?._id) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/events/${props.selectedEvent._id}`, eventData);
+        await axios.put(`${import.meta.env.VITE_API_URL}/events/${props.selectedEvent._id}`, eventData);
         toast.success('Event updated successfully!');
       } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/events/createEvent`, eventData);
+        await axios.post(`${import.meta.env.VITE_API_URL}/events/createEvent`, eventData);
         toast.success('Event created successfully!');
       }
 
@@ -1119,7 +1119,7 @@ function Events() {
   const fetchEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events`);
       const data = await response.json();
       
       const filteredEvents = data.filter((event) => {
@@ -1146,7 +1146,7 @@ function Events() {
   const fetchEventDetails = async (eventId) => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/events/${eventId}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/events/${eventId}`);
       const data = await response.json();
       setSelectedEvent(data);
     } catch (error) {
@@ -1160,7 +1160,7 @@ function Events() {
     if (!eventId) return;
     
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/events/attendees/${eventId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/events/attendees/${eventId}`);
       if (response.status === 200) {
         setAttendees(response.data);
         determineAttendanceStatus(response.data);
@@ -1194,7 +1194,7 @@ function Events() {
       };
 
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/events/attendEvent/${eventId}`,
+        `${import.meta.env.VITE_API_URL}/events/attendEvent/${eventId}`,
         body
       );
 
@@ -1221,7 +1221,7 @@ function Events() {
     if (!window.confirm('Are you sure you want to delete this event?')) return;
 
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/events/${selectedEvent._id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/events/${selectedEvent._id}`, {
         method: 'DELETE',
       });
 

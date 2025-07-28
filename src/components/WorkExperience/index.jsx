@@ -33,7 +33,7 @@ export const WorkExperience = () => {
   const fetchWorkExperiences = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/alumni/workExperience/${profile._id}`, {
         headers: {
           'Authorization': `Bearer ${cookie.token}`
         }
@@ -113,7 +113,7 @@ export const WorkExperience = () => {
           endYear: form.currentWork ? '' : form.endYear
         }));
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/alumni/workExperience/${profile._id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/alumni/workExperience/${profile._id}`, {
           method: 'PUT',
           body: JSON.stringify(updatedForms),
           headers: {

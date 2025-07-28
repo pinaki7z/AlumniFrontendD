@@ -41,7 +41,7 @@ const NewsUpdatesPage = () => {
         params.append('search', searchQuery);
       }
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/all?${params}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/all?${params}`);
       const result = await response.json();
 
       if (result.success) {
@@ -61,7 +61,7 @@ const NewsUpdatesPage = () => {
   // Fetch statistics
   const fetchStats = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/stats/overview`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/stats/overview`);
       const result = await response.json();
       if (result.success) {
         setStats(result.stats);
@@ -79,7 +79,7 @@ const NewsUpdatesPage = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/news/${newsId}/like`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/news/${newsId}/like`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: profile._id })
@@ -112,7 +112,7 @@ const NewsUpdatesPage = () => {
     
     try {
       const likePromises = newsData.map(news =>
-        fetch(`${process.env.REACT_APP_API_URL}/api/news/${news._id}/like-status/${profile._id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/news/${news._id}/like-status/${profile._id}`)
           .then(res => res.json())
           .then(result => ({ newsId: news._id, isLiked: result.isLiked }))
       );
@@ -433,7 +433,7 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
       await navigator.clipboard.writeText(`${window.location.origin}/home/news/${news._id}`);
       
       // Update share count
-      await fetch(`${process.env.REACT_APP_API_URL}/api/news/${news._id}/share`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/news/${news._id}/share`, {
         method: 'PATCH'
       });
       

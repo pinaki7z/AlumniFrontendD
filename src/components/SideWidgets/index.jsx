@@ -41,7 +41,7 @@ const SideWidgets = () => {
   const fetchNotifications = async () => {
     setLoad(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/notifications`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/notifications`);
       const sortedNotifications = response.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
       setNotifications(sortedNotifications);
     } catch (error) {
@@ -60,7 +60,7 @@ const SideWidgets = () => {
     if (!email) return toast.error("Please enter an email address.");
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/invite`, { email });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/invite`, { email });
       toast.success("Invitation sent successfully!");
       setEmail('');
     } catch (error) {
@@ -77,7 +77,7 @@ const SideWidgets = () => {
   const handleFollowToggle = async (memberId, firstName, lastName) => {
     setIsLoading(prevLoading => ({ ...prevLoading, [memberId]: true }));
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${memberId}/follow`, {
+      const response = await axios.patch(`${import.meta.env.VITE_API_URL}/alumni/${memberId}/follow`, {
         userId: profile._id,
         requestedUserName: `${profile.firstName} ${profile.lastName}`,
         followedUserName: `${firstName} ${lastName}`

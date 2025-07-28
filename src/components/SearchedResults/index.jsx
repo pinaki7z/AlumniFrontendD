@@ -40,7 +40,7 @@ export const SearchedResults = () => {
     const fetchSearchResults = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/search/search?keyword=${searchKeyword}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/search/search?keyword=${searchKeyword}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

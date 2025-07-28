@@ -66,8 +66,8 @@ export default function ShowImages() {
   const fetchMeta = async () => {
     try {
       const [yearsRes, deptsRes] = await Promise.all([
-        axios.get(`${process.env.REACT_APP_API_URL}/photoGallary/years`),
-        axios.get(`${process.env.REACT_APP_API_URL}/photoGallary/years/${yearId}/departments`)
+        axios.get(`${import.meta.env.VITE_API_URL}/photoGallary/years`),
+        axios.get(`${import.meta.env.VITE_API_URL}/photoGallary/years/${yearId}/departments`)
       ]);
       
       setYear(yearsRes.data.find(y => y._id === yearId) || {});
@@ -81,7 +81,7 @@ export default function ShowImages() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/photoGallary/images/get/year/${yearId}/dept/${deptId}`
+        `${import.meta.env.VITE_API_URL}/photoGallary/images/get/year/${yearId}/dept/${deptId}`
       );
       setPhotos(res.data || []);
     } catch (error) {
@@ -103,7 +103,7 @@ export default function ShowImages() {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/photoGallary/images/multipleImages/year/${yearId}/dept/${deptId}`,
+        `${import.meta.env.VITE_API_URL}/photoGallary/images/multipleImages/year/${yearId}/dept/${deptId}`,
         form,
         { 
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -128,7 +128,7 @@ export default function ShowImages() {
     
     try {
       await axios.delete(
-        `${process.env.REACT_APP_API_URL}/photoGallary/images/${selectedImage._id}/deleteImage`
+        `${import.meta.env.VITE_API_URL}/photoGallary/images/${selectedImage._id}/deleteImage`
       );
       
       setSelectedImage(null);

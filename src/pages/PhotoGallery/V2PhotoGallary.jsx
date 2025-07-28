@@ -17,7 +17,7 @@ export default function V2PhotoGallery() {
     (async () => {
       try {
         const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/photoGallary/years`
+          `${import.meta.env.VITE_API_URL}/photoGallary/years`
         );
         setStats(s => ({ ...s, totalYears: data.length }));
       } catch (err) { console.error(err); }

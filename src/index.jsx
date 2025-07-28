@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 import "./global.css";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import storePromise from "./store";
 //import 'react-loading-skeleton/dist/skeleton.css';
@@ -54,4 +53,3 @@ function AppLoader() {
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 root.render(<AppLoader />);
-reportWebVitals();

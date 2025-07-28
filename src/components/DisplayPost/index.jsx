@@ -37,7 +37,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
 
   const getRequest = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/requests/req`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/groups/requests/req`);
       setNotificationList(response.data);
     } catch (error) {
       console.error("Error fetching request:", error);
@@ -121,7 +121,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
 
     const fetchJoin = () => {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/groupMember/isMember/${group._id}/${profile._id}`)
+        .get(`${import.meta.env.VITE_API_URL}/groupMember/isMember/${group._id}/${profile._id}`)
         .then((res) => {
           setIsMember(res.data.isMember);
           setApproved(res.data.approved);
@@ -173,7 +173,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
               "Content-Type": "multipart/form-data",
             },
           };
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, formData, config);
+          const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/createRequest`, formData, config);
           setModalShow(false);
           getRequest();
           toast.success("requested");
@@ -194,7 +194,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
           groupName,
           requestedUserName,
         };
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/groups/createRequest`, body);
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/groups/createRequest`, body);
         if (response.data.requested === true) setRequestStatus("Requested");
         else setRequestStatus("Request");
       } catch (error) {
@@ -205,7 +205,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
     const handleAddMember = async (groupId) => {
       try {
         setIsLoading(true);
-        const response = await axios.put(`${process.env.REACT_APP_API_URL}/groups/members/${groupId}`, {
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/groups/members/${groupId}`, {
           members: {
             userId: profile._id,
             profilePicture: profile.profilePicture,
@@ -265,7 +265,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
         approved: group.groupType == "Public" ? true : false,
       };
       axios
-        .post(`${process.env.REACT_APP_API_URL}/groupMember/add`, data)
+        .post(`${import.meta.env.VITE_API_URL}/groupMember/add`, data)
         .then((res) => {
           if (group.groupType == "Public") navigateTo(`/home/groups/${group._id}`);
           else {

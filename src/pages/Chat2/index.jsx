@@ -95,7 +95,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/messages/${currentUserId}/${otherUserId}`, 
+        `${import.meta.env.VITE_API_URL}/messages/${currentUserId}/${otherUserId}`, 
         { withCredentials: true }
       );
       
@@ -103,7 +103,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
       
       // Mark messages as read
       await axios.patch(
-        `${process.env.REACT_APP_API_URL}/messages/${currentUserId}/${otherUserId}/read`,
+        `${import.meta.env.VITE_API_URL}/messages/${currentUserId}/${otherUserId}/read`,
         {},
         { withCredentials: true }
       );
@@ -120,7 +120,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
     
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/alumni/${otherUserId}`, 
+        `${import.meta.env.VITE_API_URL}/alumni/${otherUserId}`, 
         { withCredentials: true }
       );
       setCurrentSelectedUserData(response.data);

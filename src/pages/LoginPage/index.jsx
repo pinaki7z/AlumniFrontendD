@@ -67,7 +67,7 @@ const LoginPage = ({ handleLogin }) => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       const currentDate = new Date();
 
-      const loginUrl = `${process.env.REACT_APP_API_URL}/alumni/login`;
+      const loginUrl = `${import.meta.env.VITE_API_URL}/alumni/login`;
       const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {

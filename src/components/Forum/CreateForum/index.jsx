@@ -29,7 +29,7 @@ const CreateForum = () => {
 
   const fetchForumDetails = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/forums/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/forums/${id}`);
       const forum = response.data;
       setForumData({
         title: forum.title,
@@ -69,7 +69,7 @@ const CreateForum = () => {
         profilePicture: profile.profilePicture
       };
 
-      await axios.post(`${process.env.REACT_APP_API_URL}/forums/createForum`, body);
+      await axios.post(`${import.meta.env.VITE_API_URL}/forums/createForum`, body);
       toast.success("New Forum Created");
       navigateTo("/home/forums");
     } catch (error) {
@@ -86,7 +86,7 @@ const CreateForum = () => {
         type: forumData.type
       };
 
-      await axios.put(`${process.env.REACT_APP_API_URL}/forums/edit/${id}`, body);
+      await axios.put(`${import.meta.env.VITE_API_URL}/forums/edit/${id}`, body);
       toast.success("Forum Updated Successfully");
       navigateTo("/home/forums");
     } catch (error) {

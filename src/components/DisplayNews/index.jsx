@@ -96,7 +96,7 @@ export const DisplayNews = ({
     if (window.confirm('Are you sure you want to delete this news article?')) {
       setLoading(true);
       try {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/news/${postId}`);
+        await axios.delete(`${import.meta.env.VITE_API_URL}/news/${postId}`);
         onDeletePost(postId);
       } catch (error) {
         console.error('Error deleting post:', error);
