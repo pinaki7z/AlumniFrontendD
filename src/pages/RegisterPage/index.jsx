@@ -30,7 +30,7 @@ const RegisterPage = () => {
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', password: '', confirmPassword: '',
-    gender: '', department: '', graduatingYear: '', batch: '', accept: false, captchaToken: null, userType: 'alumni'
+    gender: '', startingYear: '', graduatingYear: '', accept: false, captchaToken: null, userType: 'alumni'
   });
 
   const handleReCaptcha = (token) => setFormData({ ...formData, captchaToken: token });
@@ -61,9 +61,26 @@ const RegisterPage = () => {
       setLoading(false);
       return;
     }
+
+    // Validate years
+    if (formData.startingYear && formData.graduatingYear) {
+      if (parseInt(formData.startingYear) >= parseInt(formData.graduatingYear)) {
+        toast.error("Starting year must be before graduating year.");
+        setLoading(false);
+        return;
+      }
+    }
     
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, formData);
+      // Combine starting and graduating year to create batch
+      const batch = `${formData.startingYear}-${formData.graduatingYear}`;
+      
+      const submitData = {
+        ...formData,
+        batch: batch
+      };
+      
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/alumni/register`, submitData);
       toast.success("Registration successful! Please login to continue.");
       navigateTo('/login');
     } catch (error) {
@@ -75,19 +92,8 @@ const RegisterPage = () => {
 
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
-    return Array.from({ length: 101 }, (_, i) => `${currentYear - 1 - i}-${currentYear - i}`);
+    return Array.from({ length: 50 }, (_, i) => currentYear - i);
   };
-  
-  const generateGraduatingYears = () => {
-    const currentYear = new Date().getFullYear();
-    return ['Graduated', ...Array.from({ length: 101 }, (_, i) => currentYear - i)];
-  };
-
-  const departments = [
-    'Agricultural Engineering', 'Gastroenterology', 'Indian languages', 
-    'Neurosurgery', 'Vocal Music', 'Computer Science', 'Mechanical Engineering',
-    'Electrical Engineering', 'Civil Engineering', 'Business Administration'
-  ];
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gray-50">
@@ -209,56 +215,40 @@ const RegisterPage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Gender</label>
-                <select
-                  name="gender"
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] bg-white text-sm"
-                >
-                  <option value="">Select</option>
-                  <option>Male</option>
-                  <option>Female</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Department</label>
-                <select
-                  name="department"
-                  onChange={handleChange}
-                  required
-                  className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] bg-white text-sm"
-                >
-                  <option value="">Select</option>
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>{dept}</option>
-                  ))}
-                </select>
-              </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Gender</label>
+              <select
+                name="gender"
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] bg-white text-sm"
+              >
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Graduation</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Starting Year</label>
                 <select
-                  name="graduatingYear"
+                  name="startingYear"
                   onChange={handleChange}
                   required
                   className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] bg-white text-sm"
                 >
                   <option value="">Select</option>
-                  {generateGraduatingYears().map((yr) => (
+                  {generateYears().map((yr) => (
                     <option key={yr} value={yr}>{yr}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Batch</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Graduating Year</label>
                 <select
-                  name="batch"
+                  name="graduatingYear"
                   onChange={handleChange}
                   required
                   className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#71be95] bg-white text-sm"
@@ -270,6 +260,15 @@ const RegisterPage = () => {
                 </select>
               </div>
             </div>
+
+            {/* Show batch preview if both years are selected */}
+            {formData.startingYear && formData.graduatingYear && (
+              <div className="p-3 bg-[#71be95]/10 rounded-lg border border-[#71be95]/20">
+                <div className="text-sm font-medium text-[#0A3A4C]">
+                  Batch: {formData.startingYear}-{formData.graduatingYear}
+                </div>
+              </div>
+            )}
 
             {/* Mobile reCAPTCHA */}
             <div className="flex justify-center py-2">
@@ -486,40 +485,38 @@ const RegisterPage = () => {
                     </div>
                   </div>
 
-                  {/* Select Fields */}
+                  {/* Gender */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                    <select
+                      name="gender"
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 bg-white transition-all duration-200"
+                    >
+                      <option value="">Select Gender</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+
+                  {/* Year Fields */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Starting Year</label>
                       <select
-                        name="gender"
+                        name="startingYear"
                         onChange={handleChange}
                         required
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 bg-white transition-all duration-200"
                       >
-                        <option value="">Select Gender</option>
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
-                      <select
-                        name="department"
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 bg-white transition-all duration-200"
-                      >
-                        <option value="">Select Department</option>
-                        {departments.map((dept) => (
-                          <option key={dept} value={dept}>{dept}</option>
+                        <option value="">Select Starting Year</option>
+                        {generateYears().map((yr) => (
+                          <option key={yr} value={yr}>{yr}</option>
                         ))}
                       </select>
                     </div>
-                  </div>
-
-                  {/* Year & Batch */}
-                  <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Graduating Year</label>
                       <select
@@ -529,26 +526,22 @@ const RegisterPage = () => {
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 bg-white transition-all duration-200"
                       >
                         <option value="">Select Graduating Year</option>
-                        {generateGraduatingYears().map((yr) => (
-                          <option key={yr} value={yr}>{yr}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Batch</label>
-                      <select
-                        name="batch"
-                        onChange={handleChange}
-                        required
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#71be95] focus:ring-2 focus:ring-[#71be95]/20 bg-white transition-all duration-200"
-                      >
-                        <option value="">Select Batch</option>
-                        {generateYears().map((yr) => (
+                          {generateYears().map((yr) => (
                           <option key={yr} value={yr}>{yr}</option>
                         ))}
                       </select>
                     </div>
                   </div>
+
+                  {/* Show batch preview if both years are selected */}
+                  {formData.startingYear && formData.graduatingYear && (
+                    <div className="p-4 bg-[#71be95]/10 rounded-xl border border-[#71be95]/20">
+                      <div className="text-sm font-medium text-[#0A3A4C] flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" />
+                        Batch: {formData.startingYear}-{formData.graduatingYear}
+                      </div>
+                    </div>
+                  )}
 
                   {/* reCAPTCHA */}
                   <div className="flex justify-center py-4">
@@ -640,7 +633,7 @@ const RegisterPage = () => {
             
             <div className="p-6 space-y-4 text-sm overflow-y-auto max-h-[60vh] custom-scrollbar">
               <p>
-                At <strong>Alumnify</strong>, we collect personal information such as your name, email address, gender, graduation details, and department to create your alumni profile and provide personalized services. This data helps us connect you with fellow alumni, notify you about events, and enhance networking opportunities. We do not sell or share your personal data with third parties for marketing purposes. All data is securely stored, and we take strong measures to prevent unauthorized access.
+                At <strong>Alumnify</strong>, we collect personal information such as your name, email address, gender, graduation details, and batch information to create your alumni profile and provide personalized services. This data helps us connect you with fellow alumni, notify you about events, and enhance networking opportunities. We do not sell or share your personal data with third parties for marketing purposes. All data is securely stored, and we take strong measures to prevent unauthorized access.
               </p>
               <p>
                 If you are a resident of the <strong>European Economic Area (EEA)</strong>, your data is protected under the <strong>General Data Protection Regulation (GDPR)</strong>. You have the right to access, modify, or delete your personal data at any time. Additionally, you can request a copy of your stored data or withdraw consent for data processing by contacting us. We ensure that your data is processed lawfully, transparently, and for legitimate purposes.

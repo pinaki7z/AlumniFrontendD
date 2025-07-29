@@ -1,10 +1,6 @@
 import LeftSidebar from "./components/left-sidebar";
 import TopBar from "./components/topbar";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LandingPage from "./pages/LandingPage";
@@ -19,6 +15,7 @@ import Events from "./pages/Events";
 import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 import BackButtonHandler from "./components/BackButtonHandler";
+import ScrollToTop from "./components/ScrollToTop";
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState(true);
@@ -52,22 +49,29 @@ function App() {
 
   return (
     <>
-       
+
       <div className="App">
         <ToastContainer />
         <Router>
-            <BackButtonHandler />
+          <ScrollToTop />
+          <BackButtonHandler />
+
+
           <Routes>
-           
+
 
             {/* Login and Register Routes */}
             <Route
               path="/login"
-              element={<LoginPage handleLogin={handleLogin} />}
+              element={
+                isLoggedIn ? <Navigate to="/home" replace /> : <LoginPage handleLogin={handleLogin} />
+              }
             />
             <Route
               path="/register"
-              element={<RegisterPage handleLogin={handleLogin} />}
+              element={
+                isLoggedIn ? <Navigate to="/home" replace /> : <RegisterPage handleLogin={handleLogin} />
+              }
             />
 
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -75,11 +79,11 @@ function App() {
               path="/reset-password/:userId/:token"
               element={<PasswordReset />}
             />
-             {/* Route for the base URL */}
-            {/* <Route
+            {/* Route for the base URL */}
+            <Route
               path="/*"
               element={<LandingPage handleLogin={handleLogin} />}
-            /> */}
+            />
 
             {isLoggedIn && (
               <>

@@ -45,6 +45,7 @@ import NewsDetailPage from "../NewsV2/NewsDetailPage.jsx";
 import CreateNewsPage from "../NewsV2/CreateNewsPage.jsx";
 import DraftsPage from "../NewsV2/DraftsPage.jsx";
 import AnalyticsPage from "../NewsV2/AnalyticsPage.jsx";
+import ScrollToTop from "../../components/ScrollToTop.jsx";
 
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
@@ -70,7 +71,8 @@ const Dashboard = ({ handleLogout }) => {
   }, [profile.accountDeleted, profile.expirationDate]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div  className="flex h-screen w-full overflow-hidden">
+       <ScrollToTop targetId="main-scroll" />
       {/* Desktop Sidebar - Collapsed by default, expands on hover */}
       <div className="hidden lg:block">
         <LeftSidebar onNavigate={() => {}} isMobile={false} isExpanded={false} />
@@ -125,8 +127,10 @@ const Dashboard = ({ handleLogout }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
+        <div id="main-scroll" className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
+
           <div className="">
+
             <Routes>
               <Route path="/groups/*" element={<Groups />} />
               {searchQuery && (
