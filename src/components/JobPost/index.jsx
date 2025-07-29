@@ -294,13 +294,13 @@ const JobPost = ({
                   {menuVisible && (
                     <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                       <div className="py-2">
-                        <button
+                        {/* <button
                           onClick={(e) => { e.stopPropagation(); setArchiveModalShow(true); setMenuVisible(false); }}
                           className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         >
                           <Archive size={12} />
                           Archive
-                        </button>
+                        </button> */}
                         <button
                           onClick={(e) => { e.stopPropagation(); setDeleteModalShow(true); setMenuVisible(false); }}
                           className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50"
@@ -529,13 +529,13 @@ const JobPost = ({
                 {menuVisible && (
                   <div className="absolute right-0 top-full mt-2 w-36 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                     <div className="py-2">
-                      <button
+                      {/* <button
                         onClick={(e) => { e.stopPropagation(); setArchiveModalShow(true); setMenuVisible(false); }}
                         className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
                       >
                         <Archive size={12} />
                         Archive
-                      </button>
+                      </button> */}
                       <button
                         onClick={(e) => { e.stopPropagation(); setDeleteModalShow(true); setMenuVisible(false); }}
                         className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50"

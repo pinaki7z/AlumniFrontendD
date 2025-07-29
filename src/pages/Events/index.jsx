@@ -1287,31 +1287,7 @@ function Events() {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
-              <button
-                onClick={() => setViewMode('calendar')}
-                className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 ${
-                  viewMode === 'calendar' 
-                    ? 'bg-white text-gray-900 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <CalendarIcon size={14} />
-                <span className="hidden sm:inline">Calendar</span>
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-200 ${
-                  viewMode === 'list' 
-                    ? 'bg-white text-gray-900 shadow-sm' 
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                <List size={14} />
-                <span className="hidden sm:inline">List</span>
-              </button>
-            </div>
+        
 
             {/* Create Event Button */}
             {isAdmin && (
