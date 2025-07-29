@@ -294,7 +294,7 @@ export default function CreatePost1({
       {/* Mobile FAB */}
       <button
         onClick={() => setShowMobilePostModal(true)}
-        className="sm:hidden fixed bottom-20 right-4 w-14 h-14 bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-lg text-white rounded-full shadow-lg flex items-center justify-center z-40 transition-all duration-200 active:scale-95"
+        className="sm:hidden fixed bottom-10 right-4 w-14 h-14 bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-lg text-white rounded-full shadow-lg flex items-center justify-center z-40 transition-all duration-200 active:scale-95"
       >
         <Plus className="w-6 h-6" />
       </button>

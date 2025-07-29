@@ -127,6 +127,8 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
                 >
                     {showFullContent ? (
                         <div className='h-[70px]'>
+                <img src="/v2/logo2.png" alt="InsideOut Logo" className="w-[200px] h-[99px] mx-auto rounded-lg object-contain transition-all duration-300" />
+                            
                        </div>
                     ) : (
                        <div className='h-[70px]'>
