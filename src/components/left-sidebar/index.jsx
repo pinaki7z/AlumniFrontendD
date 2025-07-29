@@ -77,6 +77,12 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
             label: 'Member C-Panel',
             icon: <GrUserAdmin />,
             roles: [0] // Only profileLevel 0 (super admin)
+        },
+        {
+            path: '/home/prohibited-keywords',
+            label: 'Prohibited Keywords',
+            icon: <GrUserAdmin />,
+            roles: [0] // Only profileLevel 0 (super admin)
         }
     ];
 
@@ -121,7 +127,6 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
                 >
                     {showFullContent ? (
                         <div className='h-[70px]'>
-
                        </div>
                     ) : (
                        <div className='h-[70px]'>

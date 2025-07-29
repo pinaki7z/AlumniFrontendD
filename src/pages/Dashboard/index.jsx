@@ -46,7 +46,7 @@ import CreateNewsPage from "../NewsV2/CreateNewsPage.jsx";
 import DraftsPage from "../NewsV2/DraftsPage.jsx";
 import AnalyticsPage from "../NewsV2/AnalyticsPage.jsx";
 import ScrollToTop from "../../components/ScrollToTop.jsx";
-
+import ProhibitedKeywords from "../../pages/ProhibitedKeywords/ProhibitedKeywords.jsx"
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -194,6 +194,10 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/news/:id" element={<NewsDetailPage />} />
               <Route path="/news/drafts" element={<DraftsPage />} />
               <Route path="/news/analytics" element={<AnalyticsPage />} />
+
+              <Route path="/prohibited-keywords" element={<ProhibitedKeywords />} />
+
+
 
 
               {/* <Route path="/guidance/*" element={<Guidance />} /> */}
