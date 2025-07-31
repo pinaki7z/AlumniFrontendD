@@ -30,6 +30,7 @@ import {
   Clock,
   Users
 } from "lucide-react"
+import AIRefactorButton from '../../utils/AIRefactorButton';
 
 export default function CreatePost1({
   name,
@@ -260,6 +261,7 @@ export default function CreatePost1({
       <div className="hidden sm:block w-full  mx-auto">
         <PostCreatorContent
           isMobile={false}
+          setInput={setInput}
           profile={profile}
           picturePlaceholder={picture}
           input={input}
@@ -302,6 +304,7 @@ export default function CreatePost1({
       {/* Mobile Post Modal */}
       {showMobilePostModal && (
         <MobilePostModal
+          setInput={setInput}
           profile={profile}
           picturePlaceholder={picture}
           input={input}
@@ -629,6 +632,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
 // Desktop Post Creator - LinkedIn-like compact design
 export function PostCreatorContent({
   isMobile,
+  setInput,
   profile,
   picturePlaceholder,
   input,
@@ -659,11 +663,10 @@ export function PostCreatorContent({
 }) {
   const textareaRef = React.useRef(null);
   const [charCount, setCharCount] = useState(0);
-  const maxChars = 1000; // Reduced for LinkedIn-like experience
+  const maxChars =100; // Reduced for LinkedIn-like experience
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    if (value.length <= maxChars) {
       onInputChange(e);
       setCharCount(value.length);
       
@@ -672,7 +675,6 @@ export function PostCreatorContent({
         textareaRef.current.style.height = 'auto';
         textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
       }
-    }
   };
 
   const hasContent = input.trim() || picturePath.length > 0 || youtubeVideoId || videoPath.videoPath;
@@ -699,6 +701,11 @@ export function PostCreatorContent({
               rows={isExpanded ? 2 : 1}
               style={{ minHeight: '36px', maxHeight: '120px' }}
             />
+            <div className="flex flex-col sm:flex-row gap-2 mt-1">
+  <AIRefactorButton inputText={input} setInputText={setInput} />
+  {/* ...other buttons like Submit */}
+</div>
+            
           </div>
         </div>
       </div>
@@ -802,7 +809,7 @@ export function PostCreatorContent({
 
       {/* Compact Actions */}
       <div className="px-3 py-2 border-t border-gray-100">
-        {isExpanded ? (
+        {true ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
               <label className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:bg-gray-50 rounded cursor-pointer transition-colors text-sm">
@@ -811,13 +818,13 @@ export function PostCreatorContent({
                 <input type="file" accept="image/*" hidden onChange={onImageChange} multiple />
               </label>
 
-              <label className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:bg-gray-50 rounded cursor-pointer transition-colors text-sm">
+              {/* <label className="flex items-center gap-1 px-2 py-1 text-gray-600 hover:bg-gray-50 rounded cursor-pointer transition-colors text-sm">
                 <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
                 </svg>
                 <span className="hidden sm:inline">Video</span>
                 <input type="file" accept="video/*" hidden onChange={onVideoChange} />
-              </label>
+              </label> */}
 
               <button
                 onClick={onOpenPoll}
@@ -847,7 +854,7 @@ export function PostCreatorContent({
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500">{charCount}/{maxChars}</span>
+              {/* <span className="text-xs text-gray-500">{charCount}/{maxChars}</span> */}
               <button
                 onClick={onSubmit}
                 disabled={loadingPost || !hasContent}
@@ -874,12 +881,12 @@ export function PostCreatorContent({
               <ImageIcon className="w-5 h-5" />
               <input type="file" accept="image/*" hidden onChange={onImageChange} multiple />
             </label>
-            <label className="cursor-pointer hover:text-blue-600 transition-colors">
+            {/* <label className="cursor-pointer hover:text-blue-600 transition-colors">
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
               </svg>
               <input type="file" accept="video/*" hidden onChange={onVideoChange} />
-            </label>
+            </label> */}
             <button onClick={onOpenPoll} className="hover:text-amber-600 transition-colors">
               <BarChart3 className="w-5 h-5" />
             </button>
@@ -901,6 +908,7 @@ export function PostCreatorContent({
 // Mobile Post Modal - Compact
 export function MobilePostModal({
   profile,
+  setInput,
   picturePlaceholder,
   input,
   onInputChange,
@@ -939,8 +947,8 @@ export function MobilePostModal({
   const hasContent = input.trim() || picturePath.length > 0 || youtubeVideoId || videoPath.videoPath;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end">
-      <div className="w-full bg-white rounded-t-3xl max-h-[85vh] overflow-hidden shadow-2xl animate-slide-up">
+    <div onClick={closeMobilePostModal} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end">
+      <div onClick={e => e.stopPropagation()} className="w-full bg-white rounded-t-3xl max-h-[85vh] overflow-hidden shadow-2xl animate-slide-up">
         {/* Compact Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
@@ -993,11 +1001,16 @@ export function MobilePostModal({
               className="w-full text-gray-700 placeholder-gray-500 border-none outline-none resize-none text-base leading-relaxed min-h-[80px] max-h-[150px]"
               autoFocus
             />
-            <div className="flex items-center justify-end mt-2">
+
+              <div className="">
+  <AIRefactorButton inputText={input} setInputText={setInput} />
+  {/* ...other buttons like Submit */}
+</div>
+            {/* <div className="flex items-center justify-end mt-2">
               <span className={`text-xs ${charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
                 {charCount}/{maxChars}
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* Loading State */}
@@ -1101,14 +1114,14 @@ export function MobilePostModal({
               <span className="text-xs text-gray-600">Photos</span>
               <input type="file" accept="image/*" hidden onChange={onImageChange} multiple />
             </label>
-
+{/* 
             <label className="flex flex-col items-center gap-1 p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100 transition-colors">
               <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
               </svg>
               <span className="text-xs text-gray-600">Video</span>
               <input type="file" accept="video/*" hidden onChange={onVideoChange} />
-            </label>
+            </label> */}
 
             <button
               onClick={onOpenPoll}

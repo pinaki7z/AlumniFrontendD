@@ -47,6 +47,7 @@ import DraftsPage from "../NewsV2/DraftsPage.jsx";
 import AnalyticsPage from "../NewsV2/AnalyticsPage.jsx";
 import ScrollToTop from "../../components/ScrollToTop.jsx";
 import ProhibitedKeywords from "../../pages/ProhibitedKeywords/ProhibitedKeywords.jsx"
+import NotificationCenterPage from "../NotificationCenterPage/NotificationCenterPage.jsx";
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -217,7 +218,7 @@ const Dashboard = ({ handleLogout }) => {
               } />
               <Route path="/members/:id/*" element={<Profile />} />
               <Route path="/profile/*" element={<ProfilePage />} />
-              <Route path="/notifications/*" element={<NotificationsPage />} />
+              <Route path="/notifications/*" element={<NotificationCenterPage />} />
               <Route path="/events/*" element={<Events />} />
               <Route path="/jobs/*" element={<Jobs />} />
               <Route path="/jobs/create" element={<CreateJob />} />
