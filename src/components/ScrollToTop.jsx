@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import useCapacitorRedirect from "../utils/useCapacitorRedirect";
 
 const ScrollToTop = ({ targetId = null }) => {
   const { pathname } = useLocation();
+  useCapacitorRedirect();
 
   useEffect(() => {
     const scrollElement = targetId

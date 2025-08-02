@@ -16,11 +16,13 @@ import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 import BackButtonHandler from "./components/BackButtonHandler";
 import ScrollToTop from "./components/ScrollToTop";
+import useCapacitorRedirect from "./utils/useCapacitorRedirect";
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState(true);
   const profile = useSelector((state) => state.profile);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+
 
   useEffect(() => {
     const token = cookies.token;

@@ -29,7 +29,9 @@ import {
   Info,
   Loader2,
   Target,
-  TrendingUp
+  TrendingUp,
+  Upload,
+  Eye
 } from "lucide-react";
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
@@ -41,6 +43,8 @@ const ProfilePage = () => {
   const profile = useSelector((state) => state.profile);
   const member = members.find(m => m._id === profile._id) || {};
   const [workExperiences, setWorkExperiences] = useState([]);
+  const [userVerification, setUserVerification] = useState(null);
+  const [verificationLoading, setVerificationLoading] = useState(true);
   const [cookie] = useCookies(["token"]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -58,7 +62,10 @@ const ProfilePage = () => {
   });
   const completionPct = Math.round((completed / totalProps) * 100);
 
-  useEffect(() => { fetchWorkExperiences(); }, []);
+  useEffect(() => { 
+    fetchWorkExperiences(); 
+    fetchUserVerification();
+  }, []);
 
   const fetchWorkExperiences = async () => {
     try {
@@ -66,16 +73,252 @@ const ProfilePage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWorkExperiences(data);
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error(err); 
+    }
   };
 
-  const renderExpirationDateMessage = () => {
-    if (profile.ID && profile.expirationDate) return 'Your account is being validated';
-    if (!profile.expirationDate) return null;
-    const days = Math.ceil((new Date(profile.expirationDate) - new Date()) / (1000 * 3600 * 24));
-    if (days > 0) return (<p>Your account is not validated and will expire in {days} days. <Link to='/profile/profile-settings' className="text-blue-600 underline">Upload your ID</Link> to validate.</p>);
-    if (days < 0) return 'Your account has expired';
-    return null;
+  // Fetch user verification data
+  const fetchUserVerification = async () => {
+    setVerificationLoading(true);
+    try {
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/user-verification/user/${profile._id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUserVerification(data);
+    } catch (err) {
+      console.error('Error fetching user verification:', err);
+      // If verification record doesn't exist, we'll handle it in the UI
+      setUserVerification(null);
+    } finally {
+      setVerificationLoading(false);
+    }
+  };
+
+  // Get verification status from UserVerification data
+  const getVerificationStatus = () => {
+    if (!userVerification) {
+      // No verification record exists
+      return {
+        status: 'no-record',
+        message: 'Verification record not found',
+        type: 'error'
+      };
+    }
+
+    const currentDate = new Date();
+    
+    // Check if account is deleted
+    if (userVerification.accountDeleted) {
+      return {
+        status: 'account-deleted',
+        message: 'Your account has been deleted',
+        type: 'error'
+      };
+    }
+    
+    // Check if user is validated
+    if (userVerification.validated) {
+      return {
+        status: 'validated',
+        message: 'Your account is verified',
+        type: 'success'
+      };
+    }
+    
+    // Check if ID is uploaded and pending approval
+    if (userVerification.ID && userVerification.idApprovalStatus === 'pending') {
+      return {
+        status: 'id-pending',
+        message: 'Your ID card has been successfully uploaded and is currently under verification.',
+        type: 'warning',
+        uploadedAt: userVerification.idUploadedAt
+      };
+    }
+    
+    // Check if ID was rejected
+    if (userVerification.ID && userVerification.idApprovalStatus === 'rejected') {
+      return {
+        status: 'id-rejected',
+        message: `Your ID was rejected. ${userVerification.idRejectionReason ? `Reason: ${userVerification.idRejectionReason}` : 'Please upload a new ID.'}`,
+        type: 'error'
+      };
+    }
+    
+    // Check if account is expired
+    if (userVerification.expirationDate && new Date(userVerification.expirationDate) < currentDate) {
+      return {
+        status: 'expired',
+        message: 'Your account has expired',
+        type: 'error',
+        expirationDate: userVerification.expirationDate
+      };
+    }
+    
+    // Check if account is expiring soon
+    if (userVerification.expirationDate) {
+      const days = Math.ceil((new Date(userVerification.expirationDate) - currentDate) / (1000 * 3600 * 24));
+      if (days > 0) {
+        return {
+          status: 'expiring',
+          message: `Your account is not validated and will expire in ${days} day${days > 1 ? 's' : ''}.`,
+          type: 'warning',
+          daysLeft: days,
+          expirationDate: userVerification.expirationDate
+        };
+      }
+    }
+    
+    // Default case - not validated
+    return {
+      status: 'not-validated',
+      message: 'Please upload your ID to validate your account.',
+      type: 'warning'
+    };
+  };
+
+  // Render verification banner based on UserVerification data
+  const renderVerificationBanner = () => {
+    // Don't show banner for admins and super admins
+    if ([0, 1].includes(profile.profileLevel)) {
+      return null;
+    }
+
+    if (verificationLoading) {
+      return (
+        <div className="mx-4 mt-4 mb-6">
+          <div className="bg-gray-100 rounded-xl shadow-lg animate-pulse">
+            <div className="flex items-center space-x-3 p-4">
+              <div className="w-6 h-6 bg-gray-300 rounded"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
+                <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const verificationStatus = getVerificationStatus();
+
+    // Don't show banner if user is validated
+    if (verificationStatus.status === 'validated') {
+      return null;
+    }
+
+    // Determine banner style based on status
+    const getBannerStyle = () => {
+      switch (verificationStatus.status) {
+        case 'id-pending':
+          return {
+            gradient: 'from-amber-500 to-orange-500',
+            icon: <Clock className="w-6 h-6 flex-shrink-0" />,
+            title: 'Verification In Progress',
+            clickable: false
+          };
+        case 'id-rejected':
+          return {
+            gradient: 'from-red-500 to-red-600',
+            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            title: 'ID Verification Failed',
+            clickable: true
+          };
+        case 'expired':
+          return {
+            gradient: 'from-red-600 to-red-700',
+            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            title: 'Account Expired',
+            clickable: true
+          };
+        case 'expiring':
+          return {
+            gradient: 'from-orange-500 to-red-500',
+            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            title: 'Account Expiring Soon',
+            clickable: true
+          };
+        case 'account-deleted':
+          return {
+            gradient: 'from-gray-500 to-gray-600',
+            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            title: 'Account Deleted',
+            clickable: false
+          };
+        default:
+          return {
+            gradient: 'from-red-500 to-red-600',
+            icon: <Upload className="w-6 h-6 flex-shrink-0" />,
+            title: 'Account Validation Required',
+            clickable: true
+          };
+      }
+    };
+
+    const bannerStyle = getBannerStyle();
+
+    const BannerContent = () => (
+      <div className="flex items-center space-x-3 p-4">
+        {bannerStyle.icon}
+        <div className="flex-1">
+          <p className="font-semibold">{bannerStyle.title}</p>
+          <p className="text-sm opacity-90">
+            {verificationStatus.message}
+            {verificationStatus.status === 'expiring' && (
+              <>
+                {' '}Upload your <span className="underline font-semibold">ID</span> before{' '}
+                <span className="font-semibold">
+                  {new Date(verificationStatus.expirationDate).toLocaleDateString()}
+                </span> to validate your account.
+              </>
+            )}
+            {verificationStatus.status === 'not-validated' && (
+              <>
+                {' '}Please upload your <span className="underline font-semibold">ID document</span> to verify your account.
+              </>
+            )}
+          </p>
+          
+          {/* Show ID view link if ID exists */}
+          {userVerification?.ID && (
+            <div className="mt-2">
+              <a 
+                href={userVerification.ID} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded-md hover:bg-white/30 transition-colors"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Eye size={12} />
+                View uploaded ID
+              </a>
+            </div>
+          )}
+        </div>
+        {bannerStyle.clickable && <ChevronRight className="w-5 h-5" />}
+      </div>
+    );
+
+    if (bannerStyle.clickable) {
+      return (
+        <div className="mx-4 mt-4 mb-6">
+          <div 
+            className={`bg-gradient-to-r ${bannerStyle.gradient} text-white rounded-xl shadow-lg cursor-pointer transform hover:scale-[1.02] transition-all duration-200`}
+            onClick={() => navigate('/home/profile/profile-settings')}
+          >
+            <BannerContent />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mx-4 mt-4 mb-6">
+        <div className={`bg-gradient-to-r ${bannerStyle.gradient} text-white rounded-xl shadow-lg`}>
+          <BannerContent />
+        </div>
+      </div>
+    );
   };
 
   const findCurrentWorkingAt = () => workExperiences.find(e => e.endMonth === 'current')?.companyName || 'No current work experience';
@@ -116,7 +359,9 @@ const ProfilePage = () => {
       const { data } = await axios.put(url, { userId: profile._id });
       dispatch(updateProfile(data.user));
       toast.success(data.message);
-    } catch (err) { toast.error(err.response?.data?.message || 'Delete failed'); }
+    } catch (err) { 
+      toast.error(err.response?.data?.message || 'Delete failed'); 
+    }
   };
 
   const getRoleBadge = () => {
@@ -140,39 +385,8 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 md:p-4 py-2">
       <div className="mx-auto max-w-7xl">
-        {/* Validation Banner */}
-        {(!profile.validated && ![0,1].includes(profile.profileLevel) && !profile.ID) ? (
-          <div className="mx-4 mt-4 mb-6">
-            <div 
-              className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl shadow-lg cursor-pointer transform hover:scale-[1.02] transition-all duration-200"
-              onClick={() => navigate('/home/profile/profile-settings')}
-            >
-              <div className="flex items-center space-x-3 p-4">
-                <AlertTriangle className="w-6 h-6 flex-shrink-0" />
-                <div className="flex-1">
-                  <p className="font-semibold">Account Validation Required</p>
-                  <p className="text-sm opacity-90">
-                    Please upload your <span className="underline font-semibold">ID</span> before{' '}
-                    <span className="font-semibold">{new Date(profile.expirationDate).toLocaleDateString()}</span> to validate your account.
-                  </p>
-                </div>
-                <ChevronRight className="w-5 h-5" />
-              </div>
-            </div>
-          </div>
-        ) : !profile.validated && profile.ID ? (
-          <div className="mx-4 mt-4 mb-6">
-            <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl shadow-lg">
-              <div className="flex items-center space-x-3 p-4">
-                <Clock className="w-6 h-6 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold">Verification In Progress</p>
-                  <p className="text-sm opacity-90">Your ID card has been successfully uploaded and is currently under verification.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
+        {/* Verification Banner - Now uses UserVerification data */}
+        {renderVerificationBanner()}
 
         {/* Cover Section */}
         <div className="relative mx-2 md:mx-4 rounded-2xl overflow-hidden shadow-xl">
@@ -265,7 +479,8 @@ const ProfilePage = () => {
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
                 {profile.firstName} {profile.lastName}
               </h2>
-              {profile.validated && (
+              {/* Show verified badge based on UserVerification data */}
+              {userVerification?.validated && (
                 <div className="relative">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
                     <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

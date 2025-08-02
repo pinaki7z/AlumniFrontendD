@@ -48,6 +48,7 @@ import AnalyticsPage from "../NewsV2/AnalyticsPage.jsx";
 import ScrollToTop from "../../components/ScrollToTop.jsx";
 import ProhibitedKeywords from "../../pages/ProhibitedKeywords/ProhibitedKeywords.jsx"
 import NotificationCenterPage from "../NotificationCenterPage/NotificationCenterPage.jsx";
+import UserVerification from "../UserVerification/UserVerification.jsx";
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -197,7 +198,10 @@ const Dashboard = ({ handleLogout }) => {
               <Route path="/news/analytics" element={<AnalyticsPage />} />
 
               <Route path="/prohibited-keywords" element={<ProhibitedKeywords />} />
+             
 
+              {/* admin routes */}
+              <Route path="/admin/user-verification" element={<UserVerification />} />
 
 
 

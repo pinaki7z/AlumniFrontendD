@@ -23,7 +23,7 @@ export default function AIRefactorButton({ inputText, setInputText }) {
           messages: [
             {
               role: 'user',
-              content: `Refactor this text ("without providing additional information" and  "without any alternative text for the same" ): ${inputText}`
+              content: `without providing any Intro outro ( here is your data , if you have any suggestion, no other suggestion  ) just provide straight forward asnswer to this " ${inputText}" `
             }
           ]
         })
@@ -49,13 +49,13 @@ export default function AIRefactorButton({ inputText, setInputText }) {
       onClick={refactorText}
       disabled={loading || !inputText.trim()}
       className="
-         underline text-blue-500 
-         hover:text-blue-600 cursor-pointer
+         underline text-green-500 
+         hover:text-green-600 cursor-pointer
       "
       title="Refactor text using AI"
       tabIndex={0}
     >
-      {loading ? 'Modifying...' : 'AI Modify'}
+      {loading ? 'Generating...' : 'Ask Ai'}
     </button>
   );
 }

@@ -16,13 +16,13 @@ import Button from 'react-bootstrap/Button';
 import DatePicker from "react-datepicker";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import { 
-  ImageIcon, 
-  BarChart3, 
-  Youtube, 
-  Calendar, 
-  X, 
-  Loader2, 
+import {
+  ImageIcon,
+  BarChart3,
+  Youtube,
+  Calendar,
+  X,
+  Loader2,
   Plus,
   Smile,
   AtSign,
@@ -31,6 +31,9 @@ import {
   Users
 } from "lucide-react"
 import AIRefactorButton from '../../utils/AIRefactorButton';
+import AISuggestion from '../../utils/AISuggestion';
+import { auto } from '@popperjs/core';
+
 
 export default function CreatePost1({
   name,
@@ -83,7 +86,7 @@ export default function CreatePost1({
   const handleImageChange = async (e) => {
     const files = e.target.files;
     if (!files.length) return;
-    
+
     // Check file size on mobile (max 5MB per file)
     for (let file of files) {
       if (file.size > 5 * 1024 * 1024) {
@@ -91,10 +94,10 @@ export default function CreatePost1({
         return;
       }
     }
-    
+
     const formData = new FormData();
     for (let f of files) formData.append('images', f);
-    
+
     try {
       setLoading(true);
       const { data } = await axios.post(
@@ -119,11 +122,11 @@ export default function CreatePost1({
       toast.error('Video size should be less than 50MB');
       return;
     }
-    
+
     const formData = new FormData();
     formData.append('video', file);
     setLoading(true);
-    
+
     axios
       .post(`${process.env.REACT_APP_API_URL}/uploadImage/video`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -171,7 +174,7 @@ export default function CreatePost1({
       toast.error('Invalid YouTube URL');
     }
   };
-  
+
   const removeYoutubeVideo = () => {
     setYoutubeVideoId(null);
     toast.info('YouTube video removed');
@@ -187,7 +190,7 @@ export default function CreatePost1({
       options
     };
     if (groupId) pollData.groupID = groupId;
-    
+
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_API_URL}/poll/createPoll`,
@@ -211,7 +214,7 @@ export default function CreatePost1({
       setLoadingPost(false);
       return;
     }
-    
+
     setLoadingPost(true);
     const payload = {
       userId: profile._id,
@@ -220,7 +223,7 @@ export default function CreatePost1({
       profilePicture: profile.profilePicture,
       author
     };
-    
+
     if (groupId) payload.groupID = groupId;
     if (picturePath.length) payload.picturePath = picturePath;
     if (videoPath.videoPath) payload.videoPath = videoPath;
@@ -364,7 +367,7 @@ export default function CreatePost1({
 // YouTube Component - Compact
 export function YouTubeEmbed({ videoId, isMobile = false }) {
   if (!videoId) return null;
-  
+
   return (
     <div className="youtube-embed-container mt-3">
       <div className="relative w-full rounded-lg overflow-hidden shadow-sm bg-gray-100" style={{ paddingBottom: '56.25%' }}>
@@ -449,11 +452,11 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
       toast.error('Image size should be less than 5MB');
       return;
     }
-    
+
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`;
     const formData = new FormData();
     formData.append('image', file);
-    
+
     setLoading(true);
     axios
       .post(api, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -464,7 +467,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
 
   const submit = () => {
     if (!validate()) return;
-    
+
     setLoading(true);
     const payload = {
       ...newEvent,
@@ -479,7 +482,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
       userName: `${profile.firstName} ${profile.lastName}`,
       profilePicture: profile.profilePicture,
     };
-    
+
     const url = isEditing
       ? `${process.env.REACT_APP_API_URL}/events/${selectedEvent._id}`
       : `${process.env.REACT_APP_API_URL}/events/createEvent`;
@@ -609,9 +612,9 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
         <Button variant="secondary" onClick={onHide} disabled={loading}>
           Cancel
         </Button>
-        <Button 
-          variant="primary" 
-          onClick={submit} 
+        <Button
+          variant="primary"
+          onClick={submit}
           disabled={loading}
           className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] border-0"
         >
@@ -663,19 +666,29 @@ export function PostCreatorContent({
 }) {
   const textareaRef = React.useRef(null);
   const [charCount, setCharCount] = useState(0);
-  const maxChars =100; // Reduced for LinkedIn-like experience
+  const maxChars = 100; // Reduced for LinkedIn-like experience
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-      onInputChange(e);
-      setCharCount(value.length);
-      
-      // Auto-resize textarea
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
-      }
+    onInputChange(e);
+    setCharCount(value.length);
+    autoResize()
+
   };
+
+
+  useEffect(() => {
+    autoResize()
+  }, [input])
+
+  const autoResize = () => {
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      // textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight)}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 520)}px`;
+    }
+  }
 
   const hasContent = input.trim() || picturePath.length > 0 || youtubeVideoId || videoPath.videoPath;
 
@@ -698,14 +711,15 @@ export function PostCreatorContent({
               onBlur={onBlur}
               placeholder={`What's on your mind, ${profile.firstName}?`}
               className="w-full text-gray-700 placeholder-gray-500 border border-gray-200 outline-none resize-none text-sm leading-relaxed bg-gray-50 rounded-lg p-2 focus:bg-white focus:border-[#71be95] transition-all"
-              rows={isExpanded ? 2 : 1}
-              style={{ minHeight: '36px', maxHeight: '120px' }}
+
+              style={{ minHeight: '36px', }}
             />
-            <div className="flex flex-col sm:flex-row gap-2 mt-1">
-  <AIRefactorButton inputText={input} setInputText={setInput} />
-  {/* ...other buttons like Submit */}
-</div>
-            
+            <div className="flex  sm:flex-row gap-6 mt-1">
+              <AIRefactorButton inputText={input} setInputText={setInput} />
+              <AISuggestion inputText={input} setInputText={setInput} />
+              {/* ...other buttons like Submit */}
+            </div>
+
           </div>
         </div>
       </div>
@@ -726,10 +740,10 @@ export function PostCreatorContent({
           <div className={`grid gap-2 ${picturePath.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
             {picturePath.slice(0, 4).map((path, i) => (
               <div key={i} className="relative group">
-                <img 
-                  src={path} 
-                  alt={`Preview ${i + 1}`} 
-                  className="w-full h-20 object-cover rounded border border-gray-200" 
+                <img
+                  src={path}
+                  alt={`Preview ${i + 1}`}
+                  className="w-full h-20 object-cover rounded border border-gray-200"
                 />
                 <button
                   onClick={() => removeMedia(i)}
@@ -764,10 +778,10 @@ export function PostCreatorContent({
       {/* Video Preview */}
       {videoPath.videoPath && (
         <div className="px-3 pb-3 relative">
-          <video 
-            src={videoPath.videoPath} 
-            className="w-full max-h-40 object-cover rounded border border-gray-200" 
-            controls 
+          <video
+            src={videoPath.videoPath}
+            className="w-full max-h-40 object-cover rounded border border-gray-200"
+            controls
           />
           <button
             onClick={removeVideo}
@@ -858,11 +872,10 @@ export function PostCreatorContent({
               <button
                 onClick={onSubmit}
                 disabled={loadingPost || !hasContent}
-                className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${
-                  loadingPost || !hasContent
+                className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${loadingPost || !hasContent
                     ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white hover:shadow-md'
-                }`}
+                  }`}
               >
                 {loadingPost ? (
                   <div className="flex items-center gap-1">
@@ -952,8 +965,8 @@ export function MobilePostModal({
         {/* Compact Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center gap-3">
-            <button 
-              onClick={closeMobilePostModal} 
+            <button
+              onClick={closeMobilePostModal}
               className="p-1 hover:bg-gray-100 rounded-full transition-colors"
             >
               <X className="w-5 h-5 text-gray-600" />
@@ -963,11 +976,10 @@ export function MobilePostModal({
           <button
             onClick={onSubmit}
             disabled={loadingPost || !hasContent}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              loadingPost || !hasContent
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${loadingPost || !hasContent
                 ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
-            }`}
+              }`}
           >
             {loadingPost ? 'Posting...' : 'Post'}
           </button>
@@ -1002,10 +1014,11 @@ export function MobilePostModal({
               autoFocus
             />
 
-              <div className="">
-  <AIRefactorButton inputText={input} setInputText={setInput} />
-  {/* ...other buttons like Submit */}
-</div>
+            <div className="flex  sm:flex-row gap-6 mt-1">
+              <AIRefactorButton inputText={input} setInputText={setInput} />
+              <AISuggestion inputText={input} setInputText={setInput} />
+              {/* ...other buttons like Submit */}
+            </div>
             {/* <div className="flex items-center justify-end mt-2">
               <span className={`text-xs ${charCount > maxChars * 0.9 ? 'text-red-500' : 'text-gray-500'}`}>
                 {charCount}/{maxChars}
@@ -1029,10 +1042,10 @@ export function MobilePostModal({
               <div className="grid grid-cols-2 gap-2">
                 {picturePath.slice(0, 4).map((path, i) => (
                   <div key={i} className="relative">
-                    <img 
-                      src={path} 
-                      alt={`Preview ${i + 1}`} 
-                      className="w-full h-24 object-cover rounded border border-gray-200" 
+                    <img
+                      src={path}
+                      alt={`Preview ${i + 1}`}
+                      className="w-full h-24 object-cover rounded border border-gray-200"
                     />
                     <button
                       onClick={() => removeMedia(i)}
@@ -1062,10 +1075,10 @@ export function MobilePostModal({
           {/* Video Preview */}
           {videoPath.videoPath && (
             <div className="px-4 pb-4 relative">
-              <video 
-                src={videoPath.videoPath} 
-                className="w-full max-h-48 object-cover rounded border border-gray-200" 
-                controls 
+              <video
+                src={videoPath.videoPath}
+                className="w-full max-h-48 object-cover rounded border border-gray-200"
+                controls
               />
               <button
                 onClick={removeVideo}
@@ -1114,7 +1127,7 @@ export function MobilePostModal({
               <span className="text-xs text-gray-600">Photos</span>
               <input type="file" accept="image/*" hidden onChange={onImageChange} multiple />
             </label>
-{/* 
+            {/* 
             <label className="flex flex-col items-center gap-1 p-2 bg-gray-50 rounded cursor-pointer hover:bg-gray-100 transition-colors">
               <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
