@@ -214,7 +214,8 @@ const UserVerification = () => {
     setProcessing(prev => ({ ...prev, [id]: 'rejecting' }));
     try {
       await axios.put(`${process.env.REACT_APP_API_URL}/api/user-verification/${id}/reject-id`, {
-        reason
+        reason, 
+        adminId: profile._id
       });
       await fetchPendingIds();
     } catch (error) {
