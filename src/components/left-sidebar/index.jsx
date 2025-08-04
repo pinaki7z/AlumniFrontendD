@@ -26,6 +26,7 @@ import { GrGallery, GrUserAdmin } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
 import { updateMember } from "../../store/membersSlice";
+import { User } from 'lucide-react';
 
 const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     const profile = useSelector((state) => state.profile);
@@ -52,7 +53,9 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     }, [dispatch]);
 
     const sidebarItems = [
-        { path: '/home', label: 'Dashboard', icon: <RxDashboard /> },
+        
+        { path: '/home', label: 'Feeds', icon: <User /> },
+        { path: '/home/profile', label: 'Profile', icon: <RxDashboard /> },
         { path: '/home/members', label: 'Members', icon: <BsGlobe /> },
         {
             path: profile.profileLevel === 0 || profile.profileLevel === 1 
@@ -73,8 +76,8 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     // Additional admin-only item
     const adminItems = [
         {
-            path: '/home/validate-user',
-            label: 'Member C-Panel',
+            path: '/home/admin/user-verification',
+            label: 'User Verification',
             icon: <GrUserAdmin />,
             roles: [0] // Only profileLevel 0 (super admin)
         },
@@ -183,10 +186,10 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
                         </div>
                     ))}
 
+<div className="border-t border-white/10 my-3"></div>
                     {adminItems.map((item, idx) =>
                         item.roles.includes(profile.profileLevel) && (
                             <div key={`admin-${idx}`}>
-                                <div className="border-t border-white/10 my-3"></div>
                                 <div className="relative group">
                                     <Link
                                         to={item.path}
