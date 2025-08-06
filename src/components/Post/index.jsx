@@ -9,7 +9,7 @@ import { MessageCircle, Share2, ThumbsUp, MoreHorizontal, Trash2, Heart, Clock, 
 import { FacebookShareButton, LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from "react-share";
 import { FacebookIcon, LinkedinIcon, TwitterIcon, WhatsappIcon } from "react-share";
 import { Menu, MenuItem } from '@mui/material';
-import profilePic from "../../images/profilepic.jpg";
+import profilePic from "../../images/profilepic.png";
 import { IoLogoLinkedin } from "react-icons/io5";
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import profilepic from "../../images/profilepic.jpg";
+import profilepic from "../../images/profilepic.png";
 import './sideWidgets.css';
 import { 
   Users, 

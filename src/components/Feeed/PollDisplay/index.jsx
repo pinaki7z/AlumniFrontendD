@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@mui/material';
-import pic from "../../../images/profilepic.jpg";
+import pic from "../../../images/profilepic.png";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from "react-toastify";

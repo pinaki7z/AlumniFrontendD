@@ -16,7 +16,7 @@ import {
   WhatsappIcon
 } from 'react-share';
 
-import profilePic from '../../images/profilepic.jpg';
+import profilePic from '../../images/profilepic.png';
 import liked from '../../images/liked.svg';
 import unliked from '../../images/unliked.svg';
 import commentIcon from '../../images/comment.svg';

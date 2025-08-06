@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Send, Heart, MoreHorizontal, Trash2, ThumbsUp, MessageCircle } from 'lucide-react';
-import profilePic from "../../images/profilepic.jpg";
+import profilePic from "../../images/profilepic.png";
 
 const reactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
 

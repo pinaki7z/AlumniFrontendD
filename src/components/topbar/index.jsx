@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IoSearchSharp } from "react-icons/io5";
 import { Search, ChevronDown, Users, Calendar, UsersIcon, X, Clock, TrendingUp } from "lucide-react";
 import { lineSpinner } from 'ldrs';
-import profilePic from "../../images/profilepic.jpg";
+import profilePic from "../../images/profilepic.png";
 import { NotificationsP } from '../NotificationsP';
 import axios from 'axios';
 

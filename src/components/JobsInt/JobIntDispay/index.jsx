@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { GiMoneyStack } from 'react-icons/gi';
 import { FaLocationDot, FaTags } from 'react-icons/fa6';
 import { FcBriefcase } from 'react-icons/fc';
-import profilePic from '../../../images/profilepic.jpg';
+import profilePic from '../../../images/profilepic.png';
 import baseUrl from '../../../config';
 
 import './individualJobPost.css';

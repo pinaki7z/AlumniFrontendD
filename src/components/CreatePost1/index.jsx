@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../CreatePost/socialWall.css';
-import picture from '../../images/profilepic.jpg'
+import picture from '../../images/profilepic.png'
 import axios from 'axios';
 import JobsInt from '../JobsInt';
 import { useCookies } from 'react-cookie';

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import picture from "../../images/d-cover.jpg";
+import picture from "../../images/d-cover1.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
 import axios from 'axios';
-import profilePic from "../../images/profilepic.jpg" // Default profile picture
+import profilePic from "../../images/profilepic.png" // Default profile picture
 
 import { toast } from 'react-toastify';
 import {

@@ -239,7 +239,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="relative">
             <img
-              src={currentSelectedUserData?.profilePicture || '/images/profilepic.jpg'}
+              src={currentSelectedUserData?.profilePicture || '/images/profilepic.png'}
               alt={`${currentSelectedUserData?.firstName} ${currentSelectedUserData?.lastName}`}
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-100"
             />

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import picture from "../../images/profilepic.jpg"
+import picture from "../../images/profilepic.png"
 import { Users, UserPlus, Trash2, RotateCcw } from "lucide-react"
 import { Link } from "react-router-dom"
 import axios from "axios"

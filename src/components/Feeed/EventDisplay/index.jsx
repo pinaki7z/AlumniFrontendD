@@ -1,4 +1,4 @@
-import pic from "../../../images/profilepic.jpg";
+import pic from "../../../images/profilepic.png";
 import { Modal } from '@mui/material';
 import { useSelector } from 'react-redux';
 import React, { useState, useEffect } from 'react';

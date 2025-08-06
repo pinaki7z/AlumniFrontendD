@@ -4,8 +4,8 @@ import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import Feeed from "../../components/Feeed"
-import picture from "../../images/d-cover.jpg" // Default cover image
-import profilePic from "../../images/profilepic.jpg" // Default profile picture
+import picture from "../../images/d-cover1.jpg" // Default cover image
+import profilePic from "../../images/profilepic.png" // Default profile picture
 import axios from "axios"
 import { updateProfile } from "../../store/profileSlice"
 import { toast } from "react-toastify"
