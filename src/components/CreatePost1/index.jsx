@@ -714,11 +714,7 @@ export function PostCreatorContent({
 
               style={{ minHeight: '36px', }}
             />
-            <div className="flex  sm:flex-row gap-6 mt-1">
-              <AIRefactorButton inputText={input} setInputText={setInput} />
-              <AISuggestion inputText={input} setInputText={setInput} />
-              {/* ...other buttons like Submit */}
-            </div>
+            
 
           </div>
         </div>
@@ -869,6 +865,9 @@ export function PostCreatorContent({
 
             <div className="flex items-center gap-2">
               {/* <span className="text-xs text-gray-500">{charCount}/{maxChars}</span> */}
+              
+             <AIRefactorButton inputText={input} setInputText={setInput} />
+              <AISuggestion inputText={input} setInputText={setInput} />
               <button
                 onClick={onSubmit}
                 disabled={loadingPost || !hasContent}
@@ -886,6 +885,7 @@ export function PostCreatorContent({
                   'Post'
                 )}
               </button>
+              
             </div>
           </div>
         ) : (

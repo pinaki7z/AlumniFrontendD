@@ -26,7 +26,7 @@ import { GrGallery, GrUserAdmin } from "react-icons/gr";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
 import { updateMember } from "../../store/membersSlice";
-import { User } from 'lucide-react';
+import { Ban, Settings, User } from 'lucide-react';
 
 const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     const profile = useSelector((state) => state.profile);
@@ -54,8 +54,8 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
 
     const sidebarItems = [
         
-        { path: '/home', label: 'Feeds', icon: <User /> },
-        { path: '/home/profile', label: 'Profile', icon: <RxDashboard /> },
+        { path: '/home', label: 'Feeds', icon: <RxDashboard />},
+        { path: '/home/profile', label: 'Profile', icon: <User size={20}/>},
         { path: '/home/members', label: 'Members', icon: <BsGlobe /> },
         {
             path: profile.profileLevel === 0 || profile.profileLevel === 1 
@@ -66,11 +66,12 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
         },
         { path: '/home/news', label: 'News', icon: <BiNews /> },
         { path: '/home/business-connect', label: 'Business Connect', icon: <LuHeartHandshake /> },
-        { path: '/home/sponsorship-connect', label: 'Sponsorships', icon: <GoSponsorTiers /> },
+        { path: '/home/sponsorship-connect', label: 'Sponsorships', icon: <GoSponsorTiers size={22} /> },
         { path: '/home/events', label: 'Events', icon: <MdOutlineEvent /> },
         { path: '/home/jobs', label: 'Jobs/Internships', icon: <FaBriefcase /> },
         { path: '/home/photo-gallery', label: 'Photo Gallery', icon: <GrGallery /> },
-        { path: '/home/notifications', label: 'Notifications', icon: <IoIosNotifications /> },
+        { path: '/home/notifications', label: 'Notifications', icon: <IoIosNotifications size={22}/> },
+        { path: '/home/profile/profile-settings', label: 'Profile Settings', icon: <Settings size={19} /> },
     ];
 
     // Additional admin-only item
@@ -84,7 +85,7 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
         {
             path: '/home/prohibited-keywords',
             label: 'Prohibited Keywords',
-            icon: <GrUserAdmin />,
+            icon: <Ban size={19}/>,
             roles: [0] // Only profileLevel 0 (super admin)
         }
     ];

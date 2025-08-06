@@ -18,7 +18,6 @@ import {
   CheckCircle, 
   FileText, 
   Globe, 
-  Mail, 
   Star,
   Award,
   Users,
@@ -27,8 +26,9 @@ import {
   Save,
   ArrowLeft,
   Plus,
-  Search,
-  Loader2
+  Loader2,
+  AlertTriangle,
+  Eye
 } from "lucide-react"
 
 export const ProfileSettings = () => {
@@ -57,6 +57,7 @@ export const ProfileSettings = () => {
       profilePicture: profile.profilePicture || "",
       coverPicture: profile.coverPicture || "",
       ID: profile.ID || "",
+      linkedIn: profile.linkedIn || "",
     }))
     setIsCurrentStudent(()=>{
       if(profile.profileLevel === 3){
@@ -85,6 +86,7 @@ export const ProfileSettings = () => {
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0]
+    if (!file) return;
 
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
@@ -93,11 +95,16 @@ export const ProfileSettings = () => {
     axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
     .then((res)=>{
       setFormData({ ...formData, profilePicture: res.data?.imageUrl })
+      toast.success('Profile picture uploaded successfully')
+    })
+    .catch((err) => {
+      toast.error('Failed to upload profile picture')
     })
   }
 
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0]
+    if (!file) return;
 
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
@@ -106,11 +113,16 @@ export const ProfileSettings = () => {
     axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
     .then((res)=>{
       setFormData({ ...formData, coverPicture: res.data?.imageUrl })
+      toast.success('Cover picture uploaded successfully')
+    })
+    .catch((err) => {
+      toast.error('Failed to upload cover picture')
     })
   }
 
   const handleUploadID = (e) => {
     const file = e.target.files[0]
+    if (!file) return;
 
     const api = `${process.env.REACT_APP_API_URL}/uploadImage/singleImage`
     const formDataImage = new FormData();
@@ -118,7 +130,11 @@ export const ProfileSettings = () => {
 
     axios.post(api, formDataImage, { headers: { 'Content-Type': 'multipart/form-data' } })
     .then((res)=>{
-      setFormData({ ...formData, ID: res.data?.imageUrl, idUpdated: true  })
+      setFormData({ ...formData, ID: res.data?.imageUrl, idUpdated: true })
+      toast.success('ID document uploaded successfully')
+    })
+    .catch((err) => {
+      toast.error('Failed to upload ID document')
     })
   }
 
@@ -133,7 +149,7 @@ export const ProfileSettings = () => {
   const handleCurrentStudentChange = () => {
     setIsCurrentStudent(!isCurrentStudent)
     if (!isCurrentStudent) {
-      setFormData({ ...formData, workingAt: "",companyWebsite: "", student: true })
+      setFormData({ ...formData, workingAt: "", companyWebsite: "", student: true })
     }
   }
 
@@ -141,7 +157,6 @@ export const ProfileSettings = () => {
     e.preventDefault()
     setLoading(true)
 
-    console.log("formData", formData)
     const userID = profile._id
 
     try {
@@ -156,17 +171,18 @@ export const ProfileSettings = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        console.log("response data edit", responseData)
         dispatch(updateProfile(responseData))
-        toast.success("User Updated Successfully")
+        toast.success("Profile updated successfully!")
         setLoading(false)
         navigateTo("/home/profile")
       } else {
         console.error("Failed to update user")
+        toast.error("Failed to update profile")
         setLoading(false)
       }
     } catch (error) {
       console.error("Error:", error)
+      toast.error("An error occurred while updating profile")
       setLoading(false)
     }
   }
@@ -174,7 +190,6 @@ export const ProfileSettings = () => {
   const handleSearch = async (e) => {
     setShowDropDown(true)
     const { value } = e.target
-    console.log("value", value)
     setFormData((prevFormData) => ({
       ...prevFormData,
       workingAt: value,
@@ -206,118 +221,98 @@ export const ProfileSettings = () => {
   }
 
   const getRoleBadge = (level) => {
-    let label = ""
-    let colorClass = ""
-    let icon = null
-    switch (level) {
-      case 0:
-        label = "SUPER ADMIN"
-        colorClass = "bg-[#0A3A4C] text-white shadow-lg"
-        icon = <Star size={12} className="text-white" />
-        break
-      case 1:
-        label = "ADMIN"
-        colorClass = "bg-[#0A3A4C] text-white shadow-lg"
-        icon = <Award size={12} className="text-white" />
-        break
-      case 2:
-        label = "ALUMNI"
-        colorClass = "bg-[#0A3A4C] text-white shadow-lg"
-        icon = <Users size={12} className="text-white" />
-        break
-      case 3:
-        label = "STUDENT"
-        colorClass = "bg-[#0A3A4C] text-white shadow-lg"
-        icon = <Users size={12} className="text-white" />
-        break
-      default:
-        label = "UNKNOWN"
-        colorClass = "bg-gray-500 text-white shadow-lg"
-        icon = <Info size={12} className="text-white" />
-    }
+    const badges = {
+      0: { label: "SUPER ADMIN", color: "bg-red-600 text-white", icon: <Star size={14} /> },
+      1: { label: "ADMIN", color: "bg-orange-600 text-white", icon: <Award size={14} /> },
+      2: { label: "ALUMNI", color: "bg-[#0A3A4C] text-white", icon: <Users size={14} /> },
+      3: { label: "STUDENT", color: "bg-[#71be95] text-white", icon: <Users size={14} /> }
+    };
+    
+    const badge = badges[level] || badges[2];
+    
     return (
-      <span className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-bold rounded-full ${colorClass}`}>
-        {icon}
-        <span className="hidden sm:inline">{label}</span>
-        <span className="sm:hidden">{label.split(' ')[0]}</span>
-      </span>
-    )
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md ${badge.color} font-medium text-xs`}>
+        {badge.icon}
+        <span className="hidden sm:inline">{badge.label}</span>
+        <span className="sm:hidden">{badge.label.split(' ')[0]}</span>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-4">
+    <div className="h-full overflow-auto bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden mb-4 sm:mb-6">
-          <div className="bg-[#CEF3DF] p-3 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-              <div className="flex items-center gap-2 sm:gap-4">
-                <div className="w-8 h-8 sm:w-12 sm:h-12 bg-white/20 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <Settings size={16} className="sm:size-6 text-[#0A3A4C]" />
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+          <div className="bg-gray-50 border-b border-gray-200 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[#0A3A4C] bg-opacity-10 rounded-lg flex items-center justify-center">
+                  <Settings className="w-5 h-5 text-[#0A3A4C]" />
                 </div>
                 <div>
-                  <h1 className="text-xl sm:text-3xl font-bold text-[#136175]">Profile Settings</h1>
-                  <p className="text-[#136175]/80 text-xs sm:text-sm">Manage your profile information and preferences</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Profile Settings</h1>
+                  <p className="text-gray-600 text-sm">Manage your profile information and preferences</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 self-start sm:self-center">
+              <div className="flex items-center gap-3">
                 {getRoleBadge(profile.profileLevel)}
               </div>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden">
-            <div className="bg-[#0A3A4C] p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-md sm:rounded-lg flex items-center justify-center">
-                  <User size={12} className="sm:size-4 text-white" />
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-[#0A3A4C] text-white p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-white">Personal Information</h3>
-                  <p className="text-white/80 text-xs sm:text-sm">Basic details about yourself</p>
+                  <h3 className="text-lg font-semibold">Personal Information</h3>
+                  <p className="text-blue-100 text-sm">Basic details about yourself</p>
                 </div>
               </div>
             </div>
             
-            <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    First Name*
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                    First Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="firstName"
                     name="firstName"
-                    placeholder="Enter first name"
+                    placeholder="Enter your first name"
                     value={formData.firstName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 text-gray-900"
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Last Name*
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Last Name <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     id="lastName"
                     name="lastName"
-                    placeholder="Enter last name"
+                    placeholder="Enter your last name"
                     value={formData.lastName}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 text-gray-900"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="aboutMe" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                <label htmlFor="aboutMe" className="block text-sm font-medium text-gray-700 mb-2">
                   About Me
                 </label>
                 <textarea
@@ -326,42 +321,43 @@ export const ProfileSettings = () => {
                   value={formData.aboutMe}
                   onChange={handleInputChange}
                   rows="4"
-                  placeholder="Tell us about yourself..."
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 resize-none text-sm sm:text-base"
+                  placeholder="Tell us about yourself, your interests, achievements..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 resize-none text-gray-900"
                 />
               </div>
 
-              <div className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4">
-                <label className="flex items-center gap-2 sm:gap-3 cursor-pointer">
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
+                <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isCurrentStudent}
                     onChange={handleCurrentStudentChange}
-                    className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A3A4C] border-gray-300 rounded focus:ring-[#0A3A4C]"
+                    className="w-4 h-4 text-[#71be95] border-gray-300 rounded focus:ring-[#71be95]"
                   />
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Users size={14} className="sm:size-4 text-[#0A3A4C]" />
-                    <span className="text-xs sm:text-sm font-medium text-gray-700">I am currently a student</span>
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-800">I am currently a student</span>
                   </div>
                 </label>
+                <p className="text-xs text-blue-600 mt-2 ml-7">Check this if you're currently enrolled as a student</p>
               </div>
 
               <div>
-                <label htmlFor="linkedIn" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                <label htmlFor="linkedIn" className="block text-sm font-medium text-gray-700 mb-2">
                   LinkedIn Profile
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                    <LinkIcon size={14} className="sm:size-4 text-gray-400" />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <LinkIcon className="w-4 h-4 text-gray-400" />
                   </div>
                   <input
-                    type="text"
+                    type="url"
                     id="linkedIn"
                     name="linkedIn"
                     placeholder="https://linkedin.com/in/yourprofile"
                     value={formData.linkedIn}
                     onChange={handleInputChange}
-                    className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 text-gray-900"
                   />
                 </div>
               </div>
@@ -369,28 +365,28 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Professional Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden">
-            <div className="bg-[#0A3A4C] p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-md sm:rounded-lg flex items-center justify-center">
-                  <Building size={12} className="sm:size-4 text-white" />
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-[#0A3A4C] text-white p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <Building className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-white">Professional Information</h3>
-                  <p className="text-white/80 text-xs sm:text-sm">Your work and career details</p>
+                  <h3 className="text-lg font-semibold">Professional Information</h3>
+                  <p className="text-blue-100 text-sm">Your work and career details</p>
                 </div>
               </div>
             </div>
             
-            <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="relative">
-                  <label htmlFor="workingAt" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Working At*
+                  <label htmlFor="workingAt" className="block text-sm font-medium text-gray-700 mb-2">
+                    Working At {!isCurrentStudent && <span className="text-red-500">*</span>}
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                      <Building size={14} className="sm:size-4 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Building className="w-4 h-4 text-gray-400" />
                     </div>
                     <input
                       type="text"
@@ -399,53 +395,54 @@ export const ProfileSettings = () => {
                       placeholder="Search for your company"
                       value={formData.workingAt}
                       onChange={handleSearch}
-                      required
+                      required={!isCurrentStudent}
                       disabled={isCurrentStudent}
-                      className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-500 text-sm sm:text-base"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 disabled:bg-gray-100 disabled:text-gray-500 text-gray-900"
                     />
                   </div>
-                  {searchResults.length > 0 && showDropDown ? (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg sm:rounded-xl shadow-xl max-h-60 overflow-auto">
+                  {searchResults.length > 0 && showDropDown && (
+                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
                       {searchResults.map((company) => (
                         <div
                           key={company._id}
                           onClick={() => handleSelectCompany(company.name)}
-                          className="px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 flex items-center gap-2 sm:gap-3"
+                          className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 flex items-center gap-3 transition-colors duration-200"
                         >
-                          <Building size={14} className="sm:size-4 text-gray-400" />
-                          <span className="text-gray-700 text-sm sm:text-base">{company.name}</span>
+                          <Building className="w-4 h-4 text-gray-400" />
+                          <span className="text-gray-700">{company.name}</span>
                         </div>
                       ))}
                     </div>
-                  ) : formData.workingAt !== "" && showDropDown ? (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg sm:rounded-xl shadow-xl">
+                  )}
+                  {formData.workingAt !== "" && showDropDown && searchResults.length === 0 && (
+                    <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                       <div
-                        className="px-3 sm:px-4 py-2 sm:py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-2 sm:gap-3"
+                        className="px-4 py-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 transition-colors duration-200"
                         onClick={() => handleSelectCompany(formData.workingAt)}
                       >
-                        <Plus size={14} className="sm:size-4 text-[#0A3A4C]" />
-                        <span className="text-gray-700 text-sm sm:text-base">Add "{formData.workingAt}"</span>
+                        <Plus className="w-4 h-4 text-[#71be95]" />
+                        <span className="text-gray-700">Add "{formData.workingAt}"</span>
                       </div>
                     </div>
-                  ) : null}
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="companyWebsite" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="companyWebsite" className="block text-sm font-medium text-gray-700 mb-2">
                     Company Website
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                      <Globe size={14} className="sm:size-4 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Globe className="w-4 h-4 text-gray-400" />
                     </div>
                     <input
-                      type="text"
+                      type="url"
                       id="companyWebsite"
                       name="companyWebsite"
                       placeholder="https://company.com"
                       value={formData.companyWebsite}
                       disabled={isCurrentStudent}
                       onChange={handleInputChange}
-                      className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 disabled:bg-gray-100 disabled:text-gray-500 text-sm sm:text-base"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 disabled:bg-gray-100 disabled:text-gray-500 text-gray-900"
                     />
                   </div>
                 </div>
@@ -454,28 +451,28 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Location Information */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden">
-            <div className="bg-[#0A3A4C] p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-md sm:rounded-lg flex items-center justify-center">
-                  <MapPin size={12} className="sm:size-4 text-white" />
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-[#0A3A4C] text-white p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-white">Location Information</h3>
-                  <p className="text-white/80 text-xs sm:text-sm">Where are you located?</p>
+                  <h3 className="text-lg font-semibold">Location Information</h3>
+                  <p className="text-blue-100 text-sm">Where are you located?</p>
                 </div>
               </div>
             </div>
             
-            <div className="p-3 sm:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="city" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    City*
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                    City <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                      <MapPin size={14} className="sm:size-4 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <MapPin className="w-4 h-4 text-gray-400" />
                     </div>
                     <input
                       type="text"
@@ -485,17 +482,17 @@ export const ProfileSettings = () => {
                       value={formData.city}
                       onChange={handleInputChange}
                       required
-                      className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 text-gray-900"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="country" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                    Country*
+                  <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
+                    Country <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
-                      <Globe size={14} className="sm:size-4 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Globe className="w-4 h-4 text-gray-400" />
                     </div>
                     <input
                       type="text"
@@ -505,7 +502,7 @@ export const ProfileSettings = () => {
                       value={formData.country}
                       onChange={handleInputChange}
                       required
-                      className="w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-3 border border-gray-300 rounded-lg sm:rounded-xl shadow-sm focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] transition-all duration-200 text-sm sm:text-base"
+                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] transition-colors duration-200 text-gray-900"
                     />
                   </div>
                 </div>
@@ -514,129 +511,135 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Media & Documents */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden">
-            <div className="bg-[#0A3A4C] p-3 sm:p-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-md sm:rounded-lg flex items-center justify-center">
-                  <Camera size={12} className="sm:size-4 text-white" />
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 ">
+            <div className="bg-[#0A3A4C] text-white p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <Camera className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-white">Media & Documents</h3>
-                  <p className="text-white/80 text-xs sm:text-sm">Upload your photos and verification documents</p>
+                  <h3 className="text-lg font-semibold">Media & Documents</h3>
+                  <p className="text-blue-100 text-sm">Upload your photos and verification documents</p>
                 </div>
               </div>
             </div>
             
-            <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 gap-4 sm:gap-6">
-                {/* Profile Picture */}
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
-                    Profile Picture (1:1 Ratio)
-                  </label>
-                  <div 
-                    onClick={() => document.getElementById('profileImage').click()} 
-                    className="group border-2 border-dashed border-gray-300 cursor-pointer rounded-lg sm:rounded-xl p-4 sm:p-8 text-center hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <div className="space-y-2 sm:space-y-3">
-                      <div className="w-8 h-8 sm:w-12 sm:h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
-                        <Camera size={16} className="sm:size-5 text-[#0A3A4C]" />
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm font-medium text-gray-700">Drop your profile picture here</p>
-                        <p className="text-xs text-gray-500 mt-1">or click to browse</p>
-                      </div>
+            <div className="p-6 ">
+              {/* Profile Picture */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Profile Picture
+                </label>
+                <div 
+                  onClick={() => document.getElementById('profileImage').click()} 
+                  className="border-2 border-dashed border-gray-300 cursor-pointer rounded-lg p-6 text-center hover:border-[#71be95] hover:bg-gray-50 transition-all duration-200"
+                >
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto">
+                      <Camera className="w-6 h-6 text-gray-400" />
                     </div>
-                    <input
-                      id="profileImage"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleProfileImageChange}
-                      className="sr-only"
-                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Click to upload profile picture</p>
+                      <p className="text-xs text-gray-500">JPG, PNG up to 10MB</p>
+                    </div>
                   </div>
-                  {formData.profilePicture && (
-                    <div className="mt-3 sm:mt-4 relative inline-block">
-                      <img 
-                        className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg sm:rounded-xl object-cover border-2 border-gray-200" 
-                        src={formData.profilePicture} 
-                        alt="Profile" 
-                      />
-                      <button 
-                        type="button"
-                        onClick={() => setFormData({...formData, profilePicture: null})} 
-                        className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
-                      >
-                        <X size={12} className="sm:size-4" />
-                      </button>
-                    </div>
-                  )}
+                  <input
+                    id="profileImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfileImageChange}
+                    className="sr-only"
+                  />
                 </div>
+                {formData.profilePicture && (
+                  <div className="mt-3 relative inline-block">
+                    <img 
+                      className="w-24 h-24 rounded-lg object-cover border-2 border-gray-200" 
+                      src={formData.profilePicture} 
+                      alt="Profile Preview" 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setFormData({...formData, profilePicture: ""})} 
+                      className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+              </div>
 
-                {/* Cover Picture */}
-                <div>
-                  <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
-                    Cover Picture
-                  </label>
-                  <div 
-                    onClick={() => document.getElementById('coverImage').click()} 
-                    className="group border-2 border-dashed border-gray-300 cursor-pointer rounded-lg sm:rounded-xl p-4 sm:p-8 text-center hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <div className="space-y-2 sm:space-y-3">
-                      <div className="w-8 h-8 sm:w-12 sm:h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
-                        <Upload size={16} className="sm:size-5 text-[#0A3A4C]" />
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm font-medium text-gray-700">Drop your cover image here</p>
-                        <p className="text-xs text-gray-500 mt-1">or click to browse</p>
-                      </div>
+              {/* Cover Picture */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Cover Picture
+                </label>
+                <div 
+                  onClick={() => document.getElementById('coverImage').click()} 
+                  className="border-2 border-dashed border-gray-300 cursor-pointer rounded-lg p-6 text-center hover:border-[#71be95] hover:bg-gray-50 transition-all duration-200"
+                >
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto">
+                      <Upload className="w-6 h-6 text-gray-400" />
                     </div>
-                    <input
-                      id="coverImage"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleCoverImageChange}
-                      className="sr-only"
-                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">Click to upload cover picture</p>
+                      <p className="text-xs text-gray-500">JPG, PNG up to 10MB</p>
+                    </div>
                   </div>
-                  {formData.coverPicture && (
-                    <div className="mt-3 sm:mt-4 relative">
-                      <img 
-                        className="w-full h-20 sm:h-24 rounded-lg sm:rounded-xl object-cover border-2 border-gray-200" 
-                        src={formData.coverPicture} 
-                        alt="Cover" 
-                      />
-                      <button 
-                        type="button"
-                        onClick={() => setFormData({...formData, coverPicture: null})} 
-                        className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
-                      >
-                        <X size={12} className="sm:size-4" />
-                      </button>
-                    </div>
-                  )}
+                  <input
+                    id="coverImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCoverImageChange}
+                    className=""
+                  />
                 </div>
+                {formData.coverPicture && (
+                  <div className="mt-3 relative">
+                    <img 
+                      className="w-full h-24 rounded-lg object-cover border-2 border-gray-200" 
+                      src={formData.coverPicture} 
+                      alt="Cover Preview" 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setFormData({...formData, coverPicture: ""})} 
+                      className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* ID Upload */}
               <div>
-                <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
-                  Identity Verification
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Identity Verification <span className="text-red-500">*</span>
                 </label>
-                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-                  Upload your College ID, Aadhaar Card, PAN Card, or Passport for verification
-                </p>
+                <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+                  <div className="flex items-start gap-2">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-amber-800">Verification Required</p>
+                      <p className="text-xs text-amber-700 mt-1">
+                        Upload your College ID, Aadhaar Card, PAN Card, or Passport for account verification.
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 <div 
-                  className="group border-2 border-dashed border-gray-300 rounded-lg sm:rounded-xl p-4 sm:p-8 text-center hover:border-[#0A3A4C] hover:bg-gray-50 transition-all duration-200 cursor-pointer" 
+                  className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#71be95] hover:bg-gray-50 transition-all duration-200 cursor-pointer" 
                   onClick={() => document.getElementById('idUpload').click()}
                 >
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="w-8 h-8 sm:w-12 sm:h-12 bg-[#0A3A4C]/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-[#0A3A4C]/20 transition-colors duration-200">
-                      <FileText size={16} className="sm:size-5 text-[#0A3A4C]" />
+                  <div className="space-y-2">
+                    <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto">
+                      <FileText className="w-6 h-6 text-gray-400" />
                     </div>
                     <div>
-                      <p className="text-xs sm:text-sm font-medium text-gray-700">Upload your ID document</p>
-                      <p className="text-xs text-gray-500 mt-1">Accepted: College ID, Aadhaar, PAN, Passport</p>
+                      <p className="text-sm font-medium text-gray-700">Click to upload ID document</p>
+                      <p className="text-xs text-gray-500">College ID, Aadhaar, PAN, Passport • JPG, PNG up to 10MB</p>
                     </div>
                   </div>
                   <input 
@@ -648,18 +651,18 @@ export const ProfileSettings = () => {
                   />
                 </div>
                 {formData.ID && (
-                  <div className="mt-3 sm:mt-4 relative inline-block">
+                  <div className="mt-3 relative inline-block">
                     <img 
-                      className="w-40 h-28 sm:w-48 sm:h-32 rounded-lg sm:rounded-xl object-cover border-2 border-gray-200" 
+                      className="w-32 h-24 rounded-lg object-cover border-2 border-gray-200" 
                       src={formData.ID} 
-                      alt="ID Document" 
+                      alt="ID Document Preview" 
                     />
                     <button 
                       type="button"
-                      onClick={() => setFormData({ ...formData, ID: null })} 
-                      className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
+                      onClick={() => setFormData({ ...formData, ID: "" })} 
+                      className="absolute -top-1 -right-1 bg-red-500 hover:bg-red-600 text-white p-1 rounded-full transition-colors duration-200"
                     >
-                      <X size={12} className="sm:size-4" />
+                      <X className="w-3 h-3" />
                     </button>
                   </div>
                 )}
@@ -668,30 +671,30 @@ export const ProfileSettings = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl overflow-hidden">
-            <div className="p-3 sm:p-6">
-              <div className="flex flex-col sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-6">
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => navigateTo("/home/profile")}
-                  className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg sm:rounded-xl font-semibold hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 text-sm sm:text-base"
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-md font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-colors duration-200"
                 >
-                  <ArrowLeft size={16} className="sm:size-5" />
+                  <ArrowLeft className="w-4 h-4" />
                   <span>Cancel</span>
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="group flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-[#0A3A4C] text-white rounded-lg sm:rounded-xl font-semibold hover:bg-[#0A3A4C]/90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-[#71be95] text-white rounded-md font-medium hover:bg-[#5fa080] focus:outline-none focus:ring-2 focus:ring-[#71be95] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <>
-                      <Loader2 size={16} className="sm:size-5 animate-spin" />
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Updating...</span>
                     </>
                   ) : (
                     <>
-                      <Save size={16} className="sm:size-5" />
+                      <Save className="w-4 h-4" />
                       <span>Save Changes</span>
                     </>
                   )}
@@ -704,3 +707,5 @@ export const ProfileSettings = () => {
     </div>
   )
 }
+
+export default ProfileSettings

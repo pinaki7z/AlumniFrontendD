@@ -196,9 +196,9 @@ function Feed({
       <div className="space-y-4">
         {loading ? (
           <div className="flex justify-center py-8">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className=" rounded-lg  p-8">
               <l-dot-pulse size="40" speed="1.0" color="#71be95" />
-              <p className="text-center text-gray-500 mt-4">Loading posts...</p>
+              {/* <p className="text-center text-gray-500 mt-4">Loading posts...</p> */}
             </div>
           </div>
         ) : posts.length === 0 ? (
@@ -287,19 +287,19 @@ function Feed({
             className="flex justify-center py-6"
           >
             {isLoadingMore ? (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className=" rounded-lg    p-6">
                 <div className="flex items-center justify-center space-x-3">
                   <l-dot-pulse size="30" speed="1.0" color="#71be95" />
-                  <span className="text-gray-500">Loading more posts...</span>
+                  {/* <span className="text-gray-500">Loading more posts...</span> */}
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+              <div className=" rounded-lg    p-4">
                 <button
                   onClick={loadMore}
                   className="px-6 py-2 bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white rounded-lg hover:shadow-lg transition-all duration-200 font-medium"
                 >
-                  Load More Posts
+                  {/* Load More Posts */}
                 </button>
               </div>
             )}

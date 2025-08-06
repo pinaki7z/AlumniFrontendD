@@ -48,14 +48,19 @@ export default function AIRefactorButton({ inputText, setInputText }) {
     <button
       onClick={refactorText}
       disabled={loading || !inputText.trim()}
-      className="
-         underline text-blue-500 
-         hover:text-blue-600 cursor-pointer
-      "
+      // className="
+      //   underline
+      //     text-blue-500 bg-blue-100 rounded-xl px-2 font-semibold 
+      //    hover:text-blue-700 hover:bg-blue-200 cursor-pointer text-sm 
+      // "
+       className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${ !inputText.trim()
+                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-teal-500 hover:bg-teal-600 cursor-pointer text-white hover:shadow-md'
+                  }`}
       title="Refactor text using AI"
       tabIndex={0}
     >
-      {loading ? 'Modifying...' : 'AI Modify'}
+      {loading ? 'Modifying...' : 'Modify'}
     </button>
   );
 }

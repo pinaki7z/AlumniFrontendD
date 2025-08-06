@@ -839,7 +839,7 @@ const handleInvestment = async (amount) => {
           <div className="space-y-4 sm:space-y-6 lg:col-span-6">
 
             {/* Social Stats - Mobile Optimized */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="bg-white rounded-lg shadow-sm border font-semibold border-gray-200 p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto">
                   <div className="flex items-center gap-2 flex-shrink-0">

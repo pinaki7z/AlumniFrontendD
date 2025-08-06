@@ -326,6 +326,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                 id="search"
                                 placeholder="Search people, groups, events..."
                                 value={searchText}
+                                autoComplete="off"
                                 onChange={handleChange}
                                 onFocus={handleSearchFocus}
                                 className="block w-full pl-12 pr-16 py-3 border-2 border-white/30 rounded-2xl bg-white/90 backdrop-blur-sm text-[#0a3a4c] placeholder-[#0a3a4c]/60 focus:outline-none focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] focus:bg-white transition-all duration-200 shadow-lg"
@@ -786,6 +787,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                         value={searchText}
                                         onChange={handleChange}
                                         autoFocus
+                                        autoComplete="off"
                                         className="block w-full pl-12 pr-16 py-4 text-lg border-2 border-white/50 rounded-2xl bg-white/90 backdrop-blur-sm text-[#0a3a4c] placeholder-[#0a3a4c]/60 focus:outline-none focus:ring-2 focus:ring-[#71be95] focus:border-[#71be95] focus:bg-white transition-all duration-200 shadow-lg"
                                     />
                                     <button

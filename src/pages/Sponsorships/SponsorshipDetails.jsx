@@ -658,38 +658,7 @@ const SponsorshipDetails = () => {
                 </div>
               )}
 
-              {/* Sponsorship Stats */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <TrendingUp size={16} className="text-white" />
-                  </div>
-                  <h3 className="text-base font-semibold text-gray-900">Statistics</h3>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Views</span>
-                    <span className="text-sm font-semibold text-gray-900">{sponsorship.views || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Inquiries</span>
-                    <span className="text-sm font-semibold text-gray-900">{sponsorship.inquiries || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Applications</span>
-                    <span className="text-sm font-semibold text-gray-900">{sponsorship.applications || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">Priority</span>
-                    <span className={`text-sm font-semibold ${
-                      sponsorship.priority === 'high' ? 'text-red-600' :
-                      sponsorship.priority === 'medium' ? 'text-yellow-600' : 'text-green-600'
-                    }`}>
-                      {sponsorship.priority.charAt(0).toUpperCase() + sponsorship.priority.slice(1)}
-                    </span>
-                  </div>
-                </div>
-              </div>
+            
             </div>
           </div>
 
@@ -701,7 +670,7 @@ const SponsorshipDetails = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">Amount</p>
-                    <p className="text-xl font-bold text-gray-900">₹{sponsorship.amount.toLocaleString()}</p>
+                    <p className="text-xl font-bold text-gray-900">₹{sponsorship?.amount?.toLocaleString() || "N/A"}</p>
                   </div>
                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                     <DollarSign size={20} className="text-green-600" />
@@ -709,33 +678,30 @@ const SponsorshipDetails = () => {
                 </div>
               </div>
 
-              {sponsorship.duration && (
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Duration</p>
-                      <p className="text-xl font-bold text-gray-900">{sponsorship.duration}</p>
-                    </div>
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Clock size={20} className="text-blue-600" />
-                    </div>
-                  </div>
-                </div>
-              )}
 
-              {sponsorship.expectedAudience && (
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Audience</p>
-                      <p className="text-xl font-bold text-gray-900">{sponsorship.expectedAudience.toLocaleString()}</p>
+                      <p className="text-xl font-bold text-gray-900">{sponsorship?.expectedAudience?.toLocaleString() || "N/A"}</p>
                     </div>
                     <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                       <Users size={20} className="text-purple-600" />
                     </div>
                   </div>
                 </div>
-              )}
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Views</p>
+                      <p className="text-xl font-bold text-gray-900">{sponsorship?.views || "N/A"}</p>
+                    </div>
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users size={20} className="text-purple-600" />
+                    </div>
+                  </div>
+                </div>
             </div>
 
             {/* Social Stats */}

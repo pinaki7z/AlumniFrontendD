@@ -31,7 +31,15 @@ import {
   Target,
   TrendingUp,
   Upload,
-  Eye
+  Eye,
+  Activity,
+  Heart,
+  MessageCircle,
+  Share2,
+  BookOpen,
+  Zap,
+  Timer,
+  ListCollapse
 } from "lucide-react";
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
@@ -45,6 +53,8 @@ const ProfilePage = () => {
   const [workExperiences, setWorkExperiences] = useState([]);
   const [userVerification, setUserVerification] = useState(null);
   const [verificationLoading, setVerificationLoading] = useState(true);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [activityLoading, setActivityLoading] = useState(true);
   const [cookie] = useCookies(["token"]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -65,6 +75,7 @@ const ProfilePage = () => {
   useEffect(() => { 
     fetchWorkExperiences(); 
     fetchUserVerification();
+    fetchRecentActivity();
   }, []);
 
   const fetchWorkExperiences = async () => {
@@ -78,6 +89,81 @@ const ProfilePage = () => {
     }
   };
 
+  // Fetch Recent Activity
+  const fetchRecentActivity = async () => {
+    setActivityLoading(true);
+    try {
+      // Replace with actual API calls
+      const activities = [
+        {
+          id: 1,
+          type: 'post',
+          action: 'created a new post',
+          content: 'Just completed a great project at work!',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          icon: <BookOpen className="w-4 h-4" />,
+          color: 'text-blue-600 bg-blue-50'
+        },
+        {
+          id: 2,
+          type: 'like',
+          action: 'liked a post',
+          content: 'Amazing work on the new alumni website!',
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          icon: <Heart className="w-4 h-4" />,
+          color: 'text-red-600 bg-red-50'
+        },
+        {
+          id: 3,
+          type: 'comment',
+          action: 'commented on a post',
+          content: 'Great insights! Thanks for sharing.',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          icon: <MessageCircle className="w-4 h-4" />,
+          color: 'text-green-600 bg-green-50'
+        },
+        {
+          id: 4,
+          type: 'join',
+          action: 'joined a group',
+          content: 'Tech Alumni Network',
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          icon: <Users className="w-4 h-4" />,
+          color: 'text-purple-600 bg-purple-50'
+        },
+        {
+          id: 5,
+          type: 'update',
+          action: 'updated profile',
+          content: 'Added new work experience',
+          timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          icon: <Settings className="w-4 h-4" />,
+          color: 'text-gray-600 bg-gray-50'
+        }
+      ];
+      
+      setRecentActivity(activities);
+    } catch (err) {
+      console.error('Error fetching recent activity:', err);
+    } finally {
+      setActivityLoading(false);
+    }
+  };
+
+  // Format time ago
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return 'Just now';
+  };
+
   // Fetch user verification data
   const fetchUserVerification = async () => {
     setVerificationLoading(true);
@@ -88,7 +174,6 @@ const ProfilePage = () => {
       setUserVerification(data);
     } catch (err) {
       console.error('Error fetching user verification:', err);
-      // If verification record doesn't exist, we'll handle it in the UI
       setUserVerification(null);
     } finally {
       setVerificationLoading(false);
@@ -98,7 +183,6 @@ const ProfilePage = () => {
   // Get verification status from UserVerification data
   const getVerificationStatus = () => {
     if (!userVerification) {
-      // No verification record exists
       return {
         status: 'no-record',
         message: 'Verification record not found',
@@ -108,7 +192,6 @@ const ProfilePage = () => {
 
     const currentDate = new Date();
     
-    // Check if account is deleted
     if (userVerification.accountDeleted) {
       return {
         status: 'account-deleted',
@@ -117,7 +200,6 @@ const ProfilePage = () => {
       };
     }
     
-    // Check if user is validated
     if (userVerification.validated) {
       return {
         status: 'validated',
@@ -126,7 +208,6 @@ const ProfilePage = () => {
       };
     }
     
-    // Check if ID is uploaded and pending approval
     if (userVerification.ID && userVerification.idApprovalStatus === 'pending') {
       return {
         status: 'id-pending',
@@ -136,7 +217,6 @@ const ProfilePage = () => {
       };
     }
     
-    // Check if ID was rejected
     if (userVerification.ID && userVerification.idApprovalStatus === 'rejected') {
       return {
         status: 'id-rejected',
@@ -145,7 +225,6 @@ const ProfilePage = () => {
       };
     }
     
-    // Check if account is expired
     if (userVerification.expirationDate && new Date(userVerification.expirationDate) < currentDate) {
       return {
         status: 'expired',
@@ -155,7 +234,6 @@ const ProfilePage = () => {
       };
     }
     
-    // Check if account is expiring soon
     if (userVerification.expirationDate) {
       const days = Math.ceil((new Date(userVerification.expirationDate) - currentDate) / (1000 * 3600 * 24));
       if (days > 0) {
@@ -169,7 +247,6 @@ const ProfilePage = () => {
       }
     }
     
-    // Default case - not validated
     return {
       status: 'not-validated',
       message: 'Please upload your ID to validate your account.',
@@ -177,9 +254,8 @@ const ProfilePage = () => {
     };
   };
 
-  // Render verification banner based on UserVerification data
+  // Render verification banner
   const renderVerificationBanner = () => {
-    // Don't show banner for admins and super admins
     if ([0, 1].includes(profile.profileLevel)) {
       return null;
     }
@@ -187,9 +263,9 @@ const ProfilePage = () => {
     if (verificationLoading) {
       return (
         <div className="mx-4 mt-4 mb-6">
-          <div className="bg-gray-100 rounded-xl shadow-lg animate-pulse">
+          <div className="bg-gray-200 rounded-lg shadow animate-pulse">
             <div className="flex items-center space-x-3 p-4">
-              <div className="w-6 h-6 bg-gray-300 rounded"></div>
+              <div className="w-5 h-5 bg-gray-300 rounded"></div>
               <div className="flex-1">
                 <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
                 <div className="h-3 bg-gray-300 rounded w-2/3"></div>
@@ -202,53 +278,50 @@ const ProfilePage = () => {
 
     const verificationStatus = getVerificationStatus();
 
-    // Don't show banner if user is validated
     if (verificationStatus.status === 'validated') {
       return null;
     }
 
-    // Determine banner style based on status
     const getBannerStyle = () => {
       switch (verificationStatus.status) {
         case 'id-pending':
           return {
-            gradient: 'from-amber-500 to-orange-500',
-            icon: <Clock className="w-6 h-6 flex-shrink-0" />,
+            bg: 'bg-amber-50 border-amber-200',
+            textColor: 'text-amber-800',
+            icon: <Clock className="w-5 h-5 text-amber-600" />,
             title: 'Verification In Progress',
             clickable: false
           };
         case 'id-rejected':
-          return {
-            gradient: 'from-red-500 to-red-600',
-            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
-            title: 'ID Verification Failed',
-            clickable: true
-          };
         case 'expired':
           return {
-            gradient: 'from-red-600 to-red-700',
-            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
-            title: 'Account Expired',
+            bg: 'bg-red-50 border-red-200',
+            textColor: 'text-red-800',
+            icon: <AlertTriangle className="w-5 h-5 text-red-600" />,
+            title: verificationStatus.status === 'expired' ? 'Account Expired' : 'ID Verification Failed',
             clickable: true
           };
         case 'expiring':
           return {
-            gradient: 'from-orange-500 to-red-500',
-            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            bg: 'bg-orange-50 border-orange-200',
+            textColor: 'text-orange-800',
+            icon: <AlertTriangle className="w-5 h-5 text-orange-600" />,
             title: 'Account Expiring Soon',
             clickable: true
           };
         case 'account-deleted':
           return {
-            gradient: 'from-gray-500 to-gray-600',
-            icon: <AlertTriangle className="w-6 h-6 flex-shrink-0" />,
+            bg: 'bg-gray-50 border-gray-200',
+            textColor: 'text-gray-800',
+            icon: <AlertTriangle className="w-5 h-5 text-gray-600" />,
             title: 'Account Deleted',
             clickable: false
           };
         default:
           return {
-            gradient: 'from-red-500 to-red-600',
-            icon: <Upload className="w-6 h-6 flex-shrink-0" />,
+            bg: 'bg-red-50 border-red-200',
+            textColor: 'text-red-800',
+            icon: <Upload className="w-5 h-5 text-red-600" />,
             title: 'Account Validation Required',
             clickable: true
           };
@@ -261,32 +334,26 @@ const ProfilePage = () => {
       <div className="flex items-center space-x-3 p-4">
         {bannerStyle.icon}
         <div className="flex-1">
-          <p className="font-semibold">{bannerStyle.title}</p>
-          <p className="text-sm opacity-90">
+          <p className={`font-semibold ${bannerStyle.textColor}`}>{bannerStyle.title}</p>
+          <p className={`text-sm ${bannerStyle.textColor} opacity-80`}>
             {verificationStatus.message}
             {verificationStatus.status === 'expiring' && (
               <>
-                {' '}Upload your <span className="underline font-semibold">ID</span> before{' '}
+                {' '}Upload your ID before{' '}
                 <span className="font-semibold">
                   {new Date(verificationStatus.expirationDate).toLocaleDateString()}
                 </span> to validate your account.
               </>
             )}
-            {verificationStatus.status === 'not-validated' && (
-              <>
-                {' '}Please upload your <span className="underline font-semibold">ID document</span> to verify your account.
-              </>
-            )}
           </p>
           
-          {/* Show ID view link if ID exists */}
           {userVerification?.ID && (
             <div className="mt-2">
               <a 
                 href={userVerification.ID} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded-md hover:bg-white/30 transition-colors"
+                className={`inline-flex items-center gap-1 text-xs ${bannerStyle.textColor} underline hover:no-underline`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <Eye size={12} />
@@ -295,7 +362,7 @@ const ProfilePage = () => {
             </div>
           )}
         </div>
-        {bannerStyle.clickable && <ChevronRight className="w-5 h-5" />}
+        {bannerStyle.clickable && <ChevronRight className="w-4 h-4 text-gray-400" />}
       </div>
     );
 
@@ -303,7 +370,7 @@ const ProfilePage = () => {
       return (
         <div className="mx-4 mt-4 mb-6">
           <div 
-            className={`bg-gradient-to-r ${bannerStyle.gradient} text-white rounded-xl shadow-lg cursor-pointer transform hover:scale-[1.02] transition-all duration-200`}
+            className={`${bannerStyle.bg} border rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200`}
             onClick={() => navigate('/home/profile/profile-settings')}
           >
             <BannerContent />
@@ -314,7 +381,7 @@ const ProfilePage = () => {
 
     return (
       <div className="mx-4 mt-4 mb-6">
-        <div className={`bg-gradient-to-r ${bannerStyle.gradient} text-white rounded-xl shadow-lg`}>
+        <div className={`${bannerStyle.bg} border rounded-lg shadow-sm`}>
           <BannerContent />
         </div>
       </div>
@@ -366,16 +433,16 @@ const ProfilePage = () => {
 
   const getRoleBadge = () => {
     const badges = {
-      0: { label: "SUPER ADMIN", gradient: "from-red-500 to-pink-600", icon: <Star size={14} /> },
-      1: { label: "ADMIN", gradient: "from-orange-500 to-red-500", icon: <Award size={14} /> },
-      2: { label: "ALUMNI", gradient: "from-[#0A3A4C] to-[#174873]", icon: <Users size={14} /> },
-      3: { label: "STUDENT", gradient: "from-[#71be95] to-[#5fa080]", icon: <Users size={14} /> }
+      0: { label: "SUPER ADMIN", color: "bg-red-600 text-white", icon: <Star size={14} /> },
+      1: { label: "ADMIN", color: "bg-orange-600 text-white", icon: <Award size={14} /> },
+      2: { label: "ALUMNI", color: "bg-[#0A3A4C] text-white", icon: <Users size={14} /> },
+      3: { label: "STUDENT", color: "bg-[#71be95] text-white", icon: <Users size={14} /> }
     };
     
     const badge = badges[profile.profileLevel] || badges[2];
     
     return (
-      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white bg-gradient-to-r ${badge.gradient} shadow-lg font-semibold text-sm`}>
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md ${badge.color} font-medium text-xs`}>
         {badge.icon}
         {badge.label}
       </div>
@@ -385,40 +452,39 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50 md:p-4 py-2">
       <div className="mx-auto max-w-7xl">
-        {/* Verification Banner - Now uses UserVerification data */}
+        {/* Verification Banner */}
         {renderVerificationBanner()}
 
         {/* Cover Section */}
-        <div className="relative mx-2 md:mx-4 rounded-2xl overflow-hidden shadow-xl">
+        <div className="relative mx-2 md:mx-4 rounded-lg overflow-hidden shadow-lg">
           <div 
-            className="h-48 sm:h-64 lg:h-80 bg-cover bg-center relative"
+            className="h-48 sm:h-[260px] bg-cover bg-center relative"
             style={{ backgroundImage: `url(${profile.coverPicture || picture})` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0A3A4C]/20 to-[#174873]/20" />
+            <div className="absolute inset-0 bg-opacity-30" />
             
             {/* Cover Actions */}
             <div className="absolute top-4 left-4 right-4 flex justify-between">
               <button 
                 onClick={() => handleDelete('cover')}
-                className="bg-white/90 backdrop-blur-sm hover:bg-white p-2 sm:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="bg-white hover:bg-gray-50 p-2 rounded-md shadow-sm transition-colors duration-200"
                 title="Delete cover photo"
               >
-                <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
+                <Trash2 className="w-4 h-4 text-gray-600" />
               </button>
               
-              <div className="flex space-x-2 sm:space-x-3">
+              <div className="flex space-x-2">
                 <button 
                   onClick={() => navigate('/home/profile/profile-settings')}
-                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+                  className="bg-white hover:bg-gray-50 px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2"
                 >
-                  <Settings className="w-4 h-4" />
-                  <span className="text-sm font-medium hidden sm:inline">Settings</span>
+                  <Settings className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">Settings</span>
                 </button>
                 
                 <button 
                   onClick={() => document.getElementById('coverInput').click()}
-                  className="bg-white/90 backdrop-blur-sm hover:bg-white px-3 py-2 sm:px-4 sm:py-3 rounded-full shadow-lg transition-all duration-200 hover:scale-105 flex items-center space-x-2"
+                  className="bg-[#71be95] hover:bg-[#5fa080] px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2 text-white"
                 >
                   <Camera className="w-4 h-4" />
                   <span className="text-sm font-medium hidden sm:inline">Edit Cover</span>
@@ -437,22 +503,22 @@ const ProfilePage = () => {
         </div>
 
         {/* Profile Card */}
-        <div className="relative mx-2 md:mx-4 bg-white rounded-2xl shadow-xl -mt-16 sm:-mt-20 pt-16 sm:pt-20 ">
+        <div className="relative mx-2 md:mx-4 bg-white rounded-b-lg shadow-md -mt-16 sm:-mt-10 pt-10 sm:pt-10">
           {/* Profile Picture */}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[-80%] sm:-translate-y-[80%]">
             <div className="relative group">
               <img 
                 src={profile.profilePicture || "/images/profilepic.jpg"} 
                 alt="profile" 
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-4 border-white object-cover shadow-2xl group-hover:shadow-3xl transition-all duration-300" 
+                className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] rounded-full border-4 border-white object-cover shadow-lg" 
               />
               
               <button 
                 onClick={() => handleDelete('profile')}
-                className="absolute -top-1 -left-1 sm:-top-2 sm:-left-2 bg-red-500 hover:bg-red-600 p-1.5 sm:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="absolute -top-1 -left-1 bg-red-500 hover:bg-red-600 p-1 rounded-md shadow-sm transition-colors duration-200"
                 title="Delete profile picture"
               >
-                <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                <Trash2 className="w-3 h-3 text-white" />
               </button>
               
               <input 
@@ -465,10 +531,10 @@ const ProfilePage = () => {
               
               <button 
                 onClick={() => document.getElementById('profileInput').click()}
-                className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-[#71be95] hover:bg-[#5fa080] p-1.5 sm:p-2 rounded-full shadow-lg transition-all duration-200 hover:scale-110"
+                className="absolute -bottom-1 -right-1 bg-[#71be95] hover:bg-[#5fa080] p-1 rounded-md shadow-sm transition-colors duration-200"
                 title="Change profile picture"
               >
-                <Camera className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                <Camera className="w-3 h-3 text-white" />
               </button>
             </div>
           </div>
@@ -476,17 +542,11 @@ const ProfilePage = () => {
           {/* Profile Info */}
           <div className="text-center px-6 sm:px-8">
             <div className="flex items-center justify-center space-x-3 mb-3">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
                 {profile.firstName} {profile.lastName}
               </h2>
-              {/* Show verified badge based on UserVerification data */}
               {userVerification?.validated && (
-                <div className="relative">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                  </div>
-                  <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-20"></div>
-                </div>
+                <CheckCircle className="w-6 h-6 text-blue-500" />
               )}
             </div>
             
@@ -500,72 +560,122 @@ const ProfilePage = () => {
           </div>
 
           {/* Stats */}
-          <div className="mt-6 grid grid-cols-3 divide-x divide-gray-200">
+          <div className="mt-2 grid grid-cols-3 divide-x divide-gray-200 border-t border-gray-200">
             {[
-              { label: 'Groups', count: profile.groupNames?.length || 0, icon: Users, link: `/home/groups/${profile._id}/joined-groups` },
-              { label: 'Followers', count: profile.followers?.length || 0, icon: UserCheck, link: `/home/profile/${profile._id}/followers` },
-              { label: 'Following', count: profile.following?.length || 0, icon: UserPlus, link: `/home/profile/${profile._id}/following` }
+              { label: 'Groups', count: profile.groupNames?.length || 0, link: `/home/groups/${profile._id}/joined-groups` },
+              { label: 'Followers', count: profile.followers?.length || 0, link: `/home/profile/${profile._id}/followers` },
+              { label: 'Following', count: profile.following?.length || 0, link: `/home/profile/${profile._id}/following` }
             ].map((stat, i) => (
               <Link 
                 to={stat.link} 
                 key={i} 
-                className="group flex flex-col items-center py-4 hover:bg-gray-50 transition-colors duration-200 rounded-lg"
+                className="flex flex-col items-center py-3 hover:bg-gray-50 transition-colors duration-200"
               >
-                <p className="text-xs sm:text-sm font-medium text-gray-600 group-hover:text-gray-800 mb-1">{stat.label}</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-800 group-hover:text-[#71be95] transition-colors">{stat.count}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stat.count}</p>
               </Link>
             ))}
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8 px-4 pb-8">
-          {/* Posts Feed */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-4 sm:p-6">
-                <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                  <Users className="w-5 h-5 sm:w-6 sm:h-6" />
-                  My Posts
-                </h3>
-                <p className="text-white/80 text-sm mt-1">Share your thoughts and updates</p>
+        {/* 3-Column Main Content Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8  pb-8">
+          {/* Left Column: Recent Activity */}
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Activity className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">Recent Activity</h3>
+                </div>
               </div>
-              <div className="p-4 sm:p-6">
-                <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
+              
+              <div className="p-4">
+                {activityLoading ? (
+                  <div className="space-y-3">
+                    {[...Array(5)].map((_, i) => (
+                      <div key={i} className="animate-pulse flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded w-3/4 mb-1"></div>
+                          <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {recentActivity.map((activity) => (
+                      <div key={activity.id} className="flex items-start space-x-3 p-2 rounded hover:bg-gray-50 transition-colors duration-200">
+                        <div className={`${activity.color} p-1.5 rounded flex-shrink-0`}>
+                          {activity.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-gray-900">
+                            You {activity.action}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-0.5 truncate">
+                            {activity.content}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            <Timer className="w-3 h-3 inline mr-1" />
+                            {formatTimeAgo(activity.timestamp)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {recentActivity.length === 0 && (
+                      <div className="text-center py-6">
+                        <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-xs">No recent activity</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <aside className="lg:col-span-1 space-y-6">
+          {/* Center Column: Posts Feed (Wider) */}
+          <div className="lg:col-span-6">
+              <div className="bg-[#0A3A4C] text-white py-3 px-4 rounded-t-lg">
+                <div className="flex items-center space-x-2">
+                  <ListCollapse className="w-5 h-5" />
+                  <h3 className="text-lg font-semibold">Posts</h3>
+                </div>
+                <p className="text-blue-100 text-sm mt-1">Share your thoughts and updates</p>
+              </div>
+              <div className="">
+                <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
+              </div>
+          </div>
+
+          {/* Right Column: Profile Info & Actions */}
+          <div className="lg:col-span-3 space-y-6">
             {/* Profile Completion */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-white/20 p-2 rounded-lg">
-                    <Target className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Profile Completion</h3>
-                    <p className="text-white/80 text-sm">Complete your profile</p>
-                  </div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Target className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">Profile Completion</h3>
                 </div>
               </div>
               
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-medium text-gray-700">Progress</span>
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-medium text-gray-700">Progress</span>
                   <span className="text-sm font-bold text-[#71be95]">{completionPct}%</span>
                 </div>
                 
-                <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+                <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                   <div 
-                    className="bg-gradient-to-r from-[#71be95] to-[#5fa080] h-3 rounded-full transition-all duration-500" 
+                    className="bg-[#71be95] h-2 rounded-full transition-all duration-500" 
                     style={{ width: `${completionPct}%` }} 
                   />
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[
                     { key: 'profilePicture', label: 'Profile Picture', link: '/home/profile/profile-settings', icon: Camera },
                     { key: 'firstName', label: 'Name', link: '/home/profile/profile-settings', icon: UserCheck },
@@ -579,19 +689,20 @@ const ProfilePage = () => {
                     
                     return (
                       <div key={i} className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-lg ${isCompleted ? 'bg-green-100' : 'bg-gray-100'}`}>
+                        <div className={`p-2 rounded ${isCompleted ? 'bg-green-50' : 'bg-gray-50'}`}>
                           <item.icon className={`w-4 h-4 ${isCompleted ? 'text-green-600' : 'text-gray-400'}`} />
                         </div>
                         
                         <div className="flex-1 min-w-0">
                           {isCompleted ? (
-                            <span className="text-sm font-medium text-gray-800 truncate block">
-                              {item.label}: {displayValue}
-                            </span>
+                            <div>
+                              <span className="text-xs font-medium text-gray-900 block">{item.label}</span>
+                              <span className="text-xs text-gray-500 truncate block">{displayValue}</span>
+                            </div>
                           ) : (
                             <Link 
                               to={item.link} 
-                              className="text-sm font-medium text-[#71be95] hover:text-[#5fa080] transition-colors duration-200"
+                              className="text-xs font-medium text-[#71be95] hover:text-[#5fa080] transition-colors duration-200"
                             >
                               Add your {item.label.toLowerCase()}
                             </Link>
@@ -599,7 +710,7 @@ const ProfilePage = () => {
                         </div>
                         
                         {isCompleted && (
-                          <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                         )}
                       </div>
                     );
@@ -609,29 +720,27 @@ const ProfilePage = () => {
             </div>
 
             {/* About Me */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="bg-white/20 p-2 rounded-lg">
-                    <Info className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-semibold text-lg">About Me</h3>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Info className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">About Me</h3>
                 </div>
               </div>
               
-              <div className="p-6">
+              <div className="p-4">
                 {profile.linkedIn ? (
                   <a 
                     href={profile.linkedIn} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="inline-flex items-center space-x-2 text-[#71be95] hover:text-[#5fa080] transition-colors duration-200 font-medium"
+                    className="inline-flex items-center space-x-2 text-[#71be95] hover:text-[#5fa080] transition-colors duration-200 text-sm font-medium"
                   >
                     <ExternalLink className="w-4 h-4" />
                     <span>LinkedIn Profile</span>
                   </a>
                 ) : (
-                  <p className="text-gray-500 italic">User has not updated their bio</p>
+                  <p className="text-gray-500 text-sm italic">User has not updated their bio</p>
                 )}
               </div>
             </div>
@@ -639,64 +748,38 @@ const ProfilePage = () => {
             {/* Work Experience */}
             <Link 
               to='/home/profile/workExperience' 
-              className="block bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 transform hover:-translate-y-1"
+              className="block bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200"
             >
-              <div className="p-6">
+              <div className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="bg-[#71be95]/10 p-3 rounded-lg">
-                      <Briefcase className="w-6 h-6 text-[#71be95]" />
+                    <div className="bg-[#71be95] bg-opacity-10 p-2 rounded">
+                      <Briefcase className="w-5 h-5 text-[#71be95]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">Work Experience</h3>
-                      <p className="text-sm text-gray-500">View your professional journey</p>
+                      <h3 className="text-sm font-semibold text-gray-900">Work Experience</h3>
+                      <p className="text-xs text-gray-500">View your professional journey</p>
                     </div>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
                 </div>
               </div>
             </Link>
-          </aside>
+          </div>
         </div>
       </div>
 
       {/* Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-8 shadow-2xl">
-            <div className="flex items-center space-x-4">
-              <Loader2 className="w-8 h-8 text-[#71be95] animate-spin" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <Loader2 className="w-6 h-6 text-[#71be95] animate-spin" />
               <p className="text-gray-700 font-medium">Uploading...</p>
             </div>
           </div>
         </div>
       )}
-
-      {/* Custom Scrollbar Styles */}
-      <style jsx>{`
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: #71be95 transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 1px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #71be95, #5fa080);
-          border-radius: 1px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #5fa080, #4d8a66);
-        }
-      `}</style>
     </div>
   );
 };
