@@ -39,7 +39,11 @@ import {
   BookOpen,
   Zap,
   Timer,
-  ListCollapse
+  ListCollapse,
+  Edit,
+  Mail,
+  Phone,
+  Linkedin
 } from "lucide-react";
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
@@ -450,134 +454,144 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 md:p-4 py-2">
-      <div className="mx-auto max-w-7xl">
-        {/* Verification Banner */}
-        {renderVerificationBanner()}
+    <div className="min-h-screen bg-gray-100">
+      {/* Verification Banner */}
+      {renderVerificationBanner()}
 
-        {/* Cover Section */}
-        <div className="relative mx-2 md:mx-4 rounded-lg overflow-hidden shadow-lg">
-          <div 
-            className="h-48 sm:h-[260px] bg-cover bg-center relative"
-            style={{ backgroundImage: `url(${profile.coverPicture || picture})` }}
-          >
-            <div className="absolute inset-0 bg-opacity-30" />
-            
-            {/* Cover Actions */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between">
-              <button 
-                onClick={() => handleDelete('cover')}
-                className="bg-white hover:bg-gray-50 p-2 rounded-md shadow-sm transition-colors duration-200"
-                title="Delete cover photo"
-              >
-                <Trash2 className="w-4 h-4 text-gray-600" />
-              </button>
-              
-              <div className="flex space-x-2">
-                <button 
-                  onClick={() => navigate('/home/profile/profile-settings')}
-                  className="bg-white hover:bg-gray-50 px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2"
-                >
-                  <Settings className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">Settings</span>
-                </button>
-                
+      <div className="max-w-6xl mx-auto px-4 py-6">
+        {/* Main Profile Card - LinkedIn Style */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
+          {/* Cover Photo Section */}
+          <div className="relative">
+            <div 
+              className="h-48 sm:h-60 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-cover bg-center relative"
+              style={{ 
+                backgroundImage: profile.coverPicture ? `url(${profile.coverPicture})` : 'none',
+                backgroundBlendMode: profile.coverPicture ? 'overlay' : 'normal'
+              }}
+            >
+              {/* Cover Actions */}
+              <div className="absolute top-4 right-4 flex space-x-2">
                 <button 
                   onClick={() => document.getElementById('coverInput').click()}
-                  className="bg-[#71be95] hover:bg-[#5fa080] px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2 text-white"
+                  className="bg-white hover:bg-gray-50 px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2"
                 >
-                  <Camera className="w-4 h-4" />
-                  <span className="text-sm font-medium hidden sm:inline">Edit Cover</span>
+                  <Camera className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">Edit cover</span>
                 </button>
               </div>
             </div>
+            
+            <input 
+              type="file" 
+              id="coverInput" 
+              className="hidden" 
+              onChange={e => handleFileChange(e, 'coverPicture')} 
+              accept="image/*"
+            />
           </div>
-          
-          <input 
-            type="file" 
-            id="coverInput" 
-            className="hidden" 
-            onChange={e => handleFileChange(e, 'coverPicture')} 
-            accept="image/*"
-          />
+
+          {/* Profile Info Section */}
+          <div className="relative px-6 pb-6">
+            {/* Profile Picture */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
+              <div className="relative -mt-16 sm:-mt-20 mb-4 sm:mb-0">
+                <div className="relative group">
+                  <img 
+                    src={profile.profilePicture || "/images/profilepic.jpg"} 
+                    alt="profile" 
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white object-cover shadow-lg" 
+                  />
+                  
+                  <input 
+                    type="file" 
+                    id="profileInput" 
+                    className="hidden" 
+                    onChange={e => handleFileChange(e, 'profilePicture')} 
+                    accept="image/*"
+                  />
+                  
+                  <button 
+                    onClick={() => document.getElementById('profileInput').click()}
+                    className="absolute bottom-2 right-2 bg-white hover:bg-gray-50 p-2 rounded-full shadow-md border border-gray-200 transition-colors duration-200"
+                    title="Change profile picture"
+                  >
+                    <Camera className="w-4 h-4 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Profile Details */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex-1 min-w-0">
+                    {/* Name and Verification */}
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
+                        {profile.firstName} {profile.lastName}
+                      </h1>
+                      {userVerification?.validated && (
+                        <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0" />
+                      )}
+                    </div>
+
+                    {/* Role Badge */}
+                    <div className="mb-3">
+                      {getRoleBadge()}
+                    </div>
+
+                    {/* Work/Education Info */}
+                    <div className="space-y-1 mb-4">
+                      {findCurrentWorkingAt() !== 'No current work experience' && (
+                        <p className="text-gray-700 font-medium flex items-center">
+                          <Briefcase className="w-4 h-4 mr-2 text-gray-500" />
+                          {findCurrentWorkingAt()}
+                        </p>
+                      )}
+                      
+                      {(profile.country || profile.city) && (
+                        <p className="text-gray-600 flex items-center">
+                          <MapPin className="w-4 h-4 mr-2 text-gray-500" />
+                          {[profile.city, profile.country].filter(Boolean).join(', ')}
+                        </p>
+                      )}
+
+                      {/* Connections count */}
+                      <p className="text-sm text-[#71BE95] font-medium">
+                        {profile.followers?.length || 0} followers • {profile.following?.length || 0} following
+                      </p>
+                    </div>
+
+                    {/* About Me Preview */}
+                    {profile.aboutMe && (
+                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-2 mb-4">
+                        {profile.aboutMe}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex space-x-3 mt-4 sm:mt-0">
+                    <button 
+                      onClick={() => navigate('/home/profile/profile-settings')}
+                      className="flex items-center space-x-2 px-4 py-2 bg-[#71BE95] text-white rounded-md hover:bg-[#5fa080] transition-colors duration-200"
+                    >
+                      <Edit className="w-4 h-4" />
+                      <span className="text-sm font-medium">Edit profile</span>
+                    </button>
+                    
+                    <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200">
+                      <Share2 className="w-4 h-4" />
+                      <span className="text-sm font-medium">Share</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Profile Card */}
-        <div className="relative mx-2 md:mx-4 bg-white rounded-b-lg shadow-md -mt-16 sm:-mt-10 pt-10 sm:pt-10">
-          {/* Profile Picture */}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[-80%] sm:-translate-y-[80%]">
-            <div className="relative group">
-              <img 
-                src={profile.profilePicture || "/images/profilepic.jpg"} 
-                alt="profile" 
-                className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] rounded-full border-4 border-white object-cover shadow-lg" 
-              />
-              
-              <button 
-                onClick={() => handleDelete('profile')}
-                className="absolute -top-1 -left-1 bg-red-500 hover:bg-red-600 p-1 rounded-md shadow-sm transition-colors duration-200"
-                title="Delete profile picture"
-              >
-                <Trash2 className="w-3 h-3 text-white" />
-              </button>
-              
-              <input 
-                type="file" 
-                id="profileInput" 
-                className="hidden" 
-                onChange={e => handleFileChange(e, 'profilePicture')} 
-                accept="image/*"
-              />
-              
-              <button 
-                onClick={() => document.getElementById('profileInput').click()}
-                className="absolute -bottom-1 -right-1 bg-[#71be95] hover:bg-[#5fa080] p-1 rounded-md shadow-sm transition-colors duration-200"
-                title="Change profile picture"
-              >
-                <Camera className="w-3 h-3 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Profile Info */}
-          <div className="text-center px-6 sm:px-8">
-            <div className="flex items-center justify-center space-x-3 mb-3">
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-                {profile.firstName} {profile.lastName}
-              </h2>
-              {userVerification?.validated && (
-                <CheckCircle className="w-6 h-6 text-blue-500" />
-              )}
-            </div>
-            
-            <div className="flex justify-center mb-4">
-              {getRoleBadge()}
-            </div>
-            
-            {profile.aboutMe && (
-              <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm sm:text-base">{profile.aboutMe}</p>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div className="mt-2 grid grid-cols-3 divide-x divide-gray-200 border-t border-gray-200">
-            {[
-              { label: 'Groups', count: profile.groupNames?.length || 0, link: `/home/groups/${profile._id}/joined-groups` },
-              { label: 'Followers', count: profile.followers?.length || 0, link: `/home/profile/${profile._id}/followers` },
-              { label: 'Following', count: profile.following?.length || 0, link: `/home/profile/${profile._id}/following` }
-            ].map((stat, i) => (
-              <Link 
-                to={stat.link} 
-                key={i} 
-                className="flex flex-col items-center py-3 hover:bg-gray-50 transition-colors duration-200"
-              >
-                <p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                <p className="text-lg sm:text-2xl font-bold text-gray-900">{stat.count}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-
+        
         {/* 3-Column Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8  pb-8">
           {/* Left Column: Recent Activity */}
@@ -774,7 +788,7 @@ const ProfilePage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-lg">
             <div className="flex items-center space-x-3">
-              <Loader2 className="w-6 h-6 text-[#71be95] animate-spin" />
+              <Loader2 className="w-6 h-6 text-[#71BE95] animate-spin" />
               <p className="text-gray-700 font-medium">Uploading...</p>
             </div>
           </div>

@@ -49,12 +49,14 @@ import ScrollToTop from "../../components/ScrollToTop.jsx";
 import ProhibitedKeywords from "../../pages/ProhibitedKeywords/ProhibitedKeywords.jsx"
 import NotificationCenterPage from "../NotificationCenterPage/NotificationCenterPage.jsx";
 import UserVerification from "../UserVerification/UserVerification.jsx";
+import { useCookies } from "react-cookie";
 const Dashboard = ({ handleLogout }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get('search');
   const navigate = useNavigate();
   const profile = useSelector((state) => state.profile);
+  const [cookie, setCookie, removeCookie] = useCookies('token');
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -66,8 +68,11 @@ const Dashboard = ({ handleLogout }) => {
     setMobileSidebarOpen(false);
   };
 
+  console.log("profile", profile?._id)
+
   useEffect(() => {
-    if (profile.accountDeleted === true || (profile.expirationDate && new Date(profile.expirationDate) < new Date())) {
+    if (profile?._id===undefined ||profile.accountDeleted === true || (profile.expirationDate && new Date(profile.expirationDate) < new Date())) {
+      removeCookie('token');
       navigate("/login");
     }
   }, [profile.accountDeleted, profile.expirationDate]);
