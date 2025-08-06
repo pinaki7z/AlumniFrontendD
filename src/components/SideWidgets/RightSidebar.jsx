@@ -11,10 +11,12 @@ import {
   Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import socket from '../../socket';
+// import socket from '../../socket';
+import { useSocket } from "../../contexts/SocketContext";
 
 
-const RightSidebar = () => {
+const RightSidebar = () => {  
+   const socket = useSocket();
     const socketRef = useRef(socket);
 
       const [onlineCount, setOnlineCount] = useState(0);
@@ -116,7 +118,7 @@ const RightSidebar = () => {
             <span className="text-sm font-medium text-gray-900">Online Now</span>
           </div>
           <div className="bg-[#71be95] text-white text-xs font-bold px-2 py-1 rounded-full">
-            {onlineCount}
+            {onlineCount || 1}
           </div>
         </div>
       </div>

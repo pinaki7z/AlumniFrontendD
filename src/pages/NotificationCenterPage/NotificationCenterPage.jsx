@@ -2,7 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Eye, X, CheckCircle, AlertCircle, Bell, Clock, Users, Building, ExternalLink, Upload, AlertTriangle } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import socket from '../../socket'; // Adjust path to your socket file
+// import socket from '../../socket'; // Adjust path to your socket file
+import { useSocket } from "../../contexts/SocketContext";
 
 const typeIcons = {
   job: <Building className="text-blue-600" size={20} />,
@@ -13,11 +14,12 @@ const typeIcons = {
 };
 
 function NotificationCenterPage() {
+   const socket = useSocket();
   const profile = useSelector(state => state.profile);
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isConnected, setIsConnected] = useState(false);
+   const [isConnected, setIsConnected] = useState(socket?.connected);
 
   // **Fetch notifications from API**
   const fetchNotifications = useCallback(async () => {
@@ -200,13 +202,13 @@ function NotificationCenterPage() {
 
     // Cleanup on unmount
     return () => {
-      console.log("🧹 Cleaning up notification socket listeners");
-      socket.off("connect", handleConnect);
-      socket.off("disconnect", handleDisconnect);
-      socket.off("connect_error", handleConnectError);
-      socket.off("new-notification", handleNewNotification);
-      socket.off("notification-read", handleNotificationRead);
-      socket.off("notification-removed", handleNotificationRemoved);
+      // console.log("🧹 Cleaning up notification socket listeners");
+      // socket.off("connect", handleConnect);
+      // socket.off("disconnect", handleDisconnect);
+      // socket.off("connect_error", handleConnectError);
+      // socket.off("new-notification", handleNewNotification);
+      // socket.off("notification-read", handleNotificationRead);
+      // socket.off("notification-removed", handleNotificationRemoved);
     };
   }, [profile._id]);
 

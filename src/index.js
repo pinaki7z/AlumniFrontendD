@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import storePromise from "./store";
 //import 'react-loading-skeleton/dist/skeleton.css';
 import { tailChase } from "ldrs";
-
+import { SocketProvider } from "./contexts/SocketContext";
 
 tailChase.register();
 
@@ -45,7 +45,9 @@ function AppLoader() {
   return (
     //<React.StrictMode>
     <Provider store={store}>
-      <App />
+      <SocketProvider>
+        <App />
+      </SocketProvider>
     </Provider>
     //</React.StrictMode>
   );
