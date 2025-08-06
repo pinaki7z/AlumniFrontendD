@@ -22,7 +22,18 @@ import {
   Calendar,
   Building,
   Award,
-  Star
+  Star,
+  Activity,
+  Timer,
+  ListCollapse,
+  Users2,
+  UserCheck,
+  ExternalLink,
+  Heart,
+  MessageCircle,
+  BookOpen,
+  Eye,
+  ChevronRight
 } from "lucide-react"
 
 const Profile = () => {
@@ -31,25 +42,71 @@ const Profile = () => {
   const profile = useSelector((state) => state.profile)
   const [isFollowing, setIsFollowing] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState(false)
+  const [recentActivity, setRecentActivity] = useState([])
+  const [activityLoading, setActivityLoading] = useState(true)
   const dispatch = useDispatch()
 
   const getAlumni = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/${id}`)
+      setLoading(false)
       setMember(response.data)
       const followingResponse = await axios.get(`${process.env.REACT_APP_API_URL}/alumni/${profile._id}/following/all`)
       const followingDetails = followingResponse.data.followingDetails
       const isUserFollowing = followingDetails.some((detail) => detail.userId === response.data._id)
       setIsFollowing(isUserFollowing)
-      setLoading(false)
     } catch (error) {
       console.error("Error fetching alumni details or following status:", error)
       setLoading(false)
     }
   }
 
+  // Fetch Recent Activity (mock data similar to ProfilePage)
+  const fetchRecentActivity = async () => {
+    setActivityLoading(true)
+    try {
+      const activities = [
+        {
+          id: 1,
+          type: 'post',
+          action: 'created a new post',
+          content: 'Just completed a great project at work!',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          icon: <BookOpen className="w-4 h-4" />,
+          color: 'text-blue-600 bg-blue-50'
+        },
+        {
+          id: 2,
+          type: 'like',
+          action: 'liked a post',
+          content: 'Amazing work on the new alumni website!',
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          icon: <Heart className="w-4 h-4" />,
+          color: 'text-red-600 bg-red-50'
+        },
+        {
+          id: 3,
+          type: 'comment',
+          action: 'commented on a post',
+          content: 'Great insights! Thanks for sharing.',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          icon: <MessageCircle className="w-4 h-4" />,
+          color: 'text-green-600 bg-green-50'
+        }
+      ];
+
+      setRecentActivity(activities)
+    } catch (err) {
+      console.error('Error fetching recent activity:', err)
+    } finally {
+      setActivityLoading(false)
+    }
+  }
+
   useEffect(() => {
     getAlumni()
+    fetchRecentActivity()
   }, [id, profile._id])
 
   const handleFollowToggle = async () => {
@@ -86,6 +143,20 @@ const Profile = () => {
     }
   }
 
+  // Format time ago
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date()
+    const diff = now - timestamp
+    const minutes = Math.floor(diff / 60000)
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+
+    if (days > 0) return `${days}d ago`
+    if (hours > 0) return `${hours}h ago`
+    if (minutes > 0) return `${minutes}m ago`
+    return 'Just now'
+  }
+
   const currentWork = member?.workExperience?.find((exp) => exp.endMonth?.toLowerCase() === "current")
 
   if (!member || Object.keys(member).length === 0) {
@@ -102,367 +173,338 @@ const Profile = () => {
     )
   }
 
-  const getRoleBadge = (level) => {
-    let label = ""
-    let colorClass = ""
-    let icon = null
-    switch (level) {
-      case 0:
-        label = "SUPER ADMIN"
-        colorClass = "bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg shadow-red-500/25"
-        icon = <Star size={14} className="text-white" />
-        break
-      case 1:
-        label = "ADMIN"
-        colorClass = "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/25"
-        icon = <Award size={14} className="text-white" />
-        break
-      case 2:
-        label = "ALUMNI"
-        colorClass = "bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-lg shadow-blue-500/25"
-        icon = <Users size={14} className="text-white" />
-        break
-      case 3:
-        label = "STUDENT"
-        colorClass = "bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white shadow-lg shadow-emerald-500/25"
-        icon = <Users size={14} className="text-white" />
-        break
-      default:
-        label = "UNKNOWN"
-        colorClass = "bg-gradient-to-r from-gray-500 to-slate-600 text-white shadow-lg shadow-gray-500/25"
-        icon = <Info size={14} className="text-white" />
+  const getRoleBadge = () => {
+    const badges = {
+      0: { label: "SUPER ADMIN", color: "bg-red-600 text-white", icon: <Star size={14} /> },
+      1: { label: "ADMIN", color: "bg-orange-600 text-white", icon: <Award size={14} /> },
+      2: { label: "ALUMNI", color: "bg-[#0A3A4C] text-white", icon: <Users size={14} /> },
+      3: { label: "STUDENT", color: "bg-[#71be95] text-white", icon: <Users size={14} /> }
     }
+
+    const badge = badges[member.profileLevel] || badges[2]
+
     return (
-      <span className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs font-bold rounded-full ${colorClass}`}>
-        {icon}
-        {label}
-      </span>
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md ${badge.color} font-medium text-xs`}>
+        {badge.icon}
+        {badge.label}
+      </div>
     )
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="md:max-w-7xl mx-auto p-4 space-y-6">
-        {/* Profile Header Section - Enhanced Design */}
-        <div className="relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-          {/* Cover Image with Overlay - Better mobile sizing */}
-          <div className="relative h-40 sm:h-48 md:h-60 overflow-hidden">
-            <div
-              className="absolute inset-0 bg-cover bg-center transform scale-105 transition-transform duration-700 hover:scale-110"
-              style={{ backgroundImage: `url(${member.coverPicture || picture})` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0A3A4C]/20 to-[#174873]/20" />
-          </div>
+  const lines = member.aboutMe ? member.aboutMe.split('\n') : ["🌟 This user hasn't shared their story yet."]
+  const displayLines = expanded ? lines : lines.slice(0, 2)
 
-          {/* Profile Picture - Better responsive positioning */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[-290%]   md:translate-y-[-231%] lg:translate-y-[-90%] lg:left-8 lg:translate-x-[0%]">
-            <div className="relative">
-              <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-2xl border-4 border-white shadow-xl overflow-hidden bg-white transform hover:scale-105 transition-transform duration-300">
-                <img 
-                  src={member.profilePicture || profilePic} 
-                  alt="profile" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Online Status Indicator - Better sizing */}
-              <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white shadow-lg">
-                <div className="w-full h-full bg-green-400 rounded-full animate-pulse" />
-              </div>
+  return (
+    <div className="min-h-screen bg-gray-50 md:p-4 py-2">
+      <div className="mx-auto max-w-7xl">
+        {/* Cover Section */}
+        <div className="relative mx-2 md:mx-4 rounded-lg overflow-hidden shadow-md">
+          <div
+            className="h-48 sm:h-[260px] bg-cover bg-center relative"
+            style={{ backgroundImage: `url(${member.coverPicture || picture})` }}
+          >
+            <div className="absolute inset-0 bg-opacity-30" />
+
+            {/* Follow Button in top right */}
+            <div className="absolute top-4 right-4">
+              <button
+                onClick={handleFollowToggle}
+                disabled={loading}
+                className={`px-4 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2 ${
+                  isFollowing 
+                    ? "bg-red-500 hover:bg-red-600 text-white" 
+                    : "bg-[#71be95] hover:bg-[#5fa080] text-white"
+                }`}
+              >
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isFollowing ? (
+                  <>
+                    <Users className="w-4 h-4" />
+                    <span className="text-sm font-medium hidden sm:inline">Following</span>
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="w-4 h-4" />
+                    <span className="text-sm font-medium hidden sm:inline">Follow</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Profile Card */}
+        <div className="relative mx-2 md:mx-4 bg-white rounded-b-lg shadow-md -mt-16 sm:-mt-10 pt-10 sm:pt-10">
+          {/* Profile Picture */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[-80%] sm:-translate-y-[80%]">
+            <div className="relative group">
+              <img
+                src={member.profilePicture || profilePic}
+                alt="profile"
+                className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] rounded-full border-4 border-white object-cover shadow-lg"
+              />
             </div>
           </div>
 
-          {/* Profile Info - Better mobile layout */}
-          <div className="px-4 sm:px-6 pb-6 pt-14 sm:pt-16 md:pt-18 lg:pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-              {/* Left Section - Profile Info */}
-              <div className="lg:col-span-2 text-center lg:text-left lg:pl-40 xl:pl-44">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-center lg:justify-start gap-2">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-                      {member.firstName} {member.lastName}
-                    </h1>
-                    {member.isVerified && (
-                      <div className="relative">
-                        <CheckCircle size={24} className="text-blue-500" />
-                        <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-20" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex justify-center lg:justify-start">
-                    {getRoleBadge(member.profileLevel)}
-                  </div>
+          {/* Profile Info */}
+          <div className="text-center px-6 sm:px-8">
+            <div className="flex items-center justify-center space-x-3 mb-3">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                {member.firstName} {member.lastName}
+              </h2>
+              {member.isVerified && (
+                <CheckCircle className="w-6 h-6 text-blue-500" />
+              )}
+            </div>
+
+            <div className="flex justify-center mb-4">
+              {getRoleBadge()}
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="flex justify-center gap-3 pb-4">
+            {member.followers?.length > 0 && (
+              <div className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm flex items-center space-x-2">
+                <span className="hidden md:inline"><Users className="w-4 h-4" /></span>
+                <span>{member.followers.length} Followers</span>
+              </div>
+            )}
+            {member.following?.length > 0 && (
+              <div className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm flex items-center space-x-2">
+                <span className="hidden md:inline"><UserCheck className="w-4 h-4" /></span>
+                <span>{member.following.length} Following</span>
+              </div>
+            )}
+            {member.groupNames?.length > 0 && (
+              <div className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm flex items-center space-x-2">
+                <span className="hidden md:inline"><Users2 className="w-4 h-4" /></span>
+                <span>{member.groupNames.length} Groups</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3-Column Main Content Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8 pb-8">
+          {/* Left Column: About & Recent Activity */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* About Me */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Info className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">About {member.firstName}</h3>
                 </div>
               </div>
 
-              {/* Right Section - Action Button */}
-              <div className="flex justify-center lg:justify-end items-start">
-                <button
-                  onClick={handleFollowToggle}
-                  disabled={loading}
-                  className={`group relative px-4 sm:px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg ${
-                    isFollowing 
-                      ? "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-red-500/25" 
-                      : "bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:from-[#174873] hover:to-[#0A3A4C] text-white shadow-blue-500/25"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    {loading ? (
-                      <Loader2 size={18} className="animate-spin" />
-                    ) : isFollowing ? (
-                      <>
-                        <Users size={18} />
-                        <span className="group-hover:hidden">Following</span>
-                        <span className="hidden group-hover:inline">Unfollow</span>
-                      </>
-                    ) : (
-                      <>
-                        <UserPlus size={18} />
-                        <span>Follow</span>
-                      </>
+              <div className="p-4 text-xs">
+                <div className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm">
+                  {displayLines.map((line, index) => (
+                    <p key={index} className="mb-2 whitespace-pre-line">
+                      {line}
+                    </p>
+                  ))}
+
+                  {lines.length > 2 && (
+                    <span
+                      className="text-[#71be95] cursor-pointer hover:text-[#5fa080] transition-colors duration-200"
+                      onClick={() => setExpanded(!expanded)}
+                    >
+                      {expanded ? 'Show less' : '...Read more'}
+                    </span>
+                  )}
+                </div>
+                
+                {/* Department & Batch Info */}
+                {(member.department || member.batch) && (
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    {member.department && (
+                      <p className="text-sm text-gray-600 mb-1">
+                        <span className="font-medium">Department:</span> {member.department}
+                      </p>
+                    )}
+                    {member.batch && (
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Batch:</span> {member.batch}
+                      </p>
                     )}
                   </div>
-                  
-                  {/* Button Glow Effect */}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/20 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </button>
+                )}
               </div>
             </div>
 
-            {/* Enhanced Stats - Better mobile layout */}
-            <div className="mt-6 grid grid-cols-3 gap-4 border-t border-gray-200 pt-4">
-              <div className="text-center group cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors">
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{member.groupNames?.length || 0}</p>
-                <p className="text-gray-600 font-medium text-xs sm:text-sm">Groups</p>
+            {/* Recent Activity */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Activity className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">Recent Activity</h3>
+                </div>
               </div>
-              
-              <div className="text-center group cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors">
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{member.followers?.length || 0}</p>
-                <p className="text-gray-600 font-medium text-xs sm:text-sm">Followers</p>
-              </div>
-              
-              <div className="text-center group cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-colors">
-                <p className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{member.following?.length || 0}</p>
-                <p className="text-gray-600 font-medium text-xs sm:text-sm">Following</p>
+
+              <div className="p-4">
+                {activityLoading ? (
+                  <div className="space-y-3">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="animate-pulse flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded"></div>
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded w-3/4 mb-1"></div>
+                          <div className="h-2 bg-gray-200 rounded w-1/2"></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {recentActivity.map((activity) => (
+                      <div key={activity.id} className="flex items-start space-x-3 p-2 rounded hover:bg-gray-50 transition-colors duration-200">
+                        <div className={`${activity.color} p-1.5 rounded flex-shrink-0`}>
+                          {activity.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-gray-900">
+                            {member.firstName} {activity.action}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-0.5 truncate">
+                            {activity.content}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            <Timer className="w-3 h-3 inline mr-1" />
+                            {formatTimeAgo(activity.timestamp)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+
+                    {recentActivity.length === 0 && (
+                      <div className="text-center py-6">
+                        <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-xs">No recent activity</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
 
-       {/* Main Content Area */}
-<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-  {/* Left Sidebar - About & Profile Info - Sticky */}
-  <div className="lg:col-span-3">
-    <div className="lg:sticky lg:top-6 space-y-6">
-      {/* About Section - Enhanced styling */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-        <div className="bg-gradient-to-r from-[#71be95] to-[#5fa080] p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <Info size={16} className="text-white" />
+          {/* Center Column: Posts Feed (Wider) */}
+          <div className="lg:col-span-6">
+            <div className="bg-[#0A3A4C] text-white py-3 px-4 rounded-t-lg mb-3">
+              <div className="flex items-center space-x-2">
+                <ListCollapse className="w-5 h-5" />
+                <h3 className="text-lg font-semibold">Posts</h3>
+              </div>
+              <p className="text-blue-100 text-sm mt-1">{member.firstName}'s latest updates</p>
             </div>
             <div>
-              <h3 className="font-bold text-white">About {member.firstName}</h3>
-              <p className="text-white/80 text-xs">Get to know them better</p>
+              <Feeed profilePage={true} entityType="posts" showCreatePost={false} showDeleteButton={true} userId={id} />
             </div>
           </div>
-        </div>
-        <div className="p-4">
-          <p className="text-gray-700 leading-relaxed text-sm">
-            {member.aboutMe || "🌟 This user hasn't shared their story yet. Every great story starts with a single step!"}
-          </p>
-        </div>
-      </div>
 
-      {/* Additional Info Card */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <Users size={16} className="text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-white">Profile Stats</h3>
-              <p className="text-white/80 text-xs">Activity overview</p>
-            </div>
-          </div>
-        </div>
-        <div className="p-4">
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 text-sm">Joined</span>
-              <span className="font-semibold text-gray-900 text-sm">
-                {member.createdAt ? new Date(member.createdAt).toLocaleDateString() : 'N/A'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 text-sm">Department</span>
-              <span className="font-semibold text-gray-900 text-sm">
-                {member.department || 'Not specified'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 text-sm">Batch</span>
-              <span className="font-semibold text-gray-900 text-sm">
-                {member.batch || 'Not specified'}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* Center - Feed Section - Enhanced but keeping your exact structure */}
-  <div className="lg:col-span-6">
-    <div className="flex justify-center flex-col items-center overflow-hidden">
-      <div className="bg-gradient-to-r rounded-t-2xl mb-3 from-[#0A3A4C] to-[#174873] p-4 sm:p-6 w-full shadow-lg">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-          <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-            <Users size={14} className="text-white" />
-          </div>
-          Recent Activity
-        </h2>
-        <p className="text-white/80 mt-1 text-xs sm:text-sm">Latest posts and updates</p>
-      </div>
-      <div className="w-full">
-        <Feeed profilePage={true} entityType="posts" showCreatePost={false} showDeleteButton={true} userId={id} />
-      </div>
-    </div>
-  </div>
-
-  {/* Right Sidebar - Work Experience & Actions - Sticky */}
-  <div className="lg:col-span-3">
-    <div className="lg:sticky lg:top-6 space-y-6">
-      {/* Enhanced Current Work Section - Better styling but same data */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-        <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <Briefcase size={16} className="text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-white">Current Role</h3>
-              <p className="text-white/80 text-xs">Professional journey</p>
-            </div>
-          </div>
-        </div>
-        <div className="p-4 space-y-4">
-          <div className="space-y-3">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#71be95] to-[#5fa080] rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                <Briefcase size={16} className="text-white" />
+          {/* Right Column: Work Experience & Profile Info */}
+          <div className="lg:col-span-3 space-y-6">
+            {/* Work Experience */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Briefcase className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">Current Role</h3>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="font-bold text-gray-900 mb-1 text-sm">
-                  {currentWork?.title || "🚀 Ready for new opportunities"}
-                </h4>
-                <p className="text-gray-600 text-sm">
-                  {currentWork?.companyName || "Looking for the perfect role"}
-                </p>
-              </div>
-            </div>
-            
-            {currentWork && (
-              <>
-                {currentWork.startMonth && currentWork.startYear && (
-                  <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
-                    <Calendar size={16} className="text-[#71be95]" />
-                    <span className="font-medium text-sm">
-                      {`${currentWork.startMonth} ${currentWork.startYear} - ${currentWork.endMonth}`}
-                    </span>
+
+              <div className="p-4">
+                {currentWork ? (
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-semibold text-gray-900 text-sm">
+                        {currentWork.title}
+                      </h4>
+                      <p className="text-gray-600 text-sm">
+                        {currentWork.companyName}
+                      </p>
+                    </div>
+                    
+                    {currentWork.location && (
+                      <div className="flex items-center gap-2 text-gray-600 text-xs">
+                        <MapPin className="w-4 h-4" />
+                        <span>{currentWork.location} • {currentWork.locationType}</span>
+                      </div>
+                    )}
+                    
+                    {currentWork.startMonth && (
+                      <div className="flex items-center gap-2 text-gray-600 text-xs">
+                        <Calendar className="w-4 h-4" />
+                        <span>{currentWork.startMonth} {currentWork.startYear} - Current</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <Briefcase className="w-8 h-8 text-gray-300 mx-auto mb-2" />
+                    <p className="text-gray-500 text-sm">No current work experience</p>
                   </div>
                 )}
                 
-                {currentWork.location && currentWork.locationType && (
-                  <div className="flex items-center gap-2 text-gray-600 bg-gray-50 rounded-lg p-3">
-                    <MapPin size={16} className="text-[#71be95]" />
-                    <span className="font-medium text-sm">
-                      {`${currentWork.location} • ${currentWork.locationType}`}
+                <Link
+                  to={`/home/members/${id}/experience`}
+                  className="mt-4 flex items-center justify-center w-full bg-[#71be95] hover:bg-[#5fa080] text-white rounded-md py-2 text-sm font-medium transition-colors duration-200"
+                >
+                  View Full Experience
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Profile Stats */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Users className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">Profile Info</h3>
+                </div>
+              </div>
+
+              <div className="p-4">
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Joined</span>
+                    <span className="font-medium text-gray-900">
+                      {member.createdAt ? new Date(member.createdAt).toLocaleDateString() : 'N/A'}
                     </span>
                   </div>
-                )}
-              </>
-            )}
-          </div>
-          
-          <Link
-            to={`/home/members/${id}/experience`}
-            className="group flex items-center justify-between w-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg p-3 font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/25"
-          >
-            <span className="text-sm">View Full Experience</span>
-            <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform duration-300" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Contact/Connect Section */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300">
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <UserPlus size={16} className="text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-white">Connect</h3>
-              <p className="text-white/80 text-xs">Build your network</p>
-            </div>
-          </div>
-        </div>
-        <div className="p-4 space-y-3">
-          <div className="text-center">
-            <p className="text-gray-600 text-sm mb-3">
-              Connect with {member.firstName} to expand your professional network
-            </p>
-            
-            {member.email && (
-              <a
-                href={`mailto:${member.email}`}
-                className="inline-flex items-center gap-2 w-full justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg p-2 font-medium transition-colors duration-200 mb-2"
-              >
-                <MapPin size={16} />
-                <span className="text-sm">Send Email</span>
-              </a>
-            )}
-            
-            <div className="text-xs text-gray-500 mt-2">
-              Member since {member.createdAt ? new Date(member.createdAt).getFullYear() : 'N/A'}
+                  
+                  {member.email && (
+                    <div className="pt-3 border-t border-gray-100">
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="flex items-center justify-center w-full bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md py-2 text-sm font-medium transition-colors duration-200"
+                      >
+                        Send Email
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-      </div>
-
-      {/* Custom Scrollbar Styles */}
-      <style jsx>{`
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: #71be95 transparent;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-          border-radius: 1px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #71be95, #5fa080);
-          border-radius: 1px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #5fa080, #4d8a66);
-        }
-      `}</style>
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <Loader2 className="w-6 h-6 text-[#71be95] animate-spin" />
+              <p className="text-gray-700 font-medium">Updating...</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

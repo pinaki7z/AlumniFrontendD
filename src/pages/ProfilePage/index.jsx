@@ -4,17 +4,19 @@ import picture from "../../images/d-cover.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
 import axios from 'axios';
+import profilePic from "../../images/profilepic.jpg" // Default profile picture
+
 import { toast } from 'react-toastify';
-import { 
-  Plus, 
-  CheckCircle, 
-  Trash2, 
-  Settings, 
-  Camera, 
-  MapPin, 
-  Building, 
-  Users, 
-  UserPlus, 
+import {
+  Plus,
+  CheckCircle,
+  Trash2,
+  Settings,
+  Camera,
+  MapPin,
+  Building,
+  Users,
+  UserPlus,
   UserCheck,
   ExternalLink,
   Briefcase,
@@ -40,10 +42,7 @@ import {
   Zap,
   Timer,
   ListCollapse,
-  Edit,
-  Mail,
-  Phone,
-  Linkedin
+  Users2
 } from "lucide-react";
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
@@ -76,8 +75,8 @@ const ProfilePage = () => {
   });
   const completionPct = Math.round((completed / totalProps) * 100);
 
-  useEffect(() => { 
-    fetchWorkExperiences(); 
+  useEffect(() => {
+    fetchWorkExperiences();
     fetchUserVerification();
     fetchRecentActivity();
   }, []);
@@ -88,8 +87,8 @@ const ProfilePage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setWorkExperiences(data);
-    } catch (err) { 
-      console.error(err); 
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -145,7 +144,7 @@ const ProfilePage = () => {
           color: 'text-gray-600 bg-gray-50'
         }
       ];
-      
+
       setRecentActivity(activities);
     } catch (err) {
       console.error('Error fetching recent activity:', err);
@@ -195,7 +194,7 @@ const ProfilePage = () => {
     }
 
     const currentDate = new Date();
-    
+
     if (userVerification.accountDeleted) {
       return {
         status: 'account-deleted',
@@ -203,7 +202,7 @@ const ProfilePage = () => {
         type: 'error'
       };
     }
-    
+
     if (userVerification.validated) {
       return {
         status: 'validated',
@@ -211,7 +210,7 @@ const ProfilePage = () => {
         type: 'success'
       };
     }
-    
+
     if (userVerification.ID && userVerification.idApprovalStatus === 'pending') {
       return {
         status: 'id-pending',
@@ -220,7 +219,7 @@ const ProfilePage = () => {
         uploadedAt: userVerification.idUploadedAt
       };
     }
-    
+
     if (userVerification.ID && userVerification.idApprovalStatus === 'rejected') {
       return {
         status: 'id-rejected',
@@ -228,7 +227,7 @@ const ProfilePage = () => {
         type: 'error'
       };
     }
-    
+
     if (userVerification.expirationDate && new Date(userVerification.expirationDate) < currentDate) {
       return {
         status: 'expired',
@@ -237,7 +236,7 @@ const ProfilePage = () => {
         expirationDate: userVerification.expirationDate
       };
     }
-    
+
     if (userVerification.expirationDate) {
       const days = Math.ceil((new Date(userVerification.expirationDate) - currentDate) / (1000 * 3600 * 24));
       if (days > 0) {
@@ -250,7 +249,7 @@ const ProfilePage = () => {
         };
       }
     }
-    
+
     return {
       status: 'not-validated',
       message: 'Please upload your ID to validate your account.',
@@ -350,12 +349,12 @@ const ProfilePage = () => {
               </>
             )}
           </p>
-          
+
           {userVerification?.ID && (
             <div className="mt-2">
-              <a 
-                href={userVerification.ID} 
-                target="_blank" 
+              <a
+                href={userVerification.ID}
+                target="_blank"
                 rel="noopener noreferrer"
                 className={`inline-flex items-center gap-1 text-xs ${bannerStyle.textColor} underline hover:no-underline`}
                 onClick={(e) => e.stopPropagation()}
@@ -373,7 +372,7 @@ const ProfilePage = () => {
     if (bannerStyle.clickable) {
       return (
         <div className="mx-4 mt-4 mb-6">
-          <div 
+          <div
             className={`${bannerStyle.bg} border rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow duration-200`}
             onClick={() => navigate('/home/profile/profile-settings')}
           >
@@ -430,8 +429,8 @@ const ProfilePage = () => {
       const { data } = await axios.put(url, { userId: profile._id });
       dispatch(updateProfile(data.user));
       toast.success(data.message);
-    } catch (err) { 
-      toast.error(err.response?.data?.message || 'Delete failed'); 
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Delete failed');
     }
   };
 
@@ -442,9 +441,9 @@ const ProfilePage = () => {
       2: { label: "ALUMNI", color: "bg-[#0A3A4C] text-white", icon: <Users size={14} /> },
       3: { label: "STUDENT", color: "bg-[#71be95] text-white", icon: <Users size={14} /> }
     };
-    
+
     const badge = badges[profile.profileLevel] || badges[2];
-    
+
     return (
       <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-md ${badge.color} font-medium text-xs`}>
         {badge.icon}
@@ -453,149 +452,205 @@ const ProfilePage = () => {
     );
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Verification Banner */}
-      {renderVerificationBanner()}
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        {/* Main Profile Card - LinkedIn Style */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 overflow-hidden">
-          {/* Cover Photo Section */}
-          <div className="relative">
-            <div 
-              className="h-48 sm:h-60 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-cover bg-center relative"
-              style={{ 
-                backgroundImage: profile.coverPicture ? `url(${profile.coverPicture})` : 'none',
-                backgroundBlendMode: profile.coverPicture ? 'overlay' : 'normal'
-              }}
-            >
-              {/* Cover Actions */}
-              <div className="absolute top-4 right-4 flex space-x-2">
-                <button 
-                  onClick={() => document.getElementById('coverInput').click()}
+  const [expanded, setExpanded] = useState(false);
+
+
+  const lines = profile.aboutMe.split('\n');
+  const displayLines = expanded ? lines : lines.slice(0, 2);
+
+  return (
+    <div className="min-h-screen bg-gray-50 md:p-4 py-2">
+      <div className="mx-auto max-w-7xl">
+        {/* Verification Banner */}
+        {renderVerificationBanner()}
+
+        {/* Cover Section */}
+        <div className="relative mx-2 md:mx-4 rounded-lg overflow-hidden shadow-md">
+          <div
+            className="h-48 sm:h-[260px] bg-cover bg-center relative"
+            style={{ backgroundImage: `url(${profile.coverPicture || picture})` }}
+          >
+            <div className="absolute inset-0 bg-opacity-30" />
+
+            {/* Cover Actions */}
+            <div className="absolute top-4 left-4 right-4 flex justify-between">
+              <button
+                onClick={() => handleDelete('cover')}
+                className="bg-white hover:bg-gray-50 p-2 rounded-md shadow-sm transition-colors duration-200"
+                title="Delete cover photo"
+              >
+                <Trash2 className="w-4 h-4 text-gray-600" />
+              </button>
+
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => navigate('/home/profile/profile-settings')}
                   className="bg-white hover:bg-gray-50 px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2"
                 >
-                  <Camera className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">Edit cover</span>
+                  <Settings className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-700 hidden sm:inline">Settings</span>
+                </button>
+
+                <button
+                  onClick={() => document.getElementById('coverInput').click()}
+                  className="bg-[#71be95] hover:bg-[#5fa080] px-3 py-2 rounded-md shadow-sm transition-colors duration-200 flex items-center space-x-2 text-white"
+                >
+                  <Camera className="w-4 h-4" />
+                  <span className="text-sm font-medium hidden sm:inline">Edit Cover</span>
                 </button>
               </div>
             </div>
-            
-            <input 
-              type="file" 
-              id="coverInput" 
-              className="hidden" 
-              onChange={e => handleFileChange(e, 'coverPicture')} 
-              accept="image/*"
-            />
           </div>
 
-          {/* Profile Info Section */}
-          <div className="relative px-6 pb-6">
-            {/* Profile Picture */}
-            <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
-              <div className="relative -mt-16 sm:-mt-20 mb-4 sm:mb-0">
-                <div className="relative group">
-                  <img 
-                    src={profile.profilePicture || "/images/profilepic.jpg"} 
-                    alt="profile" 
-                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-white object-cover shadow-lg" 
-                  />
-                  
-                  <input 
-                    type="file" 
-                    id="profileInput" 
-                    className="hidden" 
-                    onChange={e => handleFileChange(e, 'profilePicture')} 
-                    accept="image/*"
-                  />
-                  
-                  <button 
-                    onClick={() => document.getElementById('profileInput').click()}
-                    className="absolute bottom-2 right-2 bg-white hover:bg-gray-50 p-2 rounded-full shadow-md border border-gray-200 transition-colors duration-200"
-                    title="Change profile picture"
-                  >
-                    <Camera className="w-4 h-4 text-gray-600" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Profile Details */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-                  <div className="flex-1 min-w-0">
-                    {/* Name and Verification */}
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
-                        {profile.firstName} {profile.lastName}
-                      </h1>
-                      {userVerification?.validated && (
-                        <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0" />
-                      )}
-                    </div>
-
-                    {/* Role Badge */}
-                    <div className="mb-3">
-                      {getRoleBadge()}
-                    </div>
-
-                    {/* Work/Education Info */}
-                    <div className="space-y-1 mb-4">
-                      {findCurrentWorkingAt() !== 'No current work experience' && (
-                        <p className="text-gray-700 font-medium flex items-center">
-                          <Briefcase className="w-4 h-4 mr-2 text-gray-500" />
-                          {findCurrentWorkingAt()}
-                        </p>
-                      )}
-                      
-                      {(profile.country || profile.city) && (
-                        <p className="text-gray-600 flex items-center">
-                          <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                          {[profile.city, profile.country].filter(Boolean).join(', ')}
-                        </p>
-                      )}
-
-                      {/* Connections count */}
-                      <p className="text-sm text-[#71BE95] font-medium">
-                        {profile.followers?.length || 0} followers • {profile.following?.length || 0} following
-                      </p>
-                    </div>
-
-                    {/* About Me Preview */}
-                    {profile.aboutMe && (
-                      <p className="text-gray-700 text-sm leading-relaxed line-clamp-2 mb-4">
-                        {profile.aboutMe}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3 mt-4 sm:mt-0">
-                    <button 
-                      onClick={() => navigate('/home/profile/profile-settings')}
-                      className="flex items-center space-x-2 px-4 py-2 bg-[#71BE95] text-white rounded-md hover:bg-[#5fa080] transition-colors duration-200"
-                    >
-                      <Edit className="w-4 h-4" />
-                      <span className="text-sm font-medium">Edit profile</span>
-                    </button>
-                    
-                    <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors duration-200">
-                      <Share2 className="w-4 h-4" />
-                      <span className="text-sm font-medium">Share</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <input
+            type="file"
+            id="coverInput"
+            className="hidden"
+            onChange={e => handleFileChange(e, 'coverPicture')}
+            accept="image/*"
+          />
         </div>
 
-        
+        {/* Profile Card */}
+        <div className="relative mx-2 md:mx-4 bg-white rounded-b-lg shadow-md -mt-16 sm:-mt-10 pt-10 sm:pt-10">
+          {/* Profile Picture */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-[-80%] sm:-translate-y-[80%]">
+            <div className="relative group">
+              <img
+                src={profile.profilePicture || profilePic}
+                alt="profile"
+                className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] rounded-full border-4 border-white object-cover shadow-lg"
+              />
+
+              <button
+                onClick={() => handleDelete('profile')}
+                className="absolute -top-1 -left-1 bg-red-500 hover:bg-red-600 p-1 rounded-md shadow-sm transition-colors duration-200"
+                title="Delete profile picture"
+              >
+                <Trash2 className="w-3 h-3 text-white" />
+              </button>
+
+              <input
+                type="file"
+                id="profileInput"
+                className="hidden"
+                onChange={e => handleFileChange(e, 'profilePicture')}
+                accept="image/*"
+              />
+
+              <button
+                onClick={() => document.getElementById('profileInput').click()}
+                className="absolute -bottom-1 -right-1 bg-[#71be95] hover:bg-[#5fa080] p-1 rounded-md shadow-sm transition-colors duration-200"
+                title="Change profile picture"
+              >
+                <Camera className="w-3 h-3 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Profile Info */}
+          <div className="text-center px-6 sm:px-8">
+            <div className="flex items-center justify-center space-x-3 mb-3">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                {profile.firstName} {profile.lastName}
+              </h2>
+              {userVerification?.validated && (
+                <CheckCircle className="w-6 h-6 text-blue-500" />
+              )}
+            </div>
+
+            <div className="flex justify-center mb-4">
+              {getRoleBadge()}
+            </div>
+
+
+          </div>
+
+         {/* Stats */}
+<div className="flex justify-center gap-3 pb-4">
+  {profile.followers?.length > 0 && (
+    <Link 
+      to={`/home/profile/${profile._id}/followers`} 
+      className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center space-x-2"
+    >
+     <span className="hidden md:inline"> <Users className="w-4 h-4" /></span>
+      <span>{profile.followers.length} Followers</span>
+    </Link>
+  )}
+  {profile.following?.length > 0 && (
+    <Link 
+      to={`/home/profile/${profile._id}/following`} 
+      className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center space-x-2"
+    >
+       <span className="hidden md:inline"><UserCheck className="w-4 h-4" /></span>
+      <span>{profile.following.length} Following</span>
+    </Link>
+  )}
+  {profile.groupNames?.length > 0 && (
+    <Link 
+      to={`/home/groups/${profile._id}/joined-groups`} 
+      className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-full text-[11px] md:text-sm hover:bg-gray-200 transition-colors duration-200 flex items-center space-x-2"
+    >
+       <span className="hidden md:inline"><Users2 className="w-4 h-4" /></span>
+      <span>{profile.groupNames.length} Groups</span>
+    </Link>
+  )}
+</div>
+        </div>
+
         {/* 3-Column Main Content Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8  pb-8">
+
+
+
+
+
           {/* Left Column: Recent Activity */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 space-y-6">
+            {/* About Me */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gray-50 border-b border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Info className="w-5 h-5 text-gray-600" />
+                  <h3 className="text-sm font-semibold text-gray-900">About Me</h3>
+                </div>
+              </div>
+
+              <div className="p-4 text-xs">
+                <div className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm ">
+                  {displayLines.map((line, index) => (
+                    <p key={index} className="mb-2 whitespace-pre-line">
+                      {line}
+                    </p>
+                  ))}
+
+                  {lines.length > 5 && (
+                    <span
+                      className="text-[#71be95] cursor-pointer hover:text-[#5fa080] transition-colors duration-200"
+                      onClick={() => setExpanded(!expanded)}
+                    >
+                      {expanded ? 'Show less' : '...Read more'}
+                    </span>
+                  )}
+                </div>
+                {profile.linkedIn ? (
+                  <a
+                    href={profile.linkedIn}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-2 text-[#71be95] hover:text-[#5fa080] transition-colors duration-200 text-sm font-medium"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    <span>LinkedIn Profile</span>
+                  </a>
+                ) :
+                  !profile.aboutMe ? (
+                    <p className="text-gray-500 text-sm italic">User has not updated their bio</p>
+                  ) : null}
+              </div>
+            </div>
+
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gray-50 border-b border-gray-200 p-4">
                 <div className="flex items-center space-x-2">
@@ -603,7 +658,7 @@ const ProfilePage = () => {
                   <h3 className="text-sm font-semibold text-gray-900">Recent Activity</h3>
                 </div>
               </div>
-              
+
               <div className="p-4">
                 {activityLoading ? (
                   <div className="space-y-3">
@@ -638,7 +693,7 @@ const ProfilePage = () => {
                         </div>
                       </div>
                     ))}
-                    
+
                     {recentActivity.length === 0 && (
                       <div className="text-center py-6">
                         <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
@@ -652,17 +707,17 @@ const ProfilePage = () => {
           </div>
 
           {/* Center Column: Posts Feed (Wider) */}
-          <div className="lg:col-span-6">
-              <div className="bg-[#0A3A4C] text-white py-3 px-4 rounded-t-lg">
-                <div className="flex items-center space-x-2">
-                  <ListCollapse className="w-5 h-5" />
-                  <h3 className="text-lg font-semibold">Posts</h3>
-                </div>
-                <p className="text-blue-100 text-sm mt-1">Share your thoughts and updates</p>
+          <div className="lg:col-span-6 ">
+            <div className="bg-[#0A3A4C] text-white py-3 px-4 rounded-t-lg mb-3">
+              <div className="flex items-center space-x-2">
+                <ListCollapse className="w-5 h-5" />
+                <h3 className="text-lg font-semibold">Posts</h3>
               </div>
-              <div className="">
-                <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
-              </div>
+              <p className="text-blue-100 text-sm mt-1">Share your thoughts and updates</p>
+            </div>
+            <div className="">
+              <Feeed entityType='posts' showCreatePost showDeleteButton userId={member._id} />
+            </div>
           </div>
 
           {/* Right Column: Profile Info & Actions */}
@@ -675,20 +730,20 @@ const ProfilePage = () => {
                   <h3 className="text-sm font-semibold text-gray-900">Profile Completion</h3>
                 </div>
               </div>
-              
+
               <div className="p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-medium text-gray-700">Progress</span>
                   <span className="text-sm font-bold text-[#71be95]">{completionPct}%</span>
                 </div>
-                
+
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                  <div 
-                    className="bg-[#71be95] h-2 rounded-full transition-all duration-500" 
-                    style={{ width: `${completionPct}%` }} 
+                  <div
+                    className="bg-[#71be95] h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${completionPct}%` }}
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   {[
                     { key: 'profilePicture', label: 'Profile Picture', link: '/home/profile/profile-settings', icon: Camera },
@@ -698,15 +753,15 @@ const ProfilePage = () => {
                     { key: 'city', label: 'City', link: '/home/profile/profile-settings', icon: MapPin }
                   ].map((item, i) => {
                     const isCompleted = item.custom ? profile.workExperience?.length : profile[item.key];
-                    const displayValue = item.custom ? findCurrentWorkingAt() : 
+                    const displayValue = item.custom ? findCurrentWorkingAt() :
                       item.key === 'firstName' ? profile.firstName : profile[item.key];
-                    
+
                     return (
                       <div key={i} className="flex items-center space-x-3">
                         <div className={`p-2 rounded ${isCompleted ? 'bg-green-50' : 'bg-gray-50'}`}>
                           <item.icon className={`w-4 h-4 ${isCompleted ? 'text-green-600' : 'text-gray-400'}`} />
                         </div>
-                        
+
                         <div className="flex-1 min-w-0">
                           {isCompleted ? (
                             <div>
@@ -714,15 +769,15 @@ const ProfilePage = () => {
                               <span className="text-xs text-gray-500 truncate block">{displayValue}</span>
                             </div>
                           ) : (
-                            <Link 
-                              to={item.link} 
+                            <Link
+                              to={item.link}
                               className="text-xs font-medium text-[#71be95] hover:text-[#5fa080] transition-colors duration-200"
                             >
                               Add your {item.label.toLowerCase()}
                             </Link>
                           )}
                         </div>
-                        
+
                         {isCompleted && (
                           <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                         )}
@@ -733,35 +788,10 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* About Me */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="bg-gray-50 border-b border-gray-200 p-4">
-                <div className="flex items-center space-x-2">
-                  <Info className="w-5 h-5 text-gray-600" />
-                  <h3 className="text-sm font-semibold text-gray-900">About Me</h3>
-                </div>
-              </div>
-              
-              <div className="p-4">
-                {profile.linkedIn ? (
-                  <a 
-                    href={profile.linkedIn} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="inline-flex items-center space-x-2 text-[#71be95] hover:text-[#5fa080] transition-colors duration-200 text-sm font-medium"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>LinkedIn Profile</span>
-                  </a>
-                ) : (
-                  <p className="text-gray-500 text-sm italic">User has not updated their bio</p>
-                )}
-              </div>
-            </div>
 
             {/* Work Experience */}
-            <Link 
-              to='/home/profile/workExperience' 
+            <Link
+              to='/home/profile/workExperience'
               className="block bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200"
             >
               <div className="p-4">
@@ -788,7 +818,7 @@ const ProfilePage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 shadow-lg">
             <div className="flex items-center space-x-3">
-              <Loader2 className="w-6 h-6 text-[#71BE95] animate-spin" />
+              <Loader2 className="w-6 h-6 text-[#71be95] animate-spin" />
               <p className="text-gray-700 font-medium">Uploading...</p>
             </div>
           </div>
