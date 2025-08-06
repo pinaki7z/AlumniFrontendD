@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { 
-  Newspaper, Calendar, TrendingUp, Users, Award, MapPin, Clock, 
-  Heart, MessageCircle, Share2, Eye, ChevronRight, Star, 
+import {
+  Newspaper, Calendar, TrendingUp, Users, Award, MapPin, Clock,
+  Heart, MessageCircle, Share2, Eye, ChevronRight, Star,
   Briefcase, GraduationCap, Building, Bell, Search, Filter,
   BookOpen, Trophy, UserCheck, Globe, ArrowRight, ExternalLink,
   Play, Image as ImageIcon, FileText, Zap, Plus, Edit, Loader2
@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 const NewsUpdatesPage = () => {
   const navigate = useNavigate();
   const profile = useSelector(state => state.profile);
-  
+
   const [activeFilter, setActiveFilter] = useState('all');
   const [likedNews, setLikedNews] = useState(new Set());
   const [newsData, setNewsData] = useState([]);
@@ -32,11 +32,11 @@ const NewsUpdatesPage = () => {
         page: page.toString(),
         limit: '20'
       });
-      
+
       if (category && category !== 'all') {
         params.append('category', category);
       }
-      
+
       if (searchQuery) {
         params.append('search', searchQuery);
       }
@@ -94,9 +94,9 @@ const NewsUpdatesPage = () => {
           newLiked.delete(newsId);
         }
         setLikedNews(newLiked);
-        
+
         // Update the news data with new like count
-        setNewsData(prev => prev.map(news => 
+        setNewsData(prev => prev.map(news =>
           news._id === newsId ? { ...news, likes: result.likes } : news
         ));
       }
@@ -109,14 +109,14 @@ const NewsUpdatesPage = () => {
   // Fetch like statuses for current user
   const fetchLikeStatuses = async () => {
     if (!profile._id || newsData.length === 0) return;
-    
+
     try {
       const likePromises = newsData.map(news =>
         fetch(`${process.env.REACT_APP_API_URL}/api/news/${news._id}/like-status/${profile._id}`)
           .then(res => res.json())
           .then(result => ({ newsId: news._id, isLiked: result.isLiked }))
       );
-      
+
       const likeResults = await Promise.all(likePromises);
       const newLiked = new Set();
       likeResults.forEach(({ newsId, isLiked }) => {
@@ -154,24 +154,34 @@ const NewsUpdatesPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3">
         {/* Page Header */}
         <div className="mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">News & Updates</h1>
-              <p className="text-gray-600">Stay connected with the latest happenings in our alumni community</p>
+
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                <Building size={16} className="sm:size-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+                  News & Updates
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600">
+                  Stay connected with the latest happenings in our alumni community
+                </p>
+              </div>
             </div>
             <button
               onClick={() => navigate('/home/news/create')}
-              className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 flex items-center gap-2 shadow-lg"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
             >
               <Plus size={20} />
               <span className="hidden sm:inline">Create News</span>
               <span className="sm:hidden">Create</span>
             </button>
           </div>
-          
+
           {/* Quick Actions */}
           <div className="flex flex-wrap gap-2">
             <button
@@ -181,7 +191,7 @@ const NewsUpdatesPage = () => {
               <Edit size={16} />
               Drafts
             </button>
-            <button 
+            <button
               onClick={() => navigate('/home/news/analytics')}
               className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm"
             >
@@ -207,11 +217,11 @@ const NewsUpdatesPage = () => {
 
         {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
+
           {/* Left Sidebar */}
           <div className="lg:col-span-3">
-            <LeftSidebar 
-              activeFilter={activeFilter} 
+            <LeftSidebar
+              activeFilter={activeFilter}
               setActiveFilter={setActiveFilter}
               categories={categories}
               quickStats={quickStats}
@@ -220,7 +230,7 @@ const NewsUpdatesPage = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-6">
-            <MainContent 
+            <MainContent
               newsData={newsData}
               loading={loading}
               likedNews={likedNews}
@@ -255,19 +265,17 @@ const LeftSidebar = ({ activeFilter, setActiveFilter, categories, quickStats }) 
             <button
               key={category.id}
               onClick={() => setActiveFilter(category.id)}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${
-                activeFilter === category.id
+              className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${activeFilter === category.id
                   ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
                   : 'text-gray-700 hover:bg-gray-100'
-              }`}
+                }`}
             >
               <category.icon size={16} />
               <span className="flex-1 text-left text-sm font-medium">{category.label}</span>
-              <span className={`text-xs px-2 py-1 rounded-full ${
-                activeFilter === category.id 
-                  ? 'bg-white/20 text-white' 
+              <span className={`text-xs px-2 py-1 rounded-full ${activeFilter === category.id
+                  ? 'bg-white/20 text-white'
                   : 'bg-gray-200 text-gray-600'
-              }`}>
+                }`}>
                 {category.count}
               </span>
             </button>
@@ -284,11 +292,10 @@ const LeftSidebar = ({ activeFilter, setActiveFilter, categories, quickStats }) 
         <div className="space-y-4">
           {quickStats.map((stat, index) => (
             <div key={index} className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                stat.color === 'text-blue-600' ? 'bg-blue-100' :
-                stat.color === 'text-green-600' ? 'bg-green-100' :
-                stat.color === 'text-red-600' ? 'bg-red-100' : 'bg-purple-100'
-              }`}>
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${stat.color === 'text-blue-600' ? 'bg-blue-100' :
+                  stat.color === 'text-green-600' ? 'bg-green-100' :
+                    stat.color === 'text-red-600' ? 'bg-red-100' : 'bg-purple-100'
+                }`}>
                 <stat.icon size={16} className={stat.color} />
               </div>
               <div>
@@ -309,8 +316,8 @@ const MainContent = ({ newsData, loading, likedNews, toggleLike, pagination, onL
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
@@ -361,7 +368,7 @@ const MainContent = ({ newsData, loading, likedNews, toggleLike, pagination, onL
               <span className="inline-block bg-[#0A3A4C] px-3 py-1 rounded-full text-xs font-medium mb-2">
                 Featured
               </span>
-              <h2 
+              <h2
                 className="text-xl sm:text-2xl font-bold mb-2 cursor-pointer hover:underline"
                 onClick={() => navigate(`/home/news/${newsData[0]._id}`)}
               >
@@ -402,7 +409,7 @@ const MainContent = ({ newsData, loading, likedNews, toggleLike, pagination, onL
       {/* Load More */}
       {pagination.current < pagination.total && (
         <div className="text-center py-8">
-          <button 
+          <button
             onClick={onLoadMore}
             className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 flex items-center gap-2 mx-auto"
           >
@@ -431,12 +438,12 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/home/news/${news._id}`);
-      
+
       // Update share count
       await fetch(`${process.env.REACT_APP_API_URL}/api/news/${news._id}/share`, {
         method: 'PATCH'
       });
-      
+
       toast.success('Link copied to clipboard!');
     } catch (error) {
       console.error('Error sharing:', error);
@@ -466,7 +473,7 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
             </div>
           </div>
         </div>
-        
+
         <div className="p-4 sm:p-6 flex-1">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-sm text-gray-600">{formatDate(news.publishedAt || news.createdAt)}</span>
@@ -475,16 +482,16 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
             <span className="text-gray-400">•</span>
             <span className="text-sm text-gray-600">by {news.authorName}</span>
           </div>
-          
-          <h2 
+
+          <h2
             className="text-lg sm:text-xl font-bold text-gray-900 mb-2 hover:text-[#0A3A4C] cursor-pointer transition-colors duration-200"
             onClick={() => navigate(`/home/news/${news._id}`)}
           >
             {news.title}
           </h2>
-          
+
           <p className="text-gray-600 mb-4 line-clamp-2">{news.subtitle || news.metaDescription}</p>
-          
+
           <div className="flex flex-wrap gap-2 mb-4">
             {news.tags?.slice(0, 3).map((tag, index) => (
               <span
@@ -495,7 +502,7 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
               </span>
             ))}
           </div>
-          
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <span className="flex items-center gap-1">
@@ -507,21 +514,20 @@ const NewsCard = ({ news, isLiked, onToggleLike, formatDate, getTypeIcon }) => {
                 {news.comments?.length || 0}
               </span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={onToggleLike}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors duration-200 ${
-                  isLiked 
-                    ? 'bg-red-100 text-red-700' 
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition-colors duration-200 ${isLiked
+                    ? 'bg-red-100 text-red-700'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 <Heart size={14} className={isLiked ? 'fill-current' : ''} />
                 <span className="text-sm">{news.likes || 0}</span>
               </button>
-              
-              <button 
+
+              <button
                 onClick={handleShare}
                 className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
               >

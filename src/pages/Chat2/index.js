@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import socket from "../../socket";
+import {useSocket} from "../../contexts/SocketContext";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Send, MoreVertical, Phone, Video } from "lucide-react";
 
 export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserData }) {
+  const socket = useSocket();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [onlineUsers, setOnline] = useState([]);

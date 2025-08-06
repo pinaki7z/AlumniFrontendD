@@ -268,7 +268,7 @@ const CreateNewsPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3">
         
         {/* Header */}
         <div className="mb-6">

@@ -4,6 +4,7 @@ import socket from "../../socket";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Search, MessageCircle, Users as UsersIcon } from "lucide-react";
+import profilePic from "../../images/profilepic.png" // Default profile picture
 
 export default function UserList({ currentUserId, selectedUserId, onSelectUser, setCurrentSelectedUserData }) {
   const navigate = useNavigate();
@@ -235,7 +236,7 @@ export default function UserList({ currentUserId, selectedUserId, onSelectUser, 
                   {/* Profile Image */}
                   <div className="relative flex-shrink-0">
                     <img
-                      src={u.profilePicture || '/images/profilepic.png'}
+                      src={u.profilePicture || profilePic}
                       alt={`${u.firstName} ${u.lastName}`}
                       className="w-12 h-12 rounded-full object-cover border-2 border-gray-100"
                     />

@@ -127,7 +127,7 @@ const SideWidgets = () => {
       {/* Profile Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Cover Background */}
-        <div className="h-16 bg-gradient-to-r from-[#0A3A4C] to-[#174873]"></div>
+        <div className="h-[80px] bg-gradient-to-r from-[#0A3A4C] to-[#174873]"></div>
         
         {/* Profile Content */}
         <div className="relative px-4 pb-4">
@@ -137,7 +137,7 @@ const SideWidgets = () => {
               <img 
                 src={profile.profilePicture || profilepic} 
                 alt="Profile" 
-                className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-lg"
+                className="w-[80px] h-[80px] rounded-full object-cover border-4 border-white shadow-lg"
               />
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-400 border-2 border-white rounded-full"></div>
             </div>

@@ -264,7 +264,7 @@ function NotificationCenterPage() {
           <h2 className="text-2xl font-bold text-[#0A3A4C]">Notification Center</h2>
           
           {/* Connection status indicator */}
-          <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+          {/* <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
             isConnected 
               ? 'bg-green-100 text-green-700' 
               : 'bg-red-100 text-red-700'
@@ -273,7 +273,7 @@ function NotificationCenterPage() {
               isConnected ? 'bg-green-500' : 'bg-red-500'
             }`}></div>
             {isConnected ? 'Live' : 'Offline'}
-          </div>
+          </div> */}
         </div>
         
         <div className="flex items-center gap-2">
