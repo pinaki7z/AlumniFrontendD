@@ -110,7 +110,7 @@ const LeftSidebar = ({ onNavigate, isMobile = false, isExpanded = false }) => {
     // const showFullContent = true;
     return (
         <div 
-            className={`h-full bg-gradient-to-b from-[#0A3A4C] to-[#174873] text-white flex flex-col transition-all duration-300 ease-in-out ${
+            className={`h-full dynamic-site-bg-2 text-white flex flex-col transition-all duration-300 ease-in-out ${
                 isMobile 
                     ? 'w-72' 
                     : showFullContent 

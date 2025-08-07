@@ -43,7 +43,7 @@ export default function V2PhotoGallery() {
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r from-[#0A3A4C] to-[#174873] flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg dynamic-site-bg flex items-center justify-center">
               <Camera size={18} className="text-white" />
             </div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">

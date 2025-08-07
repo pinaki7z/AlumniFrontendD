@@ -154,7 +154,7 @@ const LoginPage = ({ handleLogin }) => {
         <div className="w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/20">
           <div className="text-center space-y-2 mb-6">
             <h1 className="text-lg font-medium text-gray-800">Welcome Back To</h1>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold dynamic-site-bg bg-clip-text text-transparent">
               ALUMNIFY
             </h2>
           </div>
@@ -320,7 +320,7 @@ const LoginPage = ({ handleLogin }) => {
                 {/* Header */}
                 <div className="text-center space-y-2">
                   <h1 className="text-xl font-medium text-gray-800">Welcome Back To</h1>
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold dynamic-site-bg bg-clip-text text-transparent">
                     ALUMNIFY
                   </h2>
                   <p className="text-gray-600 text-sm">Sign in to continue your journey</p>

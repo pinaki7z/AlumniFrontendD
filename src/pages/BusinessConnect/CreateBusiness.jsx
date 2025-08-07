@@ -792,7 +792,7 @@ const CreateBusiness = () => {
           
           <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
             <div 
-              className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full transition-all duration-300"
+              className="dynamic-site-bg h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -803,7 +803,7 @@ const CreateBusiness = () => {
               <div key={step.id} className="flex items-center">
                 <div className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-colors duration-200 ${
                   currentStep >= step.id 
-                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white' 
+                    ? 'dynamic-site-bg text-white' 
                     : 'bg-gray-200 text-gray-500'
                 }`}>
                   {currentStep > step.id ? <CheckCircle size={16} /> : step.id}
@@ -816,7 +816,7 @@ const CreateBusiness = () => {
                 </div>
                 {index < steps.length - 1 && (
                   <div className={`w-8 sm:w-16 h-px mx-2 sm:mx-4 ${
-                    currentStep > step.id ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873]' : 'bg-gray-200'
+                    currentStep > step.id ? 'dynamic-site-bg' : 'bg-gray-200'
                   }`} />
                 )}
               </div>
@@ -852,7 +852,7 @@ const CreateBusiness = () => {
           {currentStep < 4 ? (
             <button
               onClick={handleNext}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
             >
               <span>Next</span>
               <ArrowRight size={16} />
@@ -861,7 +861,7 @@ const CreateBusiness = () => {
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

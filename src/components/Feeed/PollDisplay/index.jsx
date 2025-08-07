@@ -224,7 +224,7 @@ const PollDisplay = ({ poll, userId, userData }) => {
               className={`px-6 py-2 rounded-lg font-medium text-sm transition-all ${
                 isSubmitting
                   ? 'bg-gray-300 cursor-not-allowed text-gray-500'
-                  : 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-lg text-white'
+                  : 'dynamic-site-bg hover:shadow-lg text-white'
               }`}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Vote'}

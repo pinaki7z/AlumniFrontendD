@@ -593,7 +593,7 @@ function EventModal(props) {
       
       <div className="relative bg-white rounded-lg sm:rounded-xl shadow-2xl max-w-2xl w-full max-h-[95vh] overflow-hidden">
         {/* Header - Mobile optimized */}
-        <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-3 sm:p-4">
+        <div className="dynamic-site-bg p-3 sm:p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -669,7 +669,7 @@ function EventModal(props) {
             {currentStep < steps.length ? (
               <button
                 onClick={() => setCurrentStep(prev => prev + 1)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
               >
                 <span>Next</span>
                 <ArrowRight size={14} />
@@ -678,7 +678,7 @@ function EventModal(props) {
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
               >
                 {loading ? (
                   <>
@@ -742,7 +742,7 @@ function EventDetailsModal({ event, onClose, onEdit, onDelete, profile, attendee
       
       <div className="relative bg-white rounded-lg sm:rounded-xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-3 sm:p-4">
+        <div className="dynamic-site-bg p-3 sm:p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-lg flex items-center justify-center">
@@ -898,7 +898,7 @@ function EventDetailsModal({ event, onClose, onEdit, onDelete, profile, attendee
                 <div className="space-y-2">
                   <button
                     onClick={onEdit}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                   >
                     <Edit size={14} />
                     <span>Edit Event</span>
@@ -993,7 +993,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view }) => {
       <div className="flex items-center gap-2">
         <button
           onClick={goToCurrent}
-          className="px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+          className="px-3 py-1.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
         >
           Today
         </button>
@@ -1004,7 +1004,7 @@ const CustomToolbar = ({ date, onNavigate, onView, view }) => {
               onClick={() => onView(v)}
               className={`px-2 py-1 rounded text-xs font-medium transition-colors duration-200 ${
                 view === v
-                  ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                  ? 'dynamic-site-bg text-white'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
@@ -1273,7 +1273,7 @@ function Events() {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <CalendarIcon size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -1321,7 +1321,7 @@ function Events() {
                   setIsEditing(false);
                   setSelectedEvent(null);
                 }}
-                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
               >
                 <Plus size={16} />
                 <span>Create Event</span>
@@ -1351,7 +1351,7 @@ function Events() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                className="flex items-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
               >
                 <Filter size={14} />
                 <span>Filters</span>
@@ -1382,7 +1382,7 @@ function Events() {
                   onClick={() => setFilterType(type)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors duration-200 ${
                     filterType === type
-                      ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                      ? 'dynamic-site-bg text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >

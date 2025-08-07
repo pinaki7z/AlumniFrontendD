@@ -243,7 +243,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Users size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -256,7 +256,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
           {admin && (
             <Link 
               to="/home/members/create"
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
             >
               <UserPlus size={16} />
               <span>Create Member</span>
@@ -285,7 +285,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                className="flex items-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
               >
                 <Filter size={14} />
                 <span>Filters</span>
@@ -466,7 +466,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
                   <button
                     onClick={loadMoreMembers}
                     disabled={loading}
-                    className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
+                    className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
                   >
                     {loading ? (
                       <Loader2 size={16} className="animate-spin" />

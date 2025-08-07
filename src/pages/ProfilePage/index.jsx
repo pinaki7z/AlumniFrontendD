@@ -265,17 +265,7 @@ const ProfilePage = () => {
 
     if (verificationLoading) {
       return (
-        <div className="mx-4 mt-4 mb-6">
-          <div className="bg-gray-200 rounded-lg shadow animate-pulse">
-            <div className="flex items-center space-x-3 p-4">
-              <div className="w-5 h-5 bg-gray-300 rounded"></div>
-              <div className="flex-1">
-                <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
-                <div className="h-3 bg-gray-300 rounded w-2/3"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+        null
       );
     }
 
@@ -456,8 +446,8 @@ const ProfilePage = () => {
   const [expanded, setExpanded] = useState(false);
 
 
-  const lines = profile.aboutMe.split('\n');
-  const displayLines = expanded ? lines : lines.slice(0, 2);
+  const lines = profile?.aboutMe?.split('\n');
+  const displayLines = expanded ? lines : lines?.slice(0, 2);
 
   return (
     <div className="min-h-screen bg-gray-50 md:p-4 py-2">
@@ -619,13 +609,13 @@ const ProfilePage = () => {
 
               <div className="p-4 text-xs">
                 <div className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-sm ">
-                  {displayLines.map((line, index) => (
+                  {displayLines?.map((line, index) => (
                     <p key={index} className="mb-2 whitespace-pre-line">
                       {line}
                     </p>
                   ))}
 
-                  {lines.length > 5 && (
+                  {lines?.length > 5 && (
                     <span
                       className="text-[#71be95] cursor-pointer hover:text-[#5fa080] transition-colors duration-200"
                       onClick={() => setExpanded(!expanded)}
@@ -634,7 +624,7 @@ const ProfilePage = () => {
                     </span>
                   )}
                 </div>
-                {profile.linkedIn ? (
+                {profile?.linkedIn ? (
                   <a
                     href={profile.linkedIn}
                     target="_blank"
@@ -662,7 +652,7 @@ const ProfilePage = () => {
               <div className="p-4">
                 {activityLoading ? (
                   <div className="space-y-3">
-                    {[...Array(5)].map((_, i) => (
+                    {[...Array(5)]?.map((_, i) => (
                       <div key={i} className="animate-pulse flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gray-200 rounded"></div>
                         <div className="flex-1">
@@ -674,7 +664,7 @@ const ProfilePage = () => {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {recentActivity.map((activity) => (
+                    {recentActivity?.map((activity) => (
                       <div key={activity.id} className="flex items-start space-x-3 p-2 rounded hover:bg-gray-50 transition-colors duration-200">
                         <div className={`${activity.color} p-1.5 rounded flex-shrink-0`}>
                           {activity.icon}
@@ -694,7 +684,7 @@ const ProfilePage = () => {
                       </div>
                     ))}
 
-                    {recentActivity.length === 0 && (
+                    {recentActivity?.length === 0 && (
                       <div className="text-center py-6">
                         <Activity className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                         <p className="text-gray-500 text-xs">No recent activity</p>
@@ -751,7 +741,7 @@ const ProfilePage = () => {
                     { key: 'workExperience', label: 'Workplace', link: '/home/profile/workExperience', icon: Building, custom: true },
                     { key: 'country', label: 'Country', link: '/home/profile/profile-settings', icon: MapPin },
                     { key: 'city', label: 'City', link: '/home/profile/profile-settings', icon: MapPin }
-                  ].map((item, i) => {
+                  ]?.map((item, i) => {
                     const isCompleted = item.custom ? profile.workExperience?.length : profile[item.key];
                     const displayValue = item.custom ? findCurrentWorkingAt() :
                       item.key === 'firstName' ? profile.firstName : profile[item.key];
@@ -765,15 +755,15 @@ const ProfilePage = () => {
                         <div className="flex-1 min-w-0">
                           {isCompleted ? (
                             <div>
-                              <span className="text-xs font-medium text-gray-900 block">{item.label}</span>
+                              <span className="text-xs font-medium text-gray-900 block">{item?.label}</span>
                               <span className="text-xs text-gray-500 truncate block">{displayValue}</span>
                             </div>
                           ) : (
                             <Link
-                              to={item.link}
+                              to={item?.link}
                               className="text-xs font-medium text-[#71be95] hover:text-[#5fa080] transition-colors duration-200"
                             >
-                              Add your {item.label.toLowerCase()}
+                              Add your {item?.label.toLowerCase()}
                             </Link>
                           )}
                         </div>

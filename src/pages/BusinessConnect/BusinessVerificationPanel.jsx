@@ -69,7 +69,7 @@ const BusinessVerificationPanel = () => {
             <p className="text-gray-600">You don't have permission to access this panel.</p>
             <Link
               to="/home/business-connect"
-              className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              className="inline-flex items-center gap-2 mt-4 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
             >
               <ArrowLeft size={16} />
               Back to Business Connect
@@ -401,7 +401,7 @@ const BusinessVerificationPanel = () => {
                 </div>
                 <button 
                   onClick={() => handleDownloadBusinessPlan(business.businessPlan, business.businessName)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm flex-shrink-0"
+                  className="flex items-center gap-2 px-3 py-1.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm flex-shrink-0"
                 >
                   <Download size={14} />
                   <span className="hidden sm:inline">Download</span>
@@ -617,7 +617,7 @@ const BusinessVerificationPanel = () => {
                           }}
                         />
                       ) : (
-                        <div className="w-full lg:w-32 h-32 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                        <div className="w-full lg:w-32 h-32 dynamic-site-bg rounded-lg flex items-center justify-center">
                           <Building size={24} className="text-white" />
                         </div>
                       )}

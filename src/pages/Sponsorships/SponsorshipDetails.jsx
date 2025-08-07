@@ -350,7 +350,7 @@ const SponsorshipDetails = () => {
             <p className="text-gray-600 mb-4">The sponsorship you're looking for doesn't exist or has been removed.</p>
             <button
               onClick={() => navigate('/home/sponsorship-connect')}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
+              className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
             >
               <ArrowLeft size={16} />
               Back to Sponsorships
@@ -387,7 +387,7 @@ const SponsorshipDetails = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] flex items-center justify-center">
+              <div className="w-full h-full dynamic-site-bg flex items-center justify-center">
                 <Award size={64} className="text-white" />
               </div>
             )}
@@ -457,7 +457,7 @@ const SponsorshipDetails = () => {
 
         {/* Mobile Donation Quick Action */}
         <div className="block lg:hidden mb-6">
-          <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg p-4 text-white">
+          <div className="dynamic-site-bg rounded-lg p-4 text-white">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-sm font-medium">Support This Sponsorship</p>
@@ -510,7 +510,7 @@ const SponsorshipDetails = () => {
               {/* Sponsor Info */}
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
                     <Building size={16} className="text-white" />
                   </div>
                   <h3 className="text-base font-semibold text-gray-900">Sponsor</h3>
@@ -763,7 +763,7 @@ const SponsorshipDetails = () => {
             {(sponsorship.eventName || sponsorship.eventDate || sponsorship.eventLocation) && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
                     <Calendar size={16} className="text-white" />
                   </div>
                   <h3 className="text-base font-semibold text-gray-900">Event Information</h3>
@@ -854,7 +854,7 @@ const SponsorshipDetails = () => {
             {sponsorship.images && sponsorship.images.length > 1 && (
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
                     <Eye size={16} className="text-white" />
                   </div>
                   <h3 className="text-base font-semibold text-gray-900">Gallery</h3>

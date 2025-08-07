@@ -274,12 +274,12 @@ export const CreateJob = () => {
       {steps.map((step, index) => (
         <div key={step.id} className="flex items-center">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-            currentStep >= step.id ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white' : 'bg-gray-200 text-gray-500'
+            currentStep >= step.id ? 'dynamic-site-bg text-white' : 'bg-gray-200 text-gray-500'
           }`}>
             {step.id}
           </div>
           {index < steps.length - 1 && (
-            <div className={`w-6 h-0.5 mx-1 ${currentStep > step.id ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873]' : 'bg-gray-200'}`} />
+            <div className={`w-6 h-0.5 mx-1 ${currentStep > step.id ? 'dynamic-site-bg' : 'bg-gray-200'}`} />
           )}
         </div>
       ))}
@@ -294,7 +294,7 @@ export const CreateJob = () => {
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div 
-          className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full transition-all duration-300"
+          className="dynamic-site-bg h-2 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -317,7 +317,7 @@ export const CreateJob = () => {
           {/* Preview Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
                 <Eye size={16} className="sm:size-5 text-white" />
               </div>
               <div>
@@ -429,7 +429,7 @@ export const CreateJob = () => {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Briefcase size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -471,7 +471,7 @@ export const CreateJob = () => {
               {/* Basic Information */}
               <section className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-opacity-10 rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 dynamic-site-bg bg-opacity-10 rounded-lg flex items-center justify-center">
                     <Briefcase size={14} className="sm:size-4 text-[#0A3A4C]" />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">Basic Information</h3>
@@ -798,7 +798,7 @@ export const CreateJob = () => {
               {/* Requirements Section */}
               <section className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-opacity-10 rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 dynamic-site-bg bg-opacity-10 rounded-lg flex items-center justify-center">
                     <FileText size={14} className="sm:size-4 text-[#0A3A4C]" />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">Job Requirements</h3>
@@ -896,7 +896,7 @@ export const CreateJob = () => {
               {/* Media Section */}
               <section className="space-y-4 sm:space-y-6">
                 <div className="flex items-center gap-3 pb-2 border-b border-gray-200">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-opacity-10 rounded-lg flex items-center justify-center">
+                  <div className="w-6 h-6 sm:w-8 sm:h-8 dynamic-site-bg bg-opacity-10 rounded-lg flex items-center justify-center">
                     <Camera size={14} className="sm:size-4 text-[#0A3A4C]" />
                   </div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">Media & Attachments</h3>
@@ -920,7 +920,7 @@ export const CreateJob = () => {
                         </div>
                       ) : (
                         <div className="space-y-2 sm:space-y-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-opacity-10 rounded-full flex items-center justify-center mx-auto group-hover:bg-opacity-20 transition-colors duration-200">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 dynamic-site-bg bg-opacity-10 rounded-full flex items-center justify-center mx-auto group-hover:bg-opacity-20 transition-colors duration-200">
                             <Camera size={20} className="sm:size-6 text-[#0A3A4C]" />
                           </div>
                           <div>
@@ -981,7 +981,7 @@ export const CreateJob = () => {
                         </div>
                       ) : (
                         <div className="space-y-2 sm:space-y-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-opacity-10 rounded-full flex items-center justify-center mx-auto group-hover:bg-opacity-20 transition-colors duration-200">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 dynamic-site-bg bg-opacity-10 rounded-full flex items-center justify-center mx-auto group-hover:bg-opacity-20 transition-colors duration-200">
                             <Paperclip size={20} className="sm:size-6 text-[#0A3A4C]" />
                           </div>
                           <div>
@@ -1046,7 +1046,7 @@ export const CreateJob = () => {
                 <button
                   type="submit"
                   disabled={loading || uploadingCover || uploadingAttachments}
-                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
                   {loading ? (
                     <>

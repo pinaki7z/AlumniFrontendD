@@ -211,7 +211,7 @@ const DraftsPage = () => {
               
               <button
                 onClick={() => navigate('/home/news/create')}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
+                className="flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
               >
                 <Plus size={16} />
                 New Draft
@@ -295,7 +295,7 @@ const DraftsPage = () => {
               </p>
               <button
                 onClick={() => navigate('/home/news/create')}
-                className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200"
+                className="dynamic-site-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200"
               >
                 Create Article
               </button>
@@ -398,7 +398,7 @@ const DraftRow = ({ draft, isSelected, onSelect, formatDate, getStatusColor, get
         <div className="flex items-center gap-2">
           <div className="w-16 bg-gray-200 rounded-full h-2">
             <div
-              className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full transition-all duration-300"
+              className="dynamic-site-bg h-2 rounded-full transition-all duration-300"
               style={{ width: `${draft.completionStatus}%` }}
             ></div>
           </div>

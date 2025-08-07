@@ -129,7 +129,7 @@ const RegisterPage = () => {
         {/* Mobile Form */}
         <div className="flex-1 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/20 overflow-y-auto">
           <div className="text-center mb-6">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold dynamic-site-bg bg-clip-text text-transparent">
               Join Alumnify
             </h1>
             <p className="text-gray-600 text-sm mt-1">Create your alumni account</p>
@@ -616,7 +616,7 @@ const RegisterPage = () => {
       {showPrivacyPolicy && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl">
-            <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white p-6">
+            <div className="dynamic-site-bg text-white p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <FileText className="w-6 h-6" />

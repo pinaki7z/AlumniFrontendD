@@ -195,7 +195,7 @@ const IndividualJobPost = () => {
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3">
         <div className="bg-white rounded-lg sm:rounded-xl shadow-2xl w-full max-w-2xl max-h-[95vh] overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-[#0A3A4C] to-[#174873]">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dynamic-site-bg">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                 <Briefcase size={16} className="text-white" />
@@ -443,7 +443,7 @@ const IndividualJobPost = () => {
               <button
                 type="submit"
                 disabled={applyLoading || uploadingResume}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {applyLoading ? (
                   <>
@@ -499,7 +499,7 @@ const IndividualJobPost = () => {
             <div key={applicant._id} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 dynamic-site-bg rounded-full flex items-center justify-center text-white font-semibold">
                     {idx + 1}
                   </div>
                   <div>
@@ -848,7 +848,7 @@ Experience with version control systems such as Git.`
                   <>
                     <button
                       onClick={() => setCandidateModalShow(true)}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
                     >
                       <Users size={16} />
                       View Candidates ({applicants?.length})
@@ -875,7 +875,7 @@ Experience with version control systems such as Git.`
                     ) : (
                       <button
                         onClick={() => setModalShow(true)}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 font-medium"
                       >
                         <Briefcase size={16} />
                         Apply Now

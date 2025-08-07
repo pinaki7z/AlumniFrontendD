@@ -189,7 +189,7 @@ const AnalyticsPage = () => {
 
             <button 
               onClick={handleExport}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
+              className="flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
             >
               <Download size={16} />
               Export Report
@@ -290,7 +290,7 @@ const AnalyticsPage = () => {
                     {topPerformingArticles.map((article, index) => (
                       <tr key={article.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
                         <td className="py-4">
-                          <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                          <div className="w-8 h-8 dynamic-site-bg rounded-full flex items-center justify-center text-white font-bold text-sm">
                             {index + 1}
                           </div>
                         </td>
@@ -332,7 +332,7 @@ const AnalyticsPage = () => {
                           <div className="flex items-center gap-2">
                             <div className="w-16 bg-gray-200 rounded-full h-2">
                               <div
-                                className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full"
+                                className="dynamic-site-bg h-2 rounded-full"
                                 style={{ width: `${article.engagement}%` }}
                               ></div>
                             </div>
@@ -381,7 +381,7 @@ const AnalyticsPage = () => {
                       <div className="flex items-center gap-2">
                         <div className="w-20 bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full transition-all duration-300"
+                            className="dynamic-site-bg h-2 rounded-full transition-all duration-300"
                             style={{ width: `${category.engagement}%` }}
                           ></div>
                         </div>
@@ -422,7 +422,7 @@ const AnalyticsPage = () => {
                       
                       <div className="w-16 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full"
+                          className="dynamic-site-bg h-2 rounded-full"
                           style={{ width: `${source.percentage}%` }}
                         ></div>
                       </div>
@@ -496,7 +496,7 @@ const AnalyticsPage = () => {
                       <div className="flex items-center gap-2">
                         <div className="w-16 bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full"
+                            className="dynamic-site-bg h-2 rounded-full"
                             style={{ width: `${device.value}%` }}
                           ></div>
                         </div>
@@ -521,7 +521,7 @@ const AnalyticsPage = () => {
                         <span className="text-xs text-gray-600">{country.views.toLocaleString()}</span>
                         <div className="w-12 bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] h-2 rounded-full"
+                            className="dynamic-site-bg h-2 rounded-full"
                             style={{ width: `${country.percentage}%` }}
                           ></div>
                         </div>
@@ -540,7 +540,7 @@ const AnalyticsPage = () => {
               <div className="space-y-3">
                 <button
                   onClick={() => navigate('/home/news/create')}
-                  className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
+                  className="w-full flex items-center justify-center gap-2 py-3 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200"
                 >
                   <FileText size={16} />
                   Create New Article
@@ -565,7 +565,7 @@ const AnalyticsPage = () => {
             </div>
 
             {/* Performance Summary */}
-            <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg shadow-sm p-6 text-white">
+            <div className="dynamic-site-bg rounded-lg shadow-sm p-6 text-white">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Target size={18} />
                 Performance Summary

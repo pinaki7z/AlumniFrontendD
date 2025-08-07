@@ -114,7 +114,7 @@ const Groups = () => {
             {/* Simple Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
                   <Users size={16} className="sm:size-5 text-white" />
                 </div>
                 <div>
@@ -131,7 +131,7 @@ const Groups = () => {
               {isAdmin && location.pathname === "/home/groups" && (
                 <Link
                   to="/home/groups/create"
-                  className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+                  className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
                 >
                   <Plus size={16} />
                   <span>Create Group</span>
@@ -149,7 +149,7 @@ const Groups = () => {
                       to={nav.path}
                       className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium whitespace-nowrap ${
                         location.pathname === nav.path
-                          ? "bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white"
+                          ? "dynamic-site-bg text-white"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       }`}
                     >
@@ -182,7 +182,7 @@ const Groups = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                    className="flex items-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                   >
                     <Filter size={14} />
                     <span>Filters</span>
@@ -267,7 +267,7 @@ const Groups = () => {
             <Route path="/" element={
               <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-6 sm:p-8">
                 <div className="text-center py-4 sm:py-8">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 dynamic-site-bg rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     <Users size={24} className="sm:size-32 text-white" />
                   </div>
                   <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
@@ -279,7 +279,7 @@ const Groups = () => {
                   <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center max-w-md mx-auto">
                     <Link
                       to="/home/groups/suggested-groups"
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                      className="flex items-center justify-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                     >
                       <Eye size={14} />
                       <span>Explore Groups</span>
@@ -320,7 +320,7 @@ const Groups = () => {
                   </p>
                   <Link
                     to="/home/groups"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                   >
                     <ArrowRight size={14} />
                     <span>Go to Groups</span>
@@ -340,7 +340,7 @@ const Groups = () => {
                   </p>
                   <Link
                     to="/home/groups"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                    className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                   >
                     <ArrowRight size={14} />
                     <span>Go to Groups</span>

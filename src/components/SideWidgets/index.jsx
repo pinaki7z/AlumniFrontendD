@@ -127,7 +127,7 @@ const SideWidgets = () => {
       {/* Profile Card */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Cover Background */}
-        <div className="h-[80px] bg-gradient-to-r from-[#0A3A4C] to-[#174873]"></div>
+        <div className="h-[80px] dynamic-site-bg"></div>
         
         {/* Profile Content */}
         <div className="relative px-4 pb-4">

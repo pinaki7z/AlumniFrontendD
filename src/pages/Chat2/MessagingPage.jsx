@@ -56,7 +56,7 @@ export default function MessagingPage() {
         ) : (
           <div className="h-full flex flex-col bg-white">
             {/* Mobile back button */}
-            <div className="flex items-center p-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white">
+            <div className="flex items-center p-3 dynamic-site-bg text-white">
               <button 
                 onClick={handleBackToList}
                 className="p-2 rounded-full hover:bg-white/20 transition-colors mr-3"

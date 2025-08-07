@@ -325,7 +325,7 @@ const NewsDetailPage = () => {
             <p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p>
             <button
               onClick={() => navigate('/home/news')}
-              className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-200"
+              className="dynamic-site-bg text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-200"
             >
               Back to News
             </button>
@@ -355,7 +355,7 @@ const NewsDetailPage = () => {
             <article className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               {/* Category Badge */}
               <div className="px-4 sm:px-6 pt-6">
-                <span className="inline-block bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-3 py-1 rounded-full text-sm font-medium capitalize mb-4">
+                <span className="inline-block dynamic-site-bg text-white px-3 py-1 rounded-full text-sm font-medium capitalize mb-4">
                   {newsArticle.category.replace('-', ' ')}
                 </span>
               </div>
@@ -570,7 +570,7 @@ const NewsDetailPage = () => {
                       <button
                         onClick={handleCommentSubmit}
                         disabled={!newComment.trim() || submittingComment}
-                        className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="dynamic-site-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                       >
                         {submittingComment ? (
                           <>
@@ -678,7 +678,7 @@ const NewsDetailPage = () => {
               </div>
 
               {/* Newsletter Signup */}
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg shadow-sm p-4 sm:p-6 text-white">
+              <div className="dynamic-site-bg rounded-lg shadow-sm p-4 sm:p-6 text-white">
                 <div className="flex items-center gap-2 mb-3">
                   <Bell size={20} />
                   <h3 className="font-bold">Stay Updated</h3>

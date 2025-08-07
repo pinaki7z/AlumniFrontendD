@@ -236,7 +236,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
                 className={`w-full py-2 px-3 rounded-lg font-semibold text-xs transition-all duration-200 flex items-center justify-center gap-2 ${
                   isFollowing
                     ? "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
-                    : "bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white hover:opacity-90 shadow-sm"
+                    : "dynamic-site-bg text-white hover:opacity-90 shadow-sm"
                 }`}
               >
                 {isFollowing ? (

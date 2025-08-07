@@ -88,7 +88,7 @@ const AllGroups = ({ groupType, searchQuery }) => {
           <button
             onClick={handleLoadMore}
             disabled={loadingMore}
-            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium shadow-sm w-full sm:w-auto"
+            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 dynamic-site-bg text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[#0A3A4C] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium shadow-sm w-full sm:w-auto"
           >
             {loadingMore ? (
               <Loader2 size={16} className="animate-spin" />

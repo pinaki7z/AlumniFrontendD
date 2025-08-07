@@ -297,7 +297,7 @@ const CreateNewsPage = () => {
             <button
               onClick={() => handleSubmit('published')}
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
@@ -433,7 +433,7 @@ const CreateNewsPage = () => {
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
                           disabled={uploadingImage}
-                          className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 flex items-center gap-2 mx-auto"
+                          className="dynamic-site-bg text-white px-6 py-2 rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 flex items-center gap-2 mx-auto"
                         >
                           {uploadingImage ? (
                             <>
@@ -718,7 +718,7 @@ const CreateNewsPage = () => {
               </div>
 
               {/* Status Indicator */}
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg shadow-sm p-4 sm:p-6 text-white">
+              <div className="dynamic-site-bg rounded-lg shadow-sm p-4 sm:p-6 text-white">
                 <h3 className="font-semibold mb-3 flex items-center gap-2">
                   <CheckCircle size={18} />
                   Article Status

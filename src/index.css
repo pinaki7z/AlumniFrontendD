@@ -75,3 +75,13 @@ code {
   color: #9ca3af;
   font-style: normal;
 }
+
+.dynamic-site-bg{
+  @apply bg-gradient-to-r from-[#0A3A4C] to-[#174873];
+  /* @apply bg-gradient-to-r from-[#6EE7B7] to-[#3B82F6]; */
+}
+
+.dynamic-site-bg-2{
+  @apply bg-gradient-to-b from-[#0A3A4C] to-[#174873];
+  /* @apply bg-gradient-to-b from-[#6EE7B7] to-[#3B82F6]; */
+}

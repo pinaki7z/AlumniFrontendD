@@ -308,7 +308,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
                       <div className={`
                         max-w-[75%] sm:max-w-[70%] px-3 py-2 rounded-2xl relative
                         ${isMe 
-                          ? `bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-br-md ${m.isTemporary ? 'opacity-80' : ''}` 
+                          ? `dynamic-site-bg text-white rounded-br-md ${m.isTemporary ? 'opacity-80' : ''}` 
                           : "bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100"}
                       `}>
                         <p className="whitespace-pre-wrap text-sm leading-relaxed break-words">
@@ -364,7 +364,7 @@ export default function Chat2({ currentSelectedUserData, setCurrentSelectedUserD
             disabled={!text.trim()}
             className={`p-2 sm:p-3 rounded-full transition-all flex-shrink-0 ${
               text.trim()
-                ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:shadow-lg text-white'
+                ? 'dynamic-site-bg hover:shadow-lg text-white'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >

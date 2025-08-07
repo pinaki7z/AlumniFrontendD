@@ -160,7 +160,7 @@ const NewsUpdatesPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
 
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
                 <Building size={16} className="sm:size-5 text-white" />
               </div>
               <div>
@@ -174,7 +174,7 @@ const NewsUpdatesPage = () => {
             </div>
             <button
               onClick={() => navigate('/home/news/create')}
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
             >
               <Plus size={20} />
               <span className="hidden sm:inline">Create News</span>
@@ -266,7 +266,7 @@ const LeftSidebar = ({ activeFilter, setActiveFilter, categories, quickStats }) 
               key={category.id}
               onClick={() => setActiveFilter(category.id)}
               className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 ${activeFilter === category.id
-                  ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                  ? 'dynamic-site-bg text-white'
                   : 'text-gray-700 hover:bg-gray-100'
                 }`}
             >
@@ -411,7 +411,7 @@ const MainContent = ({ newsData, loading, likedNews, toggleLike, pagination, onL
         <div className="text-center py-8">
           <button
             onClick={onLoadMore}
-            className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 flex items-center gap-2 mx-auto"
+            className="dynamic-site-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity duration-200 flex items-center gap-2 mx-auto"
           >
             Load More News
             <ArrowRight size={16} />
@@ -548,7 +548,7 @@ const RightSidebar = () => {
   return (
     <div className="lg:sticky lg:top-6 space-y-6">
       {/* Newsletter Signup */}
-      <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg shadow-sm p-4 sm:p-6 text-white">
+      <div className="dynamic-site-bg rounded-lg shadow-sm p-4 sm:p-6 text-white">
         <div className="flex items-center gap-2 mb-3">
           <Bell size={18} />
           <h3 className="font-semibold">Stay Updated</h3>

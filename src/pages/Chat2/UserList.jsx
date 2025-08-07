@@ -171,7 +171,7 @@ export default function UserList({ currentUserId, selectedUserId, onSelectUser, 
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg">
+          <div className="p-2 dynamic-site-bg rounded-lg">
             <MessageCircle className="w-5 h-5 text-white" />
           </div>
           <div>

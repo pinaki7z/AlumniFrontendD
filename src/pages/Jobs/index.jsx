@@ -161,7 +161,7 @@ const Jobs = () => {
       {type === 'my jobs' && (
         <Link
           to="/home/jobs/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
         >
           <Plus size={16} />
           <span>Create Job</span>
@@ -198,7 +198,7 @@ const Jobs = () => {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Briefcase size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -213,7 +213,7 @@ const Jobs = () => {
           {[0, 1, 2].includes(profile.profileLevel) && (
             <Link
               to="/home/jobs/create"
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium shadow-sm w-full sm:w-auto"
             >
               <Plus size={16} />
               <span>Create Job</span>
@@ -238,7 +238,7 @@ const Jobs = () => {
               className={({ isActive }) =>
                 `flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                   isActive
-                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-sm'
+                    ? 'dynamic-site-bg text-white shadow-sm'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`
               }
@@ -253,7 +253,7 @@ const Jobs = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-sm'
+                      ? 'dynamic-site-bg text-white shadow-sm'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`
                 }
@@ -270,7 +270,7 @@ const Jobs = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-sm'
+                        ? 'dynamic-site-bg text-white shadow-sm'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`
                   }
@@ -284,7 +284,7 @@ const Jobs = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                       isActive
-                        ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-sm'
+                        ? 'dynamic-site-bg text-white shadow-sm'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`
                   }
@@ -300,7 +300,7 @@ const Jobs = () => {
               className={({ isActive }) =>
                 `flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                   isActive
-                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white shadow-sm'
+                    ? 'dynamic-site-bg text-white shadow-sm'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`
               }
@@ -333,7 +333,7 @@ const Jobs = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                  className="flex items-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                 >
                   <SlidersHorizontal size={14} />
                   <span>Filters</span>

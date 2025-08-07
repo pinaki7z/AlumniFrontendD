@@ -87,7 +87,7 @@ export const SearchedResults = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 dynamic-site-bg rounded-full flex items-center justify-center mx-auto mb-4">
             <Loader2 className="w-8 h-8 text-white animate-spin" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Searching...</h3>
@@ -153,7 +153,7 @@ export const SearchedResults = () => {
             {/* Members Section */}
             {(activeFilter === 'all' || activeFilter === 'alumni') && searchResults.alumni && searchResults.alumni.length > 0 && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-6">
+                <div className="dynamic-site-bg p-6">
                   <div className="flex items-center gap-3">
                     <Users className="w-6 h-6 text-white" />
                     <h2 className="text-xl font-semibold text-white">

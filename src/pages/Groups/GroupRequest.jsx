@@ -213,7 +213,7 @@ const GroupRequest = ({ edit }) => {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               {edit ? (
                 <Edit size={16} className="sm:size-5 text-white" />
               ) : (
@@ -240,7 +240,7 @@ const GroupRequest = ({ edit }) => {
             {/* Basic Information */}
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <FileText size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">Basic Information</h3>
@@ -350,7 +350,7 @@ const GroupRequest = ({ edit }) => {
             {/* Media Upload */}
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <Image size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">Group Images</h3>
@@ -489,7 +489,7 @@ const GroupRequest = ({ edit }) => {
               <button
                 type="submit"
                 disabled={loading || uploadingBackground || uploadingLogo}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {loading ? (
                   <>

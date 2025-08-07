@@ -102,7 +102,7 @@ export default function Contact() {
       {isPopupVisible && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl">
-            <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white p-6">
+            <div className="dynamic-site-bg text-white p-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">Schedule Your Free Demo</h3>
                 <button

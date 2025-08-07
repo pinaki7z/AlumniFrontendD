@@ -450,7 +450,7 @@ const ProhibitedKeywords = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Shield size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -503,7 +503,7 @@ const ProhibitedKeywords = () => {
             <button
               onClick={() => setShowAddModal(true)}
               disabled={addingKeyword}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 text-sm font-medium"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 text-sm font-medium"
             >
               {addingKeyword ? (
                 <Loader2 size={16} className="animate-spin" />
@@ -851,7 +851,7 @@ const ProhibitedKeywords = () => {
                               disabled={loading}
                               className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                                 i === currentPage
-                                  ? 'z-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] border-[#0A3A4C] text-white'
+                                  ? 'z-10 dynamic-site-bg border-[#0A3A4C] text-white'
                                   : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                               } disabled:opacity-50 disabled:cursor-not-allowed`}
                             >
@@ -902,7 +902,7 @@ const ProhibitedKeywords = () => {
                 {!searchQuery && filterCategory === 'all' && filterSeverity === 'all' && filterStatus === 'all' && (
                   <button
                     onClick={() => setShowAddModal(true)}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+                    className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
                   >
                     <Plus size={16} />
                     Add Your First Keyword
@@ -917,7 +917,7 @@ const ProhibitedKeywords = () => {
         {showAddModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-6 py-4 rounded-t-xl">
+              <div className="dynamic-site-bg px-6 py-4 rounded-t-xl">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-white">Add Prohibited Keyword</h3>
                   <button
@@ -1004,7 +1004,7 @@ const ProhibitedKeywords = () => {
                   <button
                     type="submit"
                     disabled={addingKeyword}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
                   >
                     {addingKeyword ? (
                       <>
@@ -1025,7 +1025,7 @@ const ProhibitedKeywords = () => {
         {showEditModal && editingKeyword && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-6 py-4 rounded-t-xl">
+              <div className="dynamic-site-bg px-6 py-4 rounded-t-xl">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-white">Edit Prohibited Keyword</h3>
                   <button
@@ -1112,7 +1112,7 @@ const ProhibitedKeywords = () => {
                   <button
                     type="submit"
                     disabled={editingLoading}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
                   >
                     {editingLoading ? (
                       <>
@@ -1133,7 +1133,7 @@ const ProhibitedKeywords = () => {
         {showBulkModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-6 py-4 rounded-t-xl">
+              <div className="dynamic-site-bg px-6 py-4 rounded-t-xl">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-white">Bulk Import Keywords</h3>
                   <button
@@ -1240,7 +1240,7 @@ const ProhibitedKeywords = () => {
                   <button
                     onClick={handleBulkImport}
                     disabled={bulkImporting || !bulkKeywords.trim()}
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
+                    className="flex-1 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-200 flex items-center justify-center gap-2"
                   >
                     {bulkImporting ? (
                       <>

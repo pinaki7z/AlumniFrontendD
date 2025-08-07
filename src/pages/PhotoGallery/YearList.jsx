@@ -94,7 +94,7 @@ export default function YearList() {
       {isAdmin && (
         <button
           onClick={() => document.getElementById('yearInput')?.focus()}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
         >
           <Plus size={16} />
           Add First Year
@@ -131,7 +131,7 @@ export default function YearList() {
               <button
                 onClick={addYear}
                 disabled={adding}
-                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {adding ? (
                   <Loader2 size={14} className="animate-spin" />

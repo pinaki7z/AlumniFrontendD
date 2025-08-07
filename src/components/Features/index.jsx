@@ -30,7 +30,7 @@ export default function Features() {
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             What Makes Alumnify The 
-            <span className="block bg-gradient-to-r from-[#0A3A4C] to-[#174873] bg-clip-text text-transparent">
+            <span className="block dynamic-site-bg bg-clip-text text-transparent">
               Ideal Choice
             </span>
             For Your Institution?

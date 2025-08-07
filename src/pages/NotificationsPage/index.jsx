@@ -163,7 +163,7 @@ const NotificationsPage = () => {
         <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
                 <Bell size={16} className="text-white" />
               </div>
               {notificationCount > 0 && (
@@ -229,7 +229,7 @@ const NotificationsPage = () => {
             to="/home/notifications"
             className={`flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-lg text-sm font-medium transition ${
               ActiveTab === 'all'
-                ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                ? 'dynamic-site-bg text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -242,7 +242,7 @@ const NotificationsPage = () => {
               to="/home/notifications/declined"
               className={`flex items-center gap-1 whitespace-nowrap px-3 py-1.5 rounded-lg text-sm font-medium transition ${
                 ActiveTab === 'declined'
-                  ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                  ? 'dynamic-site-bg text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

@@ -88,7 +88,7 @@ const Dashboard = ({ handleLogout }) => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar with Mobile Hamburger Menu */}
-        <div className="flex items-center bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-2 md:px-5 px-2 relative z-50 shadow-lg lg:hidden">
+        <div className="flex items-center dynamic-site-bg py-2 md:px-5 px-2 relative z-50 shadow-lg lg:hidden">
           <button
             onClick={toggleMobileSidebar}
             className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
@@ -102,7 +102,7 @@ const Dashboard = ({ handleLogout }) => {
 
         {/* Desktop TopBar - No hamburger menu */}
         <div className="hidden lg:block ">
-          <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] py-3 px-5 shadow-lg">
+          <div className="dynamic-site-bg py-3 px-5 shadow-lg">
             <div className="text-white font-semibold text-lg absolute left-[0.5%] top-[0%]">
                 <img src="/v2/logo2.png" alt="InsideOut Logo" className="w-[200px] h-[99px] mx-auto rounded-lg object-contain transition-all duration-300" />
                </div>

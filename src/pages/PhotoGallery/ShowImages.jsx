@@ -186,7 +186,7 @@ export default function ShowImages() {
         No photos have been uploaded for {dept.name} ({year.year}) yet.
       </p>
       {isAdmin && (
-        <label className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 cursor-pointer text-sm">
+        <label className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 cursor-pointer text-sm">
           <Upload size={16} />
           Upload First Photos
           <input
@@ -254,7 +254,7 @@ export default function ShowImages() {
 
             {/* Upload Button */}
             {isAdmin && (
-              <label className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 cursor-pointer text-sm">
+              <label className="flex items-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 cursor-pointer text-sm">
                 {uploading ? (
                   <>
                     <Loader2 size={14} className="animate-spin" />

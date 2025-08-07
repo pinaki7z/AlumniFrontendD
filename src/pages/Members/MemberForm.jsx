@@ -181,7 +181,7 @@ const MemberForm = ({ edit }) => {
         {/* Simple Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <UserPlus size={16} className="sm:size-5 text-white" />
             </div>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
@@ -199,7 +199,7 @@ const MemberForm = ({ edit }) => {
             </button>
             <button
               onClick={() => setModalOpen(true)}
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
             >
               <Upload size={14} />
               <span>Bulk Upload</span>
@@ -214,7 +214,7 @@ const MemberForm = ({ edit }) => {
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
                       <Upload size={16} className="text-white" />
                     </div>
                     <div>
@@ -277,7 +277,7 @@ const MemberForm = ({ edit }) => {
                     <button
                       onClick={handleCSVupload}
                       disabled={uploadingCSV}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                     >
                       {uploadingCSV ? (
                         <>
@@ -304,7 +304,7 @@ const MemberForm = ({ edit }) => {
             {/* Personal Information Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <User size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">Personal Information</h3>
@@ -414,7 +414,7 @@ const MemberForm = ({ edit }) => {
             {/* Security Section */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <Lock size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">Security Information</h3>
@@ -502,7 +502,7 @@ const MemberForm = ({ edit }) => {
             {/* Role Selection */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <Users size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">User Role</h3>
@@ -591,7 +591,7 @@ const MemberForm = ({ edit }) => {
             {formData.userType && (
               <div className="space-y-3">
                 <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                  <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                     <Building size={12} className="text-white" />
                   </div>
                   <h3 className="text-base font-semibold text-gray-900">Academic Information</h3>
@@ -694,7 +694,7 @@ const MemberForm = ({ edit }) => {
             {/* CAPTCHA - Reduced spacing */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 pb-2 border-b border-gray-200">
-                <div className="w-6 h-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-6 h-6 dynamic-site-bg rounded-lg flex items-center justify-center flex-shrink-0">
                   <Shield size={12} className="text-white" />
                 </div>
                 <h3 className="text-base font-semibold text-gray-900">Security Verification</h3>
@@ -730,7 +730,7 @@ const MemberForm = ({ edit }) => {
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
               >
                 {submitting ? (
                   <>

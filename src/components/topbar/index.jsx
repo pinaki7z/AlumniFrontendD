@@ -337,7 +337,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                 ) : (
                                     <button
                                         type="submit"
-                                        className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:from-[#174873] hover:to-[#0A3A4C] text-white p-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        className="dynamic-site-bg hover:from-[#174873] hover:to-[#0A3A4C] text-white p-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
                                     >
                                         <IoSearchSharp className="w-4 h-4" />
                                     </button>
@@ -350,7 +350,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                             <div className="absolute top-full mt-2 w-full bg-white border border-gray-200 rounded-2xl shadow-2xl z-[9999] overflow-hidden backdrop-blur-sm">
                                 {searchText && getSearchResultsCount() > 0 && (
                                     <>
-                                        <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-2">
+                                        <div className="dynamic-site-bg px-4 py-2">
                                             <h3 className="text-white font-medium text-sm">
                                                 Search Results ({getSearchResultsCount()})
                                             </h3>
@@ -515,7 +515,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
 
                         {showNotifications && (
                             <div className="absolute right-0 mt-3 w-[95vw] sm:w-[400px] lg:w-[500px] bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-[99999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                <div className="dynamic-site-bg px-4 py-3">
                                     <h3 className="text-white font-semibold text-lg">Notifications</h3>
                                 </div>
                                 <div className="h-[300px] sm:h-[400px] overflow-y-auto">
@@ -556,7 +556,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                         {/* Desktop Profile Dropdown with Full Options */}
                         {showProfileOptions && (
                             <div className="absolute right-0 top-full mt-3 w-64 bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-2">
+                                <div className="dynamic-site-bg px-4 py-2">
                                     <div className="flex items-center space-x-3">
                                         <img 
                                             src={profile.profilePicture || profilePic} 
@@ -677,7 +677,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
 
                         {showNotifications && (
                             <div className="absolute right-0 mt-3 w-[95vw] sm:w-[400px] bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-[99999] overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                <div className="dynamic-site-bg px-4 py-3">
                                     <h3 className="text-white font-semibold text-lg">Notifications</h3>
                                 </div>
                                 <div className="h-[300px] overflow-y-auto">
@@ -710,7 +710,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                         {/* Mobile Profile Dropdown */}
                         {showProfileOptions && (
                             <div className="absolute right-0 top-full mt-3 w-56 bg-white border border-[#71be95]/30 rounded-xl shadow-2xl z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-                                <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-4 py-3">
+                                <div className="dynamic-site-bg px-4 py-3">
                                     <div className="flex items-center space-x-3">
                                         <img 
                                             src={profile.profilePicture || profilePic} 
@@ -763,7 +763,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
             {showMobileSearch && (
                 <div className="lg:hidden fixed inset-0 bg-white z-50 animate-in slide-in-from-top duration-300">
                     <div className="flex flex-col h-full">
-                        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#0A3A4C] to-[#174873] shadow-lg">
+                        <div className="flex items-center justify-between p-4 dynamic-site-bg shadow-lg">
                             <h2 className="text-lg font-semibold text-white drop-shadow-sm">Search</h2>
                             <button
                                 onClick={() => setShowMobileSearch(false)}
@@ -797,7 +797,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
                                         {searchLoading ? (
                                             <l-line-spinner size="24" stroke="3" speed="1" color="#0a3a4c"></l-line-spinner>
                                         ) : (
-                                            <div className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:from-[#174873] hover:to-[#0A3A4C] text-white p-3 rounded-xl transition-all duration-200 shadow-lg">
+                                            <div className="dynamic-site-bg hover:from-[#174873] hover:to-[#0A3A4C] text-white p-3 rounded-xl transition-all duration-200 shadow-lg">
                                                 <IoSearchSharp className="w-6 h-6" />
                                             </div>
                                         )}

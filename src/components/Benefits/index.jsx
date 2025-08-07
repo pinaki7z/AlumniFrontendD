@@ -79,7 +79,7 @@ function DemoModal({ open, onClose }) {
         className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in-95"
       >
         {/* Header */}
-        <header className="flex items-center justify-between bg-gradient-to-r from-[#0A3A4C] to-[#174873] px-6 py-4 text-white">
+        <header className="flex items-center justify-between dynamic-site-bg px-6 py-4 text-white">
           <h2 id="demo-modal-title" className="flex items-center gap-3 text-lg font-semibold">
             <Calendar className="h-5 w-5" />
             Schedule your free demo
@@ -175,7 +175,7 @@ export default function Benefits() {
           </ul>
 
           {/* ----------  CTA Banner  ---------- */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0A3A4C] to-[#174873] p-8 text-center sm:p-12">
+          <div className="relative overflow-hidden rounded-3xl dynamic-site-bg p-8 text-center sm:p-12">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute right-4 top-4 h-32 w-32 rounded-full bg-white blur-2xl" />
               <div className="absolute bottom-4 left-4 h-24 w-24 rounded-full bg-[#71be95] blur-xl" />

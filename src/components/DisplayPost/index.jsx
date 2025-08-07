@@ -353,7 +353,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
         return (
           <button
             onClick={() => setConfirmModal(true)}
-            className="w-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:opacity-90 text-white font-semibold rounded-lg text-sm px-4 py-2.5 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+            className="w-full dynamic-site-bg hover:opacity-90 text-white font-semibold rounded-lg text-sm px-4 py-2.5 transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
           >
             <UserPlus size={14} />
             <span>{isPublic ? "Join Group" : "Request to Join"}</span>
@@ -403,7 +403,7 @@ const DisplayPost = ({ groups = [], loading, joined }) => {
                     e.preventDefault();
                     navigateTo(`/home/groups/${group._id}`);
                   }}
-                  className="w-full bg-gradient-to-r from-[#0A3A4C] to-[#174873] hover:opacity-90 text-white font-semibold rounded-lg text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 shadow-sm flex items-center justify-center gap-2"
+                  className="w-full dynamic-site-bg hover:opacity-90 text-white font-semibold rounded-lg text-xs sm:text-sm px-3 sm:px-4 py-2 sm:py-2.5 transition-all duration-200 shadow-sm flex items-center justify-center gap-2"
                 >
                   <Eye size={14} />
                   <span>View Group</span>

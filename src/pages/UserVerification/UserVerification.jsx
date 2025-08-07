@@ -735,7 +735,7 @@ const UserVerification = () => {
       {activeFiltersCount > 0 && (
         <button
           onClick={clearFilters}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
         >
           <RefreshCw size={16} />
           Clear Filters
@@ -783,7 +783,7 @@ const UserVerification = () => {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors duration-200 ${
                     currentPage === pageNum
-                      ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                      ? 'dynamic-site-bg text-white'
                       : 'border border-gray-300 hover:bg-gray-50'
                   }`}
                 >
@@ -836,7 +836,7 @@ const UserVerification = () => {
             >
               <ArrowLeft size={16} className="sm:size-5" />
             </button>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Database size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -959,7 +959,7 @@ const UserVerification = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
+                  className="flex items-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm"
                 >
                   <Filter size={14} />
                   <span>Filters</span>

@@ -163,7 +163,7 @@ const Profile = () => {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm w-full mx-4">
-          <div className="w-16 h-16 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 dynamic-site-bg rounded-full flex items-center justify-center mx-auto mb-4">
             <Loader2 size={32} className="animate-spin text-white" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading Profile</h3>

@@ -385,7 +385,7 @@ const BusinessCard = ({ business }) => {
               e.stopPropagation();
               navigate(`/home/business-connect/${business._id}`);
             }}
-            className="flex items-center gap-1 px-3 py-1.5 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 hover:shadow-lg transition-all duration-200 text-xs font-medium group/btn"
+            className="flex items-center gap-1 px-3 py-1.5 dynamic-site-bg text-white rounded-lg hover:opacity-90 hover:shadow-lg transition-all duration-200 text-xs font-medium group/btn"
           >
             <span>View</span>
             <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
@@ -403,7 +403,7 @@ const BusinessCard = ({ business }) => {
         {/* Header - UPDATED with Admin Verify button */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-[#0A3A4C] to-[#174873] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 dynamic-site-bg rounded-lg flex items-center justify-center">
               <Building size={16} className="sm:size-5 text-white" />
             </div>
             <div>
@@ -421,7 +421,7 @@ const BusinessCard = ({ business }) => {
             {isAdmin && (
               <Link
                 to="/home/business-connect/admin/verify"
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
               >
                 <Shield size={16} />
                 <span className="hidden sm:inline">Admin Verify</span>
@@ -432,7 +432,7 @@ const BusinessCard = ({ business }) => {
             {/* Existing Create Business Button */}
             <Link
               to="/home/business-connect/create"
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
             >
               <Plus size={16} />
               <span>Create Business</span>
@@ -498,7 +498,7 @@ const BusinessCard = ({ business }) => {
               onClick={() => setActiveTab('all')}
               className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                 activeTab === 'all'
-                  ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                  ? 'dynamic-site-bg text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -515,7 +515,7 @@ const BusinessCard = ({ business }) => {
               onClick={() => setActiveTab('my')}
               className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                 activeTab === 'my'
-                  ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                  ? 'dynamic-site-bg text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -533,7 +533,7 @@ const BusinessCard = ({ business }) => {
                 onClick={() => setActiveTab('pending')}
                 className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg transition-colors duration-200 font-medium text-sm whitespace-nowrap ${
                   activeTab === 'pending'
-                    ? 'bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white'
+                    ? 'dynamic-site-bg text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -610,7 +610,7 @@ const BusinessCard = ({ business }) => {
             {activeTab === 'my' && (
               <Link
                 to="/home/business-connect/create"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
+                className="inline-flex items-center gap-2 px-4 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 text-sm font-medium"
               >
                 <Plus size={16} />
                 Create Your First Business

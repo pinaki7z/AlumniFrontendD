@@ -143,7 +143,7 @@ export const WorkExperience = () => {
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white">
+          <div className="flex items-center justify-between p-6 dynamic-site-bg text-white">
             <div className="flex items-center gap-3">
               <Briefcase className="w-6 h-6" />
               <h2 className="text-xl font-semibold">
@@ -360,7 +360,7 @@ export const WorkExperience = () => {
             <button
               onClick={handleSave}
               disabled={submitting}
-              className="px-6 py-2 bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 dynamic-site-bg text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               {submitting ? 'Saving...' : 'Save Experience'}
@@ -439,7 +439,7 @@ export const WorkExperience = () => {
               <p className="text-gray-600 mb-6">Add your professional experience to showcase your career journey</p>
               <button
                 onClick={() => setModalShow(true)}
-                className="bg-gradient-to-r from-[#0A3A4C] to-[#174873] text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2 mx-auto"
+                className="dynamic-site-bg text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center gap-2 mx-auto"
               >
                 <Plus className="w-5 h-5" />
                 Add Your First Experience
