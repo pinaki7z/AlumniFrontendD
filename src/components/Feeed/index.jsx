@@ -33,7 +33,7 @@ function Feed({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  
+
   const profile = useSelector((state) => state.profile);
   const { _id } = useParams();
   const LIMIT = 5;
@@ -44,6 +44,7 @@ function Feed({
   // Track which comment sections are expanded
   const [visibleComments, setVisibleComments] = useState({});
   const toggleComments = (postId) => {
+    console.log("alksjdflaksfjdsal")
     setVisibleComments(v => ({ ...v, [postId]: !v[postId] }));
   };
 
@@ -67,7 +68,7 @@ function Feed({
 
       const response = await axios.get(url);
       const newPosts = response.data.records || [];
-      
+
       if (isFirstLoad) {
         setPosts(newPosts);
       } else {
@@ -227,7 +228,13 @@ function Feed({
                     admin={admin}
                     showDeleteButton={showDeleteButton}
                     handleLikes={handleLikes}
-                    onCommentIconClick={() => toggleComments(post._id)}
+                    onCommentIconClick={(commentCountCallback) => {
+                      toggleComments(post._id);
+                      // Store the callback for this post if needed
+                      if (commentCountCallback && typeof commentCountCallback === 'function') {
+                        // The Post component will handle the callback internally
+                      }
+                    }}
                     onDeletePost={() => handleDeletePost(post._id)}
                     groupID={post.groupID}
                   />
@@ -236,14 +243,20 @@ function Feed({
                     <div className="w-full -mt-3">
                       <CommentSection
                         entityId={post._id}
+                        postId={post._id}
                         entityType="posts"
                         comments={post.comments?.filter(c => !c.reported) || []}
                         onCommentSubmit={refreshComments}
                         onDeleteComment={refreshComments}
                         onClose={() => toggleComments(post._id)}
+                        onCommentCountChange={() => {
+                          // This will trigger the Post component to refresh its comment count
+                          // The Post component handles this internally via its own state
+                        }}
                       />
                     </div>
                   )}
+
                 </div>
               );
             }
@@ -274,7 +287,7 @@ function Feed({
               );
             }
 
-      
+
 
             return null;
           })
@@ -282,7 +295,7 @@ function Feed({
 
         {/* Auto-trigger element for infinite scroll */}
         {hasMore && !loading && (
-          <div 
+          <div
             ref={loadMoreRef}
             className="flex justify-center py-6"
           >

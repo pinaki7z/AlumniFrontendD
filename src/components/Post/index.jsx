@@ -12,20 +12,21 @@ import { Menu, MenuItem } from '@mui/material';
 import profilePic from "../../images/profilepic.png";
 import { IoLogoLinkedin } from "react-icons/io5";
 
-
 function Post({ userId, postId, profilePicture, username, text, timestamp, image, video, handleLikes, onDeletePost, entityType, showDeleteButton, groupID, onCommentIconClick, post }) {
   const navigate = useNavigate();
   const { _id } = useParams();
   const [isliked, setLiked] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [likeLoading, setLikeLoading] = useState(false); // New state for like loading
+  const [likeLoading, setLikeLoading] = useState(false);
   const [showFullText, setShowFullText] = useState(false);
   const profile = useSelector((state) => state.profile);
   const loggedInUserId = profile._id;
   const shareUrl = `https://alumnify.in/home/posts/${postId}`;
   const [likes, setLikes] = useState(0);
-
+  
+  // Add comment count state
+  const [commentCount, setCommentCount] = useState(0);
 
   // Mobile-first slider settings
   const settings = {
@@ -40,21 +41,31 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     customPaging: () => <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
   };
 
-
-
-  const countLikes = async ()=>{
+  const countLikes = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/postLike/counts/${postId}`
       )
       setLikes(response.data?.data?.like);
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Error counting likes:", error);
     }
   }
 
+  // Add function to count comments
+  const countComments = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/postComment/count/${postId}`
+      );
+      if (response.data.success) {
+        setCommentCount(response.data.data.count);
+      }
+    } catch (error) {
+      console.error("Error counting comments:", error);
+    }
+  }
 
-  
   const checkLike = async () => {
     try {
       const response = await axios.get(
@@ -63,26 +74,21 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       if (response.data) {
         setLiked(response.data?.data?.isLiked);
       }
-      console.log(response.data);
-
-
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Error checking like:", error);
     }
   }
-
 
   useEffect(() => {
     if (loggedInUserId && postId) {
       checkLike();
       countLikes();
+      countComments(); // Add this line
     }
   }, [loggedInUserId, postId]);
 
-
-
   const handleLike = async () => {
-    setLikeLoading(true); // Start loading
+    setLikeLoading(true);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/postLike/`,
@@ -92,14 +98,17 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
       checkLike();
       countLikes();
       const id = await response.data._id;
-      // handleLikes(id);
     } catch (error) {
       console.error("Error liking post:", error);
     } finally {
-      setLikeLoading(false); // Stop loading
+      setLikeLoading(false);
     }
   };
 
+  // Add function to handle comment count updates
+  const handleCommentCountChange = () => {
+    countComments();
+  };
 
   const handleDeletePost = async (userId) => {
     if (userId === profile._id || profile.profileLevel === 0) {
@@ -112,41 +121,34 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     }
   };
 
-
   const formatCreatedAt = (timestamp) => {
     const now = new Date();
     const postTime = new Date(timestamp);
     const diffInMinutes = Math.floor((now - postTime) / (1000 * 60));
-
 
     if (diffInMinutes < 1) return 'now';
     if (diffInMinutes < 60) return `${diffInMinutes}m`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
     if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)}d`;
 
-
     return postTime.toLocaleDateString();
   };
-
 
   const handleShareClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-
   const handleShareClose = () => {
     setAnchorEl(null);
   };
-
 
   const truncateText = (text, maxLength = 140) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
 
-
   return (
-    <div className="w-full  bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-all duration-200 mb-3">
+    <div className="w-full bg-white rounded-lg border border-gray-200 hover:shadow-sm transition-all duration-200 mb-3">
       {loading ? (
         <div className="p-4 sm:p-6 text-center">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#71be95] mx-auto"></div>
@@ -174,7 +176,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 </div>
               </Link>
 
-
               {((profile.profileLevel === 0) || (userId === profile._id)) && (
                 <button
                   onClick={() => handleDeletePost(userId)}
@@ -185,7 +186,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
               )}
             </div>
           </div>
-
 
           {/* Content - Mobile optimized */}
           <div className="px-3 sm:px-4">
@@ -212,7 +212,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 </div>
               )}
 
-
               {/* Images - Mobile optimized */}
               {image && image.length > 1 ? (
                 <div className="mb-3 rounded-lg overflow-hidden">
@@ -228,10 +227,9 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                 </div>
               ) : image && image.length === 1 && image[0] ? (
                 <div className="mb-3 rounded-lg overflow-hidden">
-                  <img src={image[0]} alt="Post" className="w-full  object-cover" />
+                  <img src={image[0]} alt="Post" className="w-full object-cover" />
                 </div>
               ) : null}
-
 
               {/* YouTube Video - Mobile optimized */}
               {post.youtubeVideoId && (
@@ -251,26 +249,28 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
             </div>
           </div>
 
-
-          {/* Like count - Mobile optimized with improved styling */}
-          {likes > 0 && (
-            <div className="px-3 sm:px-4 py-2">
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4 fill-[#71be95] text-[#71be95]" />
-                  <span className="font-medium text-gray-700">{likes}</span>
-                </div>
-                <span className="text-gray-500">
-                  {likes === 1 ? 'person likes this' : 'people like this'}
-                </span>
+          {/* Engagement Stats - Updated to show both likes and comments */}
+          <div className="px-3 sm:px-4">
+            {(likes > 0 || commentCount > 0) && (
+              <div className="py-2 flex items-center justify-between border-b border-gray-100">
+                {/* Likes count */}
+                {likes > 0 && (
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4 fill-[#71be95] text-[#71be95]" />
+                      <span className="font-medium text-gray-700">{likes}</span>
+                    </div>
+                  </div>
+                )}
+                
+              
               </div>
-            </div>
-          )}
-
+            )}
+          </div>
 
           {/* Actions - Mobile optimized with like loader */}
           {entityType === 'posts' && (
-            <div className="border-t border-gray-100 mx-3 sm:mx-4 mt-2">
+            <div className="mx-3 sm:mx-4">
               <div className="flex items-center justify-around py-2">
                 <button
                   onClick={handleLike}
@@ -293,16 +293,15 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
                     </>
                   )}
                 </button>
-
-
-                <button
-                  onClick={onCommentIconClick}
-                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-50 hover:text-[#71be95] transition-all duration-200 flex-1 justify-center"
-                >
+<button
+  onClick={onCommentIconClick}
+  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-50 hover:text-[#71be95] transition-all duration-200 flex-1 justify-center"
+>
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-xs sm:text-sm">Comment</span>
+                  <span className="text-xs sm:text-sm">
+                    Comment {commentCount > 0 && `(${commentCount})`}
+                  </span>
                 </button>
-
 
                 <button
                   onClick={handleShareClick}
@@ -316,7 +315,6 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           )}
         </>
       )}
-
 
       {/* Share Menu */}
       <Menu
@@ -355,6 +353,5 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
     </div>
   );
 }
-
 
 export default Post;

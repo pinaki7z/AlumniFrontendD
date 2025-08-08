@@ -56,6 +56,7 @@ const Dashboard = ({ handleLogout }) => {
   const searchQuery = searchParams.get('search');
   const navigate = useNavigate();
   const profile = useSelector((state) => state.profile);
+  const profileVerification = useSelector((state) => state.profileVerification);
   const [cookie, setCookie, removeCookie] = useCookies('token');
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -68,14 +69,17 @@ const Dashboard = ({ handleLogout }) => {
     setMobileSidebarOpen(false);
   };
 
-  console.log("profile", profile?._id)
+  console.log("profileVerification", profileVerification)
+
+
 
   useEffect(() => {
-    if (profile?._id===undefined ||profile.accountDeleted === true || (profile.expirationDate && new Date(profile.expirationDate) < new Date())) {
+    if (profile?._id===undefined ||profileVerification?.accountDeleted === true || (profileVerification?.expirationDate && new Date(profileVerification?.expirationDate) < new Date())) {
+      console.log("alksdfjalskdfj asdf adsfsafasfadfafafasfsafasdfffffffff")
       removeCookie('token');
       navigate("/login");
     }
-  }, [profile.accountDeleted, profile.expirationDate]);
+  }, [profileVerification?.accountDeleted, profileVerification?.expirationDate]);
 
   return (
     <div  className="flex h-screen w-full overflow-hidden">

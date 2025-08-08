@@ -135,7 +135,7 @@ const TopBar = ({ handleLogout, onMenuClick }) => {
     }, [searchText]);
 
     const logout = () => {
-        console.log('logout', cookie.token)
+        // console.log('logout', cookie.token)
         removeCookie('token');
         handleLogout();
         navigate('/login');

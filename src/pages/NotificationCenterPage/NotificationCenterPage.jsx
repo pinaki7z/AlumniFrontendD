@@ -282,7 +282,7 @@ function NotificationCenterPage() {
     };
 
     socket.on("connect", handleConnect);
-    socket.on("disconnect", handleDisconnect);
+    // socket.on("disconnect", handleDisconnect);
     socket.on("connect_error", handleConnectError);
     socket.on("new-notification", handleNewNotification);
     socket.on("notification-read", handleNotificationRead);
@@ -307,14 +307,15 @@ function NotificationCenterPage() {
   // Update the getNotificationStyle function
   const getNotificationStyle = (notification) => {
     // Special styling for specific notification types
+      if (notification.title === "ID Verification Required") {
+      return "bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500";
+    }
     if(notification.read){
        return notification.read
       ? 'bg-gray-50 border border-gray-100 opacity-70'
       : 'bg-white border-l-4 border-blue-500 shadow-sm ring-1 ring-blue-100';
     }
-    if (notification.title === "ID Verification Required") {
-      return "bg-gradient-to-r from-red-50 to-orange-50 border-l-4 border-red-500";
-    }
+  
 
     if (notification.title === "ID Verification Approved") {
       return "bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500";
