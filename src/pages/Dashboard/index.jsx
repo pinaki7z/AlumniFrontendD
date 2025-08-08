@@ -56,11 +56,11 @@ const Dashboard = ({ handleLogout }) => {
   const searchQuery = searchParams.get('search');
   const navigate = useNavigate();
   const profile = useSelector((state) => state.profile);
-  const profileVerification = useSelector((state) => state.profileVerification);
+  // const profileVerification = useSelector((state) => state.profileVerification);
   const [cookie, setCookie, removeCookie] = useCookies('token');
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-
+  const [profileVerification, setProfileVerification] = useState(null);
   const toggleMobileSidebar = () => {
     setMobileSidebarOpen(!mobileSidebarOpen);
   };
@@ -69,13 +69,30 @@ const Dashboard = ({ handleLogout }) => {
     setMobileSidebarOpen(false);
   };
 
-  console.log("profileVerification", profileVerification)
 
 
+  const fetchUserVerification = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user-verification/user/${profile._id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile verification');
+      }
+      const data = await response.json();
+      setProfileVerification(data);
+    } catch (error) {
+      console.error('Error fetching profile verification:', error.message);
+    }
+  };
 
   useEffect(() => {
+    fetchUserVerification();
+  }, []);
+
+  useEffect(() => {
+  console.log("profileVerification", profileVerification)
+
     if (profile?._id===undefined ||profileVerification?.accountDeleted === true || (profileVerification?.expirationDate && new Date(profileVerification?.expirationDate) < new Date())) {
-      console.log("alksdfjalskdfj asdf adsfsafasfadfafafasfsafasdfffffffff")
+      // console.log("alksdfjalskdfj asdf adsfsafasfadfafafasfsafasdfffffffff")
       removeCookie('token');
       navigate("/login");
     }
