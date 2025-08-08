@@ -17,6 +17,7 @@ import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 import BackButtonHandler from "./components/BackButtonHandler";
 import ScrollToTop from "./components/ScrollToTop";
 import useCapacitorRedirect from "./utils/useCapacitorRedirect";
+import PullToReload from "./components/PullToReload/PullToReload";
 function App() {
   const [cookies, removeCookie] = useCookies(["token"]);
   const [loading, setLoading] = useState(true);
@@ -92,7 +93,7 @@ function App() {
                 {/* Home route for logged-in users */}
                 <Route
                   path="/home/*"
-                  element={<Dashboard handleLogout={handleLogout} />}
+                  element={<PullToReload><Dashboard handleLogout={handleLogout} /></PullToReload>}
                 />
                 <Route
                   path="/groups/:_id/invite/*"
