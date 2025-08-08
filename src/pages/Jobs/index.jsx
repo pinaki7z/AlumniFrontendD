@@ -294,7 +294,7 @@ const Jobs = () => {
                 </NavLink>
               </>
             )}
-
+{/* 
             <NavLink
               to="/home/jobs/archive"
               className={({ isActive }) =>
@@ -307,7 +307,7 @@ const Jobs = () => {
             >
               <ArchiveIcon size={14} />
               <span>Archive</span>
-            </NavLink>
+            </NavLink> */}
           </div>
         </div>
 
