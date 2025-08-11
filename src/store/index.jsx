@@ -72,10 +72,10 @@ const accessToken = jwtToken;
 const initializeStore = async () => {
   try {
     // const [initialSettings, initialProfile, initialMembers] = await Promise.all([
-    const [ initialProfile, initialMembers] = await Promise.all([
+    const [ initialProfile] = await Promise.all([
       // fetchSettings(),
       fetchProfileData(),
-      fetchMembers(),
+      // fetchMembers(),
     ]);
 
     const preloadedState = {
@@ -88,7 +88,7 @@ const initializeStore = async () => {
       },
       // settings: initialSettings || {},
       profile: initialProfile || {},
-      member: initialMembers || {},
+      // member: initialMembers || {},
       webSocket: {
         ws: null,
       },

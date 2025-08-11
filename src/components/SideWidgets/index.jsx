@@ -29,11 +29,12 @@ const SideWidgets = () => {
   const [cookie, setCookie] = useCookies(["access_token"]);
   const profile = useSelector((state) => state.profile);
   const [notifications, setNotifications] = useState([]);
-  const members = useSelector((state) => state.member);
+  // const members = useSelector((state) => state.member);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [isloading, setIsLoading] = useState({});
   const [load, setLoad] = useState(false);
+  const [members, setMembers] = useState([]);
   const itemsPerPage = 3;
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
@@ -54,6 +55,18 @@ const SideWidgets = () => {
     fetchNotifications();
   }, [isloading]);
 
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni`);
+        console.log("response", response.data?.records);
+        setMembers(response.data?.records);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    fetchMembers();
+  }, []);
 
 
   const handleInvite = async () => {

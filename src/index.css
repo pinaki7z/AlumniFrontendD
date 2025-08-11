@@ -97,3 +97,81 @@ code {
   overflow: auto !important;
   height: 100% !important;
 }
+
+
+/* Add to your global CSS file */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Ensure smooth transitions */
+.mobile-bottom-nav {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Active state animations */
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.nav-active-indicator {
+  animation: bounce-in 0.3s ease-out;
+}
+
+/* Add to your global CSS file */
+.safe-area-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0px);
+}
+
+/* Active state animation */
+@keyframes bounce-in {
+  0% { 
+    transform: scale(0.3) translateX(-50%); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.05) translateX(-50%); 
+  }
+  70% { 
+    transform: scale(0.9) translateX(-50%); 
+  }
+  100% { 
+    transform: scale(1) translateX(-50%); 
+    opacity: 1; 
+  }
+}
+
+.nav-active-indicator {
+  animation: bounce-in 0.3s ease-out;
+}
+
+/* Touch feedback */
+.nav-button {
+  transition: all 0.15s ease-in-out;
+}
+
+.nav-button:active {
+  transform: scale(0.95);
+}
+
+/* Smooth backdrop blur for better native feel */
+.mobile-bottom-nav {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Notification badge pulse animation */
+@keyframes badge-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.badge-animate {
+  animation: badge-pulse 2s infinite;
+}

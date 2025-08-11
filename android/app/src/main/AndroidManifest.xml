@@ -36,6 +36,7 @@
     </application>
 
     <!-- Permissions -->
-
+    <!-- Add this to android/app/src/main/AndroidManifest.xml -->
+<uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

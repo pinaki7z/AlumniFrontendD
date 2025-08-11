@@ -47,10 +47,12 @@ import {
 import { updateProfile } from "../../store/profileSlice";
 import Feeed from "../../components/Feeed";
 import baseUrl from "../../config";
+import ScrollToTop from "../../components/ScrollToTop";
 
 const ProfilePage = () => {
   const { id } = useParams();
-  const members = useSelector((state) => state.member);
+  // const members = useSelector((state) => state.member);
+  const [members, setMembers] = useState([]);
   const profile = useSelector((state) => state.profile);
   const member = members.find(m => m._id === profile._id) || {};
   const [workExperiences, setWorkExperiences] = useState([]);
@@ -64,6 +66,20 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = cookie.token;
+
+    useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni`);
+        console.log("response", response.data?.records);
+        setMembers(response.data?.records);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    fetchMembers();
+  }, []);
+
 
   // compute completion
   const totalProps = 5;
@@ -451,6 +467,8 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 md:p-4 py-2">
+           <ScrollToTop targetId="main-scroll" />
+
       <div className="mx-auto max-w-7xl">
         {/* Verification Banner */}
         {renderVerificationBanner()}

@@ -9,6 +9,7 @@
     "@capacitor/app": "^7.0.1",
     "@capacitor/cli": "^7.4.2",
     "@capacitor/core": "^7.4.2",
+    "@capacitor/haptics": "^7.0.2",
     "@ckeditor/ckeditor5-build-classic": "^40.1.0",
     "@ckeditor/ckeditor5-react": "^6.2.0",
     "@emotion/react": "^11.11.1",

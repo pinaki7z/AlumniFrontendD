@@ -190,7 +190,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
           {/* Content - Mobile optimized */}
           <div className="px-3 sm:px-4">
             <div
-              onClick={() => navigate(`/home/posts/${postId}`)}
+              // onClick={() => navigate(`/home/posts/${postId}`)}
               className="cursor-pointer"
             >
               {text && (

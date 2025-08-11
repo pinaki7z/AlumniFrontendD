@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
-  const membersred = useSelector((state) => state.member.filter(member => member.profileLevel !== 0));
+  // const membersred = useSelector((state) => state.member.filter(member => member.profileLevel !== 0));
   const [cookie, setCookie] = useCookies('token');
   const [displayedMembers, setDisplayedMembers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,13 +37,32 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
   const [graduatingYear, setGraduatingYear] = useState('');
   const [department, setDepartment] = useState('');
   const [batch, setBatch] = useState('');
+  const [membersred, setMembersred] = useState([]);
+  const [totalMembers, setTotalMembers] = useState(0);
   const profile = useSelector((state) => state.profile);
   let admin;
   if (profile.profileLevel === 0 || profile.profileLevel === 1) {
     admin = true;
   }
 
-  const totalMembers = membersred.length;
+    useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/alumni`);
+        console.log("response", response.data?.records);
+        setMembersred(response.data?.records);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  useEffect(() => {
+    setTotalMembers(membersred?.length);
+  }, [membersred]);
+
+  // const totalMembers = membersred.length;
 
   const generateYears = () => {
     const currentYear = new Date().getFullYear();
@@ -216,7 +235,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
 
     setNoUsersFound(filteredMembers.length === 0);
     setDisplayedMembers(filteredMembers.slice(0, LIMIT));
-  }, [searchQuery, memberRole, graduatingYear, department, batch]);
+  }, [searchQuery, memberRole, graduatingYear, department, batch, membersred]);
 
   const loadMoreMembers = () => {
     setLoading(true);
@@ -426,7 +445,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               {viewMode === 'grid' && !noUsersFound && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
                   {/* Member Cards */}
-                  {displayedMembers.map((member) => (
+                  {displayedMembers?.map((member) => (
                     <Profilecard
                       key={member._id}
                       member={member}
@@ -443,7 +462,7 @@ const Members = ({ addButton, groupMembers, owner, deleteButton }) => {
               {/* List View */}
               {viewMode === 'list' && !noUsersFound && (
                 <div className="space-y-2">
-                  {displayedMembers.map((member) => (
+                  {displayedMembers?.map((member) => (
                     <ListViewItem
                       key={member._id}
                       member={member}
