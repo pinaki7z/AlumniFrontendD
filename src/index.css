@@ -85,3 +85,15 @@ code {
   @apply bg-gradient-to-b from-[#0A3A4C] to-[#174873];
   /* @apply bg-gradient-to-b from-[#6EE7B7] to-[#3B82F6]; */
 }
+
+
+/* Add to your CSS file */
+.ptr {
+  overflow: auto !important;
+  height: 100% !important;
+}
+
+.ptr__children {
+  overflow: auto !important;
+  height: 100% !important;
+}
