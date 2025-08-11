@@ -63,6 +63,7 @@ const Dashboard = ({ handleLogout }) => {
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileVerification, setProfileVerification] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const toggleMobileSidebar = () => {
     setMobileSidebarOpen(!mobileSidebarOpen);
   };
@@ -111,66 +112,34 @@ const Dashboard = ({ handleLogout }) => {
     }
   }, [profileVerification?.accountDeleted, profileVerification?.expirationDate]);
 
-  return (
-    <div className="flex h-screen w-full overflow-hidden">
-      <ScrollToTop targetId="main-scroll" />
-      {/* Desktop Sidebar - Collapsed by default, expands on hover */}
-      <div className="hidden lg:block">
-        <LeftSidebar onNavigate={() => { }} isMobile={false} isExpanded={false} />
-      </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Bar with Mobile Hamburger Menu */}
-        <div className="flex items-center dynamic-site-bg py-2 md:px-5 px-2 relative z-50 shadow-lg lg:hidden">
-          <button
-            onClick={toggleMobileSidebar}
-            className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
-          >
-            <Menu className="h-6 w-6 text-white" />
-          </button>
-          <div className="flex-1">
-            <TopBar handleLogout={handleLogout} />
-          </div>
-        </div>
 
-        {/* Desktop TopBar - No hamburger menu */}
-        <div className="hidden lg:block ">
-          <div className="dynamic-site-bg py-3 px-5 shadow-lg">
-            <div className="text-white font-semibold text-lg absolute left-[0.5%] top-[0%]">
-              <img src="/v2/logo2.png" alt="InsideOut Logo" className="w-[200px] h-[99px] mx-auto rounded-lg object-contain transition-all duration-300" />
-            </div>
-            <div className="max-w-6xl mx-auto">
+  useEffect(() => {
+  const checkMobile = () => {
+    // Check for touch capability and screen size
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768;
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    
+    // Mobile device regex (excluding tablets)
+    const mobileRegex = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i;
+    const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
+    
+    // Exclude tablets
+    const isTablet = /ipad|android(?!.*mobile)|tablet/i.test(userAgent.toLowerCase());
+    
+    const isMobileDevice = (isTouchDevice && isSmallScreen && isMobileUA) && !isTablet;
+    setIsMobile(isMobileDevice);
+  };
+  
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+}, []);
 
-              <TopBar handleLogout={handleLogout} />
-            </div>
-          </div>
-        </div>
 
-        {/* Mobile Sidebar Overlay */}
-        {mobileSidebarOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
-            onClick={closeMobileSidebar}
-          />
-        )}
-
-        {/* Mobile Sidebar */}
-        <div className={`
-          lg:hidden fixed top-0 left-0 h-full shadow-2xl z-50
-          transform transition-transform duration-300 ease-in-out
-          ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          w-72 max-w-[85vw]
-        `}>
-          <div className="h-full">
-            <LeftSidebar onNavigate={closeMobileSidebar} isMobile={true} isExpanded={true} />
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div id="main-scroll" className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
-           <PullToRefresh onRefresh={handleRefresh}>
-            <div className="">
+  const MainContent = ()=>(
+      <div className="">
 
               <Routes>
                 <Route path="/groups/*" element={<Groups />} />
@@ -293,7 +262,72 @@ const Dashboard = ({ handleLogout }) => {
                 <Route path="/validate-user" element={<ValidateUser />} />
               </Routes>
             </div>
-          </PullToRefresh>
+  )
+  return (
+    <div className="flex h-screen w-full overflow-hidden">
+      <ScrollToTop targetId="main-scroll" />
+      {/* Desktop Sidebar - Collapsed by default, expands on hover */}
+      <div className="hidden lg:block">
+        <LeftSidebar onNavigate={() => { }} isMobile={false} isExpanded={false} />
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Bar with Mobile Hamburger Menu */}
+        <div className="flex items-center dynamic-site-bg py-2 md:px-5 px-2 relative z-50 shadow-lg lg:hidden">
+          <button
+            onClick={toggleMobileSidebar}
+            className="p-2 rounded-md hover:bg-white/20 transition-all duration-200 mr-4 hover:scale-105 shadow-lg"
+          >
+            <Menu className="h-6 w-6 text-white" />
+          </button>
+          <div className="flex-1">
+            <TopBar handleLogout={handleLogout} />
+          </div>
+        </div>
+
+        {/* Desktop TopBar - No hamburger menu */}
+        <div className="hidden lg:block ">
+          <div className="dynamic-site-bg py-3 px-5 shadow-lg">
+            <div className="text-white font-semibold text-lg absolute left-[0.5%] top-[0%]">
+              <img src="/v2/logo2.png" alt="InsideOut Logo" className="w-[200px] h-[99px] mx-auto rounded-lg object-contain transition-all duration-300" />
+            </div>
+            <div className="max-w-6xl mx-auto">
+
+              <TopBar handleLogout={handleLogout} />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {mobileSidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
+            onClick={closeMobileSidebar}
+          />
+        )}
+
+        {/* Mobile Sidebar */}
+        <div className={`
+          lg:hidden fixed top-0 left-0 h-full shadow-2xl z-50
+          transform transition-transform duration-300 ease-in-out
+          ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          w-72 max-w-[85vw]
+        `}>
+          <div className="h-full">
+            <LeftSidebar onNavigate={closeMobileSidebar} isMobile={true} isExpanded={true} />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div id="main-scroll" className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
+           {isMobile ? (
+            <PullToRefresh onRefresh={handleRefresh}>
+              {<MainContent/>}
+            </PullToRefresh>
+          ) : (
+            <MainContent/>
+          )}
         </div>
       </div>
     </div>
