@@ -37,7 +37,7 @@ function AppLoader() {
           height: "100vh",
         }}
       >
-        <l-tail-chase size="40" speed="1.75" color="#174873"></l-tail-chase>
+        {/* <l-tail-chase size="40" speed="1.75" color="#174873"></l-tail-chase> */}
       </div>
     );
   }

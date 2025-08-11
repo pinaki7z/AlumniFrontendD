@@ -71,8 +71,9 @@ const accessToken = jwtToken;
 
 const initializeStore = async () => {
   try {
-    const [initialSettings, initialProfile, initialMembers] = await Promise.all([
-      fetchSettings(),
+    // const [initialSettings, initialProfile, initialMembers] = await Promise.all([
+    const [ initialProfile, initialMembers] = await Promise.all([
+      // fetchSettings(),
       fetchProfileData(),
       fetchMembers(),
     ]);
@@ -85,7 +86,7 @@ const initializeStore = async () => {
       posts: {
         posts: [],
       },
-      settings: initialSettings || {},
+      // settings: initialSettings || {},
       profile: initialProfile || {},
       member: initialMembers || {},
       webSocket: {
