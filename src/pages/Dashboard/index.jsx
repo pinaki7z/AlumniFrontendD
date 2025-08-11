@@ -63,7 +63,6 @@ const Dashboard = ({ handleLogout }) => {
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [profileVerification, setProfileVerification] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
   const toggleMobileSidebar = () => {
     setMobileSidebarOpen(!mobileSidebarOpen);
   };
@@ -112,30 +111,6 @@ const Dashboard = ({ handleLogout }) => {
     }
   }, [profileVerification?.accountDeleted, profileVerification?.expirationDate]);
 
-
-
-  useEffect(() => {
-  const checkMobile = () => {
-    // Check for touch capability and screen size
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isSmallScreen = window.innerWidth <= 768;
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    
-    // Mobile device regex (excluding tablets)
-    const mobileRegex = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i;
-    const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
-    
-    // Exclude tablets
-    const isTablet = /ipad|android(?!.*mobile)|tablet/i.test(userAgent.toLowerCase());
-    
-    const isMobileDevice = (isTouchDevice && isSmallScreen && isMobileUA) && !isTablet;
-    setIsMobile(isMobileDevice);
-  };
-  
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-  return () => window.removeEventListener('resize', checkMobile);
-}, []);
 
 
   const MainContent = ()=>(
@@ -321,13 +296,131 @@ const Dashboard = ({ handleLogout }) => {
 
         {/* Main Content */}
         <div id="main-scroll" className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4">
-           {isMobile ? (
-            <PullToRefresh onRefresh={handleRefresh}>
-              {<MainContent/>}
-            </PullToRefresh>
-          ) : (
-            <MainContent/>
-          )}
+           <PullToRefresh onRefresh={handleRefresh}>
+            <div className="">
+
+              <Routes>
+                <Route path="/groups/*" element={<Groups />} />
+                {searchQuery && (
+                  <Route
+                    path="/*"
+                    element={<SearchedResults searchQuery={searchQuery} />}
+                  />
+                )}
+                {!searchQuery && (
+                  <Route
+                    path="/*"
+                    element={
+                      <div className="md:max-w-7xl mx-auto md:p-4">
+                        <div className="grid grid-cols-12 gap-4">
+                          {/* Left Sidebar - Sticky */}
+                          <div className="col-span-12 lg:col-span-3 hidden lg:block">
+                            <div className="sticky top-4">
+                              <SideWidgets />
+                            </div>
+                          </div>
+
+                          {/* Middle Column - Wider and Scrollable */}
+                          <div className="col-span-12 lg:col-span-6">
+                            <SocialMediaPost showCreatePost={true} />
+                          </div>
+
+                          {/* Right Sidebar - Sticky */}
+                          <div className="col-span-12 lg:col-span-3 hidden lg:block">
+                            <div className="sticky top-4">
+                              <RightSidebar />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  />
+                )}
+
+                {/* All other routes remain the same */}
+                {/* <Route path="/donations/*" element={<Donations />} /> */}
+
+
+                {/* all business connect routes */}
+                <Route path="/business-connect" element={<BusinessConnect />} />
+                <Route path="/business-connect/:id/" element={<BusinessConnectDetails />} />
+                <Route path="/business-connect/create" element={<CreateBusiness />} />
+                <Route path="/business-connect/edit/:id" element={<CreateBusiness />} />
+                <Route path="/business-connect/admin/verify" element={<BusinessVerificationPanel />} />
+
+                {/* all sponsorship routes */}
+                <Route path="/sponsorship-connect" element={<SponsorshipConnect />} />
+                <Route path="/sponsorship-connect/:id/" element={<SponsorshipDetails />} />
+                <Route path="/sponsorship-connect/create" element={<CreateSponsorship />} />
+                <Route path="/sponsorship-connect/edit/:id" element={<CreateSponsorship />} />
+                <Route path="/sponsorship-connect/admin/verify" element={<SponsorshipVerificationPanel />} />
+
+
+                {/* all newsv2 routes */}
+                <Route path="/news/*" element={<NewsUpdatesPage />} />
+                <Route path="/news/create" element={<CreateNewsPage />} />
+                <Route path="/news/:id" element={<NewsDetailPage />} />
+                <Route path="/news/drafts" element={<DraftsPage />} />
+                <Route path="/news/analytics" element={<AnalyticsPage />} />
+
+                <Route path="/prohibited-keywords" element={<ProhibitedKeywords />} />
+
+
+                {/* admin routes */}
+                <Route path="/admin/user-verification" element={<UserVerification />} />
+
+
+
+                {/* <Route path="/guidance/*" element={<Guidance />} /> */}
+                <Route path="/photo-gallery/*" element={<V2PhotoGallery />} />
+                <Route path="/chatv2">
+                  <Route index element={<MessagingPage />} />
+                  <Route path=":userId" element={<MessagingPage />} />
+                </Route>
+                {/* <Route path="/sponsorships/*" element={<Sponsorships />} /> */}
+                <Route path="/members/*" element={
+                  <div className="w-full">
+                    <Members showHeading={true} />
+                  </div>
+                } />
+                <Route path="/members/create" element={
+                  <MemberForm name='member' />
+                } />
+                <Route path="/members/:id/*" element={<Profile />} />
+                <Route path="/profile/*" element={<ProfilePage />} />
+                <Route path="/notifications/*" element={<NotificationCenterPage />} />
+                <Route path="/events/*" element={<Events />} />
+                <Route path="/jobs/*" element={<Jobs />} />
+                <Route path="/jobs/create" element={<CreateJob />} />
+                <Route path="/jobs/candidates" element={<InterestedJobCandidates />} />
+                <Route path="/settings/*" element={<Settings />} />
+                <Route path="/jobs/:_id/:title" element={<IndividualJobPost />} />
+                <Route path="/posts/:_id/" element={<Ipost />} />
+                <Route path="/internships/:_id/:title" element={<IndividualJobPost />} />
+
+
+                <Route path="/forums/*" element={<Forum />} />
+                <Route path="/forums/category/:categoryId" element={<TopicPage />} />
+                <Route path="/forums/category/:categoryId/topic/:topicId" element={<ForumPost />} />
+                <Route path="/forums/category/:categoryId/topic/:topicId/post/:postId" element={<DiscussionPage />} />
+
+
+                <Route path="/profile/:id/following" element={<Following />} />
+                <Route path="/profile/:id/followers" element={<Followers />} />
+                <Route path="/profile/workExperience" element={<WorkExperience />} />
+                <Route path="/profile/profile-settings" element={<ProfileSettings />} />
+                {/* <Route path="/news/*" element={
+                <div className="w-full">
+                  <News />
+                </div>
+              } />
+              <Route path="/news/:id/*" element={<NewsDetails />} />
+              <Route path="/news/:id/edit" element={<CreateNews />} />
+              <Route path="/news/createNews" element={<CreateNews />} /> */}
+                <Route path="/validate-user" element={<ValidateUser />} />
+              </Routes>
+            </div>
+          </PullToRefresh>
         </div>
       </div>
     </div>
