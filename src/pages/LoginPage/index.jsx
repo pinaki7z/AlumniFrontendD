@@ -88,11 +88,11 @@ const LoginPage = ({ handleLogin }) => {
           dispatch(setAdmin(true));
         }
 
-        if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
-          toast.error("Your account has expired. Contact admin.");
-          setLoading(false);
-          return;
-        }
+        // if (alumni.expirationDate && new Date(alumni.expirationDate) < currentDate) {
+        //   toast.error("Your account has expired. Contact admin.");
+        //   setLoading(false);
+        //   return;
+        // }
 
         toast.success("Welcome back!");
         setLoading(false);
