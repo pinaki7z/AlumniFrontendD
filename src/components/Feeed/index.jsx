@@ -11,6 +11,7 @@ import EventDisplay from './EventDisplay';
 import PollDisplay from './PollDisplay';
 import { useParams } from 'react-router-dom';
 import { RefreshCw, Plus } from 'lucide-react';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 dotPulse.register();
 
@@ -33,10 +34,45 @@ function Feed({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const profile = useSelector((state) => state.profile);
   const { _id } = useParams();
   const LIMIT = 5;
+
+
+    const handleRefreshPost = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        fetchPosts(1, true);
+        resolve();
+      }, 100);
+    });
+  };
+
+
+    useEffect(() => {
+  const checkMobile = () => {
+    // Check for touch capability and screen size
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768;
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    
+    // Mobile device regex (excluding tablets)
+    const mobileRegex = /android|webos|iphone|ipod|blackberry|iemobile|opera mini/i;
+    const isMobileUA = mobileRegex.test(userAgent.toLowerCase());
+    
+    // Exclude tablets
+    const isTablet = /ipad|android(?!.*mobile)|tablet/i.test(userAgent.toLowerCase());
+    
+    const isMobileDevice = (isTouchDevice && isSmallScreen && isMobileUA) && !isTablet;
+    setIsMobile(isMobileDevice);
+  };
+  
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+}, []);
 
   // Ref for the load more trigger element
   const loadMoreRef = useRef(null);
@@ -133,6 +169,7 @@ function Feed({
 
   const handleDeletePost = (postId) => {
     setPosts(prev => prev.filter(p => p._id !== postId));
+    toast.dismiss();
     toast.success('Deleted successfully!');
   };
 
@@ -155,7 +192,7 @@ function Feed({
   };
 
   const handleNewPost = () => {
-    toast.success('Posted successfully!');
+    // toast.success('Posted successfully!');
     setPosts([]);
     setPage(1);
     setHasMore(true);
@@ -169,32 +206,8 @@ function Feed({
     fetchPosts(1, true);
   };
 
-  return (
-    <div className="w-full max-w-3xl mx-auto space-y-4">
-      {/* Create Post Section */}
-      {([0, 1].includes(profile.profileLevel) && entityType !== "news" && !profilePage) && (
-        <CreatePost1
-          photoUrl={photoUrl}
-          username={username}
-          onNewPost={handleNewPost}
-          entityType={entityType}
-          setLoadingPost={setLoadingPost}
-          loadingPost={loadingPost}
-        />
-      )}
-
-      {/* Create Button */}
-      {showCreateButton && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
-          <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 px-4 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
-            <Plus className="w-4 h-4" />
-            <span>Create New Post</span>
-          </button>
-        </div>
-      )}
-
-      {/* Posts */}
-      <div className="space-y-4">
+  const showPosts = ()=>(
+     <div className="space-y-4">
         {loading ? (
           <div className="flex justify-center py-8">
             <div className=" rounded-lg  p-8">
@@ -328,6 +341,42 @@ function Feed({
           </div>
         )}
       </div>
+  )
+
+  return (
+    <div className="w-full max-w-3xl mx-auto space-y-4 custom-scrollbar">
+      {/* Create Post Section */}
+      {([0, 1].includes(profile.profileLevel) && entityType !== "news" && !profilePage) && (
+        <CreatePost1
+          photoUrl={photoUrl}
+          username={username}
+          onNewPost={handleNewPost}
+          entityType={entityType}
+          setLoadingPost={setLoadingPost}
+          loadingPost={loadingPost}
+        />
+      )}
+
+      {/* Create Button */}
+      {showCreateButton && (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+          <button className="w-full bg-gradient-to-r from-[#71be95] to-[#5fa080] text-white py-3 px-4 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-200 flex items-center justify-center space-x-2">
+            <Plus className="w-4 h-4" />
+            <span>Create New Post</span>
+          </button>
+        </div>
+      )}
+
+      {/* Posts */}
+     {isMobile ? (
+            <PullToRefresh onRefresh={handleRefreshPost}>
+              {showPosts()}
+            </PullToRefresh>
+          ) : (
+            showPosts()
+          )}
+
+
     </div>
   );
 }

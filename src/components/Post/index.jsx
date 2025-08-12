@@ -298,7 +298,7 @@ function Post({ userId, postId, profilePicture, username, text, timestamp, image
   className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-50 hover:text-[#71be95] transition-all duration-200 flex-1 justify-center"
 >
                   <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-xs sm:text-sm">
+                  <span className="text-xs sm:text-sm text-nowrap">
                     Comment {commentCount > 0 && `(${commentCount})`}
                   </span>
                 </button>

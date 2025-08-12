@@ -263,6 +263,7 @@ const Dashboard = ({ handleLogout }) => {
   )
   return (
     <div className="flex h-screen w-full overflow-hidden">
+           <ScrollToTop targetId="main-scroll" />
      
       {/* Desktop Sidebar - Collapsed by default, expands on hover */}
       <div className="hidden lg:block">
@@ -319,14 +320,14 @@ const Dashboard = ({ handleLogout }) => {
 
         {/* Main Content */}
         <div id="main-scroll" className="flex-1 overflow-auto bg-gray-100 overscroll-y-contain md:py-4 pb-[50px]">
-           <ScrollToTop targetId="main-scroll" />
-           {isMobile ? (
+           {/* {isMobile ? (
             <PullToRefresh onRefresh={handleRefresh}>
               {mainContent()}
             </PullToRefresh>
           ) : (
             mainContent()
-          )}
+          )} */}
+          { mainContent()}
         </div>
       </div>
        {/* Mobile Bottom Navigation */}

@@ -16,6 +16,8 @@ import ForgotPasswordPage from "./pages/ForgetPassword/ForgotPasswordPage";
 import PasswordReset from "./pages/ForgetPassword/PasswordReset";
 import BackButtonHandler from "./components/BackButtonHandler";
 import ScrollToTop from "./components/ScrollToTop";
+import { Capacitor } from '@capacitor/core';
+
 // import useCapacitorRedirect from "./utils/useCapacitorRedirect";
 // import PullToReload from "./components/PullToReload/PullToReload";
 function App() {
@@ -23,6 +25,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const profile = useSelector((state) => state.profile);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const isCapacitor = Capacitor.isNativePlatform();
 
 
   useEffect(() => {
@@ -137,7 +140,7 @@ function App() {
             {/* Catch-all route to redirect to LandingPage */}
             <Route
               path="/"
-              element={<LandingPage handleLogin={handleLogin} />}
+              element={isCapacitor ? <Navigate to="/login" replace /> : <LandingPage handleLogin={handleLogin} />}
             />
           </Routes>
         </Router>

@@ -169,7 +169,7 @@ export default function CreatePost1({
     const id = extractYoutubeVideoId(url);
     if (id) {
       setYoutubeVideoId(id);
-      toast.success('YouTube video added!');
+      // toast.success('YouTube video added!');
     } else {
       toast.error('Invalid YouTube URL');
     }
@@ -199,7 +199,7 @@ export default function CreatePost1({
       onNewPost(data);
       setInput('');
       setShowPollModal(false);
-      toast.success('Poll created successfully!');
+      // toast.success('Poll created successfully!');
     } catch (err) {
       console.error(err);
       toast.error('Failed to create poll');
@@ -233,7 +233,7 @@ export default function CreatePost1({
       await axios.post(`${process.env.REACT_APP_API_URL}/${entityType}/create`, payload);
       resetForm();
       onNewPost();
-      toast.success('Post created successfully!');
+      // toast.success('Post created successfully!');
     } catch (err) {
       console.error(err);
       toast.error('Failed to create post');
@@ -490,7 +490,7 @@ export function MyVerticallyCenteredModal({ show, onHide, isEditing, selectedEve
 
     axios[method](url, payload)
       .then(() => {
-        toast.success(isEditing ? 'Event updated!' : 'Event created!');
+        // toast.success(isEditing ? 'Event updated!' : 'Event created!');
         onHide();
         window.location.reload();
       })
@@ -1010,13 +1010,13 @@ export function MobilePostModal({
               value={input}
               onChange={handleInputChange}
               placeholder={`What's on your mind, ${profile.firstName}?`}
-              className="w-full text-gray-700 placeholder-gray-500 border-none outline-none resize-none text-base leading-relaxed min-h-[80px] max-h-[150px]"
+              className="w-full text-gray-700 placeholder-gray-500 border-none outline-none resize-none text-base leading-relaxed min-h-[160px] max-h-[350px]"
               autoFocus
             />
 
             <div className="flex  sm:flex-row gap-6 mt-1">
               <AIRefactorButton inputText={input} setInputText={setInput} />
-              <AISuggestion inputText={input} setInputText={setInput} />
+              {/* <AISuggestion inputText={input} setInputText={setInput} /> */}
               {/* ...other buttons like Submit */}
             </div>
             {/* <div className="flex items-center justify-end mt-2">

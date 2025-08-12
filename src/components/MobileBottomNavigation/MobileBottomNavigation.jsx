@@ -107,7 +107,7 @@ const MobileBottomNavigation = () => {
     return (
         <>
             {/* Bottom Navigation */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 lg:hidden safe-area-bottom">
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-[10] lg:hidden safe-area-bottom">
                 <div className="grid grid-cols-4 h-[50px]">
                     {bottomNavItems.map((item, index) => (
                         <Link

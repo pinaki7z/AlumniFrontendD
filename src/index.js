@@ -10,10 +10,11 @@ import storePromise from "./store";
 //import 'react-loading-skeleton/dist/skeleton.css';
 import { tailChase } from "ldrs";
 import { SocketProvider } from "./contexts/SocketContext";
-
+import { SplashScreen } from '@capacitor/splash-screen';
 tailChase.register();
 
 function AppLoader() {
+  SplashScreen.hide();
   const [isLoading, setLoading] = useState(true);
   const [store, setStore] = useState(null);
 

@@ -4,7 +4,7 @@ import useCapacitorRedirect from "../utils/useCapacitorRedirect";
 
 const ScrollToTop = ({ targetId = null }) => {
   const { pathname } = useLocation();
-  useCapacitorRedirect();
+  // useCapacitorRedirect();
 
   useEffect(() => {
     const scrollElement = targetId

@@ -175,3 +175,48 @@ code {
 .badge-animate {
   animation: badge-pulse 2s infinite;
 }
+
+
+/* Hide scrollbars for pull-to-refresh container */
+.ptr {
+  overflow: hidden !important;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.ptr::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.ptr__children {
+  overflow: hidden !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ptr__children::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar class - you already have this */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
