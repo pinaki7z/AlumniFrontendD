@@ -85,6 +85,7 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "eslint-config-react-app": "^7.0.1",
     "source-map-explorer": "^2.5.3"
   }

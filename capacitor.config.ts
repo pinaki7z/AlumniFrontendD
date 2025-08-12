@@ -8,6 +8,17 @@ const config: CapacitorConfig = {
     url: 'http://192.168.1.10:3000', // your local IP + dev server port
     cleartext: true, // allows HTTP
   },
+    plugins: {
+    SplashScreen: {
+      launchShowDuration: 100, // in ms
+      launchAutoHide: true,
+      backgroundColor: '#ffffff',
+      showSpinner: true,
+      androidSpinnerStyle: 'small',
+      iosSpinnerStyle: 'small',
+      spinnerColor: '#000000'
+    }
+  }
 
 };
 
