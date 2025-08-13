@@ -392,7 +392,7 @@ function NotificationCenterPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8  pb-8">
 
           {/* **LEFT SIDEBAR - Recent Activities** */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-6 hidden md:block">
             <div className="sticky top-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                 <h3 className="text-lg font-bold text-[#0A3A4C] mb-4 flex items-center gap-2">
@@ -634,7 +634,7 @@ function NotificationCenterPage() {
           </div>
 
           {/* **RIGHT SIDEBAR - Job Openings** */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-6 hidden md:block">
             <div className="sticky top-6">
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
                 <h3 className="text-lg font-bold text-[#0A3A4C] mb-4 flex items-center gap-2">
