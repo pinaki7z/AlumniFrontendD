@@ -12,7 +12,8 @@ RUN npm ci --only=production && npm install -g serve
 COPY . .
 
 # Build the app
-RUN npm run build
+RUN GENERATE_SOURCEMAP=false npm run build
+# npm run build
 
 # Expose port 3000
 EXPOSE 3000
