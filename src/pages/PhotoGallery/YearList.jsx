@@ -169,9 +169,9 @@ export default function YearList() {
                   <ChevronRight size={14} className="sm:size-4 text-white/60 group-hover:text-white transition-colors duration-200" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold">{year.year}</h3>
-                <p className="text-white/80 text-xs sm:text-sm">
+                {/* <p className="text-white/80 text-xs sm:text-sm">
                   {year.departmentCount || 0} departments
-                </p>
+                </p> */}
               </div>
             ))}
           </div>

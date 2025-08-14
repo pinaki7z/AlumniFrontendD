@@ -183,7 +183,7 @@ const NewsUpdatesPage = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex flex-wrap gap-2">
+          {/* <div className="flex flex-wrap gap-2">
             <button
               onClick={() => navigate('/home/news/drafts')}
               className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm"
@@ -198,7 +198,7 @@ const NewsUpdatesPage = () => {
               <TrendingUp size={16} />
               Analytics
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Search Bar */}
@@ -219,17 +219,17 @@ const NewsUpdatesPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
           {/* Left Sidebar */}
-          <div className="lg:col-span-3">
+          {/* <div className="lg:col-span-3">
             <LeftSidebar
               activeFilter={activeFilter}
               setActiveFilter={setActiveFilter}
               categories={categories}
               quickStats={quickStats}
             />
-          </div>
+          </div> */}
 
           {/* Main Content */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-9">
             <MainContent
               newsData={newsData}
               loading={loading}

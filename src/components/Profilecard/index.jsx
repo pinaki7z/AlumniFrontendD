@@ -65,7 +65,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           const responseData = await response.data
           const { alumni } = responseData
           dispatch(updateProfile(alumni))
-          toast.success("Followed")
+          // toast.success("Followed")
           setIsFollowing(true)
           setLoading(false)
         }
@@ -77,7 +77,7 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           const responseData = await response.data
           const { alumni } = responseData
           dispatch(updateProfile(alumni))
-          toast.success("Unfollowed")
+          // toast.success("Unfollowed")
           setIsFollowing(false)
           setLoading(false)
         }
