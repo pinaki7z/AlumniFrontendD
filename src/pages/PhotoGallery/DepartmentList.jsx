@@ -185,9 +185,9 @@ export default function DepartmentList() {
                   <ChevronRight size={16} className="sm:size-5 text-white/60 group-hover:text-white transition-colors duration-200" />
                 </div>
                 <h3 className="text-lg sm:text-xl font-bold mb-2 capitalize">{dept.name}</h3>
-                <p className="text-white/80 text-xs sm:text-sm">
+                {/* <p className="text-white/80 text-xs sm:text-sm">
                   {dept.photoCount || 0} photos
-                </p>
+                </p> */}
               </div>
             ))}
           </div>

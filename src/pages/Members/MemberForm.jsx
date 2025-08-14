@@ -209,94 +209,95 @@ const MemberForm = ({ edit }) => {
 
         {/* Modal remains the same */}
         {modalOpen && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3">
-            <div className="bg-white rounded-xl w-full max-w-md">
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
-                      <Upload size={16} className="text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">Bulk Upload</h2>
-                      <p className="text-sm text-gray-600">For students</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                  >
-                    <X size={18} className="text-gray-500" />
-                  </button>
-                </div>
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3">
+    <div className="bg-white rounded-xl w-full max-w-md">
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 dynamic-site-bg rounded-lg flex items-center justify-center">
+              <Upload size={16} className="text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Bulk Upload</h2>
+              <p className="text-sm text-gray-600">For students and alumni</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setModalOpen(false)}
+            className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+          >
+            <X size={18} className="text-gray-500" />
+          </button>
+        </div>
 
-                <div className="space-y-3">
-                  <div className="bg-blue-50 rounded-lg p-3">
-                    <div className="flex items-start gap-2">
-                      <AlertCircle size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm text-blue-800 font-medium mb-1">CSV Format Required</p>
-                        <p className="text-xs text-blue-700">
-                          Upload CSV with: firstName, lastName, email, gender, userType, department, batch, class.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Select CSV File
-                    </label>
-                    <input
-                      type="file"
-                      name="csv"
-                      id="csv"
-                      accept=".csv"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] text-sm"
-                    />
-                  </div>
-
-                  <div className="text-center">
-                    <a
-                      href="https://generalbuckethai.s3.ap-south-1.amazonaws.com/2025/may/1746171609977-Book-_1_.csv"
-                      download="sample_members.csv"
-                      className="inline-flex items-center gap-1 text-sm text-[#0A3A4C] hover:text-[#0A3A4C]/80 transition-colors duration-200"
-                    >
-                      <Download size={14} />
-                      Download sample CSV
-                    </a>
-                  </div>
-
-                  <div className="flex gap-2 pt-3">
-                    <button
-                      onClick={() => setModalOpen(false)}
-                      className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleCSVupload}
-                      disabled={uploadingCSV}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                    >
-                      {uploadingCSV ? (
-                        <>
-                          <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          <span>Uploading...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Upload size={14} />
-                          <span>Upload CSV</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
+        <div className="space-y-3">
+          <div className="bg-blue-50 rounded-lg p-3">
+            <div className="flex items-start gap-2">
+              <AlertCircle size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm text-blue-800 font-medium mb-1">CSV Format Required</p>
+                <p className="text-xs text-blue-700">
+                  Required columns: firstName*, lastName*, email*, type* (Student/Alumni), batch*
+                </p>
               </div>
             </div>
           </div>
-        )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Select CSV File
+            </label>
+            <input
+              type="file"
+              name="csv"
+              id="csv"
+              accept=".csv"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A3A4C] focus:border-[#0A3A4C] text-sm"
+            />
+          </div>
+
+          <div className="text-center">
+            <a
+              href="/sample_bulk_upload.csv"
+              download="sample_bulk_upload.csv"
+              className="inline-flex items-center gap-1 text-sm text-[#0A3A4C] hover:text-[#0A3A4C]/80 transition-colors duration-200"
+            >
+              <Download size={14} />
+              Download sample CSV
+            </a>
+          </div>
+
+          <div className="flex gap-2 pt-3">
+            <button
+              onClick={() => setModalOpen(false)}
+              className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCSVupload}
+              disabled={uploadingCSV}
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 dynamic-site-bg text-white rounded-lg hover:opacity-90 transition-opacity duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            >
+              {uploadingCSV ? (
+                <>
+                  <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  <Upload size={14} />
+                  <span>Upload CSV</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {/* Form Container - Removed excessive padding and height constraints */}
         <div className="bg-white rounded-lg sm:rounded-xl shadow-sm mb-3">

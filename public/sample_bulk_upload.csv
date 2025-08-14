@@ -1,0 +1,6 @@
+firstName*,lastName*,email*,type*,batch*
+John,Doe,john.doe@example.com,Student,2023-2024
+Jane,Smith,jane.smith@example.com,Alumni,2020-2021
+Mike,Johnson,mike.johnson@example.com,Student,2024-2025
+Sarah,Wilson,sarah.wilson@example.com,Alumni,2019-2020
+David,Brown,david.brown@example.com,Student,2023-2024
