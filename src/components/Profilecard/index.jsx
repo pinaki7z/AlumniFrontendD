@@ -67,7 +67,9 @@ const Profilecard = ({ member, name, addButton, groupMembers, owner, deleteButto
           dispatch(updateProfile(alumni))
           // toast.success("Followed")
           setIsFollowing(true)
+          // setLoading(false)
           setLoading(false)
+
         }
       } else {
         const response = await axios.patch(`${process.env.REACT_APP_API_URL}/alumni/${member._id}/follow`, {
